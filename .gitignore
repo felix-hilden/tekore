@@ -1,0 +1,23 @@
+# See for more potential targets to ignore:
+# https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Python
+*.py[cod]
+**__pycache__/
+build/
+dist/
+*.egg-info/
+
+# PyCharm
+.idea/
+
+# Sphinx
+docs/build
+
+# Environments
+.env
+.venv
+env/
+venv/
+env.bak/
+venv.bak/
