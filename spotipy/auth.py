@@ -2,7 +2,7 @@ import time
 from base64 import b64encode as _b64encode
 
 import requests
-import urllib.parse as urllibparse
+from urllib.parse import urlencode
 
 from spotipy.scope import Scope
 
@@ -50,8 +50,7 @@ class Credentials:
         if state is not None:
             payload['state'] = state
 
-        urlparams = urllibparse.urlencode(payload)
-        return OAUTH_AUTHORIZE_URL + '?' + urlparams
+        return OAUTH_AUTHORIZE_URL + '?' + urlencode(payload)
 
     def _post_token_request(self, payload: dict) -> Token:
         auth_header = b64encode(self.client_id + ':' + self.client_secret)
