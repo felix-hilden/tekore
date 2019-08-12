@@ -72,7 +72,7 @@ class SpotifyPlaylist(SpotifyBase):
             'public': public,
             'description': description
         }
-        return self._post("users/{}/playlists".format(user_id), payload=payload)
+        return self._post('users/{}/playlists'.format(user_id), payload=payload)
 
     def playlist_change_details(self, playlist_id: str, name: str = None, public: bool = None,
                                 collaborative: bool = None, description: str = None):
@@ -93,7 +93,7 @@ class SpotifyPlaylist(SpotifyBase):
             'description': description,
         }
         data = {k: v for k, v in data.items() if v is not None}
-        return self._put("playlists/" + playlist_id, payload=data)
+        return self._put('playlists/' + playlist_id, payload=data)
 
     def playlist_tracks_add(self, playlist_id: str, track_ids: list, position: int = None):
         """

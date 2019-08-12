@@ -30,15 +30,12 @@ class SpotifyBase:
         """
         Create a Spotify API object.
 
-        :param requests_session:
-            A Requests session object or a truthy value to create one.
-            A falsy value disables sessions.
-            It should generally be a good idea to keep sessions enabled
-            for performance reasons (connection pooling).
-        :param proxies:
-            Definition of proxies (optional)
-        :param requests_timeout:
-            Tell Requests to stop waiting for a response after a given number of seconds
+        Parameters:
+            - requests_session - A Requests session object or a truthy value to create one.
+                                    A falsy value disables sessions. It should generally be a good idea
+                                    to keep sessions enabled for performance reasons (connection pooling).
+            - proxies - Definition of proxies (optional)
+            - requests_timeout - Tell Requests to stop waiting for a response after a given number of seconds
         """
         self._token = None
         self.proxies = proxies
@@ -49,7 +46,7 @@ class SpotifyBase:
         else:
             if requests_session:  # Build a new session.
                 self._session = requests.Session()
-            else:  # Use the Requests API module as a "session".
+            else:  # Use the Requests API module as a 'session'.
                 from requests import api
                 self._session = api
 
@@ -73,7 +70,7 @@ class SpotifyBase:
             'timeout': self.requests_timeout
         }
         if payload:
-            args["data"] = json.dumps(payload)
+            args['data'] = json.dumps(payload)
 
         r = self._session.request(method, url, headers=headers, proxies=self.proxies, **args)
 
@@ -155,4 +152,4 @@ class SpotifyBase:
         return id_
 
     def _get_uri(self, type_: str, id_: str):
-        return 'spotify:' + type_ + ":" + self._get_id(type_, id_)
+        return 'spotify:' + type_ + ':' + self._get_id(type_, id_)
