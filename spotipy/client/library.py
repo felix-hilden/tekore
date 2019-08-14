@@ -1,4 +1,4 @@
-from spotipy.client._base import SpotifyBase
+from spotipy.client.base import SpotifyBase
 
 
 class SpotifyLibrary(SpotifyBase):
