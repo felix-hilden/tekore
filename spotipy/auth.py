@@ -39,6 +39,13 @@ class Credentials:
         self.redirect_uri = redirect_uri
 
     def authorisation_url(self, scope: Scope = None, state: str = None) -> str:
+        """
+        Construct an authorisation url for Spotify login.
+
+        Parameters:
+            - scope - access rights
+            - state - additional state
+        """
         payload = {
             'client_id': self.client_id,
             'response_type': 'code',
@@ -63,10 +70,21 @@ class Credentials:
         return Token(response.json())
 
     def request_client_credentials(self) -> Token:
+        """
+        Request for access token using application credentials.
+        """
         payload = {'grant_type': 'client_credentials'}
         return self._post_token_request(payload)
 
     def request_access_token(self, code: str, scope: Scope = None, state: str = None) -> Token:
+        """
+        Request for access token using a code provided by a request from the Spotify server.
+
+        Parameters:
+            - code - code from request parameters
+            - scope - access rights
+            - state - additional state
+        """
         payload = {
             'code': code,
             'redirect_uri': self.redirect_uri,
