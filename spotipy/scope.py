@@ -4,7 +4,6 @@ from enum import Enum
 class AuthorisationScopes(Enum):
     """
     Spotify Web API Authorisation Scopes.
-    https://developer.spotify.com/documentation/general/guides/scopes/
     """
     user_read_email = 'user-read-email'
     user_read_private = 'user-read-private'
