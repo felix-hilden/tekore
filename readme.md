@@ -7,6 +7,6 @@ Although refactored heavily from its original source, this package does largely 
 was put in place by plamere.
 
 ### References
-##### Spotify Web API
+#### Spotify Web API
 - [Object model](https://developer.spotify.com/documentation/web-api/reference/object-model/)
 - [Authorisation scopes](https://developer.spotify.com/documentation/general/guides/scopes/)
