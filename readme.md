@@ -26,3 +26,4 @@ Here's a list of items currently under consideration.
 - Consider if model bases should be named `Track` and `Album` or `TrackBase` and `AlbumBase`.
 Names without `Base` are nice for type hinting, but if they are never used in the same context,
 `FullTrack` is a worse name than simply `Track`.
+- Should there be a separate object linking models to the client, or should the client return parsed models?
