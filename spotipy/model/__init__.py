@@ -11,6 +11,6 @@ from spotipy.model.member import Copyright, ExternalID, ExternalURL, Followers, 
 from spotipy.model.paging import Paging, OffsetPaging, Cursor, CursorPaging
 from spotipy.model.play_history import PlayHistory
 from spotipy.model.playlist import PlaylistTrack, PlaylistTrackPaging, Playlist, SimplePlaylist, FullPlaylist
-from spotipy.model.recommendations import RecommendationType, RecommendationSeed, Recommendations
+from spotipy.model.recommendations import RecommendationSeed, Recommendations
 from spotipy.model.track import TrackLink, Track, SimpleTrack, FullTrack, SimpleTrackPaging, Tracks, SavedTrack
 from spotipy.model.user import User, PrivateUser, PublicUser
