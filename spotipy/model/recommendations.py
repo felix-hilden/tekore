@@ -1,10 +1,7 @@
-from enum import Enum
 from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.track import SimpleTrack
-
-RecommendationType = Enum('RecommendationType', 'artist track genre')
 
 
 @dataclass
