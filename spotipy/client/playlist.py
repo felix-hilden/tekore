@@ -1,4 +1,5 @@
 from spotipy.client.base import SpotifyBase
+from spotipy.convert import to_uri
 
 
 class SpotifyPlaylist(SpotifyBase):
@@ -104,7 +105,7 @@ class SpotifyPlaylist(SpotifyBase):
             - track_ids - list of track IDs
             - position - position to add the tracks
         """
-        payload = {'uris': [self._get_uri('track', t) for t in track_ids]}
+        payload = {'uris': [to_uri('track', t) for t in track_ids]}
         return self._post('playlists/{}/tracks'.format(playlist_id), payload=payload, position=position)
 
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list):
@@ -115,7 +116,7 @@ class SpotifyPlaylist(SpotifyBase):
             - playlist_id - playlist ID
             - track_ids - list of track IDs to add to the playlist
         """
-        payload = {'uris': [self._get_uri('track', t) for t in track_ids]}
+        payload = {'uris': [to_uri('track', t) for t in track_ids]}
         return self._put('playlists/{}/tracks'.format(playlist_id), payload=payload)
 
     def playlist_tracks_reorder(self, playlist_id: str, range_start: int, insert_before: int,
@@ -148,7 +149,7 @@ class SpotifyPlaylist(SpotifyBase):
             - track_ids - list of track IDs to add to the playlist
             - snapshot_id - optional playlist's snapshot ID
         """
-        tracks = [self._get_uri('track', t) for t in track_ids]
+        tracks = [to_uri('track', t) for t in track_ids]
         payload = {'tracks': [{'uri': t} for t in tracks]}
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
@@ -169,7 +170,7 @@ class SpotifyPlaylist(SpotifyBase):
         ftracks = []
         for tr in tracks:
             ftracks.append({
-                'uri': self._get_uri('track', tr['uri']),
+                'uri': to_uri('track', tr['uri']),
                 'positions': tr['positions'],
             })
         payload = {'tracks': ftracks}

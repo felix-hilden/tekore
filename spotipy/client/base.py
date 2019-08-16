@@ -1,4 +1,3 @@
-import sys
 import json
 import time
 import requests
@@ -132,25 +131,3 @@ class SpotifyBase:
             return self._get(result['previous'])
         else:
             return None
-
-    @staticmethod
-    def _warn(msg, *args):
-        print('warning:' + msg.format(*args), file=sys.stderr)
-
-    def _get_id(self, type_: str, id_: str):
-        fields = id_.split(':')
-        if len(fields) >= 3:
-            if type_ != fields[-2]:
-                self._warn('expected id of type %s but found type %s %s', type_, fields[-2], id_)
-            return fields[-1]
-
-        fields = id_.split('/')
-        if len(fields) >= 3:
-            itype = fields[-2]
-            if type_ != itype:
-                self._warn('expected id of type %s but found type %s %s', type_, itype, id_)
-            return fields[-1]
-        return id_
-
-    def _get_uri(self, type_: str, id_: str):
-        return 'spotify:' + type_ + ':' + self._get_id(type_, id_)
