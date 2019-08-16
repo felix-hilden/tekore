@@ -26,18 +26,19 @@ class SpotifyBase:
     max_get_retries = 10
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, requests_session=True, proxies=None, requests_timeout=None):
+    def __init__(self, token: str = None, requests_session=True, proxies=None, requests_timeout=None):
         """
         Create a Spotify API object.
 
         Parameters:
+            - token - bearer token for requests
             - requests_session - A Requests session object or a truthy value to create one.
                                     A falsy value disables sessions. It should generally be a good idea
                                     to keep sessions enabled for performance reasons (connection pooling).
             - proxies - Definition of proxies (optional)
             - requests_timeout - Tell Requests to stop waiting for a response after a given number of seconds
         """
-        self._token = None
+        self._token = token
         self.proxies = proxies
         self.requests_timeout = requests_timeout
 
