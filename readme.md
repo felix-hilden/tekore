@@ -19,6 +19,7 @@ Here's a list of items currently under consideration.
 - TODO: (ReadTheDocs/Sphinx) documentation and tutorials
 - TODO: Determine if plural-named fields that are documented as a single object return a list instead
 - TODO: Playlist image upload
+- Should URL and URI conversions be validated?
 - How should time stamps in models be handled, or simply as strings?
 - How should scope-limited calls and response values be handled? For values perhaps default values or new types.
 - Should model bases be imported to the top level `model` space?
