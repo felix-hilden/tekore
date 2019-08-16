@@ -2,7 +2,6 @@ from spotipy.model.album import AlbumType, AlbumGroup, ReleaseDatePrecision, Alb
 from spotipy.model.album.full import FullAlbum
 from spotipy.model.artist import Artist, SimpleArtist, FullArtist
 from spotipy.model.audio_features import Key, Mode, AudioFeatures
-from spotipy.model.base import Identifiable, Item
 from spotipy.model.category import Category
 from spotipy.model.context import Context
 from spotipy.model.disallows import Disallows
