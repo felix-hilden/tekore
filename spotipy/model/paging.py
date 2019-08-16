@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.base import Item
@@ -9,14 +9,13 @@ class Paging:
     href: str
     items: List[Item]
     limit: int
-    next: Optional[str]
     total: int
 
 
 @dataclass
 class OffsetPaging(Paging):
     offset: int
-    previous: Optional[str]
+    previous: str = None
 
 
 @dataclass
