@@ -17,7 +17,7 @@ setuptools.setup(
     long_description='Client for Spotify Web API',
     license='MIT',
 
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=[
         'requests',
     ],
