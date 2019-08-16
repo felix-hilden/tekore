@@ -37,3 +37,9 @@ class PlayerError(Error):
 
     def __post_init__(self):
         self.reason = PlayerErrorReason[self.reason]
+
+
+@dataclass
+class AuthenticationError:
+    error: str
+    error_description: str

@@ -5,7 +5,7 @@ from spotipy.model.audio_features import Key, Mode, AudioFeatures
 from spotipy.model.category import Category
 from spotipy.model.context import Context
 from spotipy.model.disallows import Disallows
-from spotipy.model.error import PlayerErrorReason, Error, PlayerError
+from spotipy.model.error import PlayerErrorReason, Error, PlayerError, AuthenticationError
 from spotipy.model.member import Copyright, ExternalID, ExternalURL, Followers, Image, Restrictions
 from spotipy.model.paging import Paging, OffsetPaging, Cursor, CursorPaging
 from spotipy.model.play_history import PlayHistory
