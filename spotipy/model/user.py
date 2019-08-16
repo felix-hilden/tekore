@@ -12,6 +12,11 @@ class User(Item):
     followers: Followers
     images: List[Image]
 
+    def __post_init__(self):
+        self.external_urls = ExternalURL(**self.external_urls)
+        self.followers = Followers(**self.followers)
+        self.images = [Image(**i) for i in self.images]
+
 
 @dataclass
 class PrivateUser(User):

@@ -34,3 +34,6 @@ class Error:
 @dataclass
 class PlayerError(Error):
     reason: PlayerErrorReason
+
+    def __post_init__(self):
+        self.reason = PlayerErrorReason[self.reason]

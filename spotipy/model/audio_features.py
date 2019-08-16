@@ -26,3 +26,7 @@ class AudioFeatures(Identifiable):
     type: str
     uri: str
     valence: float
+
+    def __post_init__(self):
+        self.key = Key[self.key]
+        self.mode = Mode[self.mode]

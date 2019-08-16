@@ -19,7 +19,7 @@ Here's a list of items currently under consideration.
 - TODO: (ReadTheDocs/Sphinx) documentation and tutorials
 - TODO: Implement client and user token handling and refreshing
 - TODO: Implement methods to get items from paging objects or get all items as a list of the paged type
-- TODO: Convert from response value to enum types in models
+- TODO: Determine if plural-named fields that are documented as a single object return a list instead
 - How should time stamps in models be handled?
 - How should scope-limited calls and response values be handled? For values perhaps default values or new types.
 - Should model bases be imported to the top level `model` space?

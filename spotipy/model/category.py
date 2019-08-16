@@ -10,3 +10,6 @@ class Category(Identifiable):
     href: str
     icons: List[Image]
     name: str
+
+    def __post_init__(self):
+        self.icons = [Image(**i) for i in self.icons]

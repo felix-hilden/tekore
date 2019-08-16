@@ -18,3 +18,7 @@ class RecommendationSeed:
 class Recommendations:
     seeds: List[RecommendationSeed]
     tracks: List[SimpleTrack]
+
+    def __post_init__(self):
+        self.seeds = [RecommendationSeed(**s) for s in self.seeds]
+        self.tracks = [SimpleTrack(**t) for t in self.tracks]

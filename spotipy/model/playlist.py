@@ -15,6 +15,10 @@ class PlaylistTrack:
     is_local: bool
     track: Track
 
+    def __post_init__(self):
+        self.added_by = User(**self.added_by)
+        self.track = Track(**self.track)
+
 
 @dataclass
 class PlaylistTrackPaging(OffsetPaging):
@@ -31,10 +35,19 @@ class Playlist(Item):
     public: bool
     snapshot_id: str
 
+    def __post_init__(self):
+        self.external_urls = ExternalURL(**self.external_urls)
+        self.images = [Image(**i) for i in self.images]
+        self.owner = User(**self.owner)
+
 
 @dataclass
 class SimplePlaylist(Playlist):
     tracks: Tracks
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.tracks = Tracks(**self.tracks)
 
 
 @dataclass
@@ -42,3 +55,8 @@ class FullPlaylist(Playlist):
     description: str
     followers: Followers
     tracks: PlaylistTrackPaging
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.followers = Followers(**self.followers)
+        self.tracks = PlaylistTrackPaging(**self.tracks)
