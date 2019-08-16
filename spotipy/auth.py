@@ -38,6 +38,13 @@ class Credentials:
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
 
+    def request_client_credentials(self) -> Token:
+        """
+        Request for access token using application credentials.
+        """
+        payload = {'grant_type': 'client_credentials'}
+        return self._post_token_request(payload)
+
     def authorisation_url(self, scope: Scope = None, state: str = None) -> str:
         """
         Construct an authorisation url for Spotify login.
@@ -68,13 +75,6 @@ class Credentials:
             raise OAuthError('Access token request failed: {}, {}'.format(response.status_code, response.reason))
 
         return Token(response.json())
-
-    def request_client_credentials(self) -> Token:
-        """
-        Request for access token using application credentials.
-        """
-        payload = {'grant_type': 'client_credentials'}
-        return self._post_token_request(payload)
 
     def request_access_token(self, code: str, scope: Scope = None, state: str = None) -> Token:
         """
