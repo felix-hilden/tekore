@@ -90,12 +90,12 @@ class SpotifyBase:
         else:
             return None
 
-    def _get(self, url, payload=None, **kwargs):
+    def _get(self, url, payload=None, **params):
         retries = self.max_get_retries
         delay = 1
         while retries > 0:
             try:
-                return self._internal_call('GET', url, payload, kwargs)
+                return self._internal_call('GET', url, payload, params)
             except SpotifyException as e:
                 retries -= 1
                 status = e.http_status
@@ -111,14 +111,14 @@ class SpotifyBase:
                 else:
                     raise
 
-    def _post(self, url, payload=None, **kwargs):
-        return self._internal_call('POST', url, payload, kwargs)
+    def _post(self, url, payload=None, **params):
+        return self._internal_call('POST', url, payload, params)
 
-    def _delete(self, url, payload=None, **kwargs):
-        return self._internal_call('DELETE', url, payload, kwargs)
+    def _delete(self, url, payload=None, **params):
+        return self._internal_call('DELETE', url, payload, params)
 
-    def _put(self, url, payload=None, **kwargs):
-        return self._internal_call('PUT', url, payload, kwargs)
+    def _put(self, url, payload=None, **params):
+        return self._internal_call('PUT', url, payload, params)
 
     def next(self, result):
         if result['next']:
