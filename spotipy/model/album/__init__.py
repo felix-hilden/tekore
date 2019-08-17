@@ -14,7 +14,7 @@ class SimpleAlbum(Album):
         super().__post_init__()
         if self.album_group is not None:
             self.album_group = AlbumGroup[self.album_group]
-        else
+        else:
             self.album_group = None
 
 
