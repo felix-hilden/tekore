@@ -19,9 +19,9 @@ class User(Item):
 
 @dataclass
 class PrivateUser(User):
-    country: str
-    email: str
-    product: str
+    country: str = None
+    email: str = None
+    product: str = None
 
 
 @dataclass
