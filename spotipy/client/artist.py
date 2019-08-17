@@ -37,8 +37,7 @@ class SpotifyArtist(SpotifyBase):
 
     def artist_related_artists(self, artist_id: str):
         """
-        Get artists similar to an identified artist.
-        Similarity is based on analysis of the Spotify community's
-        listening history.
+        Get artists similar to an identified artist. Similarity is based on
+        analysis of the Spotify community's listening history.
         """
         return self._get(f'artists/{artist_id}/related-artists')

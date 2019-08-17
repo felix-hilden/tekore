@@ -18,7 +18,6 @@ class SpotifyBrowse(SpotifyBase):
             that specific date and time in the day.
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
-        :return: response
         """
         return self._get('browse/featured-playlists', locale=locale,
                          country=country, timestamp=timestamp, limit=limit,
@@ -27,7 +26,7 @@ class SpotifyBrowse(SpotifyBase):
     def new_releases(self, country: str = None, limit: int = 20,
                      offset: int = 0):
         """
-        Get a list of new album releases featured in Spotify
+        Get a list of new album releases featured in Spotify.
 
         Parameters:
             - country - An ISO 3166-1 alpha-2 country code.

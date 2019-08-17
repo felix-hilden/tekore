@@ -49,8 +49,8 @@ class SpotifyPlayer(SpotifyBase):
         """
         Transfer playback to another device.
         Requires the user-modify-playback-state scope.
-        Note that the API accepts a list of device ids, but only actually
-        supports one.
+        Note that the API accepts a list of device ids,
+        but only actually supports one.
 
         Parameters:
             - device_id - device to transfer playback to
@@ -70,9 +70,9 @@ class SpotifyPlayer(SpotifyBase):
         Start or resume user's playback.
         Requires the user-modify-playback-state scope.
 
-        Provide a `context_uri` to start playback or a album, artist, or
-        playlist
-        Provide a `uris` list to start playback of one or more tracks
+        Provide a `context_uri` to start playback of
+        an album, artist, or playlist.
+        Provide a `uris` list to start playback of one or more tracks.
         Provide `offset` as {"position": <int>} or {"uri": "<track uri>"}
         to start playback at a particular offset.
 

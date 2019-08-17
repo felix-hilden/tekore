@@ -34,9 +34,8 @@ class SpotifyFollow(SpotifyBase):
     def current_user_playlist_unfollow(self, playlist_id: str):
         """
         Unfollow a playlist as current user.
-        Requires the playlist-modify-public scope.
-        Unfollowing a privately followed playlist requires the
-        playlist-modify-private scope.
+        Requires the playlist-modify-public scope. Unfollowing a privately
+        followed playlist requires the playlist-modify-private scope.
 
         Parameters:
             - playlist_id - playlist ID

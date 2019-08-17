@@ -5,9 +5,8 @@ class SpotifyLibrary(SpotifyBase):
     def current_user_albums(self, market: str = 'from_token', limit: int = 20,
                             offset: int = 0):
         """
-        Get a list of the albums saved in the current user's Your Music
-        library.
-        Requires the user-libray-read scope.
+        Get a list of the albums saved in the current user's
+        Your Music library. Requires the user-libray-read scope.
 
         Parameters:
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
