@@ -40,7 +40,7 @@ class Spotify(
         return self._get('users/' + user_id)
 
     def current_user(self):
-        return self.me()
+        return self._get('me/')
 
     def current_user_top_artists(self, time_range: str = 'medium_term', limit: int = 20, offset: int = 0):
         """
