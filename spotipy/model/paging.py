@@ -10,7 +10,7 @@ class Paging:
     items: List[Item]
     limit: int
     total: int
-    next: str = None
+    next: str
 
     def __post_init__(self):
         self.items = [Item(**i) for i in self.items]
@@ -19,7 +19,7 @@ class Paging:
 @dataclass
 class OffsetPaging(Paging):
     offset: int
-    previous: str = None
+    previous: str
 
 
 @dataclass
