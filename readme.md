@@ -36,7 +36,7 @@ Otherwise the context manager `Spotify.token` can be used.
 
 The script below will play Sibelius' Finlandia if the user has an active (recently used) Spotify application open.
 If no active device is found, an error is thrown.
-To change device state `Spotipy.playback_transfer` can be used.
+To change device state `Spotify.playback_transfer` can be used.
 
 ```
 from spotipy import Spotify
