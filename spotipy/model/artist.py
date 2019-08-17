@@ -24,6 +24,5 @@ class FullArtist(Artist):
     popularity: int
 
     def __post_init__(self):
-        super().__post_init__()
         self.followers = Followers(**self.followers)
         self.images = [Image(**i) for i in self.images]
