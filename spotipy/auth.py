@@ -72,7 +72,10 @@ class Credentials:
         response = requests.post(OAUTH_TOKEN_URL, data=payload, headers=headers)
 
         if response.status_code != 200:
-            raise OAuthError(f'Access token request failed: {response.status_code}, {response.reason}'
+            raise OAuthError(
+                f'Access token request failed: '
+                f'{response.status_code}, {response.reason}'
+            )
 
         return Token(response.json())
 
