@@ -5,7 +5,8 @@ class SpotifyPlayer(SpotifyBase):
     def playback(self, market: str = 'from_token'):
         """
         Get information about user's current playback.
-        Requires the user-read-playback-state or the user-read-currently-playing scope.
+        Requires the user-read-playback-state or the
+        user-read-currently-playing scope.
 
         Parameters:
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
@@ -22,7 +23,8 @@ class SpotifyPlayer(SpotifyBase):
         """
         return self._get('me/player/currently-playing', market=market)
 
-    def playback_recently_played(self, limit: int = 20, after: str = None, before: str = None):
+    def playback_recently_played(self, limit: int = 20, after: str = None,
+                                 before: str = None):
         """
         Get tracks from the current user's recently played tracks.
         Only after or before should be specified at one time.
@@ -33,7 +35,8 @@ class SpotifyPlayer(SpotifyBase):
             - after - a unix timestamp in milliseconds
             - before - a unix timestamp in milliseconds
         """
-        return self._get('me/player/recently-played', limit=limit, after=after, before=before)
+        return self._get('me/player/recently-played', limit=limit,
+                         after=after, before=before)
 
     def playback_devices(self):
         """
@@ -46,11 +49,13 @@ class SpotifyPlayer(SpotifyBase):
         """
         Transfer playback to another device.
         Requires the user-modify-playback-state scope.
-        Note that the API accepts a list of device ids, but only actually supports one.
+        Note that the API accepts a list of device ids, but only actually
+        supports one.
 
         Parameters:
             - device_id - device to transfer playback to
-            - force_play - true: after transfer, play. false: keep current state.
+            - force_play - true: after transfer, play. false: keep current
+            state.
         """
         data = {
             'device_ids': [device_id],
@@ -58,13 +63,15 @@ class SpotifyPlayer(SpotifyBase):
         }
         return self._put('me/player', payload=data)
 
-    def playback_start(self, context_uri: str = None, uris: list = None, offset: dict = None,
-                       position_ms: int = None, device_id: str = None):
+    def playback_start(self, context_uri: str = None, uris: list = None,
+                       offset: dict = None, position_ms: int = None,
+                       device_id: str = None):
         """
         Start or resume user's playback.
         Requires the user-modify-playback-state scope.
 
-        Provide a `context_uri` to start playback or a album, artist, or playlist
+        Provide a `context_uri` to start playback or a album, artist, or
+        playlist
         Provide a `uris` list to start playback of one or more tracks
         Provide `offset` as {"position": <int>} or {"uri": "<track uri>"}
         to start playback at a particular offset.
@@ -83,7 +90,8 @@ class SpotifyPlayer(SpotifyBase):
             'position_ms': position_ms,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        return self._put('me/player/play', payload=payload, device_id=device_id)
+        return self._put('me/player/play', payload=payload,
+                         device_id=device_id)
 
     def playback_pause(self, device_id: str = None):
         """
@@ -124,7 +132,8 @@ class SpotifyPlayer(SpotifyBase):
             - position_ms - position on track
             - device_id - device to seek on
         """
-        return self._put('me/player/seek', position_ms=position_ms, device_id=device_id)
+        return self._put('me/player/seek', position_ms=position_ms,
+                         device_id=device_id)
 
     def playback_repeat(self, state: str, device_id: str = None):
         """
@@ -163,4 +172,5 @@ class SpotifyPlayer(SpotifyBase):
         elif volume_percent > 100:
             volume_percent = 100
 
-        self._put('me/player/volume', volume_percent=volume_percent, device_id=device_id)
+        self._put('me/player/volume', volume_percent=volume_percent,
+                  device_id=device_id)
