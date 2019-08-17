@@ -11,8 +11,7 @@ class SpotifyFollow(SpotifyBase):
             - playlist_id - the id of the playlist
             - user_ids - the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.
         """
-        return self._get('playlists/{}/followers/contains?ids={}'.format(
-            playlist_id, ','.join(user_ids))
+        return self._get(f'playlists/{playlist_id}/followers/contains?ids=' + ','.join(user_ids))
         )
 
     def current_user_playlist_follow(self, playlist_id: str, public: bool = True):
@@ -28,7 +27,7 @@ class SpotifyFollow(SpotifyBase):
         payload = {
             'public': public
         }
-        return self._put('playlists/{}/followers'.format(playlist_id), payload=payload)
+        return self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
     def current_user_playlist_unfollow(self, playlist_id: str):
         """
@@ -39,7 +38,7 @@ class SpotifyFollow(SpotifyBase):
         Parameters:
             - playlist_id - playlist ID
         """
-        return self._delete('playlists/{}/followers'.format(playlist_id))
+        return self._delete(f'playlists/{playlist_id}/followers')
 
     def current_user_followed_artists(self, limit: int = 20, after: str = None):
         """

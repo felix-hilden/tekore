@@ -1,9 +1,9 @@
 def to_uri(type_: str, id_: str) -> str:
-    return 'spotify:{}:{}'.format(type_, id_)
+    return f'spotify:{type_}:{id_}'
 
 
 def to_url(type_: str, id_: str) -> str:
-    return 'http://open.spotify.com/{}/{}'.format(type_, id_)
+    return f'http://open.spotify.com/{type_}/{id_}'
 
 
 def from_uri(uri: str) -> tuple:
