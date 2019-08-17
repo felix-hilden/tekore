@@ -7,6 +7,16 @@ an application, get its credentials and define a valid redirect URI for authenti
 `http://localhost:5000` was used for this example.
 Note that a server doesn't necessarily have to be listening to that address for a simple demo.
 
+#### Installation
+The package is not yet in PyPI.
+Until then the repository must be cloned and installed as a local package.
+
+```
+$ git clone https://github.com/felix-hilden/spotipy.git
+$ cd spotipy
+$ pip install -e .
+```
+
 #### Retrieving an access token
 First we'll retrieve an access token that has every possible right (scope) to a user account.
 The script will open a web page prompting for a Spotify login.
