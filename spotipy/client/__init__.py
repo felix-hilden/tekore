@@ -39,9 +39,6 @@ class Spotify(
     def user(self, user_id: str):
         return self._get('users/' + user_id)
 
-    def me(self):
-        return self._get('me/')
-
     def current_user(self):
         return self.me()
 
