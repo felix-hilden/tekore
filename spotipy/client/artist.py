@@ -9,7 +9,8 @@ class SpotifyArtist(SpotifyBase):
         return self._get('artists/?ids=' + ','.join(artist_ids))
 
     def artist_albums(self, artist_id: str, include_groups: list = None,
-                      market: str = 'from_token', limit: int = 20, offset: int = 0):
+                      market: str = 'from_token', limit: int = 20,
+                      offset: int = 0):
         """
         Get an artist's albums.
 
@@ -20,7 +21,8 @@ class SpotifyArtist(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get(f'artists/{artist_id}/albums', include_groups=include_groups,
+        return self._get(f'artists/{artist_id}/albums',
+                         include_groups=include_groups,
                          market=market, limit=limit, offset=offset)
 
     def artist_top_tracks(self, artist_id, market: str = 'from_token'):
@@ -36,6 +38,7 @@ class SpotifyArtist(SpotifyBase):
     def artist_related_artists(self, artist_id: str):
         """
         Get artists similar to an identified artist.
-        Similarity is based on analysis of the Spotify community's listening history.
+        Similarity is based on analysis of the Spotify community's
+        listening history.
         """
         return self._get(f'artists/{artist_id}/related-artists')

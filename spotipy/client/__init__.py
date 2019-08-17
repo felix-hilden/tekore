@@ -27,15 +27,17 @@ class Spotify(
 
         Parameters:
             - q - search query
-            - type_ - the type of item to return. 'artist', 'album', 'track' or 'playlist'
+            - type_ - the type of item to return. 'artist', 'album',
+                      'track' or 'playlist'
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
-            - include_external - if 'audio', response will include any externally hosted audio
+            - include_external - if 'audio', response will include any
+                                 externally hosted audio
         """
         return self._get(
-            'search', q=q, type=type_, market=market, include_external=include_external, limit=limit, offset=offset
-        )
+            'search', q=q, type=type_, market=market,
+            include_external=include_external, limit=limit, offset=offset)
 
     def user(self, user_id: str):
         return self._get('users/' + user_id)
@@ -48,7 +50,8 @@ class Spotify(
         """
         return self._get('me/')
 
-    def current_user_top_artists(self, time_range: str = 'medium_term', limit: int = 20, offset: int = 0):
+    def current_user_top_artists(self, time_range: str = 'medium_term',
+                                 limit: int = 20, offset: int = 0):
         """
         Get the current user's top artists.
         Requires the user-top-read scope.
@@ -59,9 +62,11 @@ class Spotify(
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('me/top/artists', time_range=time_range, limit=limit, offset=offset)
+        return self._get('me/top/artists', time_range=time_range,
+                         limit=limit, offset=offset)
 
-    def current_user_top_tracks(self, time_range: str = 'medium_term', limit: int = 20, offset: int = 0):
+    def current_user_top_tracks(self, time_range: str = 'medium_term',
+                                limit: int = 20, offset: int = 0):
         """
         Get the current user's top tracks.
         Requires the user-top-read scope.
@@ -72,4 +77,5 @@ class Spotify(
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('me/top/tracks', time_range=time_range, limit=limit, offset=offset)
+        return self._get('me/top/tracks', time_range=time_range, limit=limit,
+                         offset=offset)

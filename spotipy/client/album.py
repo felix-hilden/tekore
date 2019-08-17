@@ -12,7 +12,8 @@ class SpotifyAlbum(SpotifyBase):
         """
         return self._get('albums/' + album_id, market=market)
 
-    def album_tracks(self, album_id: str, market: str = 'from_token', limit: int = 20, offset: int = 0):
+    def album_tracks(self, album_id: str, market: str = 'from_token',
+                     limit: int = 20, offset: int = 0):
         """
         Get tracks on album.
 
@@ -22,7 +23,8 @@ class SpotifyAlbum(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get(f'albums/{album_id}/tracks', market=market, limit=limit, offset=offset)
+        return self._get(f'albums/{album_id}/tracks', market=market,
+                         limit=limit, offset=offset)
 
     def albums(self, album_ids: list, market: str = 'from_token'):
         """

@@ -80,7 +80,7 @@ class SpotifyBrowse(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get(f'browse/categories/{category_id}/playlists'
+        return self._get(f'browse/categories/{category_id}/playlists',
                          country=country, limit=limit, offset=offset)
 
     def recommendations(self, artist_ids: list = None, genres: list = None,
