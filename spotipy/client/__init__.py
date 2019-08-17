@@ -22,7 +22,8 @@ class Spotify(
     def search(self, q: str, type_: str = 'track', market: str = 'from_token',
                include_external: str = None, limit: int = 20, offset: int = 0):
         """
-        Search for an item
+        Search for an item.
+        Requires the user-read-private scope.
 
         Parameters:
             - q - search query
@@ -40,11 +41,17 @@ class Spotify(
         return self._get('users/' + user_id)
 
     def current_user(self):
+        """
+        Get current user's profile.
+        Requires the user-read-private scope.
+        Requires the user-read-email scope to return user's email.
+        """
         return self._get('me/')
 
     def current_user_top_artists(self, time_range: str = 'medium_term', limit: int = 20, offset: int = 0):
         """
-        Get the current user's top artists
+        Get the current user's top artists.
+        Requires the user-top-read scope.
 
         Parameters:
             - time_range - Over what time frame are the affinities computed
@@ -56,7 +63,8 @@ class Spotify(
 
     def current_user_top_tracks(self, time_range: str = 'medium_term', limit: int = 20, offset: int = 0):
         """
-        Get the current user's top tracks
+        Get the current user's top tracks.
+        Requires the user-top-read scope.
 
         Parameters:
             - time_range - Over what time frame are the affinities computed

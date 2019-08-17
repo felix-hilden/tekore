@@ -6,6 +6,8 @@ class SpotifyPlaylist(SpotifyBase):
     def current_user_playlists(self, limit: int = 20, offset: int = 0):
         """
         Get a list of the playlists owned or followed by the current user.
+        Requires the playlist-read-private scope to return private playlists.
+        Requires the playlist-read-collaborative scope to return collaborative playlists.
 
         Parameters:
             - limit - the number of items to return (1..50)
@@ -16,6 +18,9 @@ class SpotifyPlaylist(SpotifyBase):
     def playlists(self, user_id: str, limit: int = 20, offset: int = 0):
         """
         Get a list of the playlists owned or followed by a user.
+        Requires the playlist-read-private scope to return private playlists.
+        Requires the playlist-read-collaborative scope to return collaborative playlists.
+        Note that collaborative playlists are only returned for current user.
 
         Parameters:
             - limit - the number of items to return (1..50)
@@ -37,7 +42,16 @@ class SpotifyPlaylist(SpotifyBase):
     def playlist_cover_image(self, playlist_id: str):
         return self._get('playlists/{}/images'.format(playlist_id))
 
-    def playlist_cover_image_upload(self, playlist_id: str):
+    def playlist_cover_image_upload(self, playlist_id: str, image: str):
+        """
+        Upload a custom playlist cover image.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
+
+        Parameters:
+            - playlist_id - playlist ID
+            - image data as a base64-encoded string
+        """
         pass
         # Content type: image/jpg
         # Body: base64 image, max 256 KB
@@ -61,6 +75,8 @@ class SpotifyPlaylist(SpotifyBase):
     def playlist_create(self, user_id: str, name: str, public: bool = True, description: str = ''):
         """
         Create a playlist for a user.
+        Requires the playlist-modify-public scope.
+        To create a private playlist the playlist-modify-private scope is required.
 
         Parameters:
             - user_id - the id of the user
@@ -79,6 +95,8 @@ class SpotifyPlaylist(SpotifyBase):
                                 collaborative: bool = None, description: str = None):
         """
         Changes a playlist's name and/or public/private state.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
@@ -99,6 +117,8 @@ class SpotifyPlaylist(SpotifyBase):
     def playlist_tracks_add(self, playlist_id: str, track_ids: list, position: int = None):
         """
         Add tracks to a playlist.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
@@ -110,7 +130,9 @@ class SpotifyPlaylist(SpotifyBase):
 
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list):
         """
-        Replace all tracks in a playlist
+        Replace all tracks in a playlist.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
@@ -123,6 +145,8 @@ class SpotifyPlaylist(SpotifyBase):
                                 range_length: int = 1, snapshot_id: str = None):
         """
         Reorder tracks in a playlist.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
@@ -143,10 +167,12 @@ class SpotifyPlaylist(SpotifyBase):
     def playlist_tracks_remove(self, playlist_id: str, track_ids: list, snapshot_id=None):
         """
         Remove all occurrences of tracks from a playlist.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
-            - track_ids - list of track IDs to add to the playlist
+            - track_ids - list of track IDs
             - snapshot_id - optional playlist's snapshot ID
         """
         tracks = [to_uri('track', t) for t in track_ids]
@@ -157,7 +183,9 @@ class SpotifyPlaylist(SpotifyBase):
 
     def playlist_tracks_remove_occurrences(self, playlist_id: str, tracks: list, snapshot_id=None):
         """
-        Removes all occurrences of the given tracks from the given playlist
+        Remove all occurrences of tracks from a playlist.
+        Requires the playlist-modify-public scope.
+        To modify private playlists the playlist-modify-private scope is required.
 
         Parameters:
             - playlist_id - playlist ID
