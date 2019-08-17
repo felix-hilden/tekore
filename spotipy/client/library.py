@@ -2,9 +2,11 @@ from spotipy.client.base import SpotifyBase
 
 
 class SpotifyLibrary(SpotifyBase):
-    def current_user_albums(self, market: str = 'from_token', limit: int = 20, offset: int = 0):
+    def current_user_albums(self, market: str = 'from_token', limit: int = 20,
+                            offset: int = 0):
         """
-        Get a list of the albums saved in the current user's Your Music library.
+        Get a list of the albums saved in the current user's Your Music
+        library.
         Requires the user-libray-read scope.
 
         Parameters:
@@ -12,7 +14,8 @@ class SpotifyLibrary(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('me/albums', market=market, limit=limit, offset=offset)
+        return self._get('me/albums', market=market, limit=limit,
+                         offset=offset)
 
     def current_user_albums_contains(self, album_ids: list):
         """
@@ -44,7 +47,8 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._delete('me/albums?ids=' + ','.join(album_ids))
 
-    def current_user_tracks(self, market: str = 'from_token', limit: int = 20, offset: int = 0):
+    def current_user_tracks(self, market: str = 'from_token', limit: int = 20,
+                            offset: int = 0):
         """
         Get a list of the songs saved in the current user's Your Music library.
         Requires the user-libray-read scope.
@@ -54,7 +58,8 @@ class SpotifyLibrary(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('me/tracks', market=market, limit=limit, offset=offset)
+        return self._get('me/tracks', market=market, limit=limit,
+                         offset=offset)
 
     def current_user_tracks_contains(self, track_ids: list):
         """

@@ -28,12 +28,12 @@ class Spotify(
         Parameters:
             - q - search query
             - type_ - the type of item to return. 'artist', 'album',
-                      'track' or 'playlist'
+            'track' or 'playlist'
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
             - include_external - if 'audio', response will include any
-                                 externally hosted audio
+            externally hosted audio
         """
         return self._get(
             'search', q=q, type=type_, market=market,
@@ -57,8 +57,8 @@ class Spotify(
         Requires the user-top-read scope.
 
         Parameters:
-            - time_range - Over what time frame are the affinities computed
-                           Valid-values: short_term, medium_term, long_term
+            - time_range - Over what time frame are the affinities computed.
+            Valid-values: short_term, medium_term, long_term
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
@@ -73,7 +73,7 @@ class Spotify(
 
         Parameters:
             - time_range - Over what time frame are the affinities computed
-                           Valid-values: short_term, medium_term, long_term
+            Valid-values: short_term, medium_term, long_term
             - limit  - the number of items to return (1..50)
             - offset - the index of the first item to return
         """

@@ -11,12 +11,11 @@ class SpotifyBrowse(SpotifyBase):
         Parameters:
             - country - ISO 3166-1 alpha-2 country code
             - locale - desired language, consisting of a lowercase ISO 639
-                       language code and an uppercase ISO 3166-1 alpha-2
-                       country code, joined by an underscore.
+            language code and an uppercase ISO 3166-1 alpha-2 country code,
+            joined by an underscore.
             - timestamp - timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss.
-                          Used to specify the user's local time
-                          to get results tailored for that specific date and
-                          time in the day.
+            Used to specify the user's local time to get results tailored for
+            that specific date and time in the day.
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         :return: response
@@ -46,8 +45,8 @@ class SpotifyBrowse(SpotifyBase):
         Parameters:
             - country - An ISO 3166-1 alpha-2 country code.
             - locale - The desired language, consisting of an ISO 639 language
-                       code and an ISO 3166-1 alpha-2 country code, joined by
-                       an underscore.
+            code and an ISO 3166-1 alpha-2 country code, joined by
+            an underscore.
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
@@ -63,8 +62,8 @@ class SpotifyBrowse(SpotifyBase):
             - category_id - category ID
             - country - An ISO 3166-1 alpha-2 country code.
             - locale - The desired language, consisting of an ISO 639 language
-                       code and an ISO 3166-1 alpha-2 country code, joined by
-                       an underscore.
+            code and an ISO 3166-1 alpha-2 country code, joined by
+            an underscore.
         """
         return self._get('browse/categories/' + category_id, country=country,
                          locale=locale)
@@ -96,8 +95,8 @@ class SpotifyBrowse(SpotifyBase):
             - limit - the number of items to return (1..100)
             - market - ISO 3166-1 alpha-2 country code or 'from_token'
             - kwargs - min/max/target_<attribute> - For the tuneable track
-                       attributes listed in the documentation, these values
-                       provide filters and targeting on results.
+            attributes listed in the documentation, these values
+            provide filters and targeting on results.
         """
         params = dict(limit=limit)
         if artist_ids:

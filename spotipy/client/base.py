@@ -34,13 +34,12 @@ class SpotifyBase:
         Parameters:
             - token - bearer token for requests
             - requests_session - A Requests session object or a truthy value
-                                 to create one. A falsy value disables
-                                 sessions. It should generally be a good idea
-                                 to keep sessions enabled for performance
-                                 reasons (connection pooling).
+            to create one. A falsy value disables sessions. It should generally
+            be a good idea to keep sessions enabled for performance reasons
+            (connection pooling).
             - proxies - Definition of proxies (optional)
             - requests_timeout - Tell Requests to stop waiting for a response
-                                 after a given number of seconds
+            after a given number of seconds
         """
         self._token = token
         self.proxies = proxies

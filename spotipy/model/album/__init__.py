@@ -12,7 +12,10 @@ class SimpleAlbum(Album):
 
     def __post_init__(self):
         super().__post_init__()
-        self.album_group = AlbumGroup[self.album_group] if self.album_group is not None else None
+        if self.album_group is not None:
+            self.album_group = AlbumGroup[self.album_group]
+        else
+            self.album_group = None
 
 
 @dataclass
