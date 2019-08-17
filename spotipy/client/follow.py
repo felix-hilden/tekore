@@ -9,13 +9,14 @@ class SpotifyFollow(SpotifyBase):
 
         Parameters:
             - playlist_id - the id of the playlist
-            - user_ids - the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.
+            - user_ids - the ids of the users that you want to check to see if
+                         they follow the playlist. Maximum: 5 ids.
         """
-        return self._get('playlists/{}/followers/contains?ids={}'.format(
-            playlist_id, ','.join(user_ids))
-        )
+        return self._get(f'playlists/{playlist_id}/followers/'
+                         f'contains?ids={",".join(user_ids)}')
 
-    def current_user_playlist_follow(self, playlist_id: str, public: bool = True):
+    def current_user_playlist_follow(self, playlist_id: str,
+                                     public: bool = True):
         """
         Follow a playlist as current user.
         Requires the playlist-modify-public scope.
@@ -28,20 +29,22 @@ class SpotifyFollow(SpotifyBase):
         payload = {
             'public': public
         }
-        return self._put('playlists/{}/followers'.format(playlist_id), payload=payload)
+        return self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
     def current_user_playlist_unfollow(self, playlist_id: str):
         """
         Unfollow a playlist as current user.
         Requires the playlist-modify-public scope.
-        Unfollowing a privately followed playlist requires the playlist-modify-private scope.
+        Unfollowing a privately followed playlist requires the
+        playlist-modify-private scope.
 
         Parameters:
             - playlist_id - playlist ID
         """
-        return self._delete('playlists/{}/followers'.format(playlist_id))
+        return self._delete(f'playlists/{playlist_id}/followers')
 
-    def current_user_followed_artists(self, limit: int = 20, after: str = None):
+    def current_user_followed_artists(self, limit: int = 20,
+                                      after: str = None):
         """
         Get artists followed by the current user.
         Requires the user-follow-read scope.
@@ -50,7 +53,8 @@ class SpotifyFollow(SpotifyBase):
             - limit  - the number of items to return (1..50)
             - after - ghe last artist ID retrieved from the previous request
         """
-        return self._get('me/following', type='artist', limit=limit, after=after)
+        return self._get('me/following', type='artist',
+                         limit=limit, after=after)
 
     def current_user_artists_is_following(self, artist_ids: list):
         """
@@ -60,7 +64,8 @@ class SpotifyFollow(SpotifyBase):
         Parameters:
             - artist_ids - list of artist IDs
         """
-        return self._get('me/following/contains?type=artist&ids=' + ','.join(artist_ids))
+        return self._get('me/following/contains?type=artist&ids='
+                         + ','.join(artist_ids))
 
     def current_user_artists_follow(self, artist_ids: list):
         """
@@ -70,7 +75,8 @@ class SpotifyFollow(SpotifyBase):
         Parameters:
             - artist_ids - list of artist IDs
         """
-        return self._put('me/following?type=artist&ids=' + ','.join(artist_ids))
+        return self._put('me/following?type=artist&ids='
+                         + ','.join(artist_ids))
 
     def current_user_artists_unfollow(self, artist_ids: list):
         """
@@ -80,7 +86,8 @@ class SpotifyFollow(SpotifyBase):
         Parameters:
             - artist_ids - list of artist IDs
         """
-        return self._delete('me/following?type=artist&ids=' + ','.join(artist_ids))
+        return self._delete('me/following?type=artist&ids='
+                            + ','.join(artist_ids))
 
     def current_user_users_is_following(self, user_ids: list):
         """
@@ -90,7 +97,8 @@ class SpotifyFollow(SpotifyBase):
         Parameters:
             - user_ids - list of user IDs
         """
-        return self._get('me/following/contains?type=user&ids=' + ','.join(user_ids))
+        return self._get('me/following/contains?type=user&ids='
+                         + ','.join(user_ids))
 
     def current_user_users_follow(self, user_ids: list):
         """

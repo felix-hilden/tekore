@@ -25,7 +25,10 @@ class Token:
         self.scope = token_info['scope']
         self.expires_in = token_info['expires_in']
 
-        self.refresh_token = token_info['refresh_token'] if 'refresh_token' in token_info else None
+        if 'refresh_token' in token_info:
+            self.refresh_token = token_info['refresh_token']
+        else:
+            self.refresh_token = None
         self.expires_at = int(time.time()) + token_info['expires_in']
 
     def is_expiring(self):
@@ -69,16 +72,20 @@ class Credentials:
     def _post_token_request(self, payload: dict) -> Token:
         auth_header = b64encode(self.client_id + ':' + self.client_secret)
         headers = {'Authorization': 'Basic %s' % auth_header}
-        response = requests.post(OAUTH_TOKEN_URL, data=payload, headers=headers)
+        response = requests.post(OAUTH_TOKEN_URL, data=payload,
+                                 headers=headers)
 
         if response.status_code != 200:
-            raise OAuthError('Access token request failed: {}, {}'.format(response.status_code, response.reason))
+            raise OAuthError('Access token request failed: '
+                             '{response.status_code}, {response.reason}')
 
         return Token(response.json())
 
-    def request_access_token(self, code: str, scope: Scope = None, state: str = None) -> Token:
+    def request_access_token(self, code: str, scope: Scope = None,
+                             state: str = None) -> Token:
         """
-        Request for access token using a code provided by a request from the Spotify server.
+        Request for access token using a code provided by a request from
+        the Spotify server.
 
         Parameters:
             - code - code from request parameters

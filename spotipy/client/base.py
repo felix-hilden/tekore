@@ -11,31 +11,36 @@ class SpotifyException(requests.HTTPError):
         self.code = code
         self.msg = msg
 
-        # `headers` is used to support `Retry-After` in the event of a 429 status code
+        # `headers` is used to support `Retry-After` in the event
+        # of a 429 status code
         if headers is None:
             headers = {}
         self.headers = headers
 
     def __str__(self):
-        return 'http status: {0}, code:{1} - {2}'.format(
-            self.http_status, self.code, self.msg)
+        return f'http status: {self.http_status},' \
+               f' code: {self.code} - {self.msg}'
 
 
 class SpotifyBase:
     max_get_retries = 10
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, token: str = None, requests_session=True, proxies=None, requests_timeout=None):
+    def __init__(self, token: str = None, requests_session=True, proxies=None,
+                 requests_timeout=None):
         """
         Create a Spotify API object.
 
         Parameters:
             - token - bearer token for requests
-            - requests_session - A Requests session object or a truthy value to create one.
-                                    A falsy value disables sessions. It should generally be a good idea
-                                    to keep sessions enabled for performance reasons (connection pooling).
+            - requests_session - A Requests session object or a truthy value
+                                 to create one. A falsy value disables
+                                 sessions. It should generally be a good idea
+                                 to keep sessions enabled for performance
+                                 reasons (connection pooling).
             - proxies - Definition of proxies (optional)
-            - requests_timeout - Tell Requests to stop waiting for a response after a given number of seconds
+            - requests_timeout - Tell Requests to stop waiting for a response
+                                 after a given number of seconds
         """
         self._token = token
         self.proxies = proxies
@@ -61,7 +66,7 @@ class SpotifyBase:
             url = self.prefix + url
 
         headers = {
-            'Authorization': 'Bearer {0}'.format(self._token),
+            'Authorization': f'Bearer {self._token}',
             'Content-Type': 'application/json'
         }
 
@@ -72,17 +77,21 @@ class SpotifyBase:
         if payload:
             args['data'] = json.dumps(payload)
 
-        r = self._session.request(method, url, headers=headers, proxies=self.proxies, **args)
+        r = self._session.request(method, url, headers=headers,
+                                  proxies=self.proxies, **args)
 
         try:
             r.raise_for_status()
         except requests.HTTPError:
             if r.text and len(r.text) > 0 and r.text != 'null':
                 raise SpotifyException(
-                    r.status_code, -1, '%s:\n %s' % (r.url, r.json()['error']['message']), headers=r.headers
-                )
+                    r.status_code, -1,
+                    f'{r.url}:\n {r.json()["error"]["message"]}',
+                    headers=r.headers)
             else:
-                raise SpotifyException(r.status_code, -1, '%s:\n %s' % (r.url, 'error'), headers=r.headers)
+                raise SpotifyException(
+                    r.status_code, -1, f'{r.url}:\n {error}',
+                    headers=r.headers)
         finally:
             r.connection.close()
         if r.text and len(r.text) > 0 and r.text != 'null':
@@ -104,7 +113,8 @@ class SpotifyBase:
                     if retries < 0:
                         raise
                     else:
-                        sleep_seconds = int(e.headers.get('Retry-After', delay))
+                        sleep_seconds = int(e.headers.get('Retry-After',
+                                                          delay))
                         print('retrying ...' + str(sleep_seconds) + 'secs')
                         time.sleep(sleep_seconds + 1)
                         delay += 1
