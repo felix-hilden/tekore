@@ -71,13 +71,11 @@ class Credentials:
 
     def _post_token_request(self, payload: dict) -> Token:
         auth_header = b64encode(self.client_id + ':' + self.client_secret)
-        headers = {'Authorization': 'Basic %s' % auth_header}
-        response = requests.post(OAUTH_TOKEN_URL, data=payload,
-                                 headers=headers)
+        headers = {'Authorization': f'Basic {auth_header}'}
+        response = requests.post(OAUTH_TOKEN_URL, data=payload, headers=headers)
 
         if response.status_code != 200:
-            raise OAuthError('Access token request failed: '
-                             '{response.status_code}, {response.reason}')
+            raise OAuthError(f'Access token request failed: {response.status_code}, {response.reason}'
 
         return Token(response.json())
 
