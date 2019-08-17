@@ -14,3 +14,8 @@ class FullAlbum(Album):
     label: str
     popularity: int
     tracks: SimpleTrackPaging
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.copyrights = [Copyright(**c) for c in self.copyrights]
+        self.tracks = SimpleTrackPaging(**self.tracks)
