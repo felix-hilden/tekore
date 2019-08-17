@@ -17,8 +17,7 @@ class SpotifyException(requests.HTTPError):
         self.headers = headers
 
     def __str__(self):
-        return 'http status: {0}, code:{1} - {2}'.format(
-            self.http_status, self.code, self.msg)
+        return f'http status: {self.http_status}, code:{self.code} - {self.msg}'
 
 
 class SpotifyBase:
@@ -61,7 +60,7 @@ class SpotifyBase:
             url = self.prefix + url
 
         headers = {
-            'Authorization': 'Bearer {0}'.format(self._token),
+            'Authorization': f'Bearer {self._token}'
             'Content-Type': 'application/json'
         }
 
@@ -79,10 +78,10 @@ class SpotifyBase:
         except requests.HTTPError:
             if r.text and len(r.text) > 0 and r.text != 'null':
                 raise SpotifyException(
-                    r.status_code, -1, '%s:\n %s' % (r.url, r.json()['error']['message']), headers=r.headers
+                    r.status_code, -1, f"{r.url}:\n {r.json()['error']['message']}", headers=r.headers
                 )
             else:
-                raise SpotifyException(r.status_code, -1, '%s:\n %s' % (r.url, 'error'), headers=r.headers)
+                raise SpotifyException(r.status_code, -1, f'{r.url}:\n error', headers=r.headers)
         finally:
             r.connection.close()
         if r.text and len(r.text) > 0 and r.text != 'null':

@@ -26,7 +26,7 @@ class SpotifyPlaylist(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('users/{}/playlists'.format(user_id), limit=limit, offset=offset)
+        return self._get(f'users/{user_id}/playlists', limit=limit, offset=offset)
 
     def playlist(self, playlist_id: str, fields: str = None, market: str = 'from_token'):
         """
@@ -40,7 +40,7 @@ class SpotifyPlaylist(SpotifyBase):
         return self._get('playlists/' + playlist_id, fields=fields, market=market)
 
     def playlist_cover_image(self, playlist_id: str):
-        return self._get('playlists/{}/images'.format(playlist_id))
+        return self._get(f'playlists/{playlist_id}/images')
 
     def playlist_cover_image_upload(self, playlist_id: str, image: str):
         """
@@ -55,7 +55,7 @@ class SpotifyPlaylist(SpotifyBase):
         pass
         # Content type: image/jpg
         # Body: base64 image, max 256 KB
-        # return self._put('playlists/{}/images'.format(playlist_id))
+        # return self._put(f'playlists/{playlist_id}/images')
 
     def playlist_tracks(self, playlist_id: str, fields: str = None,
                         market: str = 'from_token', limit: int = 100, offset: int = 0):
@@ -69,8 +69,8 @@ class SpotifyPlaylist(SpotifyBase):
             - offset - the index of the first item to return
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
         """
-        return self._get('playlists/{}/tracks'.format(playlist_id),
-                         limit=limit, offset=offset, fields=fields, market=market)
+        return self._get(f'playlists/{playlist_id}/tracks', limit=limit,
+                         offset=offset, fields=fields, market=market)
 
     def playlist_create(self, user_id: str, name: str, public: bool = True, description: str = ''):
         """
@@ -89,7 +89,7 @@ class SpotifyPlaylist(SpotifyBase):
             'public': public,
             'description': description
         }
-        return self._post('users/{}/playlists'.format(user_id), payload=payload)
+        return self._post(f'users/{user_id}/playlists', payload=payload)
 
     def playlist_change_details(self, playlist_id: str, name: str = None, public: bool = None,
                                 collaborative: bool = None, description: str = None):
@@ -126,7 +126,7 @@ class SpotifyPlaylist(SpotifyBase):
             - position - position to add the tracks
         """
         payload = {'uris': [to_uri('track', t) for t in track_ids]}
-        return self._post('playlists/{}/tracks'.format(playlist_id), payload=payload, position=position)
+        return self._post(f'playlists/{playlist_id}/tracks', payload=payload, position=position)
 
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list):
         """
@@ -139,7 +139,7 @@ class SpotifyPlaylist(SpotifyBase):
             - track_ids - list of track IDs to add to the playlist
         """
         payload = {'uris': [to_uri('track', t) for t in track_ids]}
-        return self._put('playlists/{}/tracks'.format(playlist_id), payload=payload)
+        return self._put(f'playlists/{playlist_id}/tracks)', payload=payload)
 
     def playlist_tracks_reorder(self, playlist_id: str, range_start: int, insert_before: int,
                                 range_length: int = 1, snapshot_id: str = None):
@@ -162,7 +162,7 @@ class SpotifyPlaylist(SpotifyBase):
         }
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._put('playlists/{}/tracks'.format(playlist_id), payload=payload)
+        return self._put(f'playlists/{playlist_id}/tracks', payload=payload)
 
     def playlist_tracks_remove(self, playlist_id: str, track_ids: list, snapshot_id=None):
         """
@@ -179,7 +179,7 @@ class SpotifyPlaylist(SpotifyBase):
         payload = {'tracks': [{'uri': t} for t in tracks]}
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._delete('playlists/{}/tracks'.format(playlist_id), payload=payload)
+        return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
     def playlist_tracks_remove_occurrences(self, playlist_id: str, tracks: list, snapshot_id=None):
         """
@@ -204,4 +204,4 @@ class SpotifyPlaylist(SpotifyBase):
         payload = {'tracks': ftracks}
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._delete('playlists/{}/tracks'.format(playlist_id), payload=payload)
+        return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)

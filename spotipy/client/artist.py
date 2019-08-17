@@ -20,7 +20,7 @@ class SpotifyArtist(SpotifyBase):
             - limit - the number of items to return (1..50)
             - offset - the index of the first item to return
         """
-        return self._get('artists/{}/albums'.format(artist_id), include_groups=include_groups,
+        return self._get(f'artists/{artist_id}/albums', include_groups=include_groups,
                          market=market, limit=limit, offset=offset)
 
     def artist_top_tracks(self, artist_id, market: str = 'from_token'):
@@ -31,11 +31,11 @@ class SpotifyArtist(SpotifyBase):
             - artist_id - the artist ID
             - market - An ISO 3166-1 alpha-2 country code or 'from_token'
         """
-        return self._get('artists/{}/top-tracks'.format(artist_id), market=market)
+        return self._get(f'artists/{artist_id}/top-tracks', market=market)
 
     def artist_related_artists(self, artist_id: str):
         """
         Get artists similar to an identified artist.
         Similarity is based on analysis of the Spotify community's listening history.
         """
-        return self._get('artists/{}/related-artists'.format(artist_id))
+        return self._get(f'artists/{artist_id}/related-artists')
