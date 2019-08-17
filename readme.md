@@ -5,12 +5,12 @@ A client for the Spotify Web API.
 To use the Web API, you'll need to [register](https://developer.spotify.com/dashboard/applications)
 an application, get its credentials and define a valid redirect URI for authentication requests.
 `http://localhost:5000` was used for this example.
-Note that a server doesn't necssarily have to be listening to that address for a simple demo.
+Note that a server doesn't necessarily have to be listening to that address for a simple demo.
 
 #### Retrieving an access token
 First we'll retrieve an access token that has every possible right (scope) to a user account.
 The script will open a web page prompting for a Spotify login.
-If succesful, the client will be redirected to the specified address along with a code to request the token with.
+If successful, the client will be redirected to the specified address along with a code to request the token with.
 
 ```
 import webbrowser
