@@ -57,6 +57,16 @@ finlandia = 'spotify:track:3hHWhvw2hjwfngWcFjIzqr'
 s.playback_start(uris=[finlandia])
 ```
 
+### Contributions are welcome!
+Please submit any issues [here](https://github.com/felix-hilden/spotipy/issues).
+Pull requests should be made for an existing issue with no assignee (unless yourself).
+
+#### Tags
+Issues tagged `consideration` ought to be discussed further before implementation.
+
+#### Style
+[PEP 8](https://www.python.org/dev/peps/pep-0008/) is the canonical style guide for Python.
+
 ### plamere/spotipy
 Replaces [plamere/spotipy](https://github.com/plamere/spotipy), which has not been maintained since the end of 2017.
 Although refactored heavily from its original source, this package does largely rely on the original structure that
