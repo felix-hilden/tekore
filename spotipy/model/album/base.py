@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from spotipy.model.base import Item
 from spotipy.model.artist import SimpleArtist
-from spotipy.model.member import ExternalURL, Image, Restrictions
+from spotipy.model.member import Image, Restrictions
 
 AlbumType = Enum('AlbumType', 'album single compilation')
 ReleaseDatePrecision = Enum('ReleaseDatePrecision', 'year month day')
@@ -15,7 +15,7 @@ class Album(Item):
     album_type: AlbumType
     artists: List[SimpleArtist]
     available_markets: List[str]
-    external_urls: ExternalURL
+    external_urls: dict
     images: List[Image]
     name: str
     release_date: str

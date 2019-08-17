@@ -2,16 +2,13 @@ from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.base import Item
-from spotipy.model.member import ExternalURL, Followers, Image
+from spotipy.model.member import Followers, Image
 
 
 @dataclass
 class Artist(Item):
-    external_urls: ExternalURL
+    external_urls: dict
     name: str
-
-    def __post_init__(self):
-        self.external_urls = ExternalURL(**self.external_urls)
 
 
 @dataclass

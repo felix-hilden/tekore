@@ -73,7 +73,6 @@ Here's a list of items currently under consideration.
 
 - TODO: Fake test-driven development
 - TODO: (ReadTheDocs/Sphinx) documentation and tutorials
-- TODO: Determine if plural-named fields that are documented as a single object return a list instead
 - TODO: Playlist image upload
 - How should scope-limited calls and response values be handled? For values perhaps default values or new types.
 - Should the library implement client and user token handling and refreshing or just provide the token methods?

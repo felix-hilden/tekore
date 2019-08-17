@@ -8,18 +8,6 @@ class Copyright:
 
 
 @dataclass
-class ExternalID:
-    key: str
-    value: str
-
-
-@dataclass
-class ExternalURL:
-    key: str
-    value: str
-
-
-@dataclass
 class Followers:
     href: str
     total: int

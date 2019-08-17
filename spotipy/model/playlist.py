@@ -5,7 +5,7 @@ from spotipy.model.base import Item
 from spotipy.model.user import User
 from spotipy.model.track import Track, Tracks
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import ExternalURL, Followers, Image
+from spotipy.model.member import Followers, Image
 
 
 @dataclass
@@ -28,7 +28,7 @@ class PlaylistTrackPaging(OffsetPaging):
 @dataclass
 class Playlist(Item):
     collaborative: bool
-    external_urls: ExternalURL
+    external_urls: dict
     images: List[Image]
     name: str
     owner: User
@@ -36,7 +36,6 @@ class Playlist(Item):
     snapshot_id: str
 
     def __post_init__(self):
-        self.external_urls = ExternalURL(**self.external_urls)
         self.images = [Image(**i) for i in self.images]
         self.owner = User(**self.owner)
 

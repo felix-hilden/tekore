@@ -5,15 +5,12 @@ from spotipy.model.base import Item
 from spotipy.model.album import SimpleAlbum
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import ExternalID, ExternalURL, Restrictions
+from spotipy.model.member import Restrictions
 
 
 @dataclass
 class TrackLink(Item):
-    external_urls: ExternalURL
-
-    def __post_init__(self):
-        self.external_urls = ExternalURL(**self.external_urls)
+    external_urls: dict
 
 
 @dataclass
@@ -23,7 +20,7 @@ class Track(Item):
     disc_number: int
     duration_ms: int
     explicit: bool
-    external_urls: ExternalURL
+    external_urls: dict
     is_playable: bool
     linked_from: TrackLink
     restrictions: Restrictions
@@ -34,7 +31,6 @@ class Track(Item):
 
     def __post_init__(self):
         self.artists = [SimpleArtist(**a) for a in self.artists]
-        self.external_urls = ExternalURL(**self.external_urls)
         self.linked_from = TrackLink(**self.linked_from)
         self.restrictions = Restrictions(**self.restrictions)
 
@@ -47,13 +43,12 @@ class SimpleTrack(Track):
 @dataclass
 class FullTrack(Track):
     album: SimpleAlbum
-    external_ids: ExternalID
+    external_ids: dict
     popularity: int
 
     def __post_init__(self):
         super().__post_init__()
         self.album = SimpleAlbum(**self.album)
-        self.external_ids = ExternalID(**self.external_ids)
 
 
 @dataclass
