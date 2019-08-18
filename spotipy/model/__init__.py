@@ -18,7 +18,13 @@ from spotipy.model.error import (
     PlayerError,
     AuthenticationError
 )
-from spotipy.model.member import Copyright, Followers, Image, Restrictions
+from spotipy.model.member import (
+    Copyright,
+    Followers,
+    Image,
+    Restrictions,
+    Timestamp
+)
 from spotipy.model.paging import Paging, OffsetPaging, Cursor, CursorPaging
 from spotipy.model.play_history import PlayHistory
 from spotipy.model.playlist import (

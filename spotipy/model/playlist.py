@@ -5,17 +5,18 @@ from spotipy.model.base import Item
 from spotipy.model.user import User
 from spotipy.model.track import Track, Tracks
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import Followers, Image
+from spotipy.model.member import Followers, Image, Timestamp
 
 
 @dataclass
 class PlaylistTrack:
-    added_at: str
+    added_at: Timestamp
     added_by: User
     is_local: bool
     track: Track
 
     def __post_init__(self):
+        self.added_at = Timestamp(datetime=self.added_at)
         self.added_by = User(**self.added_by)
         self.track = Track(**self.track)
 
