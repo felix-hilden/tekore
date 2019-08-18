@@ -5,7 +5,7 @@ from spotipy.model.base import Item
 from spotipy.model.album import SimpleAlbum
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import Restrictions
+from spotipy.model.member import Restrictions, Timestamp
 
 
 @dataclass
@@ -67,8 +67,9 @@ class Tracks:
 
 @dataclass
 class SavedTrack:
-    added_at: str
+    added_at: Timestamp
     track: Track
 
     def __post_init__(self):
+        self.added_at = Timestamp(datetime=self.added_at)
         self.track = Track(**self.track)

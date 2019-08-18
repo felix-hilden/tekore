@@ -1,6 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 
+from spotipy.model.member import Timestamp
 from spotipy.model.album.base import Album, AlbumType, ReleaseDatePrecision
 
 AlbumGroup = Enum('AlbumGroup', 'album single compilation appears_on')
@@ -20,8 +21,9 @@ class SimpleAlbum(Album):
 
 @dataclass
 class SavedAlbum:
-    added_at: str
+    added_at: Timestamp
     album: Album
 
     def __post_init__(self):
+        self.added_at = Timestamp(datetime=self.added_at)
         self.album = Album(**self.album)
