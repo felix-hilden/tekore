@@ -1,6 +1,8 @@
 =======
 spotipy
 =======
+.. image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
+
 A client for the Spotify Web API.
 
 Getting started
