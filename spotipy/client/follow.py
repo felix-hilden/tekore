@@ -13,7 +13,7 @@ class SpotifyFollow(SpotifyBase):
             they follow the playlist. Maximum: 5 ids.
         """
         return self._get(f'playlists/{playlist_id}/followers/contains?ids='
-                         + ','.join(user_ids))
+                         ','.join(user_ids))
 
     def current_user_playlist_follow(self, playlist_id: str,
                                      public: bool = True):
@@ -64,7 +64,7 @@ class SpotifyFollow(SpotifyBase):
             - artist_ids - list of artist IDs
         """
         return self._get('me/following/contains?type=artist&ids='
-                         + ','.join(artist_ids))
+                         ','.join(artist_ids))
 
     def current_user_artists_follow(self, artist_ids: list):
         """
@@ -75,7 +75,7 @@ class SpotifyFollow(SpotifyBase):
             - artist_ids - list of artist IDs
         """
         return self._put('me/following?type=artist&ids='
-                         + ','.join(artist_ids))
+                         ','.join(artist_ids))
 
     def current_user_artists_unfollow(self, artist_ids: list):
         """
@@ -86,7 +86,7 @@ class SpotifyFollow(SpotifyBase):
             - artist_ids - list of artist IDs
         """
         return self._delete('me/following?type=artist&ids='
-                            + ','.join(artist_ids))
+                            ','.join(artist_ids))
 
     def current_user_users_is_following(self, user_ids: list):
         """
@@ -97,7 +97,7 @@ class SpotifyFollow(SpotifyBase):
             - user_ids - list of user IDs
         """
         return self._get('me/following/contains?type=user&ids='
-                         + ','.join(user_ids))
+                         ','.join(user_ids))
 
     def current_user_users_follow(self, user_ids: list):
         """

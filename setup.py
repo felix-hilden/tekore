@@ -21,4 +21,10 @@ setuptools.setup(
     install_requires=[
         'requests',
     ],
+    extras_require={
+        'dev': [
+            'pygments',
+            'flake8',
+        ]
+    }
 )
