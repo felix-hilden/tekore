@@ -28,7 +28,7 @@ class Import(unittest.TestCase):
 
     @staticmethod
     def test_import_scope():
-        from spotipy import convert
+        from spotipy import scope
 
 
 if __name__ == '__main__':
