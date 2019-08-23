@@ -7,4 +7,4 @@ install:
 
 script:
   - python -m unittest discover tests -p "*.py"
-  - flake8 .
+  - flake8 . --ignore=F401
