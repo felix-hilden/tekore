@@ -20,6 +20,11 @@ setuptools.setup(
     python_requires='>=3.7',
     install_requires=[
         'requests',
-        'pygments',
     ],
+    extras_require={
+        'dev': [
+            'pygments',
+            'flake8',
+        ]
+    }
 )
