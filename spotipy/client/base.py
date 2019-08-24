@@ -6,20 +6,7 @@ from contextlib import contextmanager
 
 
 class SpotifyException(requests.HTTPError):
-    def __init__(self, http_status, code, msg, headers=None):
-        self.http_status = http_status
-        self.code = code
-        self.msg = msg
-
-        # `headers` is used to support `Retry-After` in the event
-        # of a 429 status code
-        if headers is None:
-            headers = {}
-        self.headers = headers
-
-    def __str__(self):
-        return f'http status: {self.http_status},' \
-               f' code: {self.code} - {self.msg}'
+    pass
 
 
 class SpotifyBase:
@@ -57,6 +44,42 @@ class SpotifyBase:
         yield self
         self._token = old_token
 
+    def _request(self, method: str, url: str, headers: dict = None,
+                 params: dict = None, data=None):
+        retries = self.max_get_retries
+        delay = 1
+
+        while retries > 0:
+            r = self._session.request(
+                method, url,
+                headers=headers,
+                params=params,
+                data=data,
+                **self.requests_kwargs
+            )
+
+            if 200 <= r.status_code < 400:
+                return r
+            elif r.status_code == 429 or r.status_code >= 500:
+                retries -= 1
+                if retries < 0:
+                    raise SpotifyException(
+                        f'Maximum number of retries exceeded!\n'
+                        f'{r.url}: {r.status_code}'
+                    )
+
+                seconds = int(r.headers.get('Retry-After', delay))
+                time.sleep(seconds)
+                delay += 1
+            else:
+                if r.text and len(r.text) > 0 and r.text != 'null':
+                    msg = f'{r.status_code} - {r.json()["error"]["message"]}'
+                else:
+                    msg = f'Status code: {r.status_code}'
+                raise SpotifyException(
+                    f'Error in {r.url}:\n{msg}'
+                )
+
     def _internal_call(self, method, url, payload, params):
         if not url.startswith('http'):
             url = self.prefix + url
@@ -66,28 +89,12 @@ class SpotifyBase:
             'Content-Type': 'application/json'
         }
 
-        params = {k: v for k, v in params.items() if v is not None}
-
-        r = self._session.request(
+        r = self._request(
             method, url,
             headers=headers,
-            params=params,
-            data=json.dumps(payload) if payload is not None else None,
-            **self.requests_kwargs
+            params={k: v for k, v in params.items() if v is not None},
+            data=json.dumps(payload) if payload is not None else None
         )
-
-        try:
-            r.raise_for_status()
-        except requests.HTTPError as error:
-            if r.text and len(r.text) > 0 and r.text != 'null':
-                msg = r.json()['error']['message']
-            else:
-                msg = str(error)
-            raise SpotifyException(
-                r.status_code, -1, f'{r.url}:\n {msg}', headers=r.headers
-            ) from error
-        finally:
-            r.connection.close()
 
         if r.text and len(r.text) > 0:
             return r.json()
@@ -95,26 +102,7 @@ class SpotifyBase:
             return None
 
     def _get(self, url, payload=None, **params):
-        retries = self.max_get_retries
-        delay = 1
-        while retries > 0:
-            try:
-                return self._internal_call('GET', url, payload, params)
-            except SpotifyException as e:
-                retries -= 1
-                status = e.http_status
-                # 429 means we hit a rate limit, backoff
-                if status == 429 or (500 <= status < 600):
-                    if retries < 0:
-                        raise
-                    else:
-                        sleep_seconds = int(e.headers.get('Retry-After',
-                                                          delay))
-                        print('retrying ...' + str(sleep_seconds) + 'secs')
-                        time.sleep(sleep_seconds + 1)
-                        delay += 1
-                else:
-                    raise
+        return self._internal_call('GET', url, payload, params)
 
     def _post(self, url, payload=None, **params):
         return self._internal_call('POST', url, payload, params)
