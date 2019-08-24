@@ -65,7 +65,7 @@ class SpotifyBase:
                 time.sleep(int(seconds))
             elif r.status_code >= 500:
                 retries -= 1
-                if retries < 0:
+                if retries == 0:
                     raise SpotifyException(
                         f'Maximum number of retries exceeded!\n'
                         f'{r.url}: {r.status_code}'
