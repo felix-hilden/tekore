@@ -88,7 +88,8 @@ class SpotifyBase:
             ) from error
         finally:
             r.connection.close()
-        if r.text and len(r.text) > 0 and r.text != 'null':
+
+        if r.text and len(r.text) > 0:
             return r.json()
         else:
             return None
