@@ -40,7 +40,7 @@ class SpotifyBase:
             - requests_kwargs - keyword arguments for requests.request
         """
         self._token = token
-        self.requests_kwargs = requests_kwargs
+        self.requests_kwargs = requests_kwargs or {}
 
         if isinstance(requests_session, requests.Session):
             self._session = requests_session
