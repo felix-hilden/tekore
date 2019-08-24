@@ -54,12 +54,17 @@ class SpotifyPlaylist(SpotifyBase):
 
         Parameters:
             - playlist_id - playlist ID
-            - image data as a base64-encoded string
+            - image - image data as a base64-encoded string
         """
-        pass
-        # Content type: image/jpg
-        # Body: base64 image, max 256 KB
-        # return self._put(f'playlists/{playlist_id}/images')
+        url = self.prefix + f'playlists/{playlist_id}/images'
+
+        headers = {
+            'Authorization': f'Bearer {self._token}',
+            'Content-Type': 'image/jpg'
+        }
+
+        r = self._request('PUT', url, headers=headers, data=image)
+        return r.json()
 
     def playlist_tracks(self, playlist_id: str, fields: str = None,
                         market: str = 'from_token', limit: int = 100,
