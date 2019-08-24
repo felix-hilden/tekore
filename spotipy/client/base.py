@@ -80,14 +80,12 @@ class SpotifyBase:
             r.raise_for_status()
         except requests.HTTPError as error:
             if r.text and len(r.text) > 0 and r.text != 'null':
-                raise SpotifyException(
-                    r.status_code, -1,
-                    f'{r.url}:\n {r.json()["error"]["message"]}',
-                    headers=r.headers)
+                msg = r.json()['error']['message']
             else:
-                raise SpotifyException(
-                    r.status_code, -1, f'{r.url}:\n {str(error)}',
-                    headers=r.headers)
+                msg = str(error)
+            raise SpotifyException(
+                r.status_code, -1, f'{r.url}:\n {msg}', headers=r.headers
+            ) from error
         finally:
             r.connection.close()
         if r.text and len(r.text) > 0 and r.text != 'null':
