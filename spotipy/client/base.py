@@ -70,7 +70,7 @@ class SpotifyBase:
 
                 seconds = int(r.headers.get('Retry-After', delay))
                 time.sleep(seconds)
-                delay += 1
+                delay *= 2
             else:
                 if r.text and len(r.text) > 0 and r.text != 'null':
                     msg = f'{r.status_code} - {r.json()["error"]["message"]}'
