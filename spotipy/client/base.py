@@ -26,8 +26,8 @@ class SpotifyBase:
     max_get_retries = 10
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, token: str = None, requests_session=True, proxies=None,
-                 requests_timeout=None):
+    def __init__(self, token: str = None, requests_session=True,
+                 requests_kwargs: dict = None):
         """
         Create a Spotify API object.
 
@@ -37,13 +37,10 @@ class SpotifyBase:
             to create one. A falsy value disables sessions. It should generally
             be a good idea to keep sessions enabled for performance reasons
             (connection pooling).
-            - proxies - Definition of proxies (optional)
-            - requests_timeout - Tell Requests to stop waiting for a response
-            after a given number of seconds
+            - requests_kwargs - keyword arguments for requests.request
         """
         self._token = token
-        self.proxies = proxies
-        self.requests_timeout = requests_timeout
+        self.requests_kwargs = requests_kwargs
 
         if isinstance(requests_session, requests.Session):
             self._session = requests_session
@@ -69,15 +66,15 @@ class SpotifyBase:
             'Content-Type': 'application/json'
         }
 
-        args = {
-            'params': {k: v for k, v in params.items() if v is not None},
-            'timeout': self.requests_timeout
-        }
-        if payload:
-            args['data'] = json.dumps(payload)
+        params = {k: v for k, v in params.items() if v is not None}
 
-        r = self._session.request(method, url, headers=headers,
-                                  proxies=self.proxies, **args)
+        r = self._session.request(
+            method, url,
+            headers=headers,
+            params=params,
+            data=json.dumps(payload) if payload is not None else None,
+            **self.requests_kwargs
+        )
 
         try:
             r.raise_for_status()
