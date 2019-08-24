@@ -10,29 +10,29 @@ class SpotifyException(requests.HTTPError):
 
 
 class SpotifyBase:
-    max_get_retries = 10
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, token: str = None, requests_session=True,
+    def __init__(self, token: str = None, session=True, retries: int = 0,
                  requests_kwargs: dict = None):
         """
         Create a Spotify API object.
 
         Parameters:
             - token - bearer token for requests
-            - requests_session - A Requests session object or a truthy value
+            - session - requests session object or a truthy value
             to create one. A falsy value disables sessions. It should generally
-            be a good idea to keep sessions enabled for performance reasons
-            (connection pooling).
+            be a good idea to keep sessions enabled for connection pooling.
+            - retries - maximum number of retries on a failed request
             - requests_kwargs - keyword arguments for requests.request
         """
         self._token = token
+        self.retries = retries
         self.requests_kwargs = requests_kwargs or {}
 
-        if isinstance(requests_session, requests.Session):
-            self._session = requests_session
+        if isinstance(session, requests.Session):
+            self._session = session
         else:
-            if requests_session:  # Build a new session.
+            if session:  # Build a new session.
                 self._session = requests.Session()
             else:  # Use the Requests API module as a 'session'.
                 from requests import api
@@ -46,7 +46,7 @@ class SpotifyBase:
 
     def _request(self, method: str, url: str, headers: dict = None,
                  params: dict = None, data=None):
-        retries = self.max_get_retries
+        retries = self.retries + 1
         delay = 1
 
         while retries > 0:
