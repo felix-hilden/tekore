@@ -1,3 +1,5 @@
+import requests
+
 from spotipy.client.base import SpotifyBase
 from spotipy.convert import to_uri
 
@@ -63,7 +65,8 @@ class SpotifyPlaylist(SpotifyBase):
             'Content-Type': 'image/jpg'
         }
 
-        r = self._request('PUT', url, headers=headers, data=image)
+        request = requests.Request('PUT', url, headers=headers, data=image)
+        r = self._send(request)
         return r.json()
 
     def playlist_tracks(self, playlist_id: str, fields: str = None,
