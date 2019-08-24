@@ -60,7 +60,10 @@ class SpotifyBase:
 
             if 200 <= r.status_code < 400:
                 return r
-            elif r.status_code == 429 or r.status_code >= 500:
+            elif r.status_code == 429:
+                seconds = r.headers['Retry-After']
+                time.sleep(int(seconds))
+            elif r.status_code >= 500:
                 retries -= 1
                 if retries < 0:
                     raise SpotifyException(
@@ -68,8 +71,7 @@ class SpotifyBase:
                         f'{r.url}: {r.status_code}'
                     )
 
-                seconds = int(r.headers.get('Retry-After', delay))
-                time.sleep(seconds)
+                time.sleep(delay)
                 delay *= 2
             else:
                 if r.text and len(r.text) > 0 and r.text != 'null':
