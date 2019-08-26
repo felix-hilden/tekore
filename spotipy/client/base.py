@@ -32,11 +32,7 @@ class SpotifyBase:
         if isinstance(session, requests.Session):
             self._session = session
         else:
-            if session:  # Build a new session.
-                self._session = requests.Session()
-            else:  # Use the Requests API module as a 'session'.
-                from requests import api
-                self._session = api
+            self._session = requests.Session() if session else None
 
     @contextmanager
     def token(self, token: str) -> 'SpotifyBase':
@@ -44,19 +40,18 @@ class SpotifyBase:
         yield self
         self._token = old_token
 
-    def _request(self, method: str, url: str, headers: dict = None,
-                 params: dict = None, data=None):
+    def _send(self, request: requests.Request):
         retries = self.retries + 1
         delay = 1
 
         while retries > 0:
-            r = self._session.request(
-                method, url,
-                headers=headers,
-                params=params,
-                data=data,
-                **self.requests_kwargs
-            )
+            if self._session is not None:
+                prepared = self._session.prepare_request(request)
+                r = self._session.send(prepared, **self.requests_kwargs)
+            else:
+                with requests.Session() as sess:
+                    prepared = sess.prepare_request(request)
+                    r = sess.send(prepared, **self.requests_kwargs)
 
             if 200 <= r.status_code < 400:
                 return r
@@ -91,12 +86,13 @@ class SpotifyBase:
             'Content-Type': 'application/json'
         }
 
-        r = self._request(
+        request = requests.Request(
             method, url,
             headers=headers,
             params={k: v for k, v in params.items() if v is not None},
             data=json.dumps(payload) if payload is not None else None
         )
+        r = self._send(request)
 
         if r.text and len(r.text) > 0:
             return r.json()
