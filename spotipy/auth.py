@@ -1,7 +1,7 @@
 import time
-from base64 import b64encode as _b64encode
-
 import requests
+
+from base64 import b64encode as _b64encode
 from urllib.parse import urlencode
 
 from spotipy.scope import Scope
