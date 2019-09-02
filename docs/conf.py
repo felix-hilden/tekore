@@ -2,7 +2,7 @@ import os
 import sys
 from pathlib import Path
 
-_root = Path(os.path.realpath(__file__)).parent
+_root = Path(os.path.realpath(__file__)).parent.parent
 sys.path.insert(0, _root)
 
 
