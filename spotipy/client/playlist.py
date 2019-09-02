@@ -273,8 +273,8 @@ class SpotifyPlaylist(SpotifyBase):
             an array of objects containing Spotify URIs of the
             tracks to remove with their current positions in the playlist.
             For example:
-                [  { "uri":"4iV5W9uYEdYUVa79Axb7Rh", "positions":[2] },
-                   { "uri":"1301WleyT98MSxVHPZCA6M", "positions":[7] } ]
+            >>> [{"uri": "4iV5W9uYEdYUVa79Axb7Rh", "positions": [2]},
+            ...  {"uri": "1301WleyT98MSxVHPZCA6M", "positions": [7]}]
         snapshot_id
             id of the playlist snapshot
         """

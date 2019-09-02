@@ -112,6 +112,7 @@ class SpotifyLibrary(SpotifyBase):
         Requires the user-library-modify scope.
 
         Parameters
+        ----------
         track_ids
             list of track IDs
         """

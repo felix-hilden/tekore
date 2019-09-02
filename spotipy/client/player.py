@@ -147,7 +147,8 @@ class SpotifyPlayer(SpotifyBase):
 
         Requires the user-modify-playback-state scope.
 
-        Parameters:
+        Parameters
+        ----------
         device_id
             device to skip track on
         """
