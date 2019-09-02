@@ -28,6 +28,7 @@ setuptools.setup(
         'dev': [
             'pygments',
             'flake8',
+            'flake8-bugbear',
             'sphinx',
             'sphinx-rtd-theme',
         ]
