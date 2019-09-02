@@ -17,13 +17,18 @@ class SpotifyBase:
         """
         Create a Spotify API object.
 
-        Parameters:
-            - token - bearer token for requests
-            - session - requests session object or a truthy value
-            to create one. A falsy value disables sessions. It should generally
+        Parameters
+        ----------
+        token
+            bearer token for requests
+        session
+            requests session object or a truthy value to create one.
+            A falsy value disables sessions. It should generally
             be a good idea to keep sessions enabled for connection pooling.
-            - retries - maximum number of retries on a failed request
-            - requests_kwargs - keyword arguments for requests.request
+        retries
+            maximum number of retries on a failed request
+        requests_kwargs
+            keyword arguments for requests.request
         """
         self._token = token
         self.retries = retries

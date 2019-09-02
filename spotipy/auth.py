@@ -15,10 +15,16 @@ class OAuthError(requests.HTTPError):
 
 
 def b64encode(msg: str) -> str:
+    """
+    Base 64 encoding for Unicode strings.
+    """
     return _b64encode(msg.encode()).decode()
 
 
 class Token:
+    """
+    Spotify OAuth access token.
+    """
     def __init__(self, token_info: dict):
         self.access_token = token_info['access_token']
         self.token_type = token_info['token_type']
@@ -33,10 +39,16 @@ class Token:
         self.expires_at = int(time.time()) + token_info['expires_in']
 
     def is_expiring(self):
+        """
+        Determine whether token is about to expire.
+        """
         return True if self.expires_at - int(time.time()) < 60 else False
 
 
 class Credentials:
+    """
+    Client for retrieving access tokens.
+    """
     def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -53,9 +65,12 @@ class Credentials:
         """
         Construct an authorisation url for Spotify login.
 
-        Parameters:
-            - scope - access rights
-            - state - additional state
+        Parameters
+        ----------
+        scope
+            access rights
+        state
+            additional state
         """
         payload = {
             'client_id': self.client_id,
@@ -91,10 +106,14 @@ class Credentials:
         Request for access token using a code
         provided by a request from the Spotify server.
 
-        Parameters:
-            - code - code from request parameters
-            - scope - access rights
-            - state - additional state
+        Parameters
+        ----------
+        code
+            code from request parameters
+        scope
+            access rights
+        state
+            additional state
         """
         payload = {
             'code': code,

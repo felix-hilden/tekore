@@ -6,9 +6,12 @@ class SpotifyAlbum(SpotifyBase):
         """
         Get an album.
 
-        Parameters:
-            - album_id - album ID
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
+        Parameters
+        ----------
+        album_id
+            album ID
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         """
         return self._get('albums/' + album_id, market=market)
 
@@ -17,11 +20,16 @@ class SpotifyAlbum(SpotifyBase):
         """
         Get tracks on album.
 
-        Parameters:
-            - album_id - album ID
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
-            - limit - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        Parameters
+        ----------
+        album_id
+            album ID
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get(f'albums/{album_id}/tracks', market=market,
                          limit=limit, offset=offset)
@@ -30,8 +38,11 @@ class SpotifyAlbum(SpotifyBase):
         """
         Get multiple albums.
 
-        Parameters:
-            - album_ids - list of album IDs (1..20)
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
+        Parameters
+        ----------
+        album_ids
+            list of album IDs (1..20)
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         """
         return self._get('albums/?ids=' + ','.join(album_ids), market=market)

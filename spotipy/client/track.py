@@ -9,9 +9,12 @@ class SpotifyTrack(SpotifyBase):
         """
         Get information on multiple tracks.
 
-        Parameters:
-            - track_ids - the track IDs
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
+        Parameters
+        ----------
+        track_ids
+            the track IDs
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         """
         return self._get('tracks/?ids=' + ','.join(track_ids), market=market)
 

@@ -23,17 +23,23 @@ class Spotify(
                include_external: str = None, limit: int = 20, offset: int = 0):
         """
         Search for an item.
+
         Requires the user-read-private scope.
 
-        Parameters:
-            - q - search query
-            - type_ - the type of item to return. 'artist', 'album',
-            'track' or 'playlist'
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
-            - limit  - the number of items to return (1..50)
-            - offset - the index of the first item to return
-            - include_external - if 'audio', response will include any
-            externally hosted audio
+        Parameters
+        ----------
+        q
+            search query
+        type_
+            the type of item to return: 'artist', 'album', 'track' or 'playlist'
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
+        include_external
+            if 'audio', response will include any externally hosted audio
         """
         return self._get(
             'search', q=q, type=type_, market=market,
@@ -45,6 +51,7 @@ class Spotify(
     def current_user(self):
         """
         Get current user's profile.
+
         Requires the user-read-private scope.
         Requires the user-read-email scope to return user's email.
         """
@@ -54,13 +61,18 @@ class Spotify(
                                  limit: int = 20, offset: int = 0):
         """
         Get the current user's top artists.
+
         Requires the user-top-read scope.
 
-        Parameters:
-            - time_range - Over what time frame are the affinities computed.
+        Parameters
+        ----------
+        time_range
+            Over what time frame are the affinities computed.
             Valid-values: short_term, medium_term, long_term
-            - limit  - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get('me/top/artists', time_range=time_range,
                          limit=limit, offset=offset)
@@ -69,13 +81,18 @@ class Spotify(
                                 limit: int = 20, offset: int = 0):
         """
         Get the current user's top tracks.
+
         Requires the user-top-read scope.
 
-        Parameters:
-            - time_range - Over what time frame are the affinities computed
+        Parameters
+        ----------
+        time_range
+            Over what time frame are the affinities computed.
             Valid-values: short_term, medium_term, long_term
-            - limit  - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get('me/top/tracks', time_range=time_range, limit=limit,
                          offset=offset)

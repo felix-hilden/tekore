@@ -8,16 +8,21 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of Spotify featured playlists.
 
-        Parameters:
-            - country - ISO 3166-1 alpha-2 country code
-            - locale - desired language, consisting of a lowercase ISO 639
-            language code and an uppercase ISO 3166-1 alpha-2 country code,
-            joined by an underscore.
-            - timestamp - timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss.
+        Parameters
+        ----------
+        country
+            an ISO 3166-1 alpha-2 country code
+        locale
+            the desired language, consisting of a lowercase ISO 639 language code
+            and an uppercase ISO 3166-1 alpha-2 country code joined by an underscore
+        timestamp
+            Timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss.
             Used to specify the user's local time to get results tailored for
             that specific date and time in the day.
-            - limit - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get('browse/featured-playlists', locale=locale,
                          country=country, timestamp=timestamp, limit=limit,
@@ -28,10 +33,14 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of new album releases featured in Spotify.
 
-        Parameters:
-            - country - An ISO 3166-1 alpha-2 country code.
-            - limit  - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        Parameters
+        ----------
+        country
+            an ISO 3166-1 alpha-2 country code
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get('browse/new-releases', country=country, limit=limit,
                          offset=offset)
@@ -41,13 +50,17 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of categories used to tag items in Spotify.
 
-        Parameters:
-            - country - An ISO 3166-1 alpha-2 country code.
-            - locale - The desired language, consisting of an ISO 639 language
-            code and an ISO 3166-1 alpha-2 country code, joined by
-            an underscore.
-            - limit - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        Parameters
+        ----------
+        country
+            an ISO 3166-1 alpha-2 country code
+        locale
+            the desired language, consisting of a lowercase ISO 639 language code
+            and an uppercase ISO 3166-1 alpha-2 country code joined by an underscore
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get('browse/categories', country=country, locale=locale,
                          limit=limit, offset=offset)
@@ -57,12 +70,15 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a single category used to tag items in Spotify.
 
-        Parameters:
-            - category_id - category ID
-            - country - An ISO 3166-1 alpha-2 country code.
-            - locale - The desired language, consisting of an ISO 639 language
-            code and an ISO 3166-1 alpha-2 country code, joined by
-            an underscore.
+        Parameters
+        ----------
+        category_id
+            category ID
+        country
+            an ISO 3166-1 alpha-2 country code
+        locale
+            the desired language, consisting of a lowercase ISO 639 language code
+            and an uppercase ISO 3166-1 alpha-2 country code joined by an underscore
         """
         return self._get('browse/categories/' + category_id, country=country,
                          locale=locale)
@@ -72,11 +88,16 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of Spotify playlists tagged with a particular category.
 
-        Parameters:
-            - category_id - The Spotify category ID for the category.
-            - country - An ISO 3166-1 alpha-2 country code.
-            - limit - the number of items to return (1..50)
-            - offset - the index of the first item to return
+        Parameters
+        ----------
+        category_id
+            category ID
+        country
+            an ISO 3166-1 alpha-2 country code
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
         """
         return self._get(f'browse/categories/{category_id}/playlists',
                          country=country, limit=limit, offset=offset)
@@ -87,13 +108,20 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of recommended tracks for seeds.
 
-        Parameters:
-            - seed_artists - list of artist IDs, URIs or URLs
-            - seed_genres - list of genre names
-            - seed_tracks - list of artist IDs, URIs or URLs
-            - limit - the number of items to return (1..100)
-            - market - ISO 3166-1 alpha-2 country code or 'from_token'
-            - kwargs - min/max/target_<attribute> - For the tuneable track
+        Parameters
+        ----------
+        artist_ids
+            list of artist IDs, URIs or URLs
+        genres
+            list of genre names
+        track_ids
+            list of artist IDs, URIs or URLs
+        limit
+            the number of items to return (1..100)
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        kwargs
+            min/max/target_<attribute> - For the tuneable track
             attributes listed in the documentation, these values
             provide filters and targeting on results.
         """

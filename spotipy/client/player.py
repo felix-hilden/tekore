@@ -5,21 +5,27 @@ class SpotifyPlayer(SpotifyBase):
     def playback(self, market: str = 'from_token'):
         """
         Get information about user's current playback.
-        Requires the user-read-playback-state or the
-        user-read-currently-playing scope.
 
-        Parameters:
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
+        Requires the user-read-playback-state or
+        the user-read-currently-playing scope.
+
+        Parameters
+        ----------
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         """
         return self._get('me/player', market=market)
 
     def playback_currently_playing(self, market: str = 'from_token'):
         """
         Get user's currently playing track.
+
         Requires the user-read-playback-state scope.
 
-        Parameters:
-            - market - An ISO 3166-1 alpha-2 country code or 'from_token'
+        Parameters
+        ----------
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         """
         return self._get('me/player/currently-playing', market=market)
 
@@ -27,13 +33,18 @@ class SpotifyPlayer(SpotifyBase):
                                  before: str = None):
         """
         Get tracks from the current user's recently played tracks.
+
         Only after or before should be specified at one time.
         Requires the user-read-recently-played scope.
 
-        Parameters:
-            - limit - the number of items to return (1..50)
-            - after - a unix timestamp in milliseconds
-            - before - a unix timestamp in milliseconds
+        Parameters
+        ----------
+        limit
+            the number of items to return (1..50)
+        after
+            a unix timestamp in milliseconds
+        before
+            a unix timestamp in milliseconds
         """
         return self._get('me/player/recently-played', limit=limit,
                          after=after, before=before)
@@ -41,6 +52,7 @@ class SpotifyPlayer(SpotifyBase):
     def playback_devices(self):
         """
         Get a user's available devices.
+
         Requires the user-read-playback-state scope.
         """
         return self._get('me/player/devices')
@@ -48,14 +60,17 @@ class SpotifyPlayer(SpotifyBase):
     def playback_transfer(self, device_id: str, force_play: bool = False):
         """
         Transfer playback to another device.
+
         Requires the user-modify-playback-state scope.
         Note that the API accepts a list of device ids,
         but only actually supports one.
 
-        Parameters:
-            - device_id - device to transfer playback to
-            - force_play - true: after transfer, play. false: keep current
-            state.
+        Parameters
+        ----------
+        device_id
+            device to transfer playback to
+        force_play
+            true: play after transfer, false: keep current state
         """
         data = {
             'device_ids': [device_id],
@@ -68,6 +83,7 @@ class SpotifyPlayer(SpotifyBase):
                        device_id: str = None):
         """
         Start or resume user's playback.
+
         Requires the user-modify-playback-state scope.
 
         Provide a `context_uri` to start playback of
@@ -76,12 +92,18 @@ class SpotifyPlayer(SpotifyBase):
         Provide `offset` as {"position": <int>} or {"uri": "<track uri>"}
         to start playback at a particular offset.
 
-        Parameters:
-            - context_uri - spotify context uri to play
-            - uris - spotify track uris
-            - offset - offset into context by index or track uri
-            - position_ms - position of track
-            - device_id - device to start playback on
+        Parameters
+        ----------
+        context_uri
+            spotify context uri to play
+        uris
+            spotify track uris
+        offset
+            offset into context by index or track uri
+        position_ms
+            position of track
+        device_id
+            device to start playback on
         """
         payload = {
             'context_uri': context_uri,
@@ -96,41 +118,53 @@ class SpotifyPlayer(SpotifyBase):
     def playback_pause(self, device_id: str = None):
         """
         Pause a user's playback.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - device_id - device to pause playback on
+        Parameters
+        ----------
+        device_id
+            device to pause playback on
         """
         return self._put('me/player/pause', device_id=device_id)
 
     def playback_next(self, device_id: str = None):
         """
         Skip user's playback to next track.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - device_id - device to skip track on
+        Parameters
+        ----------
+        device_id
+            device to skip track on
         """
         return self._post('me/player/next', device_id=device_id)
 
     def playback_previous(self, device_id: str = None):
         """
         Skip user's playback to previous track.
+
         Requires the user-modify-playback-state scope.
 
         Parameters:
-            - device_id - device to skip track on
+        device_id
+            device to skip track on
         """
         return self._post('me/player/previous', device_id=device_id)
 
     def playback_seek(self, position_ms: int, device_id: str = None):
         """
         Seek to position in current playing track.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - position_ms - position on track
-            - device_id - device to seek on
+        Parameters
+        ----------
+        position_ms
+            position on track
+        device_id
+            device to seek on
         """
         return self._put('me/player/seek', position_ms=position_ms,
                          device_id=device_id)
@@ -138,22 +172,30 @@ class SpotifyPlayer(SpotifyBase):
     def playback_repeat(self, state: str, device_id: str = None):
         """
         Set repeat mode for playback.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - state - `track`, `context`, or `off`
-            - device_id - device to set repeat on
+        Parameters
+        ----------
+        state
+            `track`, `context`, or `off`
+        device_id
+            device to set repeat on
         """
         self._put('me/player/repeat', state=state, device_id=device_id)
 
     def playback_shuffle(self, state: bool, device_id: str = None):
         """
         Toggle shuffle for user's playback.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - state - shuffle state
-            - device_id - device to toggle shuffle on
+        Parameters
+        ----------
+        state
+            shuffle state
+        device_id
+            device to toggle shuffle on
         """
         state = 'true' if state else 'false'
         self._put('me/player/shuffle', state=state, device_id=device_id)
@@ -161,11 +203,15 @@ class SpotifyPlayer(SpotifyBase):
     def playback_volume(self, volume_percent: int, device_id: str = None):
         """
         Set volume for user's playback.
+
         Requires the user-modify-playback-state scope.
 
-        Parameters:
-            - volume_percent - volume to set (0..100)
-            - device_id - device to set volume on
+        Parameters
+        ----------
+        volume_percent
+            volume to set (0..100)
+        device_id
+            device to set volume on
         """
         if volume_percent < 0:
             volume_percent = 0
