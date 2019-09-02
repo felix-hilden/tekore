@@ -1,9 +1,10 @@
 import setuptools
+from spotipy import __version__
 
 
 setuptools.setup(
     name='spotipy',
-    version='0.1.0',
+    version=__version__,
     packages=setuptools.find_packages(),
     url='https://github.com/felix-hilden/spotipy',
     download_url='https://github.com/felix-hilden/spotipy',
