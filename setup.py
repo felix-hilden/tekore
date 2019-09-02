@@ -28,6 +28,8 @@ setuptools.setup(
         'dev': [
             'pygments',
             'flake8',
+            'sphinx',
+            'sphinx-rtd-theme',
         ]
     }
 )
