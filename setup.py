@@ -1,10 +1,12 @@
 import setuptools
-from spotipy import __version__
+import os
+from pathlib import Path
 
+version_file = Path(os.path.realpath(__file__)).parent / 'VERSION'
 
 setuptools.setup(
     name='spotipy',
-    version=__version__,
+    version=version_file.read_text().strip(),
     packages=setuptools.find_packages(),
     url='https://github.com/felix-hilden/spotipy',
     download_url='https://github.com/felix-hilden/spotipy',
