@@ -12,3 +12,4 @@
 
    reference/client
    reference/model
+   reference/auth
