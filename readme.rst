@@ -70,13 +70,18 @@ To change device state ``Spotify.playback_transfer`` can be used.
     finlandia = 'spotify:track:3hHWhvw2hjwfngWcFjIzqr'
     s.playback_start(uris=[finlandia])
 
+Contributing
+============
 Contributions are welcome!
-==========================
-Please submit any issues
-`here <https://github.com/felix-hilden/spotipy/issues>`_.
-Pull requests should be made for an existing issue
-with no assignee (unless yourself).
 
+Issues
+------
+Please submit any issues or questions to the GitHub repository
+`here <https://github.com/felix-hilden/spotipy/issues>`_.
+
+Submitting code
+---------------
+Direct contributions are encouraged!
 Issues tagged ``consideration`` ought to be discussed further
 before implementation.
 `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
@@ -89,8 +94,8 @@ which has not been maintained since the end of 2017.
 Although refactored heavily from its original source, this package does
 largely rely on the original structure that was put in place by plamere.
 
-References
-==========
+Links
+=====
 Spotify Web API
 ---------------
 - `Object model <https://developer.spotify.com/documentation/web-api/reference/object-model/>`_
