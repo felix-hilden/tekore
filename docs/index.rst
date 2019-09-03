@@ -13,3 +13,5 @@
    reference/client
    reference/model
    reference/auth
+   reference/scope
+   reference/convert
