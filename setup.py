@@ -2,7 +2,9 @@ import setuptools
 import os
 from pathlib import Path
 
-version_file = Path(os.path.realpath(__file__)).parent / 'VERSION'
+root = Path(os.path.realpath(__file__)).parent
+version_file = root / 'VERSION'
+readme_file = root / 'readme.rst'
 
 setuptools.setup(
     name='spotipy',
@@ -17,7 +19,8 @@ setuptools.setup(
     maintainer_email='felix.hilden@gmail.com',
 
     description='Client for Spotify Web API',
-    long_description='Client for Spotify Web API',
+    long_description=readme_file.read_text(),
+    long_description_content_type='text/x-rst',
     license='MIT',
 
     python_requires='>=3.7',
