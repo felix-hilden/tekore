@@ -11,3 +11,4 @@
    :caption: Package Reference:
 
    reference/client
+   reference/model
