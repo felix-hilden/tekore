@@ -3,6 +3,7 @@ import time
 import requests
 
 from contextlib import contextmanager
+from spotipy.sender import Sender, TransientSender
 
 
 class SpotifyException(requests.HTTPError):
@@ -12,7 +13,7 @@ class SpotifyException(requests.HTTPError):
 class SpotifyBase:
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, token: str = None, session=True, retries: int = 0,
+    def __init__(self, token: str = None, sender: Sender = None, retries: int = 0,
                  requests_kwargs: dict = None):
         """
         Create a Spotify API object.
@@ -21,10 +22,8 @@ class SpotifyBase:
         ----------
         token
             bearer token for requests
-        session
-            requests session object or a truthy value to create one.
-            A falsy value disables sessions. It should generally
-            be a good idea to keep sessions enabled for connection pooling.
+        sender
+            request sender. If None, a default sender is created
         retries
             maximum number of retries on a failed request
         requests_kwargs
@@ -33,11 +32,7 @@ class SpotifyBase:
         self._token = token
         self.retries = retries
         self.requests_kwargs = requests_kwargs or {}
-
-        if isinstance(session, requests.Session):
-            self._session = session
-        else:
-            self._session = requests.Session() if session else None
+        self.sender = sender or TransientSender()
 
     @contextmanager
     def token(self, token: str) -> 'SpotifyBase':
@@ -50,13 +45,7 @@ class SpotifyBase:
         delay = 1
 
         while retries > 0:
-            if self._session is not None:
-                prepared = self._session.prepare_request(request)
-                r = self._session.send(prepared, **self.requests_kwargs)
-            else:
-                with requests.Session() as sess:
-                    prepared = sess.prepare_request(request)
-                    r = sess.send(prepared, **self.requests_kwargs)
+            r = self.sender.send(request, **self.requests_kwargs)
 
             if 200 <= r.status_code < 400:
                 return r
