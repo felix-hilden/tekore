@@ -3,9 +3,10 @@
 .. toctree::
    :maxdepth: 1
    :hidden:
-   :caption: Home
+   :caption: Introduction
 
    index
+   advanced
 
 .. toctree::
    :maxdepth: 3
