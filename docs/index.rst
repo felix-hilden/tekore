@@ -1,4 +1,4 @@
-.. include:: readme.rst
+.. include:: ../readme.rst
 
 .. toctree::
    :maxdepth: 1
