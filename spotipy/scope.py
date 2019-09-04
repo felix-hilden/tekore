@@ -31,8 +31,22 @@ scopes = AuthorisationScopes
 class Scope:
     """
     Set of AuthorisationScopes constituting a scope for a token.
+
+    Comparisons defined like the builtin :class:`set`.
+    String representation is a sorted concatenation of the members.
+
+    For example:
+    >>> s = Scope(scopes.user_read_email, scopes.user_read_private)
     """
     def __init__(self, *members: AuthorisationScopes):
+        """
+        Initialise with a set of scopes.
+
+        Parameters
+        ----------
+        members
+            authorisation scopes
+        """
         self._members = set([m.value for m in members])
 
     @property

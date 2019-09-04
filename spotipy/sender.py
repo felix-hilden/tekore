@@ -1,3 +1,10 @@
+"""
+Define request senders to be passed to and used by the Spotify class.
+
+They implement different levels of session usage mainly for connection pooling.
+Custom subclasses could implement further logic, for example caching.
+"""
+
 from abc import ABC, abstractmethod
 from requests import Request, Response, Session
 

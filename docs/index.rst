@@ -1,13 +1,15 @@
-.. include:: readme.rst
+.. include:: ../readme.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
+   :hidden:
    :caption: Home
 
-   readme
+   index
 
 .. toctree::
    :maxdepth: 3
+   :hidden:
    :caption: Package Reference:
 
    reference/client
@@ -15,3 +17,4 @@
    reference/auth
    reference/scope
    reference/convert
+   reference/sender
