@@ -32,6 +32,8 @@ class SpotifyPlaylist(SpotifyBase):
 
         Parameters
         ----------
+        user_id
+            user ID
         limit
             the number of items to return (1..50)
         offset
