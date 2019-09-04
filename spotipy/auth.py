@@ -1,3 +1,7 @@
+"""
+Implement OAuth2 authentication for client credentials and authorisation code.
+"""
+
 import time
 import requests
 
@@ -38,7 +42,7 @@ class Token:
 
         self.expires_at = int(time.time()) + token_info['expires_in']
 
-    def is_expiring(self):
+    def is_expiring(self) -> bool:
         """
         Determine whether token is about to expire.
         """
@@ -50,6 +54,18 @@ class Credentials:
     Client for retrieving access tokens.
     """
     def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
+        """
+        Initialise client with registered third party application information.
+
+        Parameters
+        ----------
+        client_id
+            client id
+        client_secret
+            client secret
+        redirect_uri
+            whitelisted redirect URI
+        """
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -129,6 +145,14 @@ class Credentials:
         return self._post_token_request(payload)
 
     def refresh_token(self, token: Token) -> Token:
+        """
+        Request a refreshed access token.
+
+        Parameters
+        ----------
+        token
+            token to be refreshed
+        """
         payload = {
             'refresh_token': token.refresh_token,
             'grant_type': 'refresh_token'

@@ -1,3 +1,7 @@
+"""
+Conversions between Spotify IDs, URIs and URLs.
+"""
+
 import re
 from enum import Enum
 
@@ -7,6 +11,9 @@ class ConversionError(Exception):
 
 
 class Type(Enum):
+    """
+    Enumerate valid types of Spotify IDs.
+    """
     artist = 'artist'
     album = 'album'
     track = 'track'
