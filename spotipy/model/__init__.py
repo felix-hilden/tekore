@@ -11,6 +11,8 @@ from spotipy.model.artist import Artist, SimpleArtist, FullArtist
 from spotipy.model.audio_features import Key, Mode, AudioFeatures
 from spotipy.model.category import Category
 from spotipy.model.context import Context
+from spotipy.model.currently_playing import CurrentlyPlayingType, CurrentlyPlaying
+from spotipy.model.device import Device
 from spotipy.model.disallows import Disallows
 from spotipy.model.error import (
     PlayerErrorReason,

@@ -1,13 +1,14 @@
-from enum import Enum
 from typing import List
 from dataclasses import dataclass
 
+from spotipy.enum import SerialisableEnum
 from spotipy.model.base import Item
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.member import Image, Restrictions
 
-AlbumType = Enum('AlbumType', 'album single compilation')
-ReleaseDatePrecision = Enum('ReleaseDatePrecision', 'year month day')
+
+AlbumType = SerialisableEnum('AlbumType', 'album single compilation')
+ReleaseDatePrecision = SerialisableEnum('ReleaseDatePrecision', 'year month day')
 
 
 @dataclass
