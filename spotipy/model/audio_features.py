@@ -1,10 +1,10 @@
-from enum import Enum
 from dataclasses import dataclass
 
+from spotipy.enum import SerialisableEnum
 from spotipy.model.base import Identifiable
 
-Key = Enum('Key', 'C C# D Eb E F F# G G# A Bb B')
-Mode = Enum('Mode', 'minor major')
+Key = SerialisableEnum('Key', 'C C# D Eb E F F# G G# A Bb B')
+Mode = SerialisableEnum('Mode', 'minor major')
 
 
 @dataclass
