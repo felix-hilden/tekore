@@ -30,6 +30,10 @@ class Import(unittest.TestCase):
     def test_import_scope():
         from spotipy import scope
 
+    @staticmethod
+    def test_import_sender():
+        from spotipy import sender
+
 
 if __name__ == '__main__':
     unittest.main()
