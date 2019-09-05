@@ -19,3 +19,4 @@
    reference/scope
    reference/convert
    reference/sender
+   reference/enum
