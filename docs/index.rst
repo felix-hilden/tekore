@@ -20,12 +20,7 @@ A Python library for the
 .. toctree::
    :maxdepth: 3
    :hidden:
+   :glob:
    :caption: Package Reference:
 
-   reference/client
-   reference/model
-   reference/auth
-   reference/scope
-   reference/convert
-   reference/sender
-   reference/enum
+   reference/*
