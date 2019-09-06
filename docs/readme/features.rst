@@ -1,5 +1,5 @@
-Feature comparison and roadmap
-==============================
+Features
+========
 Replaces `plamere/spotipy <https://github.com/plamere/spotipy>`_,
 which has not been maintained since the end of 2017.
 Although refactored heavily from its original source, this package does
