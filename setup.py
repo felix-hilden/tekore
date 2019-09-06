@@ -34,6 +34,7 @@ setuptools.setup(
             'flake8-bugbear',
             'sphinx',
             'sphinx-rtd-theme',
+            'sphinx-autodoc-typehints'
         ]
     }
 )
