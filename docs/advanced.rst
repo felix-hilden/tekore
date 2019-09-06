@@ -7,7 +7,11 @@ Request retries
 ---------------
 Should an error response be returned,
 :class:`Spotify` can retry requests for a set number of times.
-Provide a retry value when initialising the client to enable retries.
+To enable retries, provide a retry value when initialising the client.
+
+.. code:: python
+
+   Spotify(retries=3)
 
 Senders
 -------
@@ -35,15 +39,15 @@ library provides caching algorithms that wrap around :class:`Session`.
 Providing tokens
 ----------------
 The client provides two ways of authenticating requests.
-It accepts an access token in the constructor.
+Firstly it accepts an access token in the constructor.
 
 .. code:: python
 
    s = Spotify(token)
    a = s.artist(artist_id)
 
-A context manager ``token`` is provided for using a particular token
-for requests within the context.
+Secondly, a context manager ``Spotify.token`` is provided
+for using a particular token for requests within the context.
 This is particularly handy if one object is created for all requests
 but requests need to use different tokens,
 be it due to number of users, token refreshing or scopes.

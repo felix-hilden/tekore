@@ -98,13 +98,12 @@ is the canonical style guide for Python.
 
 Features
 ========
-Replaces `plamere/spotipy <https://github.com/plamere/spotipy>`_,
+Spotipy replaces `plamere/spotipy <https://github.com/plamere/spotipy>`_,
 which has not been maintained since the end of 2017.
 Although refactored heavily from its original source, this package does
-largely rely on the original structure that was put in place by plamere.
+rely on the original structure that was put in place by plamere.
 
 The equivalent functionality of the original Spotipy is already implemented.
-The Spotify Web API also has features, which will be added to the package.
 Some additional features are also provided and being developed.
 Below ``X`` indicates a complete feature and ``/`` an incomplete one.
 
@@ -133,7 +132,7 @@ Additional features
 +=========================+======================+=================+
 | Request retries         | X                    | / (*)           |
 +-------------------------+----------------------+-----------------+
-| Responses to objects    | / (**)               |                 |
+| Model-based API         | / (**)               |                 |
 +-------------------------+----------------------+-----------------+
 
 (*) Retries implemented for GET requests
