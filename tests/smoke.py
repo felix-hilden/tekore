@@ -34,6 +34,10 @@ class Import(unittest.TestCase):
     def test_import_sender():
         from spotipy import sender
 
+    @staticmethod
+    def test_import_enum():
+        from spotipy import enum
+
 
 if __name__ == '__main__':
     unittest.main()
