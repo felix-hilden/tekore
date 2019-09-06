@@ -1,4 +1,8 @@
-.. include:: ../readme.rst
+=======
+spotipy
+=======
+
+.. include:: readme_content.rst
 
 .. toctree::
    :maxdepth: 1
