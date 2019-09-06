@@ -1,6 +1,6 @@
-=======
-spotipy
-=======
+==============
+|spotipy_logo|
+==============
 |travis|
 
 A Python library for the
