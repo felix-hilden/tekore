@@ -1,6 +1,7 @@
 .. image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
 
-A Python library for the Spotify Web API.
+A Python library for the
+`Spotify Web API <https://developer.spotify.com/documentation/web-api/>`_.
 See also `Contributing`_ and `Feature comparison and roadmap`_.
 
 Getting started
@@ -130,11 +131,3 @@ Additional features
 (*) Retries implemented for GET requests
 
 (**) Response objects are implemented, but not yet returned from calls
-
-Links
-=====
-Spotify Web API
----------------
-- `Object model <https://developer.spotify.com/documentation/web-api/reference/object-model/>`_
-- `Authorisation scopes <https://developer.spotify.com/documentation/general/guides/scopes/>`_
-- `Working with playlists <https://developer.spotify.com/documentation/general/guides/working-with-playlists/>`_
