@@ -1,7 +1,7 @@
 =======
 spotipy
 =======
-.. image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
+|travis|
 
 A Python library for the
 `Spotify Web API <https://developer.spotify.com/documentation/web-api/>`_.
@@ -24,3 +24,5 @@ A Python library for the
    :caption: Package Reference:
 
    reference/*
+
+.. include:: substitutions.rst
