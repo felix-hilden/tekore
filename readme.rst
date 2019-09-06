@@ -3,7 +3,7 @@ spotipy
 =======
 .. image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
 
-A client for the Spotify Web API.
+A Python library for the Spotify Web API.
 See also `Contributing`_ and `Feature comparison and roadmap`_.
 
 Getting started
@@ -111,10 +111,14 @@ Basic features
 +-------------------------+----------------------+-----------------+
 | Endpoints               | X                    | / (*)           |
 +-------------------------+----------------------+-----------------+
-| Conditional requests    |                      |                 |
+| Conditional requests    | (**)                 |                 |
 +-------------------------+----------------------+-----------------+
 
 (*) Not all endpoints are implemented
+
+(**) While not directly supported,
+they are made possible by creating custom ``Sender`` classes.
+See documentation on advanced usage for further details.
 
 Additional features
 -------------------
@@ -128,7 +132,7 @@ Additional features
 
 (*) Retries implemented for GET requests
 
-(**) Most response objects are implemented, but not automatically returned
+(**) Response objects are implemented, but not yet returned from calls
 
 Links
 =====
