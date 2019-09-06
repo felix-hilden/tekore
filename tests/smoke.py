@@ -11,20 +11,24 @@ class Import(unittest.TestCase):
         import spotipy
 
     @staticmethod
-    def test_import_client():
-        from spotipy import client
-
-    @staticmethod
-    def test_import_model():
-        from spotipy import model
-
-    @staticmethod
     def test_import_auth():
         from spotipy import auth
 
     @staticmethod
+    def test_import_client():
+        from spotipy import client
+
+    @staticmethod
     def test_import_convert():
         from spotipy import convert
+
+    @staticmethod
+    def test_import_enum():
+        from spotipy import enum
+
+    @staticmethod
+    def test_import_model():
+        from spotipy import model
 
     @staticmethod
     def test_import_scope():
@@ -33,10 +37,6 @@ class Import(unittest.TestCase):
     @staticmethod
     def test_import_sender():
         from spotipy import sender
-
-    @staticmethod
-    def test_import_enum():
-        from spotipy import enum
 
 
 if __name__ == '__main__':
