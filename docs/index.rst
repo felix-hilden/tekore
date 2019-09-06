@@ -1,15 +1,20 @@
 =======
 spotipy
 =======
+.. image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
 
-.. include:: readme_content.rst
+A Python library for the
+`Spotify Web API <https://developer.spotify.com/documentation/web-api/>`_.
+
+.. include:: readme/features.rst
+.. include:: readme/contributing.rst
 
 .. toctree::
    :maxdepth: 1
    :hidden:
    :caption: Introduction
 
-   index
+   readme/getting_started
    advanced
 
 .. toctree::
