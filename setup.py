@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 root = Path(os.path.realpath(__file__)).parent
-version_file = root / 'VERSION'
+version_file = root / 'spotipy' / 'VERSION'
 readme_file = root / 'readme.rst'
 
 setuptools.setup(
@@ -22,6 +22,9 @@ setuptools.setup(
     long_description=readme_file.read_text(),
     long_description_content_type='text/x-rst',
     license='MIT',
+    package_data={
+        'spotipy': ['VERSION']
+    },
 
     python_requires='>=3.7',
     install_requires=[

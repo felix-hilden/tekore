@@ -9,7 +9,7 @@ sys.path.insert(0, _root)
 project = 'spotipy'
 author = 'Felix Hildén'
 copyright = '2019, Felix Hildén'
-release = Path(_root, 'VERSION').read_text().strip()
+release = Path(_root, 'spotipy', 'VERSION').read_text().strip()
 
 extensions = [
     'sphinx.ext.autodoc',
