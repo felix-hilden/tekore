@@ -8,3 +8,5 @@ install:
 script:
   - python -m unittest discover tests -p "*.py"
   - flake8 . --select=C,E,F,W,B,B9 --ignore=E501,E722,F401
+  - cd docs
+  - make html
