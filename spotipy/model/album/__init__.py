@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from spotipy.enum import SerialisableEnum
+from spotipy.enumerate import SerialisableEnum
 from spotipy.model.member import Timestamp
 from spotipy.model.album.base import Album, AlbumType, ReleaseDatePrecision
 

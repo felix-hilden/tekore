@@ -1,6 +1,6 @@
 import unittest
 
-from spotipy.enum import SerialisableEnum
+from spotipy.enumerate import SerialisableEnum
 
 
 class TestSerialisableEnum(unittest.TestCase):

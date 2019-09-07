@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from spotipy.enum import SerialisableEnum
+from spotipy.enumerate import SerialisableEnum
 
 
 class PlayerErrorReason(SerialisableEnum):

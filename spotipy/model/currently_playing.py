@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from spotipy.enum import SerialisableEnum
+from spotipy.enumerate import SerialisableEnum
 from spotipy.model.context import Context
 from spotipy.model.track import FullTrack
 

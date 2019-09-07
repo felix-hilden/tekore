@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from spotipy.enum import SerialisableEnum
+from spotipy.enumerate import SerialisableEnum
 from spotipy.model.base import Identifiable
 
 Key = SerialisableEnum('Key', 'C C# D Eb E F F# G G# A Bb B')

@@ -24,7 +24,7 @@ class Import(unittest.TestCase):
 
     @staticmethod
     def test_import_enum():
-        from spotipy import enum
+        from spotipy import enumerate
 
     @staticmethod
     def test_import_model():
