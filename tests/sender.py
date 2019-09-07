@@ -48,7 +48,6 @@ class TestSingletonSender(unittest.TestCase):
             s = SingletonSender()
             r = Request()
             s.send(r, **kwargs)
-            mock.instances[0].prepare_request.called_with(r)
             mock.instances[0].send.assert_called_with(
                 mock.prepare_return,
                 **kwargs
