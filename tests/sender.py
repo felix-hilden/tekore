@@ -26,6 +26,15 @@ class MockSessionFactory:
         return mock
 
 
+def test_request_prepared(sender_type):
+    mock = MockSessionFactory()
+    with patch('spotipy.sender.Session', mock):
+        s = sender_type()
+        r = Request()
+        s.send(r)
+        mock.instances[0].prepare_request.assert_called_with(r)
+
+
 def test_keywords_passed_to_session(sender_type):
     mock = MockSessionFactory()
     kwargs = dict(k1='k1', k2='k2')
@@ -40,6 +49,14 @@ class TestSingletonSender(unittest.TestCase):
         s1 = SingletonSender()
         s2 = SingletonSender()
         self.assertTrue(s1.session is s2.session)
+
+    def test_request_prepared(self):
+        mock = MockSessionFactory()
+        with patch('spotipy.sender.SingletonSender.session', mock()):
+            s = SingletonSender()
+            r = Request()
+            s.send(r)
+            mock.instances[0].prepare_request.assert_called_with(r)
 
     def test_keywords_passed_to_session(self):
         mock = MockSessionFactory()
@@ -69,6 +86,9 @@ class TestReusingSender(unittest.TestCase):
         s2 = ReusingSender()
         self.assertTrue(s1.session is not s2.session)
 
+    def test_request_prepared(self):
+        test_request_prepared(ReusingSender)
+
     def test_keywords_passed_to_session(self):
         test_keywords_passed_to_session(ReusingSender)
 
@@ -81,6 +101,9 @@ class TestTransientSender(unittest.TestCase):
             s.send(Request())
             s.send(Request())
             self.assertEqual(len(mock.instances), 2)
+
+    def test_request_prepared(self):
+        test_request_prepared(TransientSender)
 
     def test_keywords_passed_to_session(self):
         test_keywords_passed_to_session(TransientSender)
