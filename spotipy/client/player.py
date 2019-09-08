@@ -29,8 +29,12 @@ class SpotifyPlayer(SpotifyBase):
         """
         return self._get('me/player/currently-playing', market=market)
 
-    def playback_recently_played(self, limit: int = 20, after: str = None,
-                                 before: str = None):
+    def playback_recently_played(
+            self,
+            limit: int = 20,
+            after: str = None,
+            before: str = None
+    ):
         """
         Get tracks from the current user's recently played tracks.
 
@@ -46,8 +50,12 @@ class SpotifyPlayer(SpotifyBase):
         before
             a unix timestamp in milliseconds
         """
-        return self._get('me/player/recently-played', limit=limit,
-                         after=after, before=before)
+        return self._get(
+            'me/player/recently-played',
+            limit=limit,
+            after=after,
+            before=before
+        )
 
     def playback_devices(self):
         """
@@ -78,9 +86,14 @@ class SpotifyPlayer(SpotifyBase):
         }
         return self._put('me/player', payload=data)
 
-    def playback_start(self, context_uri: str = None, uris: list = None,
-                       offset: dict = None, position_ms: int = None,
-                       device_id: str = None):
+    def playback_start(
+            self,
+            context_uri: str = None,
+            uris: list = None,
+            offset: dict = None,
+            position_ms: int = None,
+            device_id: str = None
+    ):
         """
         Start or resume user's playback.
 
@@ -112,8 +125,7 @@ class SpotifyPlayer(SpotifyBase):
             'position_ms': position_ms,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        return self._put('me/player/play', payload=payload,
-                         device_id=device_id)
+        return self._put('me/player/play', payload=payload, device_id=device_id)
 
     def playback_pause(self, device_id: str = None):
         """
@@ -167,8 +179,11 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to seek on
         """
-        return self._put('me/player/seek', position_ms=position_ms,
-                         device_id=device_id)
+        return self._put(
+            'me/player/seek',
+            position_ms=position_ms,
+            device_id=device_id
+        )
 
     def playback_repeat(self, state: str, device_id: str = None):
         """
@@ -219,5 +234,8 @@ class SpotifyPlayer(SpotifyBase):
         elif volume_percent > 100:
             volume_percent = 100
 
-        self._put('me/player/volume', volume_percent=volume_percent,
-                  device_id=device_id)
+        self._put(
+            'me/player/volume',
+            volume_percent=volume_percent,
+            device_id=device_id
+        )

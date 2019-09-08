@@ -15,11 +15,12 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs (1..5)
         """
-        return self._get(f'playlists/{playlist_id}/followers/contains?ids='
-                         ','.join(user_ids))
+        return self._get(
+            f'playlists/{playlist_id}/followers/contains?ids='
+            ','.join(user_ids)
+        )
 
-    def current_user_playlist_follow(self, playlist_id: str,
-                                     public: bool = True):
+    def current_user_playlist_follow(self, playlist_id: str, public: bool = True):
         """
         Follow a playlist as current user.
 
@@ -52,8 +53,7 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._delete(f'playlists/{playlist_id}/followers')
 
-    def current_user_followed_artists(self, limit: int = 20,
-                                      after: str = None):
+    def current_user_followed_artists(self, limit: int = 20, after: str = None):
         """
         Get artists followed by the current user.
 
@@ -66,8 +66,7 @@ class SpotifyFollow(SpotifyBase):
         after
             the last artist ID retrieved from the previous request
         """
-        return self._get('me/following', type='artist',
-                         limit=limit, after=after)
+        return self._get('me/following', type='artist', limit=limit, after=after)
 
     def current_user_artists_is_following(self, artist_ids: list):
         """
@@ -80,8 +79,9 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        return self._get('me/following/contains?type=artist&ids='
-                         ','.join(artist_ids))
+        return self._get(
+            'me/following/contains?type=artist&ids=' + ','.join(artist_ids)
+        )
 
     def current_user_artists_follow(self, artist_ids: list):
         """
@@ -94,8 +94,9 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        return self._put('me/following?type=artist&ids='
-                         ','.join(artist_ids))
+        return self._put(
+            'me/following?type=artist&ids=' + ','.join(artist_ids)
+        )
 
     def current_user_artists_unfollow(self, artist_ids: list):
         """
@@ -108,8 +109,9 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        return self._delete('me/following?type=artist&ids='
-                            ','.join(artist_ids))
+        return self._delete(
+            'me/following?type=artist&ids=' + ','.join(artist_ids)
+        )
 
     def current_user_users_is_following(self, user_ids: list):
         """
@@ -122,8 +124,9 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs
         """
-        return self._get('me/following/contains?type=user&ids='
-                         ','.join(user_ids))
+        return self._get(
+            'me/following/contains?type=user&ids=' + ','.join(user_ids)
+        )
 
     def current_user_users_follow(self, user_ids: list):
         """

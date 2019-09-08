@@ -13,8 +13,13 @@ class SpotifyException(requests.HTTPError):
 class SpotifyBase:
     prefix = 'https://api.spotify.com/v1/'
 
-    def __init__(self, token: str = None, sender: Sender = None, retries: int = 0,
-                 requests_kwargs: dict = None):
+    def __init__(
+            self,
+            token: str = None,
+            sender: Sender = None,
+            retries: int = 0,
+            requests_kwargs: dict = None
+    ):
         """
         Create a Spotify API object.
 
@@ -71,7 +76,7 @@ class SpotifyBase:
                     f'Error in {r.url}:\n{msg}'
                 )
 
-    def _internal_call(self, method, url, payload, params):
+    def _internal_call(self, method: str, url: str, payload, params: dict):
         if not url.startswith('http'):
             url = self.prefix + url
 
@@ -93,16 +98,16 @@ class SpotifyBase:
         else:
             return None
 
-    def _get(self, url, payload=None, **params):
+    def _get(self, url: str, payload=None, **params):
         return self._internal_call('GET', url, payload, params)
 
-    def _post(self, url, payload=None, **params):
+    def _post(self, url: str, payload=None, **params):
         return self._internal_call('POST', url, payload, params)
 
-    def _delete(self, url, payload=None, **params):
+    def _delete(self, url: str, payload=None, **params):
         return self._internal_call('DELETE', url, payload, params)
 
-    def _put(self, url, payload=None, **params):
+    def _put(self, url: str, payload=None, **params):
         return self._internal_call('PUT', url, payload, params)
 
     def next(self, result):

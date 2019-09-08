@@ -3,14 +3,25 @@ from spotipy.client.base import SpotifyBase
 
 class SpotifyArtist(SpotifyBase):
     def artist(self, artist_id: str):
+        """
+        Get information for an artist.
+        """
         return self._get('artists/' + artist_id)
 
     def artists(self, artist_ids: list):
+        """
+        Get information for multiple artists.
+        """
         return self._get('artists/?ids=' + ','.join(artist_ids))
 
-    def artist_albums(self, artist_id: str, include_groups: list = None,
-                      market: str = 'from_token', limit: int = 20,
-                      offset: int = 0):
+    def artist_albums(
+            self,
+            artist_id: str,
+            include_groups: list = None,
+            market: str = 'from_token',
+            limit: int = 20,
+            offset: int = 0
+    ):
         """
         Get an artist's albums.
 
@@ -27,9 +38,13 @@ class SpotifyArtist(SpotifyBase):
         offset
             the index of the first item to return
         """
-        return self._get(f'artists/{artist_id}/albums',
-                         include_groups=include_groups,
-                         market=market, limit=limit, offset=offset)
+        return self._get(
+            f'artists/{artist_id}/albums',
+            include_groups=include_groups,
+            market=market,
+            limit=limit,
+            offset=offset
+        )
 
     def artist_top_tracks(self, artist_id, market: str = 'from_token'):
         """

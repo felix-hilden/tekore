@@ -19,8 +19,15 @@ class Spotify(
     SpotifyTrack
 ):
 
-    def search(self, q: str, type_: str = 'track', market: str = 'from_token',
-               include_external: str = None, limit: int = 20, offset: int = 0):
+    def search(
+            self,
+            query: str,
+            type_: str = 'track',
+            market: str = 'from_token',
+            include_external: str = None,
+            limit: int = 20,
+            offset: int = 0
+    ):
         """
         Search for an item.
 
@@ -28,7 +35,7 @@ class Spotify(
 
         Parameters
         ----------
-        q
+        query
             search query
         type_
             the type of item to return: 'artist', 'album', 'track' or 'playlist'
@@ -42,10 +49,19 @@ class Spotify(
             if 'audio', response will include any externally hosted audio
         """
         return self._get(
-            'search', q=q, type=type_, market=market,
-            include_external=include_external, limit=limit, offset=offset)
+            'search',
+            q=query,
+            type=type_,
+            market=market,
+            include_external=include_external,
+            limit=limit,
+            offset=offset
+        )
 
     def user(self, user_id: str):
+        """
+        Get a user's profile.
+        """
         return self._get('users/' + user_id)
 
     def current_user(self):
@@ -57,8 +73,12 @@ class Spotify(
         """
         return self._get('me/')
 
-    def current_user_top_artists(self, time_range: str = 'medium_term',
-                                 limit: int = 20, offset: int = 0):
+    def current_user_top_artists(
+            self,
+            time_range: str = 'medium_term',
+            limit: int = 20,
+            offset: int = 0
+    ):
         """
         Get the current user's top artists.
 
@@ -74,11 +94,19 @@ class Spotify(
         offset
             the index of the first item to return
         """
-        return self._get('me/top/artists', time_range=time_range,
-                         limit=limit, offset=offset)
+        return self._get(
+            'me/top/artists',
+            time_range=time_range,
+            limit=limit,
+            offset=offset
+        )
 
-    def current_user_top_tracks(self, time_range: str = 'medium_term',
-                                limit: int = 20, offset: int = 0):
+    def current_user_top_tracks(
+            self,
+            time_range: str = 'medium_term',
+            limit: int = 20,
+            offset: int = 0
+    ):
         """
         Get the current user's top tracks.
 
@@ -94,5 +122,9 @@ class Spotify(
         offset
             the index of the first item to return
         """
-        return self._get('me/top/tracks', time_range=time_range, limit=limit,
-                         offset=offset)
+        return self._get(
+            'me/top/tracks',
+            time_range=time_range,
+            limit=limit,
+            offset=offset
+        )
