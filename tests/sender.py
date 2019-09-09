@@ -2,7 +2,7 @@ import unittest
 
 from unittest.mock import patch, MagicMock
 from requests import Request
-from spotipy.sender import Sender, TransientSender, SingletonSender, ReusingSender
+from spotipy.sender import Sender, TransientSender, SingletonSender, PersistentSender
 
 
 class TestSender(unittest.TestCase):
@@ -24,24 +24,6 @@ class MockSessionFactory:
 
         self.instances.append(mock)
         return mock
-
-
-def test_request_prepared(sender_type):
-    mock = MockSessionFactory()
-    with patch('spotipy.sender.Session', mock):
-        s = sender_type()
-        r = Request()
-        s.send(r)
-        mock.instances[0].prepare_request.assert_called_with(r)
-
-
-def test_keywords_passed_to_session(sender_type):
-    mock = MockSessionFactory()
-    kwargs = dict(k1='k1', k2='k2')
-    with patch('spotipy.sender.Session', mock):
-        s = sender_type()
-        s.send(Request(), **kwargs)
-        mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
 class TestSingletonSender(unittest.TestCase):
@@ -71,10 +53,28 @@ class TestSingletonSender(unittest.TestCase):
             )
 
 
-class TestReusingSender(unittest.TestCase):
+def test_request_prepared(sender_type):
+    mock = MockSessionFactory()
+    with patch('spotipy.sender.Session', mock):
+        s = sender_type()
+        r = Request()
+        s.send(r)
+        mock.instances[0].prepare_request.assert_called_with(r)
+
+
+def test_keywords_passed_to_session(sender_type):
+    mock = MockSessionFactory()
+    kwargs = dict(k1='k1', k2='k2')
+    with patch('spotipy.sender.Session', mock):
+        s = sender_type()
+        s.send(Request(), **kwargs)
+        mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
+
+
+class TestPersistentSender(unittest.TestCase):
     @patch('spotipy.sender.Session', MagicMock)
     def test_session_is_reused(self):
-        s = ReusingSender()
+        s = PersistentSender()
         sess1 = s.session
         s.send(Request())
         s.send(Request())
@@ -82,15 +82,15 @@ class TestReusingSender(unittest.TestCase):
         self.assertTrue(sess1 is sess2)
 
     def test_instances_dont_share_session(self):
-        s1 = ReusingSender()
-        s2 = ReusingSender()
+        s1 = PersistentSender()
+        s2 = PersistentSender()
         self.assertTrue(s1.session is not s2.session)
 
     def test_request_prepared(self):
-        test_request_prepared(ReusingSender)
+        test_request_prepared(PersistentSender)
 
     def test_keywords_passed_to_session(self):
-        test_keywords_passed_to_session(ReusingSender)
+        test_keywords_passed_to_session(PersistentSender)
 
 
 class TestTransientSender(unittest.TestCase):

@@ -48,7 +48,7 @@ class SingletonSender(Sender):
         return SingletonSender.session.send(prepared, **requests_kwargs)
 
 
-class ReusingSender(Sender):
+class PersistentSender(Sender):
     """
     Use a per-instance session to send requests.
     """

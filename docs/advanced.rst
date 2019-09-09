@@ -22,7 +22,7 @@ By default :class:`Spotify` uses a :class:`TransientSender`,
 which creates a new session for each request.
 :class:`SingletonSender` is also available.
 As the name implies, it uses a global session for all its instances and requests.
-:class:`ReusingSender` creates a session per instance.
+:class:`PersistentSender` creates a session per instance.
 
 Caching
 -------
