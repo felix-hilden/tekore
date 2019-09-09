@@ -14,7 +14,7 @@ class Sender(ABC):
     Sender interface for requests.
     """
     @abstractmethod
-    def send(self, request: Request, **kwargs) -> Response:
+    def send(self, request: Request, **requests_kwargs) -> Response:
         """
         Prepare and send a request.
 
@@ -22,7 +22,7 @@ class Sender(ABC):
         ----------
         request
             requests.Request to send
-        kwargs
+        requests_kwargs
             keyword arguments for requests.Session.send
         """
 
@@ -31,10 +31,10 @@ class TransientSender(Sender):
     """
     Create a session for each request.
     """
-    def send(self, request: Request, **kwargs) -> Response:
+    def send(self, request: Request, **requests_kwargs) -> Response:
         with Session() as sess:
             prepared = sess.prepare_request(request)
-            return sess.send(prepared, **kwargs)
+            return sess.send(prepared, **requests_kwargs)
 
 
 class SingletonSender(Sender):
@@ -43,9 +43,9 @@ class SingletonSender(Sender):
     """
     session = Session()
 
-    def send(self, request: Request, **kwargs) -> Response:
+    def send(self, request: Request, **requests_kwargs) -> Response:
         prepared = SingletonSender.session.prepare_request(request)
-        return SingletonSender.session.send(prepared, **kwargs)
+        return SingletonSender.session.send(prepared, **requests_kwargs)
 
 
 class ReusingSender(Sender):
@@ -55,6 +55,6 @@ class ReusingSender(Sender):
     def __init__(self):
         self.session = Session()
 
-    def send(self, request: Request, **kwargs) -> Response:
+    def send(self, request: Request, **requests_kwargs) -> Response:
         prepared = self.session.prepare_request(request)
-        return self.session.send(prepared, **kwargs)
+        return self.session.send(prepared, **requests_kwargs)
