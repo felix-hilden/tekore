@@ -36,21 +36,25 @@ class SpotifyBase:
         yield self
         self._token = old_token
 
-    def _internal_call(self, method: str, url: str, payload, params: dict):
+    def _build_request(self, method: str, url: str, headers: dict = None) -> Request:
         if not url.startswith('http'):
             url = self.prefix + url
 
-        headers = {
+        default_headers = {
             'Authorization': f'Bearer {self._token}',
             'Content-Type': 'application/json'
         }
+        default_headers.update(headers or {})
 
-        request = Request(
-            method, url,
-            headers=headers,
-            params={k: v for k, v in params.items() if v is not None},
-            data=json.dumps(payload) if payload is not None else None
-        )
+        return Request(method, url, headers=default_headers)
+
+    @staticmethod
+    def _set_content(request: Request, payload=None, params: dict = None) -> None:
+        params = params or {}
+        request.params = {k: v for k, v in params.items() if v is not None}
+        request.data = json.dumps(payload) if payload is not None else None
+
+    def _send(self, request: Request):
         r = self.sender.send(request, **self.requests_kwargs)
 
         if r.status_code >= 400:
@@ -62,16 +66,24 @@ class SpotifyBase:
             return None
 
     def _get(self, url: str, payload=None, **params):
-        return self._internal_call('GET', url, payload, params)
+        r = self._build_request('GET', url)
+        self._set_content(r, payload, params)
+        return self._send(r)
 
     def _post(self, url: str, payload=None, **params):
-        return self._internal_call('POST', url, payload, params)
+        r = self._build_request('POST', url)
+        self._set_content(r, payload, params)
+        return self._send(r)
 
     def _delete(self, url: str, payload=None, **params):
-        return self._internal_call('DELETE', url, payload, params)
+        r = self._build_request('DELETE', url)
+        self._set_content(r, payload, params)
+        return self._send(r)
 
     def _put(self, url: str, payload=None, **params):
-        return self._internal_call('PUT', url, payload, params)
+        r = self._build_request('PUT', url)
+        self._set_content(r, payload, params)
+        return self._send(r)
 
     def next(self, result):
         if result['next']:
