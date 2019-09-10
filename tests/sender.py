@@ -2,7 +2,9 @@ import unittest
 
 from unittest.mock import patch, MagicMock
 from requests import Request
-from spotipy.sender import Sender, TransientSender, SingletonSender, ReusingSender
+from spotipy.sender import (
+    Sender, TransientSender, SingletonSender, PersistentSender, RetryingSender
+)
 
 
 class TestSender(unittest.TestCase):
@@ -24,24 +26,6 @@ class MockSessionFactory:
 
         self.instances.append(mock)
         return mock
-
-
-def test_request_prepared(sender_type):
-    mock = MockSessionFactory()
-    with patch('spotipy.sender.Session', mock):
-        s = sender_type()
-        r = Request()
-        s.send(r)
-        mock.instances[0].prepare_request.assert_called_with(r)
-
-
-def test_keywords_passed_to_session(sender_type):
-    mock = MockSessionFactory()
-    kwargs = dict(k1='k1', k2='k2')
-    with patch('spotipy.sender.Session', mock):
-        s = sender_type()
-        s.send(Request(), **kwargs)
-        mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
 class TestSingletonSender(unittest.TestCase):
@@ -71,10 +55,28 @@ class TestSingletonSender(unittest.TestCase):
             )
 
 
-class TestReusingSender(unittest.TestCase):
+def test_request_prepared(sender_type):
+    mock = MockSessionFactory()
+    with patch('spotipy.sender.Session', mock):
+        s = sender_type()
+        r = Request()
+        s.send(r)
+        mock.instances[0].prepare_request.assert_called_with(r)
+
+
+def test_keywords_passed_to_session(sender_type):
+    mock = MockSessionFactory()
+    kwargs = dict(k1='k1', k2='k2')
+    with patch('spotipy.sender.Session', mock):
+        s = sender_type()
+        s.send(Request(), **kwargs)
+        mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
+
+
+class TestPersistentSender(unittest.TestCase):
     @patch('spotipy.sender.Session', MagicMock)
     def test_session_is_reused(self):
-        s = ReusingSender()
+        s = PersistentSender()
         sess1 = s.session
         s.send(Request())
         s.send(Request())
@@ -82,15 +84,15 @@ class TestReusingSender(unittest.TestCase):
         self.assertTrue(sess1 is sess2)
 
     def test_instances_dont_share_session(self):
-        s1 = ReusingSender()
-        s2 = ReusingSender()
+        s1 = PersistentSender()
+        s2 = PersistentSender()
         self.assertTrue(s1.session is not s2.session)
 
     def test_request_prepared(self):
-        test_request_prepared(ReusingSender)
+        test_request_prepared(PersistentSender)
 
     def test_keywords_passed_to_session(self):
-        test_keywords_passed_to_session(ReusingSender)
+        test_keywords_passed_to_session(PersistentSender)
 
 
 class TestTransientSender(unittest.TestCase):
@@ -107,6 +109,86 @@ class TestTransientSender(unittest.TestCase):
 
     def test_keywords_passed_to_session(self):
         test_keywords_passed_to_session(TransientSender)
+
+
+def ok_response() -> MagicMock:
+    response = MagicMock()
+    response.status_code = 200
+    return response
+
+
+def rate_limit_response(retry_after: int = 1) -> MagicMock:
+    response = MagicMock()
+    response.status_code = 429
+    response.headers = {'Retry-After': retry_after}
+    return response
+
+
+def failed_response() -> MagicMock:
+    response = MagicMock()
+    response.status_code = 500
+    return response
+
+
+class TestRetryingSender(unittest.TestCase):
+    def test_rate_limited_request_retried_after_set_seconds(self):
+        time = MagicMock()
+        sender = MagicMock()
+
+        fail = rate_limit_response()
+        success = ok_response()
+        sender.send.side_effect = [fail, success]
+
+        s = RetryingSender(sender=sender)
+        with patch('spotipy.sender.time', time):
+            s.send(Request())
+            time.sleep.assert_called_once_with(1)
+
+    def test_failing_request_but_no_retries_returns_failed(self):
+        sender = MagicMock()
+        fail = failed_response()
+        success = ok_response()
+        sender.send.side_effect = [fail, success]
+
+        s = RetryingSender(sender=sender)
+        r = s.send(Request())
+        self.assertTrue(r is fail)
+
+    def test_failing_request_retried_max_times(self):
+        sender = MagicMock()
+        fail = failed_response()
+        success = ok_response()
+        sender.send.side_effect = [fail, fail, fail, success]
+
+        s = RetryingSender(retries=2, sender=sender)
+        with patch('spotipy.sender.time', MagicMock()):
+            s.send(Request())
+        self.assertEqual(sender.send.call_count, 3)
+
+    def test_retry_returns_on_first_success(self):
+        sender = MagicMock()
+        fail = failed_response()
+        success = ok_response()
+        sender.send.side_effect = [fail, fail, success, fail, success]
+
+        s = RetryingSender(retries=5, sender=sender)
+        with patch('spotipy.sender.time', MagicMock()):
+            s.send(Request())
+        self.assertEqual(sender.send.call_count, 3)
+
+    def test_rate_limited_retry_doesnt_decrease_retry_count(self):
+        sender = MagicMock()
+
+        fail = failed_response()
+        rate = rate_limit_response()
+        success = ok_response()
+        sender.send.side_effect = [fail, rate, fail, success]
+
+        s = RetryingSender(retries=2, sender=sender)
+        with patch('spotipy.sender.time', MagicMock()):
+            s.send(Request())
+
+        self.assertEqual(sender.send.call_count, 4)
 
 
 if __name__ == '__main__':

@@ -1,40 +1,64 @@
 Advanced usage
 ==============
+Senders
+-------
 By default ``Spotipy`` doesn't do anything clever to requests that are sent.
-Its functionality, however, can be extended in a number of ways.
+Its functionality, however, can be extended in a number of ways
+using different kinds of :class:`Sender` classes.
+They wrap around :class:`requests.Session` to provide new functionality and
+`other advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
+of using sessions.
+Here's a short summary of the features of each sender.
 
-Request retries
----------------
-Should an error response be returned,
-:class:`Spotify` can retry requests for a set number of times.
-To enable retries, provide a retry value when initialising the client.
+- :class:`TransientSender`: Creates a new session for each request (default)
+- :class:`PersistentSender`: Reuses a session for requests made on the same instance
+- :class:`SingletonSender`: Uses a global session for all instances and requests
+- :class:`RetryingSender`: Extends any sender to enable retries on failed requests
+
+For example:
 
 .. code:: python
 
-   Spotify(retries=3)
+   from spotipy import Spotify
+   from spotipy.sender import PersistentSender
 
-Senders
--------
-Connection pooling and
-`other advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
-of using :class:`Sessions` are available through different :class:`Senders`.
-By default :class:`Spotify` uses a :class:`TransientSender`,
-which creates a new session for each request.
-:class:`SingletonSender` is also available.
-As the name implies, it uses a global session for all its instances and requests.
-:class:`ReusingSender` creates a session per instance.
+   Spotify(sender=PersistentSender())
+
+Request retries
+***************
+Should an error response be returned,
+a :class:`RetryingSender` can be used to retry requests for a number of times.
+To enable retries, pass an instance of the sender to a client.
+
+.. code:: python
+
+   from spotipy import Spotify
+   from spotipy.sender import RetryingSender
+
+   s = Spotify(sender=RetryingSender(retries=3))
+
+The retrying sender can be extend any other sender to easily provide
+the equivalent, combined functionality.
+
+.. code:: python
+
+   from spotipy import Spotify
+   from spotipy.sender import SingletonSender, RetryingSender
+
+   sender = RetryingSender(sender=SingletonSender())
+   s = Spotify(sender=sender)
 
 Caching
--------
+*******
 The Spotify Web API returns headers for caching requests.
 See the Web API
 `overview <https://developer.spotify.com/documentation/web-api/>`_
 for further information.
-``Spotipy`` does not implement caching, but does expose `Senders`_
-which can easily be subclassed for arbitrary extension.
+``Spotipy`` does not implement response caching,
+but `Senders`_ can easily be subclassed for arbitrary extension.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_
-library provides caching algorithms that wrap around :class:`Session`.
+library provides caching algorithms that also wrap around :class:`Session`.
 
 Providing tokens
 ----------------

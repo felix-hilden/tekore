@@ -81,16 +81,16 @@ class SpotifyPlaylist(SpotifyBase):
         image
             image data as a base64-encoded string
         """
-        url = self.prefix + f'playlists/{playlist_id}/images'
-
         headers = {
-            'Authorization': f'Bearer {self._token}',
             'Content-Type': 'image/jpg'
         }
-
-        request = requests.Request('PUT', url, headers=headers, data=image)
-        r = self._send(request)
-        return r.json()
+        r = self._build_request(
+            'PUT',
+            f'playlists/{playlist_id}/images',
+            headers
+        )
+        self._set_content(r, payload=image)
+        return self._send(r)
 
     def playlist_tracks(
             self,
