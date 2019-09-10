@@ -1,5 +1,3 @@
-import requests
-
 from spotipy.client.base import SpotifyBase
 from spotipy.convert import to_uri
 
