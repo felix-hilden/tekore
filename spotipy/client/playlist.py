@@ -89,7 +89,7 @@ class SpotifyPlaylist(SpotifyBase):
         }
 
         request = requests.Request('PUT', url, headers=headers, data=image)
-        r = self._send(request)
+        r = self.sender.send(request, **self.requests_kwargs)
         return r.json()
 
     def playlist_tracks(
