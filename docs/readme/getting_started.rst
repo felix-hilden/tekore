@@ -28,20 +28,15 @@ along with a code to request the token with.
 
 .. code:: python
 
-    import webbrowser
-    from spotipy import Credentials, scopes, Scope
+    from spotipy import scopes, Scope
+    from spotipy.util import prompt_for_user_token
 
-    client_id = 'yourtokenhere'
-    client_secret = 'yoursecrethere'
-    redirect_uri = 'http://localhost:5000'
+    client_id = 'your_token_here'
+    client_secret = 'your_secret_here'
+    redirect_uri = 'http://localhost'
 
-    c = Credentials(client_id, client_secret, redirect_uri)
     scope = Scope(*scopes)
-
-    url = c.authorisation_url(scope)
-    webbrowser.open(url)
-    code = input('Paste value of code: ')
-    token = c.request_access_token(code, scope)
+    token = prompt_for_user_token(client_id, client_secret, redirect_uri, scope)
 
 Calling the API
 ---------------
