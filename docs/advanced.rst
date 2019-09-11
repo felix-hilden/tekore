@@ -1,5 +1,47 @@
 Advanced usage
 ==============
+Providing tokens
+----------------
+The client provides two ways of authenticating requests.
+Firstly it accepts an access token in the constructor.
+
+.. code:: python
+
+   s = Spotify(token)
+   a = s.artist(artist_id)
+
+Secondly, a context manager ``Spotify.token`` is provided
+for using a particular token for requests within the context.
+This is particularly handy if one object is created for all requests
+but requests need to use different tokens,
+be it due to number of users, token refreshing or scopes.
+
+.. code:: python
+
+   s = Spotify(app_token)
+   a = s.artist(artist_id)
+
+   with s.token(user_token):
+       user = s.current_user()
+
+
+Retrieving user tokens
+----------------------
+The ``util`` module defines a convenient way of retrieving an access token
+that refreshes automatically when about to expire.
+However, it is intended for local use as it opens up a browser window.
+For situations involving a server, a two-step process should be implemented.
+
+- Redirect a user to a specific URL
+- Receive an access token as a result of the authentication
+
+For this use case, the utility function is essentially split in half.
+The two steps are essentially covered by the ``Credentials.authorisation_url``
+and ``Credentials.request_access_token`` methods in the ``auth`` module.
+Note that ``request_access_token`` does not return
+an automatically refreshing token but an expiring one.
+
+
 Senders
 -------
 By default ``Spotipy`` doesn't do anything clever to requests that are sent.
@@ -59,27 +101,3 @@ but `Senders`_ can easily be subclassed for arbitrary extension.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_
 library provides caching algorithms that also wrap around :class:`Session`.
-
-Providing tokens
-----------------
-The client provides two ways of authenticating requests.
-Firstly it accepts an access token in the constructor.
-
-.. code:: python
-
-   s = Spotify(token)
-   a = s.artist(artist_id)
-
-Secondly, a context manager ``Spotify.token`` is provided
-for using a particular token for requests within the context.
-This is particularly handy if one object is created for all requests
-but requests need to use different tokens,
-be it due to number of users, token refreshing or scopes.
-
-.. code:: python
-
-   s = Spotify(app_token)
-   a = s.artist(artist_id)
-
-   with s.token(user_token):
-       user = s.current_user()
