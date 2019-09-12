@@ -1,7 +1,7 @@
 """
 Utility module for your convenience <3
 
-These functions and classes are ment for local use.
+These functions and classes are meant for local use.
 For larger-scale use define your own types and routines,
 perhaps based on the ones found in this module.
 Particularly ``prompt_for_user_token`` cannot be used if the application
@@ -98,8 +98,8 @@ def prompt_for_user_token(
     cred = Credentials(client_id, client_secret, redirect_uri)
     url = cred.authorisation_url(scope)
 
-    webbrowser.open(url)
     print('Opening browser for Spotify login...')
+    webbrowser.open(url)
     redirected = input('Please paste redirect URL: ').strip()
     code = parse_code_from_url(redirected)
     token = cred.request_access_token(code, scope)

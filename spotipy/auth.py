@@ -46,7 +46,7 @@ class Token:
         """
         Determine whether token is about to expire.
         """
-        return True if self.expires_at - int(time.time()) < 60 else False
+        return (self.expires_at - int(time.time())) < 60
 
 
 class Credentials:
