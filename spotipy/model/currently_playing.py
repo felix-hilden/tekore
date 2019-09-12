@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from spotipy.enumerate import SerialisableEnum
+from spotipy.serialise import SerialisableEnum, SerialisableDataclass
 from spotipy.model.context import Context
 from spotipy.model.track import FullTrack
 
@@ -11,7 +11,7 @@ CurrentlyPlayingType = SerialisableEnum(
 
 
 @dataclass
-class CurrentlyPlaying:
+class CurrentlyPlaying(SerialisableDataclass):
     timestamp: int
     is_playing: bool
     currently_playing_type: str

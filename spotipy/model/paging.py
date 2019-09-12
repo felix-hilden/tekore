@@ -2,10 +2,11 @@ from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.base import Item
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class Paging:
+class Paging(SerialisableDataclass):
     href: str
     items: List[Item]
     limit: int
@@ -23,7 +24,7 @@ class OffsetPaging(Paging):
 
 
 @dataclass
-class Cursor:
+class Cursor(SerialisableDataclass):
     after: str
 
 

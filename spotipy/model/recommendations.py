@@ -2,10 +2,11 @@ from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.track import SimpleTrack
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class RecommendationSeed:
+class RecommendationSeed(SerialisableDataclass):
     after_filtering_size: int
     after_relinking_size: int
     href: str
@@ -15,7 +16,7 @@ class RecommendationSeed:
 
 
 @dataclass
-class Recommendations:
+class Recommendations(SerialisableDataclass):
     seeds: List[RecommendationSeed]
     tracks: List[SimpleTrack]
 

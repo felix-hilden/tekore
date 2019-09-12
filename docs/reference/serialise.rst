@@ -1,6 +1,6 @@
-Enumerate
+Serialise
 =========
 
-.. automodule:: spotipy.enumerate
+.. automodule:: spotipy.serialise
    :members:
    :show-inheritance:

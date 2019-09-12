@@ -23,10 +23,6 @@ class Import(unittest.TestCase):
         from spotipy import convert
 
     @staticmethod
-    def test_import_enum():
-        from spotipy import enumerate
-
-    @staticmethod
     def test_import_model():
         from spotipy import model
 
@@ -37,6 +33,14 @@ class Import(unittest.TestCase):
     @staticmethod
     def test_import_sender():
         from spotipy import sender
+
+    @staticmethod
+    def test_import_serialise():
+        from spotipy import serialise
+
+    @staticmethod
+    def test_import_util():
+        from spotipy import util
 
 
 if __name__ == '__main__':

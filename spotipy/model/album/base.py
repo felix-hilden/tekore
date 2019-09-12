@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from spotipy.enumerate import SerialisableEnum
+from spotipy.serialise import SerialisableEnum
 from spotipy.model.base import Item
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.member import Image, Restrictions

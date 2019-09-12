@@ -6,10 +6,11 @@ from spotipy.model.user import User
 from spotipy.model.track import Track, Tracks
 from spotipy.model.paging import OffsetPaging
 from spotipy.model.member import Followers, Image, Timestamp
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class PlaylistTrack:
+class PlaylistTrack(SerialisableDataclass):
     added_at: Timestamp
     added_by: User
     is_local: bool

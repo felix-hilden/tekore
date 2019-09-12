@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from spotipy.enumerate import SerialisableEnum
+from spotipy.serialise import SerialisableEnum, SerialisableDataclass
 
 
 class PlayerErrorReason(SerialisableEnum):
@@ -32,7 +32,7 @@ class PlayerErrorReason(SerialisableEnum):
 
 
 @dataclass
-class Error:
+class Error(SerialisableDataclass):
     status: int
     message: str
 
@@ -46,6 +46,6 @@ class PlayerError(Error):
 
 
 @dataclass
-class AuthenticationError:
+class AuthenticationError(SerialisableDataclass):
     error: str
     error_description: str
