@@ -48,7 +48,7 @@ By default ``Spotipy`` doesn't do anything clever to requests that are sent.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :class:`Sender` classes.
 They wrap around :class:`requests.Session` to provide new functionality and
-`other advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
+`other advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`
 of using sessions.
 Here's a short summary of the features of each sender.
 
