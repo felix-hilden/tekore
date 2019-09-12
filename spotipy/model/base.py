@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class Identifiable:
+class Identifiable(SerialisableDataclass):
     id: str
 
     def __str__(self):

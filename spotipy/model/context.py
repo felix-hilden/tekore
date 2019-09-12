@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class Context:
+class Context(SerialisableDataclass):
     type: str
     href: str
     external_urls: dict

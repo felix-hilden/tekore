@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
-class Disallows:
+class Disallows(SerialisableDataclass):
     interrupting_playback: bool = False
     pausing: bool = False
     resuming: bool = False

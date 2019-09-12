@@ -6,6 +6,7 @@ from spotipy.model.album import SimpleAlbum
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.paging import OffsetPaging
 from spotipy.model.member import Restrictions, Timestamp
+from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
@@ -60,13 +61,13 @@ class SimpleTrackPaging(OffsetPaging):
 
 
 @dataclass
-class Tracks:
+class Tracks(SerialisableDataclass):
     href: str
     total: int
 
 
 @dataclass
-class SavedTrack:
+class SavedTrack(SerialisableDataclass):
     added_at: Timestamp
     track: Track
 
