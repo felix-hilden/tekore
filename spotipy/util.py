@@ -8,7 +8,9 @@ Particularly ``prompt_for_user_token`` cannot be used if the application
 runs on a web server, as it needs to open up a browser.
 """
 
+import os
 import webbrowser
+
 from urllib.parse import urlparse, parse_qs
 from spotipy.auth import Token, Credentials
 from spotipy.scope import Scope
@@ -58,6 +60,34 @@ class RefreshingToken:
 
     def is_expiring(self) -> bool:
         return self._token.is_expiring()
+
+
+def read_environment(
+        client_id_var: str = 'SPOTIPY_CLIENT_ID',
+        client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
+        redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
+) -> (str, str, str):
+    """
+    Read environment variables for application configuration.
+
+    Parameters
+    ----------
+    client_id_var
+        name of the variable containing a client ID
+    client_secret_var
+        name of the variable containing a client secret
+    redirect_uri_var
+        name of the variable containing a redirect URI
+
+    Returns
+    -------
+    tuple
+        (client ID, client secret, redirect URI), None if not found
+    """
+    client_id = os.getenv(client_id_var, None)
+    client_secret = os.getenv(client_secret_var, None)
+    redirect_uri = os.getenv(redirect_uri_var, None)
+    return client_id, client_secret, redirect_uri
 
 
 def parse_code_from_url(url: str) -> str:
