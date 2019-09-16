@@ -1,8 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+from spotipy.auth import Token
 from spotipy.util import (
-    RefreshingToken, Token, parse_code_from_url, prompt_for_user_token
+    RefreshingToken,
+    parse_code_from_url,
+    prompt_for_user_token,
+    read_environment
 )
 
 
@@ -42,6 +46,25 @@ class TestRefreshingToken(unittest.TestCase):
         for attribute in token_attributes:
             with self.subTest(f'Attribute: `{attribute}`'):
                 self.assertTrue(attribute in auto_attributes)
+
+
+class TestReadEnvironment(unittest.TestCase):
+    def test_environment_read_according_to_specified_names(self):
+        import os
+        id_name = 'SP_client_id'
+        secret_name = 'SP_client_secret'
+        uri_name = 'SP_redirect_uri'
+        os.environ[id_name] = 'id'
+        os.environ[secret_name] = 'secret'
+        os.environ[uri_name] = 'uri'
+
+        id_, secret, uri = read_environment(id_name, secret_name, uri_name)
+        with self.subTest('Client ID'):
+            self.assertEqual(id_, 'id')
+        with self.subTest('Client secret'):
+            self.assertEqual(secret, 'secret')
+        with self.subTest('Redirect URI'):
+            self.assertEqual(uri, 'uri')
 
 
 class TestParseCodeFromURL(unittest.TestCase):

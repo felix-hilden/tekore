@@ -25,10 +25,32 @@ be it due to number of users, token refreshing or scopes.
        user = s.current_user()
 
 
+Configuration with environment variables
+----------------------------------------
+Should you want to use environment variables to provide application credentials,
+a function for reading those values is provided in the ``util`` module.
+
+.. code:: python
+
+   from spotipy.util import read_environment
+   client_id, client_secret, redirect_uri = read_environment()
+
+Those values can then be passed to a :class:`Credentials` manager or
+``prompt_for_user_token`` to retrieve access tokens.
+Note that if all configuration values are defined, the following is possible.
+
+.. code:: python
+
+   from spotipy import util
+
+   *env = util.read_environment()
+   c = util.prompt_for_user_token(*env)
+
+
 Retrieving user tokens
 ----------------------
 The ``util`` module defines a convenient way of retrieving an access token
-that refreshes automatically when about to expire.
+that refreshes automatically when about to expire (``prompt_for_user_token``).
 However, it is intended for local use as it opens up a browser window.
 For situations involving a server, a two-step process should be implemented.
 
@@ -36,7 +58,7 @@ For situations involving a server, a two-step process should be implemented.
 - Receive an access token as a result of the authentication
 
 For this use case, the utility function is essentially split in half.
-The two steps are essentially covered by the ``Credentials.authorisation_url``
+The two steps are covered by the ``Credentials.authorisation_url``
 and ``Credentials.request_access_token`` methods in the ``auth`` module.
 Note that ``request_access_token`` does not return
 an automatically refreshing token but an expiring one.
