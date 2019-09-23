@@ -89,14 +89,10 @@ class SpotifyBase:
         self._set_content(r, payload, params)
         self._send(r)
 
-    def next(self, result):
-        if result['next']:
-            return self._get(result['next'])
-        else:
-            return None
+    def next(self, result: Paging):
+        if result.next is not None:
+            return self._get(result.next)
 
-    def previous(self, result):
-        if result['previous']:
-            return self._get(result['previous'])
-        else:
-            return None
+    def previous(self, result: OffsetPaging):
+        if result.previous is not None:
+            return self._get(result.previous)
