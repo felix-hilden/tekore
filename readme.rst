@@ -135,8 +135,6 @@ Additional features
 
 (*) Retries implemented for GET requests
 
-(**) Response objects are implemented, but not yet returned from calls
-
 
 .. |travis| image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
 
