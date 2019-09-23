@@ -32,6 +32,14 @@ Album-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimpleAlbumPaging
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.SavedAlbumPaging
+   :members:
+   :undoc-members:
+
 
 Artist-related
 --------------
@@ -45,6 +53,14 @@ Artist-related
    :undoc-members:
 
 .. autoclass:: spotipy.model.FullArtist
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.FullArtistCursorPaging
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.FullArtistOffsetPaging
    :members:
    :undoc-members:
 
@@ -126,6 +142,10 @@ Playlist-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimplePlaylistPaging
+   :members:
+   :undoc-members:
+
 
 Track-related
 -------------
@@ -138,7 +158,15 @@ Track-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimpleTrackPaging
+   :members:
+   :undoc-members:
+
 .. autoclass:: spotipy.model.FullTrack
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.FullTrackPaging
    :members:
    :undoc-members:
 
@@ -154,7 +182,7 @@ Track-related
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.SimpleTrackPaging
+.. autoclass:: spotipy.model.SavedTrackPaging
    :members:
    :undoc-members:
 
@@ -179,6 +207,10 @@ Miscellaneous
 -------------
 
 .. autoclass:: spotipy.model.Category
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.CategoryPaging
    :members:
    :undoc-members:
 
@@ -211,6 +243,10 @@ Miscellaneous
    :undoc-members:
 
 .. autoclass:: spotipy.model.PlayHistory
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.PlayHistoryPaging
    :members:
    :undoc-members:
 

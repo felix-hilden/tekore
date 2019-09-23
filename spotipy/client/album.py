@@ -1,8 +1,10 @@
 from spotipy.client.base import SpotifyBase
+from spotipy.serialise import ModelList
+from spotipy.model import FullAlbum, SimpleTrack
 
 
 class SpotifyAlbum(SpotifyBase):
-    def album(self, album_id: str, market: str = 'from_token'):
+    def album(self, album_id: str, market: str = 'from_token') -> FullAlbum:
         """
         Get an album.
 
@@ -12,8 +14,14 @@ class SpotifyAlbum(SpotifyBase):
             album ID
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
+
+        Returns
+        -------
+        FullAlbum
+            full album object
         """
-        return self._get('albums/' + album_id, market=market)
+        json = self._get('albums/' + album_id, market=market)
+        return FullAlbum(**json)
 
     def album_tracks(
             self,
@@ -21,7 +29,7 @@ class SpotifyAlbum(SpotifyBase):
             market: str = 'from_token',
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> ModelList:
         """
         Get tracks on album.
 
@@ -35,15 +43,21 @@ class SpotifyAlbum(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        ModelList
+            list of simplified track objects
         """
-        return self._get(
+        json = self._get(
             f'albums/{album_id}/tracks',
             market=market,
             limit=limit,
             offset=offset
         )
+        return ModelList(SimpleTrack(**t) for t in json)
 
-    def albums(self, album_ids: list, market: str = 'from_token'):
+    def albums(self, album_ids: list, market: str = 'from_token') -> ModelList:
         """
         Get multiple albums.
 
@@ -53,5 +67,11 @@ class SpotifyAlbum(SpotifyBase):
             list of album IDs (1..20)
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
+
+        Returns
+        -------
+        ModelList
+            list of full album objects
         """
-        return self._get('albums/?ids=' + ','.join(album_ids), market=market)
+        json = self._get('albums/?ids=' + ','.join(album_ids), market=market)
+        return ModelList(FullAlbum(**a) for a in json['albums'])

@@ -1,9 +1,20 @@
 from spotipy.client.base import SpotifyBase
+from spotipy.serialise import ModelList
 from spotipy.convert import to_uri
+from spotipy.model import (
+    SimplePlaylistPaging,
+    FullPlaylist,
+    Image,
+    PlaylistTrackPaging
+)
 
 
 class SpotifyPlaylist(SpotifyBase):
-    def current_user_playlists(self, limit: int = 20, offset: int = 0):
+    def current_user_playlists(
+            self,
+            limit: int = 20,
+            offset: int = 0
+    ) -> SimplePlaylistPaging:
         """
         Get a list of the playlists owned or followed by the current user.
 
@@ -17,10 +28,21 @@ class SpotifyPlaylist(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-        """
-        return self._get('me/playlists', limit=limit, offset=offset)
 
-    def playlists(self, user_id: str, limit: int = 20, offset: int = 0):
+        Returns
+        -------
+        SimplePlaylistPaging
+            paging object containing simplified playlists
+        """
+        json = self._get('me/playlists', limit=limit, offset=offset)
+        return SimplePlaylistPaging(**json)
+
+    def playlists(
+            self,
+            user_id: str,
+            limit: int = 20,
+            offset: int = 0
+    ) -> SimplePlaylistPaging:
         """
         Get a list of the playlists owned or followed by a user.
 
@@ -36,15 +58,21 @@ class SpotifyPlaylist(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        SimplePlaylistPaging
+            paging object containing simplified playlists
         """
-        return self._get(f'users/{user_id}/playlists', limit=limit, offset=offset)
+        json = self._get(f'users/{user_id}/playlists', limit=limit, offset=offset)
+        return SimplePlaylistPaging(**json)
 
     def playlist(
             self,
             playlist_id: str,
             fields: str = None,
             market: str = 'from_token'
-    ):
+    ) -> FullPlaylist:
         """
         Get playlist of a user.
 
@@ -56,16 +84,28 @@ class SpotifyPlaylist(SpotifyBase):
             which fields to return
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
-        """
-        return self._get('playlists/' + playlist_id, fields=fields, market=market)
 
-    def playlist_cover_image(self, playlist_id: str):
+        Returns
+        -------
+        FullPlaylist
+            playlist object
+        """
+        json = self._get('playlists/' + playlist_id, fields=fields, market=market)
+        return FullPlaylist(**json)
+
+    def playlist_cover_image(self, playlist_id: str) -> ModelList:
         """
         Get cover image of a playlist. Note: returns a list of images.
-        """
-        return self._get(f'playlists/{playlist_id}/images')
 
-    def playlist_cover_image_upload(self, playlist_id: str, image: str):
+        Returns
+        -------
+        ModelList
+            list of cover images
+        """
+        json = self._get(f'playlists/{playlist_id}/images')
+        return ModelList(Image(**i) for i in json)
+
+    def playlist_cover_image_upload(self, playlist_id: str, image: str) -> None:
         """
         Upload a custom playlist cover image.
 
@@ -88,7 +128,7 @@ class SpotifyPlaylist(SpotifyBase):
             headers
         )
         self._set_content(r, payload=image)
-        return self._send(r)
+        self._send(r)
 
     def playlist_tracks(
             self,
@@ -97,7 +137,7 @@ class SpotifyPlaylist(SpotifyBase):
             market: str = 'from_token',
             limit: int = 100,
             offset: int = 0
-    ):
+    ) -> PlaylistTrackPaging:
         """
         Get full details of the tracks of a playlist owned by a user.
 
@@ -113,14 +153,20 @@ class SpotifyPlaylist(SpotifyBase):
             the index of the first item to return
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
+
+        Returns
+        -------
+        PlaylistTrackPaging
+            paging object containing playlist tracks
         """
-        return self._get(
+        json = self._get(
             f'playlists/{playlist_id}/tracks',
             limit=limit,
             offset=offset,
             fields=fields,
             market=market
         )
+        return PlaylistTrackPaging(**json)
 
     def playlist_create(
             self,
@@ -128,7 +174,7 @@ class SpotifyPlaylist(SpotifyBase):
             name: str,
             public: bool = True,
             description: str = ''
-    ):
+    ) -> None:
         """
         Create a playlist for a user.
 
@@ -151,7 +197,7 @@ class SpotifyPlaylist(SpotifyBase):
             'public': public,
             'description': description
         }
-        return self._post(f'users/{user_id}/playlists', payload=payload)
+        self._post(f'users/{user_id}/playlists', payload=payload)
 
     def playlist_change_details(
             self,
@@ -160,7 +206,7 @@ class SpotifyPlaylist(SpotifyBase):
             public: bool = None,
             collaborative: bool = None,
             description: str = None
-    ):
+    ) -> None:
         """
         Change a playlist's name and/or public/private state.
 
@@ -187,14 +233,14 @@ class SpotifyPlaylist(SpotifyBase):
             'description': description,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        return self._put('playlists/' + playlist_id, payload=payload)
+        self._put('playlists/' + playlist_id, payload=payload)
 
     def playlist_tracks_add(
             self,
             playlist_id: str,
             track_ids: list,
             position: int = None
-    ):
+    ) -> None:
         """
         Add tracks to a playlist.
 
@@ -211,13 +257,13 @@ class SpotifyPlaylist(SpotifyBase):
             position to add the tracks
         """
         payload = {'uris': [to_uri('track', t) for t in track_ids]}
-        return self._post(
+        self._post(
             f'playlists/{playlist_id}/tracks',
             payload=payload,
             position=position
         )
 
-    def playlist_tracks_replace(self, playlist_id: str, track_ids: list):
+    def playlist_tracks_replace(self, playlist_id: str, track_ids: list) -> None:
         """
         Replace all tracks in a playlist.
 
@@ -232,7 +278,7 @@ class SpotifyPlaylist(SpotifyBase):
             list of track IDs to add to the playlist
         """
         payload = {'uris': [to_uri('track', t) for t in track_ids]}
-        return self._put(f'playlists/{playlist_id}/tracks)', payload=payload)
+        self._put(f'playlists/{playlist_id}/tracks)', payload=payload)
 
     def playlist_tracks_reorder(
             self,
@@ -241,7 +287,7 @@ class SpotifyPlaylist(SpotifyBase):
             insert_before: int,
             range_length: int = 1,
             snapshot_id: str = None
-    ):
+    ) -> None:
         """
         Reorder tracks in a playlist.
 
@@ -268,14 +314,14 @@ class SpotifyPlaylist(SpotifyBase):
         }
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._put(f'playlists/{playlist_id}/tracks', payload=payload)
+        self._put(f'playlists/{playlist_id}/tracks', payload=payload)
 
     def playlist_tracks_remove(
             self,
             playlist_id: str,
             track_ids: list,
             snapshot_id: str = None
-    ):
+    ) -> None:
         """
         Remove all occurrences of tracks from a playlist.
 
@@ -295,14 +341,14 @@ class SpotifyPlaylist(SpotifyBase):
         payload = {'tracks': [{'uri': t} for t in tracks]}
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
+        self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
     def playlist_tracks_remove_occurrences(
             self,
             playlist_id: str,
             track_refs: list,
             snapshot_id: str = None
-    ):
+    ) -> None:
         """
         Remove all occurrences of tracks from a playlist.
 
@@ -333,4 +379,4 @@ class SpotifyPlaylist(SpotifyBase):
         payload = {'tracks': tracks}
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
+        self._delete(f'playlists/{playlist_id}/tracks', payload=payload)

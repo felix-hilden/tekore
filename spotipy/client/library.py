@@ -1,4 +1,7 @@
+from typing import List
+
 from spotipy.client.base import SpotifyBase
+from spotipy.model import SavedAlbumPaging, SavedTrackPaging
 
 
 class SpotifyLibrary(SpotifyBase):
@@ -7,7 +10,7 @@ class SpotifyLibrary(SpotifyBase):
             market: str = 'from_token',
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> SavedAlbumPaging:
         """
         Get a list of the albums saved in the current user's Your Music library.
 
@@ -21,10 +24,16 @@ class SpotifyLibrary(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-        """
-        return self._get('me/albums', market=market, limit=limit, offset=offset)
 
-    def current_user_albums_contains(self, album_ids: list):
+        Returns
+        -------
+        SavedAlbumPaging
+            paging object containing saved albums
+        """
+        json = self._get('me/albums', market=market, limit=limit, offset=offset)
+        return SavedAlbumPaging(**json)
+
+    def current_user_albums_contains(self, album_ids: list) -> List[bool]:
         """
         Check if user has saved albums.
 
@@ -34,10 +43,15 @@ class SpotifyLibrary(SpotifyBase):
         ----------
         album_ids
             list of album IDs
+
+        Returns
+        -------
+        list
+            list of booleans in the same order the album IDs were given
         """
         return self._get('me/albums/contains?ids=' + ','.join(album_ids))
 
-    def current_user_albums_add(self, album_ids: list):
+    def current_user_albums_add(self, album_ids: list) -> None:
         """
         Save albums for current user.
 
@@ -48,9 +62,9 @@ class SpotifyLibrary(SpotifyBase):
         album_ids
             list of album IDs
         """
-        return self._put('me/albums?ids=' + ','.join(album_ids))
+        self._put('me/albums?ids=' + ','.join(album_ids))
 
-    def current_user_albums_delete(self, album_ids: list):
+    def current_user_albums_delete(self, album_ids: list) -> None:
         """
         Remove albums for current user.
 
@@ -61,14 +75,14 @@ class SpotifyLibrary(SpotifyBase):
         album_ids
             list of album IDs
         """
-        return self._delete('me/albums?ids=' + ','.join(album_ids))
+        self._delete('me/albums?ids=' + ','.join(album_ids))
 
     def current_user_tracks(
             self,
             market: str = 'from_token',
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> SavedTrackPaging:
         """
         Get a list of the songs saved in the current user's Your Music library.
 
@@ -82,10 +96,16 @@ class SpotifyLibrary(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-        """
-        return self._get('me/tracks', market=market, limit=limit, offset=offset)
 
-    def current_user_tracks_contains(self, track_ids: list):
+        Returns
+        -------
+        SavedTrackPaging
+            paging object containing saved tracks
+        """
+        json = self._get('me/tracks', market=market, limit=limit, offset=offset)
+        return SavedTrackPaging(**json)
+
+    def current_user_tracks_contains(self, track_ids: list) -> List[bool]:
         """
         Check if user has saved tracks.
 
@@ -95,10 +115,15 @@ class SpotifyLibrary(SpotifyBase):
         ----------
         track_ids
             list of track IDs
+
+        Returns
+        -------
+        list
+            list of booleans in the same order the track IDs were given
         """
         return self._get('me/tracks/contains?ids=' + ','.join(track_ids))
 
-    def current_user_tracks_add(self, track_ids: list):
+    def current_user_tracks_add(self, track_ids: list) -> None:
         """
         Save tracks for current user.
 
@@ -109,9 +134,9 @@ class SpotifyLibrary(SpotifyBase):
         track_ids
             list of track IDs
         """
-        return self._put('me/tracks/?ids=' + ','.join(track_ids))
+        self._put('me/tracks/?ids=' + ','.join(track_ids))
 
-    def current_user_tracks_delete(self, track_ids: list):
+    def current_user_tracks_delete(self, track_ids: list) -> None:
         """
         Remove tracks for current user.
 
@@ -122,4 +147,4 @@ class SpotifyLibrary(SpotifyBase):
         track_ids
             list of track IDs
         """
-        return self._delete('me/tracks/?ids=' + ','.join(track_ids))
+        self._delete('me/tracks/?ids=' + ','.join(track_ids))

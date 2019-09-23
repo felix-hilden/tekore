@@ -53,6 +53,14 @@ class FullTrack(Track):
 
 
 @dataclass
+class FullTrackPaging(OffsetPaging):
+    items: List[SimpleTrack]
+
+    def __post_init__(self):
+        self.items = [FullTrack(**t) for t in self.items]
+
+
+@dataclass
 class SimpleTrackPaging(OffsetPaging):
     items: List[SimpleTrack]
 
@@ -74,3 +82,11 @@ class SavedTrack(SerialisableDataclass):
     def __post_init__(self):
         self.added_at = Timestamp(datetime=self.added_at)
         self.track = Track(**self.track)
+
+
+@dataclass
+class SavedTrackPaging(OffsetPaging):
+    items: List[SavedTrack]
+
+    def __post_init__(self):
+        self.items = [SavedTrack(**t) for t in self.items]

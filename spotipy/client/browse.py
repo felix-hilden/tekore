@@ -1,4 +1,13 @@
+from typing import List
+
 from spotipy.client.base import SpotifyBase
+from spotipy.model import (
+    SimplePlaylistPaging,
+    SimpleAlbumPaging,
+    CategoryPaging,
+    Category,
+    Recommendations
+)
 
 recommendation_prefixes = {'min', 'max', 'target'}
 recommendation_attributes = {
@@ -27,7 +36,7 @@ class SpotifyBrowse(SpotifyBase):
             timestamp: str = None,
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> tuple:
         """
         Get a list of Spotify featured playlists.
 
@@ -46,8 +55,14 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        tuple
+            (str, SimplePlaylistPaging): message for the playlists and a list of
+            simplified playlist objects wrapped in a paging object
         """
-        return self._get(
+        json = self._get(
             'browse/featured-playlists',
             locale=locale,
             country=country,
@@ -55,8 +70,14 @@ class SpotifyBrowse(SpotifyBase):
             limit=limit,
             offset=offset
         )
+        return json['message'], SimplePlaylistPaging(**json['playlists'])
 
-    def new_releases(self, country: str = None, limit: int = 20, offset: int = 0):
+    def new_releases(
+            self,
+            country: str = None,
+            limit: int = 20,
+            offset: int = 0
+    ) -> tuple:
         """
         Get a list of new album releases featured in Spotify.
 
@@ -68,13 +89,20 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        tuple
+            (str, SimpleAlbumPaging): message for the albums and a list of
+            simplified album objects wrapped in a paging object
         """
-        return self._get(
+        json = self._get(
             'browse/new-releases',
             country=country,
             limit=limit,
             offset=offset
         )
+        return json['message'], SimpleAlbumPaging(**json['albums'])
 
     def categories(
             self,
@@ -82,7 +110,7 @@ class SpotifyBrowse(SpotifyBase):
             locale: str = None,
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> CategoryPaging:
         """
         Get a list of categories used to tag items in Spotify.
 
@@ -97,16 +125,27 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        CategoryPaging
+            paging object containing a list of categories
         """
-        return self._get(
+        json = self._get(
             'browse/categories',
             country=country,
             locale=locale,
             limit=limit,
             offset=offset
         )
+        return CategoryPaging(**json['categories'])
 
-    def category(self, category_id: str, country: str = None, locale: str = None):
+    def category(
+            self,
+            category_id: str,
+            country: str = None,
+            locale: str = None
+    ) -> Category:
         """
         Get a single category used to tag items in Spotify.
 
@@ -119,12 +158,18 @@ class SpotifyBrowse(SpotifyBase):
         locale
             the desired language, consisting of a lowercase ISO 639 language code
             and an uppercase ISO 3166-1 alpha-2 country code joined by an underscore
+
+        Returns
+        -------
+        Category
+            category object
         """
-        return self._get(
+        json = self._get(
             'browse/categories/' + category_id,
             country=country,
             locale=locale
         )
+        return Category(**json)
 
     def category_playlists(
             self,
@@ -132,7 +177,7 @@ class SpotifyBrowse(SpotifyBase):
             country: str = None,
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> SimplePlaylistPaging:
         """
         Get a list of Spotify playlists tagged with a particular category.
 
@@ -146,13 +191,19 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
+
+        Returns
+        -------
+        SimplePlaylistPaging
+            paging object containing a list of simplified playlist objects
         """
-        return self._get(
+        json = self._get(
             f'browse/categories/{category_id}/playlists',
             country=country,
             limit=limit,
             offset=offset
         )
+        return SimplePlaylistPaging(**json['playlists'])
 
     def recommendations(
             self,
@@ -162,7 +213,7 @@ class SpotifyBrowse(SpotifyBase):
             limit: int = 20,
             market: str = 'from_token',
             **attributes
-    ):
+    ) -> Recommendations:
         """
         Get a list of recommended tracks for seeds.
 
@@ -182,6 +233,11 @@ class SpotifyBrowse(SpotifyBase):
             min/max/target_<attribute> - For the tuneable track
             attributes listed in the documentation, these values
             provide filters and targeting on results.
+
+        Returns
+        -------
+        Recommendations
+            recommendations object containing track recommendations and seeds
         """
         params = dict(limit=limit)
         if artist_ids is not None:
@@ -198,10 +254,16 @@ class SpotifyBrowse(SpotifyBase):
             if p in recommendation_prefixes and a in recommendation_attributes:
                 params[name] = value
 
-        return self._get('recommendations', **params)
+        json = self._get('recommendations', **params)
+        return Recommendations(**json)
 
-    def recommendation_genre_seeds(self):
+    def recommendation_genre_seeds(self) -> List[str]:
         """
         Get a list of available genre seeds.
+
+        Returns
+        -------
+        list
+            list of genres to use as seeds
         """
-        return self._get('recommendations/available-genre-seeds')
+        return self._get('recommendations/available-genre-seeds')['genres']
