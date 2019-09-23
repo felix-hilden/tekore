@@ -1,10 +1,11 @@
 """
-Implement OAuth2 authentication for client credentials and authorisation code.
+OAuth2 authentication for client credentials and authorisation code.
 """
 
 import time
 import requests
 
+from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
 from urllib.parse import urlencode
 
@@ -25,28 +26,54 @@ def b64encode(msg: str) -> str:
     return _b64encode(msg.encode()).decode()
 
 
-class Token:
+class AccessToken(ABC):
+    """
+    Token object.
+
+    Has an 'access_token' property, which is also
+    the string representation of the instance.
+    """
+    @property
+    @abstractmethod
+    def access_token(self) -> str:
+        pass
+
+    def __str__(self):
+        return self.access_token
+
+
+class Token(AccessToken):
     """
     Spotify OAuth access token.
     """
     def __init__(self, token_info: dict):
-        self.access_token = token_info['access_token']
+        self._access_token = token_info['access_token']
+        self._expires_in = token_info['expires_in']
         self.token_type = token_info['token_type']
         self.scope = token_info['scope']
-        self.expires_in = token_info['expires_in']
 
-        if 'refresh_token' in token_info:
-            self.refresh_token = token_info['refresh_token']
-        else:
-            self.refresh_token = None
-
+        self.refresh_token = token_info.get('refresh_token', None)
         self.expires_at = int(time.time()) + token_info['expires_in']
+
+    @property
+    def access_token(self) -> str:
+        """
+        Bearer token value.
+        """
+        return self._access_token
+
+    @property
+    def expires_in(self) -> int:
+        """
+        Seconds until token expiration.
+        """
+        return self.expires_at - int(time.time())
 
     def is_expiring(self) -> bool:
         """
         Determine whether token is about to expire.
         """
-        return (self.expires_at - int(time.time())) < 60
+        return self.expires_in < 60
 
 
 class Credentials:

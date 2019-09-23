@@ -2,7 +2,9 @@ import json
 
 from contextlib import contextmanager
 from requests import Request, HTTPError
+
 from spotipy.sender import Sender, TransientSender
+from spotipy.model import Paging, OffsetPaging
 
 
 class SpotifyBase:
@@ -10,7 +12,7 @@ class SpotifyBase:
 
     def __init__(
             self,
-            token: str = None,
+            token=None,
             sender: Sender = None,
             requests_kwargs: dict = None
     ):
@@ -26,22 +28,22 @@ class SpotifyBase:
         requests_kwargs
             keyword arguments for requests.request
         """
-        self._token = token
+        self.token = token
         self.requests_kwargs = requests_kwargs or {}
         self.sender = sender or TransientSender()
 
     @contextmanager
-    def token(self, token: str) -> 'SpotifyBase':
-        self._token, old_token = token, self._token
+    def token_as(self, token) -> 'SpotifyBase':
+        self.token, old_token = token, self.token
         yield self
-        self._token = old_token
+        self.token = old_token
 
     def _build_request(self, method: str, url: str, headers: dict = None) -> Request:
         if not url.startswith('http'):
             url = self.prefix + url
 
         default_headers = {
-            'Authorization': f'Bearer {self._token}',
+            'Authorization': f'Bearer {str(self.token)}',
             'Content-Type': 'application/json'
         }
         default_headers.update(headers or {})

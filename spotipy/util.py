@@ -12,11 +12,11 @@ import os
 import webbrowser
 
 from urllib.parse import urlparse, parse_qs
-from spotipy.auth import Token, Credentials
+from spotipy.auth import AccessToken, Token, Credentials
 from spotipy.scope import Scope
 
 
-class RefreshingToken:
+class RefreshingToken(AccessToken):
     """
     Automatically refreshing access token.
 
@@ -47,11 +47,11 @@ class RefreshingToken:
         return self._token.scope
 
     @property
-    def expires_in(self):
+    def expires_in(self) -> int:
         return self._token.expires_in
 
     @property
-    def expires_at(self):
+    def expires_at(self) -> int:
         return self._token.expires_at
 
     @property

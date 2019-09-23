@@ -10,7 +10,7 @@ Firstly it accepts an access token in the constructor.
    s = Spotify(token)
    a = s.artist(artist_id)
 
-Secondly, a context manager ``Spotify.token`` is provided
+Secondly, a context manager ``Spotify.token_as`` is provided
 for using a particular token for requests within the context.
 This is particularly handy if one object is created for all requests
 but requests need to use different tokens,
@@ -21,7 +21,7 @@ be it due to number of users, token refreshing or scopes.
    s = Spotify(app_token)
    a = s.artist(artist_id)
 
-   with s.token(user_token):
+   with s.token_as(user_token):
        user = s.current_user()
 
 
