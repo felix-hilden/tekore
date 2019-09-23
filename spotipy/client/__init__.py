@@ -1,3 +1,5 @@
+from typing import Union
+
 from spotipy.client.album import SpotifyAlbum
 from spotipy.client.artist import SpotifyArtist
 from spotipy.client.browse import SpotifyBrowse
@@ -40,7 +42,7 @@ class Spotify(
             self,
             query: str,
             types: tuple = ('track',),
-            market: str = 'from_token',
+            market: Union[str, None] = 'from_token',
             include_external: str = None,
             limit: int = 20,
             offset: int = 0
@@ -57,7 +59,7 @@ class Spotify(
         types
             items to return: 'artist', 'album', 'track' and/or 'playlist'
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset

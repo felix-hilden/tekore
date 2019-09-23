@@ -1,3 +1,5 @@
+from typing import Union
+
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
 from spotipy.model import FullArtist, SimpleAlbum, FullTrack
@@ -42,7 +44,7 @@ class SpotifyArtist(SpotifyBase):
             self,
             artist_id: str,
             include_groups: list = None,
-            market: str = 'from_token',
+            market: Union[str, None] = 'from_token',
             limit: int = 20,
             offset: int = 0
     ) -> ModelList:
@@ -56,7 +58,7 @@ class SpotifyArtist(SpotifyBase):
         include_groups
             'album', 'single', 'appears_on', 'compilation'
         market
-            An ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
@@ -76,7 +78,11 @@ class SpotifyArtist(SpotifyBase):
         )
         return ModelList(SimpleAlbum(**a) for a in json)
 
-    def artist_top_tracks(self, artist_id, market: str = 'from_token') -> ModelList:
+    def artist_top_tracks(
+            self,
+            artist_id: str,
+            market: Union[str, None] = 'from_token'
+    ) -> ModelList:
         """
         Get an artist's top 10 tracks by country.
 
@@ -85,7 +91,7 @@ class SpotifyArtist(SpotifyBase):
         artist_id
             the artist ID
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from spotipy.client.base import SpotifyBase
 from spotipy.model import (
@@ -211,7 +211,7 @@ class SpotifyBrowse(SpotifyBase):
             genres: list = None,
             track_ids: list = None,
             limit: int = 20,
-            market: str = 'from_token',
+            market: Union[str, None] = 'from_token',
             **attributes
     ) -> Recommendations:
         """
@@ -228,7 +228,7 @@ class SpotifyBrowse(SpotifyBase):
         limit
             the number of items to return (1..100)
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
         attributes
             min/max/target_<attribute> - For the tuneable track
             attributes listed in the documentation, these values

@@ -1,3 +1,5 @@
+from typing import Union
+
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
 from spotipy.model import FullTrack, AudioFeatures
@@ -16,7 +18,11 @@ class SpotifyTrack(SpotifyBase):
         json = self._get('tracks/' + track_id)
         return FullTrack(**json)
 
-    def tracks(self, track_ids: list, market: str = 'from_token') -> ModelList:
+    def tracks(
+            self,
+            track_ids: list,
+            market: Union[str, None] = 'from_token'
+    ) -> ModelList:
         """
         Get information for multiple tracks.
 
@@ -25,7 +31,7 @@ class SpotifyTrack(SpotifyBase):
         track_ids
             the track IDs
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

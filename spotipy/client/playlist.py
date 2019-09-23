@@ -1,3 +1,5 @@
+from typing import Union
+
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
 from spotipy.convert import to_uri
@@ -71,7 +73,7 @@ class SpotifyPlaylist(SpotifyBase):
             self,
             playlist_id: str,
             fields: str = None,
-            market: str = 'from_token'
+            market: Union[str, None] = 'from_token'
     ) -> FullPlaylist:
         """
         Get playlist of a user.
@@ -83,7 +85,7 @@ class SpotifyPlaylist(SpotifyBase):
         fields
             which fields to return
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -134,7 +136,7 @@ class SpotifyPlaylist(SpotifyBase):
             self,
             playlist_id: str,
             fields: str = None,
-            market: str = 'from_token',
+            market: Union[str, None] = 'from_token',
             limit: int = 100,
             offset: int = 0
     ) -> PlaylistTrackPaging:
@@ -152,7 +154,7 @@ class SpotifyPlaylist(SpotifyBase):
         offset
             the index of the first item to return
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

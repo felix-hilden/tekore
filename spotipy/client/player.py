@@ -1,10 +1,12 @@
+from typing import Union
+
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
 from spotipy.model import CurrentlyPlaying, PlayHistoryPaging, Device
 
 
 class SpotifyPlayer(SpotifyBase):
-    def playback(self, market: str = 'from_token') -> dict:
+    def playback(self, market: Union[str, None] = 'from_token') -> dict:
         """
         Get information about user's current playback.
 
@@ -14,7 +16,7 @@ class SpotifyPlayer(SpotifyBase):
         Parameters
         ----------
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -25,7 +27,7 @@ class SpotifyPlayer(SpotifyBase):
 
     def playback_currently_playing(
             self,
-            market: str = 'from_token'
+            market: Union[str, None] = 'from_token'
     ) -> CurrentlyPlaying:
         """
         Get user's currently playing track.
