@@ -62,30 +62,32 @@ class SpotifyBase:
         if r.status_code >= 400:
             raise HTTPError(f'Error ({r.status_code}) in {r.url}', request=r)
 
-        if r.text and len(r.text) > 0:
-            return r.json()
-        else:
-            return None
+        return r
 
     def _get(self, url: str, payload=None, **params):
-        r = self._build_request('GET', url)
-        self._set_content(r, payload, params)
-        return self._send(r)
+        request = self._build_request('GET', url)
+        self._set_content(request, payload, params)
+        response = self._send(request)
+
+        try:
+            return response.json()
+        except json.decoder.JSONDecodeError:
+            return None
 
     def _post(self, url: str, payload=None, **params):
         r = self._build_request('POST', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
     def _delete(self, url: str, payload=None, **params):
         r = self._build_request('DELETE', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
     def _put(self, url: str, payload=None, **params):
         r = self._build_request('PUT', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
     def next(self, result):
         if result['next']:
