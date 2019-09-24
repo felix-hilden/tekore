@@ -1,5 +1,6 @@
 from typing import List, Union
 
+from spotipy.client.browse.validate import validate_attributes
 from spotipy.client.base import SpotifyBase
 from spotipy.model import (
     SimplePlaylistPaging,
@@ -8,45 +9,6 @@ from spotipy.model import (
     Category,
     Recommendations
 )
-
-recommendation_prefixes = {'min', 'max', 'target'}
-recommendation_attributes = {
-    'acousticness',
-    'danceability',
-    'duration_ms',
-    'energy',
-    'instrumentalness',
-    'key',
-    'liveness',
-    'loudness',
-    'mode',
-    'popularity',
-    'speechiness',
-    'tempo',
-    'time_signature',
-    'valence'
-}
-
-
-def validate_attributes(attributes: dict) -> None:
-    """
-    Validate recommendation attributes.
-
-    Raise ValueError if any attribute is not allowed.
-
-    Parameters
-    ----------
-    attributes
-        recommendation attributes
-    """
-    for name in attributes:
-        try:
-            p, a = name.split('_')
-        except ValueError as e:
-            raise ValueError(f'Invalid attribute `{name}`!') from e
-
-        if p not in recommendation_prefixes or a not in recommendation_attributes:
-            raise ValueError(f'Invalid attribute `{name}`!')
 
 
 class SpotifyBrowse(SpotifyBase):
