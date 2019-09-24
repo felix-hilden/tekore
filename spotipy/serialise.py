@@ -8,12 +8,15 @@ from enum import Enum
 from dataclasses import dataclass, asdict
 
 
-class SerialisableEnum(Enum):
+class JSONEncoder(json.JSONEncoder):
     """
-    Convert enumeration members to strings using their name.
+    JSON Encoder capable of serialising enumerations.
     """
-    def __str__(self):
-        return self.name
+    def default(self, o):
+        if isinstance(o, Enum):
+            return o.name
+        else:
+            return super().default(o)
 
 
 @dataclass
@@ -22,7 +25,7 @@ class SerialisableDataclass:
     Convert dataclasses to JSON strings recursively.
     """
     def __str__(self):
-        return json.dumps(asdict(self))
+        return JSONEncoder().encode(asdict(self))
 
 
 class ModelList(list):

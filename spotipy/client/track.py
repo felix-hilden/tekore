@@ -6,16 +6,27 @@ from spotipy.model import FullTrack, AudioFeatures
 
 
 class SpotifyTrack(SpotifyBase):
-    def track(self, track_id: str):
+    def track(
+            self,
+            track_id: str,
+            market: Union[str, None] = 'from_token'
+    ) -> FullTrack:
         """
         Get information for a track.
+
+        Parameters
+        ----------
+        track_id
+            track ID
+        market
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
         FullTrack
             track object
         """
-        json = self._get('tracks/' + track_id)
+        json = self._get('tracks/' + track_id, market=market)
         return FullTrack(**json)
 
     def tracks(

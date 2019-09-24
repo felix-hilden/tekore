@@ -16,7 +16,7 @@ from spotipy.model.artist import (
     FullArtistCursorPaging,
     FullArtistOffsetPaging,
 )
-from spotipy.model.audio_features import Key, Mode, AudioFeatures
+from spotipy.model.audio_features import AudioFeatures
 from spotipy.model.category import Category, CategoryPaging
 from spotipy.model.context import Context
 from spotipy.model.currently_playing import CurrentlyPlayingType, CurrentlyPlaying

@@ -2,7 +2,7 @@ from typing import Union
 
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
-from spotipy.model import FullArtist, SimpleAlbum, FullTrack
+from spotipy.model import FullArtist, SimpleAlbumPaging, FullTrack
 
 
 class SpotifyArtist(SpotifyBase):
@@ -47,7 +47,7 @@ class SpotifyArtist(SpotifyBase):
             market: Union[str, None] = 'from_token',
             limit: int = 20,
             offset: int = 0
-    ) -> ModelList:
+    ) -> SimpleAlbumPaging:
         """
         Get an artist's albums.
 
@@ -66,8 +66,8 @@ class SpotifyArtist(SpotifyBase):
 
         Returns
         -------
-        ModelList
-            list of simple album objects
+        SimpleAlbumPaging
+            paging containing simple album objects
         """
         json = self._get(
             f'artists/{artist_id}/albums',
@@ -76,12 +76,12 @@ class SpotifyArtist(SpotifyBase):
             limit=limit,
             offset=offset
         )
-        return ModelList(SimpleAlbum(**a) for a in json)
+        return SimpleAlbumPaging(**json)
 
     def artist_top_tracks(
             self,
             artist_id: str,
-            market: Union[str, None] = 'from_token'
+            country: str = 'from_token'
     ) -> ModelList:
         """
         Get an artist's top 10 tracks by country.
@@ -90,16 +90,16 @@ class SpotifyArtist(SpotifyBase):
         ----------
         artist_id
             the artist ID
-        market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+        country
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
         ModelList
             list of full track objects
         """
-        json = self._get(f'artists/{artist_id}/top-tracks', market=market)
-        return ModelList(FullTrack(**t) for t in json)
+        json = self._get(f'artists/{artist_id}/top-tracks', country=country)
+        return ModelList(FullTrack(**t) for t in json['tracks'])
 
     def artist_related_artists(self, artist_id: str) -> ModelList:
         """

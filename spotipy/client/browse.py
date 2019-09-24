@@ -28,6 +28,27 @@ recommendation_attributes = {
 }
 
 
+def validate_attributes(attributes: dict) -> None:
+    """
+    Validate recommendation attributes.
+
+    Raise ValueError if any attribute is not allowed.
+
+    Parameters
+    ----------
+    attributes
+        recommendation attributes
+    """
+    for name, value in attributes.items():
+        try:
+            p, a = name.split('_')
+        except ValueError as e:
+            raise ValueError(f'Invalid attribute `{name}`!') from e
+
+        if p not in recommendation_prefixes or a not in recommendation_attributes:
+            raise ValueError(f'Invalid attribute `{name}`!')
+
+
 class SpotifyBrowse(SpotifyBase):
     def featured_playlists(
             self,
@@ -77,7 +98,7 @@ class SpotifyBrowse(SpotifyBase):
             country: str = None,
             limit: int = 20,
             offset: int = 0
-    ) -> tuple:
+    ) -> SimpleAlbumPaging:
         """
         Get a list of new album releases featured in Spotify.
 
@@ -92,9 +113,8 @@ class SpotifyBrowse(SpotifyBase):
 
         Returns
         -------
-        tuple
-            (str, SimpleAlbumPaging): message for the albums and a list of
-            simplified album objects wrapped in a paging object
+        SimpleAlbumPaging
+            paging containing simplified album objects
         """
         json = self._get(
             'browse/new-releases',
@@ -102,7 +122,7 @@ class SpotifyBrowse(SpotifyBase):
             limit=limit,
             offset=offset
         )
-        return json['message'], SimpleAlbumPaging(**json['albums'])
+        return SimpleAlbumPaging(**json['albums'])
 
     def categories(
             self,
@@ -249,10 +269,7 @@ class SpotifyBrowse(SpotifyBase):
         if market is not None:
             params['market'] = market
 
-        for name, value in attributes.items():
-            p, a = name.split('_')
-            if p in recommendation_prefixes and a in recommendation_attributes:
-                params[name] = value
+        validate_attributes(attributes)
 
         json = self._get('recommendations', **params)
         return Recommendations(**json)

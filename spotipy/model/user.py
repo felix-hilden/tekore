@@ -9,12 +9,14 @@ from spotipy.model.member import Followers, Image
 class User(Item):
     display_name: str
     external_urls: dict
-    followers: Followers
-    images: List[Image]
+    followers: Followers = None
+    images: List[Image] = None
 
     def __post_init__(self):
-        self.followers = Followers(**self.followers)
-        self.images = [Image(**i) for i in self.images]
+        if self.followers is not None:
+            self.followers = Followers(**self.followers)
+        if self.images is not None:
+            self.images = [Image(**i) for i in self.images]
 
 
 @dataclass

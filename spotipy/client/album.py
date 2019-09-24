@@ -2,7 +2,7 @@ from typing import Union
 
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
-from spotipy.model import FullAlbum, SimpleTrack
+from spotipy.model import FullAlbum, SimpleTrackPaging
 
 
 class SpotifyAlbum(SpotifyBase):
@@ -35,7 +35,7 @@ class SpotifyAlbum(SpotifyBase):
             market: Union[str, None] = 'from_token',
             limit: int = 20,
             offset: int = 0
-    ) -> ModelList:
+    ) -> SimpleTrackPaging:
         """
         Get tracks on album.
 
@@ -52,8 +52,8 @@ class SpotifyAlbum(SpotifyBase):
 
         Returns
         -------
-        ModelList
-            list of simplified track objects
+        SimpleTrackPaging
+            paging containing simplified track objects
         """
         json = self._get(
             f'albums/{album_id}/tracks',
@@ -61,7 +61,7 @@ class SpotifyAlbum(SpotifyBase):
             limit=limit,
             offset=offset
         )
-        return ModelList(SimpleTrack(**t) for t in json)
+        return SimpleTrackPaging(**json)
 
     def albums(
             self,

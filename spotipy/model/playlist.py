@@ -45,6 +45,7 @@ class Playlist(Item):
 @dataclass
 class SimplePlaylist(Playlist):
     tracks: Tracks
+    primary_color: str
 
     def __post_init__(self):
         super().__post_init__()

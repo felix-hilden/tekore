@@ -17,14 +17,10 @@ class TrackLink(Item):
 @dataclass
 class Track(Item):
     artists: List[SimpleArtist]
-    available_markets: List[str]
     disc_number: int
     duration_ms: int
     explicit: bool
     external_urls: dict
-    is_playable: bool
-    linked_from: TrackLink
-    restrictions: Restrictions
     name: str
     preview_url: str
     track_number: int
@@ -32,13 +28,21 @@ class Track(Item):
 
     def __post_init__(self):
         self.artists = [SimpleArtist(**a) for a in self.artists]
-        self.linked_from = TrackLink(**self.linked_from)
-        self.restrictions = Restrictions(**self.restrictions)
 
 
 @dataclass
 class SimpleTrack(Track):
-    pass
+    available_markets: List[str] = None
+    linked_from: TrackLink = None
+    is_playable: bool = None
+    restrictions: Restrictions = None
+
+    def __post_init__(self):
+        super().__post_init__()
+        if self.linked_from is not None:
+            self.linked_from = TrackLink(**self.linked_from)
+        if self.restrictions is not None:
+            self.restrictions = Restrictions(**self.restrictions)
 
 
 @dataclass
@@ -46,10 +50,18 @@ class FullTrack(Track):
     album: SimpleAlbum
     external_ids: dict
     popularity: int
+    available_markets: List[str] = None
+    linked_from: TrackLink = None
+    is_playable: bool = None
+    restrictions: Restrictions = None
 
     def __post_init__(self):
         super().__post_init__()
         self.album = SimpleAlbum(**self.album)
+        if self.linked_from is not None:
+            self.linked_from = TrackLink(**self.linked_from)
+        if self.restrictions is not None:
+            self.restrictions = Restrictions(**self.restrictions)
 
 
 @dataclass

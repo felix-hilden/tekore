@@ -1,13 +1,11 @@
+from enum import Enum
 from dataclasses import dataclass
 
-from spotipy.serialise import SerialisableEnum, SerialisableDataclass
+from spotipy.serialise import SerialisableDataclass
 from spotipy.model.context import Context
 from spotipy.model.track import FullTrack
 
-CurrentlyPlayingType = SerialisableEnum(
-    'CurrentlyPlayingType',
-    'track episode ad unknown'
-)
+CurrentlyPlayingType = Enum('CurrentlyPlayingType', 'track episode ad unknown')
 
 
 @dataclass
