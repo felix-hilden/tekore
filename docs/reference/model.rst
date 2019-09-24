@@ -65,21 +65,6 @@ Artist-related
    :undoc-members:
 
 
-Audio features
---------------
-
-.. autoclass:: spotipy.model.AudioFeatures
-   :members:
-   :undoc-members:
-
-.. Documenting key attributes result in import warnings
-.. autoclass:: spotipy.model.Key
-
-.. autoclass:: spotipy.model.Mode
-   :members:
-   :undoc-members:
-
-
 Errors
 ------
 
@@ -206,6 +191,10 @@ User
 Miscellaneous
 -------------
 
+.. autoclass:: spotipy.model.AudioFeatures
+   :members:
+   :undoc-members:
+
 .. autoclass:: spotipy.model.Category
    :members:
    :undoc-members:
@@ -218,11 +207,11 @@ Miscellaneous
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.Disallows
+.. autoclass:: spotipy.model.Copyright
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.Copyright
+.. autoclass:: spotipy.model.Disallows
    :members:
    :undoc-members:
 
@@ -231,14 +220,6 @@ Miscellaneous
    :undoc-members:
 
 .. autoclass:: spotipy.model.Image
-   :members:
-   :undoc-members:
-
-.. autoclass:: spotipy.model.Restrictions
-   :members:
-   :undoc-members:
-
-.. autoclass:: spotipy.model.Timestamp
    :members:
    :undoc-members:
 
@@ -255,5 +236,13 @@ Miscellaneous
    :undoc-members:
 
 .. autoclass:: spotipy.model.RecommendationSeed
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.Restrictions
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.Timestamp
    :members:
    :undoc-members:
