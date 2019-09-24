@@ -45,6 +45,7 @@ class Playlist(Item):
 @dataclass
 class SimplePlaylist(Playlist):
     tracks: Tracks
+    primary_color: str
 
     def __post_init__(self):
         super().__post_init__()
@@ -61,3 +62,11 @@ class FullPlaylist(Playlist):
         super().__post_init__()
         self.followers = Followers(**self.followers)
         self.tracks = PlaylistTrackPaging(**self.tracks)
+
+
+@dataclass
+class SimplePlaylistPaging(OffsetPaging):
+    items: List[SimplePlaylist]
+
+    def __post_init__(self):
+        self.items = [SimplePlaylist(**p) for p in self.items]

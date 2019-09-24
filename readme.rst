@@ -59,7 +59,7 @@ Calling the API
 ---------------
 Next the Spotify object should be created.
 An access token can be provided at initialisation.
-Otherwise the context manager ``Spotify.token`` can be used.
+Otherwise the context manager ``Spotify.token_as`` can be used.
 
 The script below will play Sibelius' Finlandia if the user has
 an active (recently used) Spotify application open.
@@ -70,7 +70,7 @@ To change device state ``Spotify.playback_transfer`` can be used.
 
     from spotipy import Spotify
 
-    s = Spotify(token.access_token)
+    s = Spotify(token)
 
     finlandia = 'spotify:track:3hHWhvw2hjwfngWcFjIzqr'
     s.playback_start(uris=[finlandia])
@@ -130,12 +130,10 @@ Additional features
 +-------------------------+----------------------+-----------------+
 | Auto-refreshing token   | X                    |                 |
 +-------------------------+----------------------+-----------------+
-| Model-based API         | / (**)               |                 |
+| Model-based API         | X                    |                 |
 +-------------------------+----------------------+-----------------+
 
 (*) Retries implemented for GET requests
-
-(**) Response objects are implemented, but not yet returned from calls
 
 
 .. |travis| image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master

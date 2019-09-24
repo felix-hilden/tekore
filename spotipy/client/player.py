@@ -1,8 +1,12 @@
+from typing import Union
+
 from spotipy.client.base import SpotifyBase
+from spotipy.serialise import ModelList
+from spotipy.model import CurrentlyPlaying, PlayHistoryPaging, Device
 
 
 class SpotifyPlayer(SpotifyBase):
-    def playback(self, market: str = 'from_token'):
+    def playback(self, market: Union[str, None] = 'from_token') -> dict:
         """
         Get information about user's current playback.
 
@@ -12,11 +16,19 @@ class SpotifyPlayer(SpotifyBase):
         Parameters
         ----------
         market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+
+        Returns
+        -------
+        dict
+            information about current playback
         """
         return self._get('me/player', market=market)
 
-    def playback_currently_playing(self, market: str = 'from_token'):
+    def playback_currently_playing(
+            self,
+            market: Union[str, None] = 'from_token'
+    ) -> CurrentlyPlaying:
         """
         Get user's currently playing track.
 
@@ -26,15 +38,22 @@ class SpotifyPlayer(SpotifyBase):
         ----------
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
+
+        Returns
+        -------
+        CurrentlyPlaying
+            currently playing object if the information is available
         """
-        return self._get('me/player/currently-playing', market=market)
+        json = self._get('me/player/currently-playing', market=market)
+        if json is not None:
+            return CurrentlyPlaying(**json)
 
     def playback_recently_played(
             self,
             limit: int = 20,
             after: str = None,
             before: str = None
-    ):
+    ) -> PlayHistoryPaging:
         """
         Get tracks from the current user's recently played tracks.
 
@@ -49,23 +68,35 @@ class SpotifyPlayer(SpotifyBase):
             a unix timestamp in milliseconds
         before
             a unix timestamp in milliseconds
+
+        Returns
+        -------
+        PlayHistoryPaging
+            cursor-based paging containing play history objects
         """
-        return self._get(
+        json = self._get(
             'me/player/recently-played',
             limit=limit,
             after=after,
             before=before
         )
+        return PlayHistoryPaging(**json)
 
-    def playback_devices(self):
+    def playback_devices(self) -> ModelList:
         """
         Get a user's available devices.
 
         Requires the user-read-playback-state scope.
-        """
-        return self._get('me/player/devices')
 
-    def playback_transfer(self, device_id: str, force_play: bool = False):
+        Returns
+        -------
+        ModelList
+            list of device objects
+        """
+        json = self._get('me/player/devices')
+        return ModelList(Device(**d) for d in json['devices'])
+
+    def playback_transfer(self, device_id: str, force_play: bool = False) -> None:
         """
         Transfer playback to another device.
 
@@ -84,7 +115,7 @@ class SpotifyPlayer(SpotifyBase):
             'device_ids': [device_id],
             'play': force_play
         }
-        return self._put('me/player', payload=data)
+        self._put('me/player', payload=data)
 
     def playback_start(
             self,
@@ -93,7 +124,7 @@ class SpotifyPlayer(SpotifyBase):
             offset: dict = None,
             position_ms: int = None,
             device_id: str = None
-    ):
+    ) -> None:
         """
         Start or resume user's playback.
 
@@ -125,9 +156,9 @@ class SpotifyPlayer(SpotifyBase):
             'position_ms': position_ms,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        return self._put('me/player/play', payload=payload, device_id=device_id)
+        self._put('me/player/play', payload=payload, device_id=device_id)
 
-    def playback_pause(self, device_id: str = None):
+    def playback_pause(self, device_id: str = None) -> None:
         """
         Pause a user's playback.
 
@@ -138,9 +169,9 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to pause playback on
         """
-        return self._put('me/player/pause', device_id=device_id)
+        self._put('me/player/pause', device_id=device_id)
 
-    def playback_next(self, device_id: str = None):
+    def playback_next(self, device_id: str = None) -> None:
         """
         Skip user's playback to next track.
 
@@ -151,9 +182,9 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to skip track on
         """
-        return self._post('me/player/next', device_id=device_id)
+        self._post('me/player/next', device_id=device_id)
 
-    def playback_previous(self, device_id: str = None):
+    def playback_previous(self, device_id: str = None) -> None:
         """
         Skip user's playback to previous track.
 
@@ -164,9 +195,9 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to skip track on
         """
-        return self._post('me/player/previous', device_id=device_id)
+        self._post('me/player/previous', device_id=device_id)
 
-    def playback_seek(self, position_ms: int, device_id: str = None):
+    def playback_seek(self, position_ms: int, device_id: str = None) -> None:
         """
         Seek to position in current playing track.
 
@@ -179,13 +210,13 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to seek on
         """
-        return self._put(
+        self._put(
             'me/player/seek',
             position_ms=position_ms,
             device_id=device_id
         )
 
-    def playback_repeat(self, state: str, device_id: str = None):
+    def playback_repeat(self, state: str, device_id: str = None) -> None:
         """
         Set repeat mode for playback.
 
@@ -200,7 +231,7 @@ class SpotifyPlayer(SpotifyBase):
         """
         self._put('me/player/repeat', state=state, device_id=device_id)
 
-    def playback_shuffle(self, state: bool, device_id: str = None):
+    def playback_shuffle(self, state: bool, device_id: str = None) -> None:
         """
         Toggle shuffle for user's playback.
 
@@ -216,7 +247,7 @@ class SpotifyPlayer(SpotifyBase):
         state = 'true' if state else 'false'
         self._put('me/player/shuffle', state=state, device_id=device_id)
 
-    def playback_volume(self, volume_percent: int, device_id: str = None):
+    def playback_volume(self, volume_percent: int, device_id: str = None) -> None:
         """
         Set volume for user's playback.
 

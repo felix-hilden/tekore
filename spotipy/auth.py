@@ -1,10 +1,11 @@
 """
-Implement OAuth2 authentication for client credentials and authorisation code.
+OAuth2 authentication for client credentials and authorisation code.
 """
 
 import time
 import requests
 
+from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
 from urllib.parse import urlencode
 
@@ -25,47 +26,70 @@ def b64encode(msg: str) -> str:
     return _b64encode(msg.encode()).decode()
 
 
-class Token:
+class AccessToken(ABC):
+    """
+    Token object.
+
+    Has an 'access_token' property, which is also
+    the string representation of the instance.
+    """
+    @property
+    @abstractmethod
+    def access_token(self) -> str:
+        pass
+
+    def __str__(self):
+        return self.access_token
+
+
+class Token(AccessToken):
     """
     Spotify OAuth access token.
     """
     def __init__(self, token_info: dict):
-        self.access_token = token_info['access_token']
+        self._access_token = token_info['access_token']
+        self._expires_in = token_info['expires_in']
         self.token_type = token_info['token_type']
         self.scope = token_info['scope']
-        self.expires_in = token_info['expires_in']
 
-        if 'refresh_token' in token_info:
-            self.refresh_token = token_info['refresh_token']
-        else:
-            self.refresh_token = None
-
+        self.refresh_token = token_info.get('refresh_token', None)
         self.expires_at = int(time.time()) + token_info['expires_in']
+
+    @property
+    def access_token(self) -> str:
+        """
+        Bearer token value.
+        """
+        return self._access_token
+
+    @property
+    def expires_in(self) -> int:
+        """
+        Seconds until token expiration.
+        """
+        return self.expires_at - int(time.time())
 
     def is_expiring(self) -> bool:
         """
         Determine whether token is about to expire.
         """
-        return (self.expires_at - int(time.time())) < 60
+        return self.expires_in < 60
 
 
 class Credentials:
     """
     Client for retrieving access tokens.
+
+    Parameters
+    ----------
+    client_id
+        client id
+    client_secret
+        client secret
+    redirect_uri
+        whitelisted redirect URI
     """
     def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
-        """
-        Initialise client with registered third party application information.
-
-        Parameters
-        ----------
-        client_id
-            client id
-        client_secret
-            client secret
-        redirect_uri
-            whitelisted redirect URI
-        """
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -73,13 +97,18 @@ class Credentials:
     def request_client_credentials(self) -> Token:
         """
         Request for access token using application credentials.
+
+        Returns
+        -------
+        Token
+            application access token
         """
         payload = {'grant_type': 'client_credentials'}
         return self._post_token_request(payload)
 
     def authorisation_url(self, scope: Scope = None, state: str = None) -> str:
         """
-        Construct an authorisation url for Spotify login.
+        Construct an authorisation URL for Spotify login.
 
         Parameters
         ----------
@@ -87,6 +116,11 @@ class Credentials:
             access rights
         state
             additional state
+
+        Returns
+        -------
+        str
+            URL for Spotify login
         """
         payload = {
             'client_id': self.client_id,
@@ -116,8 +150,12 @@ class Credentials:
 
         return Token(response.json())
 
-    def request_access_token(self, code: str, scope: Scope = None,
-                             state: str = None) -> Token:
+    def request_access_token(
+            self,
+            code: str,
+            scope: Scope = None,
+            state: str = None
+    ) -> Token:
         """
         Request for access token using a code
         provided by a request from the Spotify server.
@@ -130,6 +168,11 @@ class Credentials:
             access rights
         state
             additional state
+
+        Returns
+        -------
+        Token
+            user access token
         """
         payload = {
             'code': code,
@@ -152,6 +195,11 @@ class Credentials:
         ----------
         token
             token to be refreshed
+
+        Returns
+        -------
+        Token
+            refreshed access token
         """
         payload = {
             'refresh_token': token.refresh_token,

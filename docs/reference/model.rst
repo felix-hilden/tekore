@@ -32,6 +32,14 @@ Album-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimpleAlbumPaging
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.SavedAlbumPaging
+   :members:
+   :undoc-members:
+
 
 Artist-related
 --------------
@@ -48,18 +56,11 @@ Artist-related
    :members:
    :undoc-members:
 
-
-Audio features
---------------
-
-.. autoclass:: spotipy.model.AudioFeatures
+.. autoclass:: spotipy.model.FullArtistCursorPaging
    :members:
    :undoc-members:
 
-.. Documenting key attributes result in import warnings
-.. autoclass:: spotipy.model.Key
-
-.. autoclass:: spotipy.model.Mode
+.. autoclass:: spotipy.model.FullArtistOffsetPaging
    :members:
    :undoc-members:
 
@@ -126,6 +127,10 @@ Playlist-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimplePlaylistPaging
+   :members:
+   :undoc-members:
+
 
 Track-related
 -------------
@@ -138,7 +143,15 @@ Track-related
    :members:
    :undoc-members:
 
+.. autoclass:: spotipy.model.SimpleTrackPaging
+   :members:
+   :undoc-members:
+
 .. autoclass:: spotipy.model.FullTrack
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.FullTrackPaging
    :members:
    :undoc-members:
 
@@ -154,7 +167,7 @@ Track-related
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.SimpleTrackPaging
+.. autoclass:: spotipy.model.SavedTrackPaging
    :members:
    :undoc-members:
 
@@ -178,7 +191,15 @@ User
 Miscellaneous
 -------------
 
+.. autoclass:: spotipy.model.AudioFeatures
+   :members:
+   :undoc-members:
+
 .. autoclass:: spotipy.model.Category
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.CategoryPaging
    :members:
    :undoc-members:
 
@@ -186,11 +207,11 @@ Miscellaneous
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.Disallows
+.. autoclass:: spotipy.model.Copyright
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.Copyright
+.. autoclass:: spotipy.model.Disallows
    :members:
    :undoc-members:
 
@@ -202,15 +223,11 @@ Miscellaneous
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.Restrictions
-   :members:
-   :undoc-members:
-
-.. autoclass:: spotipy.model.Timestamp
-   :members:
-   :undoc-members:
-
 .. autoclass:: spotipy.model.PlayHistory
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.PlayHistoryPaging
    :members:
    :undoc-members:
 
@@ -219,5 +236,13 @@ Miscellaneous
    :undoc-members:
 
 .. autoclass:: spotipy.model.RecommendationSeed
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.Restrictions
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.model.Timestamp
    :members:
    :undoc-members:

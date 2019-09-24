@@ -6,9 +6,6 @@ from spotipy.serialise import SerialisableDataclass
 class Identifiable(SerialisableDataclass):
     id: str
 
-    def __str__(self):
-        return self.id
-
 
 @dataclass
 class Item(Identifiable):

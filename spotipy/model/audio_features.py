@@ -1,10 +1,5 @@
 from dataclasses import dataclass
-
-from spotipy.serialise import SerialisableEnum
 from spotipy.model.base import Identifiable
-
-Key = SerialisableEnum('Key', 'C C# D Eb E F F# G G# A Bb B')
-Mode = SerialisableEnum('Mode', 'minor major')
 
 
 @dataclass
@@ -15,10 +10,10 @@ class AudioFeatures(Identifiable):
     duration_ms: int
     energy: float
     instrumentalness: float
-    key: Key
+    key: int
     liveness: float
     loudness: float
-    mode: Mode
+    mode: int
     speechiness: float
     tempo: float
     time_signature: int
@@ -26,7 +21,3 @@ class AudioFeatures(Identifiable):
     type: str
     uri: str
     valence: float
-
-    def __post_init__(self):
-        self.key = Key[self.key]
-        self.mode = Mode[self.mode]

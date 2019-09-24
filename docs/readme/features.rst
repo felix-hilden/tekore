@@ -36,9 +36,7 @@ Additional features
 +-------------------------+----------------------+-----------------+
 | Auto-refreshing token   | X                    |                 |
 +-------------------------+----------------------+-----------------+
-| Model-based API         | / (**)               |                 |
+| Model-based API         | X                    |                 |
 +-------------------------+----------------------+-----------------+
 
 (*) Retries implemented for GET requests
-
-(**) Response objects are implemented, but not yet returned from calls

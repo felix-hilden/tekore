@@ -1,8 +1,9 @@
+from enum import Enum
 from dataclasses import dataclass
-from spotipy.serialise import SerialisableEnum, SerialisableDataclass
+from spotipy.serialise import SerialisableDataclass
 
 
-class PlayerErrorReason(SerialisableEnum):
+class PlayerErrorReason(Enum):
     NO_PREV_TRACK = 'The command requires a previous track, ' \
                     'but there is none in the context.'
     NO_NEXT_TRACK = 'The command requires a next track, ' \

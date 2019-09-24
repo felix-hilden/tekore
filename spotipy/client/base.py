@@ -2,7 +2,9 @@ import json
 
 from contextlib import contextmanager
 from requests import Request, HTTPError
+
 from spotipy.sender import Sender, TransientSender
+from spotipy.model import Paging, OffsetPaging
 
 
 class SpotifyBase:
@@ -10,7 +12,7 @@ class SpotifyBase:
 
     def __init__(
             self,
-            token: str = None,
+            token=None,
             sender: Sender = None,
             requests_kwargs: dict = None
     ):
@@ -30,9 +32,17 @@ class SpotifyBase:
         self.requests_kwargs = requests_kwargs or {}
         self.sender = sender or TransientSender()
 
+    @property
+    def token(self):
+        return str(self._token)
+
+    @token.setter
+    def token(self, value):
+        self._token = value
+
     @contextmanager
-    def token(self, token: str) -> 'SpotifyBase':
-        self._token, old_token = token, self._token
+    def token_as(self, token) -> 'SpotifyBase':
+        self._token, old_token = token, self.token
         yield self
         self._token = old_token
 
@@ -41,7 +51,7 @@ class SpotifyBase:
             url = self.prefix + url
 
         default_headers = {
-            'Authorization': f'Bearer {self._token}',
+            'Authorization': f'Bearer {self.token}',
             'Content-Type': 'application/json'
         }
         default_headers.update(headers or {})
@@ -60,39 +70,63 @@ class SpotifyBase:
         if r.status_code >= 400:
             raise HTTPError(f'Error ({r.status_code}) in {r.url}', request=r)
 
-        if r.text and len(r.text) > 0:
-            return r.json()
-        else:
-            return None
+        return r
 
     def _get(self, url: str, payload=None, **params):
-        r = self._build_request('GET', url)
-        self._set_content(r, payload, params)
-        return self._send(r)
+        request = self._build_request('GET', url)
+        self._set_content(request, payload, params)
+        response = self._send(request)
+
+        try:
+            return response.json()
+        except json.decoder.JSONDecodeError:
+            return None
 
     def _post(self, url: str, payload=None, **params):
         r = self._build_request('POST', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
     def _delete(self, url: str, payload=None, **params):
         r = self._build_request('DELETE', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
     def _put(self, url: str, payload=None, **params):
         r = self._build_request('PUT', url)
         self._set_content(r, payload, params)
-        return self._send(r)
+        self._send(r)
 
-    def next(self, result):
-        if result['next']:
-            return self._get(result['next'])
-        else:
-            return None
+    def next(self, result: Paging) -> Paging:
+        """
+        Retrieve the next result set of a paging object.
 
-    def previous(self, result):
-        if result['previous']:
-            return self._get(result['previous'])
-        else:
-            return None
+        Parameters
+        ----------
+        result
+            paging object
+
+        Returns
+        -------
+        Paging
+            paging object containing the next result set
+        """
+        if result.next is not None:
+            return type(result)(**self._get(result.next))
+
+    def previous(self, result: OffsetPaging) -> OffsetPaging:
+        """
+        Retrieve the previous result set of a paging object.
+
+        Parameters
+        ----------
+        result
+            offset-based paging object
+
+        Returns
+        -------
+        OffsetPaging
+            paging object containing the previous result set
+        """
+        if result.previous is not None:
+            return type(result)(**self._get(result.previous))
