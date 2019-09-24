@@ -39,7 +39,7 @@ def validate_attributes(attributes: dict) -> None:
     attributes
         recommendation attributes
     """
-    for name, value in attributes.items():
+    for name in attributes:
         try:
             p, a = name.split('_')
         except ValueError as e:
