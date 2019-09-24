@@ -28,22 +28,30 @@ class SpotifyBase:
         requests_kwargs
             keyword arguments for requests.request
         """
-        self.token = token
+        self._token = token
         self.requests_kwargs = requests_kwargs or {}
         self.sender = sender or TransientSender()
 
+    @property
+    def token(self):
+        return str(self._token)
+
+    @token.setter
+    def token(self, value):
+        self._token = value
+
     @contextmanager
     def token_as(self, token) -> 'SpotifyBase':
-        self.token, old_token = token, self.token
+        self._token, old_token = token, self.token
         yield self
-        self.token = old_token
+        self._token = old_token
 
     def _build_request(self, method: str, url: str, headers: dict = None) -> Request:
         if not url.startswith('http'):
             url = self.prefix + url
 
         default_headers = {
-            'Authorization': f'Bearer {str(self.token)}',
+            'Authorization': f'Bearer {self.token}',
             'Content-Type': 'application/json'
         }
         default_headers.update(headers or {})
