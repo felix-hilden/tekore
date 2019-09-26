@@ -5,8 +5,16 @@ python:
 install:
   - pip install .[dev]
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
-  - python -m unittest discover tests -p "*.py"
+  - coverage run --branch -m unittest discover tests -p "*.py"
   - flake8 . --select=C,E,F,W,B,B9 --ignore=B305,E501,E722,F401
-  - cd docs
-  - make html
+  - cd docs && make html && cd ..
+
+after_script:
+  - coverage xml
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
