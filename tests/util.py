@@ -93,7 +93,8 @@ class TestPromptForToken(unittest.TestCase):
         input_ = MagicMock(return_value='http://example.com?code=1')
         with patch('spotipy.util.Credentials', cred),\
                 patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_):
+                patch('spotipy.util.input', input_),\
+                patch('spotipy.util.print', MagicMock()):
             prompt_for_user_token('', '', '')
             input_.assert_called_once()
 
@@ -104,7 +105,8 @@ class TestPromptForToken(unittest.TestCase):
         input_ = MagicMock(return_value='http://example.com?code=1')
         with patch('spotipy.util.Credentials', cred),\
                 patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_):
+                patch('spotipy.util.input', input_),\
+                patch('spotipy.util.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
             self.assertIsInstance(token, RefreshingToken)
 
