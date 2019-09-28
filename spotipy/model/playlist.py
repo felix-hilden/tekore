@@ -2,8 +2,8 @@ from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.base import Item
-from spotipy.model.user import User
-from spotipy.model.track import Track, Tracks
+from spotipy.model.user import PublicUser
+from spotipy.model.track import FullTrack, Tracks
 from spotipy.model.paging import OffsetPaging
 from spotipy.model.member import Followers, Image, Timestamp
 from spotipy.serialise import SerialisableDataclass
@@ -12,19 +12,25 @@ from spotipy.serialise import SerialisableDataclass
 @dataclass
 class PlaylistTrack(SerialisableDataclass):
     added_at: Timestamp
-    added_by: User
+    added_by: PublicUser
     is_local: bool
-    track: Track
+    track: FullTrack
+    primary_color: str
+    video_thumbnail: Image
 
     def __post_init__(self):
         self.added_at = Timestamp(datetime=self.added_at)
-        self.added_by = User(**self.added_by)
-        self.track = Track(**self.track)
+        self.added_by = PublicUser(**self.added_by)
+        self.track = FullTrack(**self.track)
+        self.video_thumbnail = Image(**self.video_thumbnail)
 
 
 @dataclass
 class PlaylistTrackPaging(OffsetPaging):
-    pass
+    items: List[PlaylistTrack]
+
+    def __post_init__(self):
+        self.items = [PlaylistTrack(**t) for t in self.items]
 
 
 @dataclass
@@ -33,19 +39,19 @@ class Playlist(Item):
     external_urls: dict
     images: List[Image]
     name: str
-    owner: User
+    owner: PublicUser
     public: bool
     snapshot_id: str
+    primary_color: str
 
     def __post_init__(self):
         self.images = [Image(**i) for i in self.images]
-        self.owner = User(**self.owner)
+        self.owner = PublicUser(**self.owner)
 
 
 @dataclass
 class SimplePlaylist(Playlist):
     tracks: Tracks
-    primary_color: str
 
     def __post_init__(self):
         super().__post_init__()

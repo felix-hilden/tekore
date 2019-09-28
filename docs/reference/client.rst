@@ -1,5 +1,5 @@
-Spotify client
-==============
+client
+======
 
 Full client
 -----------
@@ -67,7 +67,15 @@ Player API
 Playlist API
 ------------
 
-.. autoclass:: spotipy.client.playlist.SpotifyPlaylist
+.. autoclass:: spotipy.client.playlist.SpotifyPlaylistView
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.client.playlist.SpotifyPlaylistModify
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.client.playlist.SpotifyPlaylistTracks
    :members:
    :undoc-members:
 

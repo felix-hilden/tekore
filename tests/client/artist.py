@@ -18,15 +18,15 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
     def test_artist_albums_with_market(self):
         albums = self.client.artist_albums(artist_id, market='US')
-        self.assertTrue(albums.total > 0)
+        self.assertGreater(albums.total, 0)
 
     def test_artist_albums_no_market(self):
         albums = self.client.artist_albums(artist_id, market=None)
-        self.assertTrue(albums.total > 0)
+        self.assertGreater(albums.total, 0)
 
     def test_artist_top_tracks_with_country(self):
         tracks = self.client.artist_top_tracks(artist_id, country='US')
-        self.assertTrue(len(tracks) > 0)
+        self.assertGreater(len(tracks), 0)
 
     def test_artist_top_tracks_no_country_raises(self):
         from requests.exceptions import HTTPError
@@ -35,4 +35,4 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
     def test_artist_related_artists(self):
         artists = self.client.artist_related_artists(artist_id)
-        self.assertTrue(len(artists) > 0)
+        self.assertGreater(len(artists), 0)

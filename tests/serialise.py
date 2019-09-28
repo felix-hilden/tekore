@@ -1,9 +1,21 @@
 import json
 import unittest
 
+from enum import Enum
 from typing import List
 from dataclasses import dataclass
-from spotipy.serialise import Enum, JSONEncoder, SerialisableDataclass, ModelList
+from spotipy.serialise import (
+    JSONEncoder,
+    SerialisableDataclass,
+    SerialisableEnum,
+    ModelList
+)
+
+
+class TestSerialisableEnum(unittest.TestCase):
+    def test_enum_str_is_name(self):
+        e = SerialisableEnum('e', 'a b c')
+        self.assertEqual(str(e.a), 'a')
 
 
 class TestJSONEncoder(unittest.TestCase):

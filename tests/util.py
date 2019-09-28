@@ -37,6 +37,7 @@ class TestRefreshingToken(unittest.TestCase):
     def test_refreshing_token_has_same_attributes_as_regular(self):
         token_info = MagicMock()
         token = Token(token_info)
+        token.expires_at = 3000
         cred = MagicMock()
         auto_token = RefreshingToken(token, cred)
 
@@ -45,6 +46,7 @@ class TestRefreshingToken(unittest.TestCase):
 
         for attribute in token_attributes:
             with self.subTest(f'Attribute: `{attribute}`'):
+                auto_token.__getattribute__(attribute)
                 self.assertTrue(attribute in auto_attributes)
 
 

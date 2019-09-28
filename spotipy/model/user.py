@@ -7,8 +7,8 @@ from spotipy.model.member import Followers, Image
 
 @dataclass
 class User(Item):
-    display_name: str
     external_urls: dict
+    display_name: str = None
     followers: Followers = None
     images: List[Image] = None
 
@@ -21,6 +21,7 @@ class User(Item):
 
 @dataclass
 class PrivateUser(User):
+    explicit_content: bool = None
     country: str = None
     email: str = None
     product: str = None

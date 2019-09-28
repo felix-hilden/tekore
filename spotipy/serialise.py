@@ -1,4 +1,7 @@
 """
+serialise
+=========
+
 Provide serialisation for models via the `str` function.
 """
 
@@ -6,6 +9,14 @@ import json
 
 from enum import Enum
 from dataclasses import dataclass, asdict
+
+
+class SerialisableEnum(Enum):
+    """
+    Convert enumeration members to strings using their name.
+    """
+    def __str__(self):
+        return self.name
 
 
 class JSONEncoder(json.JSONEncoder):

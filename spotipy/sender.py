@@ -1,4 +1,7 @@
 """
+sender
+======
+
 Define request senders to be passed to and used by the Spotify class.
 
 They implement different levels of session usage mainly for connection pooling.

@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from requests import Request, HTTPError
 
 from spotipy.sender import Sender, TransientSender
-from spotipy.model import Paging, OffsetPaging
+from spotipy.model.paging import Paging, OffsetPaging
 
 
 class SpotifyBase:
@@ -62,40 +62,54 @@ class SpotifyBase:
     def _set_content(request: Request, payload=None, params: dict = None) -> None:
         params = params or {}
         request.params = {k: v for k, v in params.items() if v is not None}
-        request.data = json.dumps(payload) if payload is not None else None
+        if payload is not None:
+            if request.headers['Content-Type'] == 'application/json':
+                request.data = json.dumps(payload)
+            else:
+                request.data = payload
 
     def _send(self, request: Request):
         r = self.sender.send(request, **self.requests_kwargs)
 
         if r.status_code >= 400:
-            raise HTTPError(f'Error ({r.status_code}) in {r.url}', request=r)
+            raise HTTPError(
+                f'Error ({r.status_code}) in {r.url}',
+                request=request,
+                response=r
+            )
 
         return r
 
-    def _get(self, url: str, payload=None, **params):
-        request = self._build_request('GET', url)
-        self._set_content(request, payload, params)
-        response = self._send(request)
-
+    @staticmethod
+    def _parse_json(response):
         try:
             return response.json()
         except json.decoder.JSONDecodeError:
             return None
 
+    def _request(
+            self,
+            method: str,
+            url: str,
+            payload=None,
+            params: dict = None
+    ):
+        request = self._build_request(method, url)
+        self._set_content(request, payload, params)
+        response = self._send(request)
+        return self._parse_json(response)
+
+    def _get(self, url: str, payload=None, **params):
+        return self._request('GET', url, payload=payload, params=params)
+
     def _post(self, url: str, payload=None, **params):
-        r = self._build_request('POST', url)
-        self._set_content(r, payload, params)
-        self._send(r)
+        return self._request('POST', url, payload=payload, params=params)
 
     def _delete(self, url: str, payload=None, **params):
-        r = self._build_request('DELETE', url)
-        self._set_content(r, payload, params)
-        self._send(r)
+        return self._request('DELETE', url, payload=payload, params=params)
 
     def _put(self, url: str, payload=None, **params):
-        r = self._build_request('PUT', url)
-        self._set_content(r, payload, params)
-        self._send(r)
+        return self._request('PUT', url, payload=payload, params=params)
 
     def next(self, result: Paging) -> Paging:
         """

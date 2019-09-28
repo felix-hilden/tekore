@@ -1,5 +1,5 @@
 from ._cred import TestCaseWithCredentials
-from ._resources import artist_ids, category_id
+from ._resources import artist_ids, category_id, genres, track_id
 
 from spotipy.client import SpotifyBrowse
 
@@ -10,27 +10,27 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
     def test_featured_playlists_with_country(self):
         msg, playlists = self.client.featured_playlists(country='US')
-        self.assertTrue(playlists.total > 0)
+        self.assertGreater(playlists.total, 0)
 
     def test_featured_playlists_no_country(self):
         msg, playlists = self.client.featured_playlists()
-        self.assertTrue(playlists.total > 0)
+        self.assertGreater(playlists.total, 0)
 
     def test_new_releases_with_country(self):
         albums = self.client.new_releases(country='US')
-        self.assertTrue(albums.total > 0)
+        self.assertGreater(albums.total, 0)
 
     def test_new_releases_no_country(self):
         albums = self.client.new_releases()
-        self.assertTrue(albums.total > 0)
+        self.assertGreater(albums.total, 0)
 
     def test_categories_with_country(self):
         cat = self.client.categories(country='US')
-        self.assertTrue(cat.total > 0)
+        self.assertGreater(cat.total, 0)
 
     def test_categories_no_country(self):
         cat = self.client.categories()
-        self.assertTrue(cat.total > 0)
+        self.assertGreater(cat.total, 0)
 
     def test_category_with_country(self):
         cat = self.client.category(category_id, country='US')
@@ -42,25 +42,34 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
     def test_category_playlists_with_country(self):
         playlists = self.client.category_playlists(category_id, country='US')
-        self.assertTrue(playlists.total > 0)
+        self.assertGreater(playlists.total, 0)
 
     def test_category_playlists_no_country(self):
         playlists = self.client.category_playlists(category_id)
-        self.assertTrue(playlists.total > 0)
+        self.assertGreater(playlists.total, 0)
 
     def test_recommendations_with_market(self):
         rec = self.client.recommendations(
             artist_ids=artist_ids,
             market='US'
         )
-        self.assertTrue(len(rec.tracks) > 0)
+        self.assertGreater(len(rec.tracks), 0)
 
     def test_recommendations_no_market(self):
         rec = self.client.recommendations(
             artist_ids=artist_ids,
             market=None
         )
-        self.assertTrue(len(rec.tracks) > 0)
+        self.assertGreater(len(rec.tracks), 0)
+
+    def test_recommendations_all_arguments(self):
+        rec = self.client.recommendations(
+            artist_ids=artist_ids,
+            genres=genres,
+            track_ids=[track_id],
+            market=None
+        )
+        self.assertGreater(len(rec.tracks), 0)
 
     def test_recommendations_target_attribute(self):
         rec = self.client.recommendations(
@@ -68,7 +77,7 @@ class TestSpotifyArtist(TestCaseWithCredentials):
             market='US',
             target_valence=50
         )
-        self.assertTrue(len(rec.tracks) > 0)
+        self.assertGreater(len(rec.tracks), 0)
 
     def test_recommendations_invalid_attribute_raises(self):
         with self.assertRaises(ValueError):
@@ -96,4 +105,4 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
     def test_recommendation_genre_seeds(self):
         seeds = self.client.recommendation_genre_seeds()
-        self.assertTrue(len(seeds) > 0)
+        self.assertGreater(len(seeds), 0)

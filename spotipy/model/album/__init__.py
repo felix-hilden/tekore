@@ -2,8 +2,7 @@ from enum import Enum
 from typing import List
 from dataclasses import dataclass
 
-from spotipy.serialise import SerialisableDataclass
-from spotipy.model.member import Timestamp, Restrictions
+from spotipy.model.member import Restrictions
 from spotipy.model.paging import OffsetPaging
 from spotipy.model.album.base import Album, AlbumType, ReleaseDatePrecision
 
@@ -30,21 +29,3 @@ class SimpleAlbumPaging(OffsetPaging):
 
     def __post_init__(self):
         self.items = [SimpleAlbum(**a) for a in self.items]
-
-
-@dataclass
-class SavedAlbum(SerialisableDataclass):
-    added_at: Timestamp
-    album: Album
-
-    def __post_init__(self):
-        self.added_at = Timestamp(datetime=self.added_at)
-        self.album = Album(**self.album)
-
-
-@dataclass
-class SavedAlbumPaging(OffsetPaging):
-    items: List[SavedAlbum]
-
-    def __post_init__(self):
-        self.items = [SavedAlbum(**a) for a in self.items]
