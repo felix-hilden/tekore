@@ -40,9 +40,12 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
                 'Current playback information could not be retrieved!'
             ) from e
 
+    def currently_playing(self):
+        sleep(2)
+        return self.client.playback_currently_playing()
+
     def assertPlaying(self, msg: str, track_id: str):
-        sleep(0.5)
-        playing = self.client.playback_currently_playing()
+        playing = self.currently_playing()
         with self.subTest(msg):
             self.assertEqual(playing.item.id, track_id)
 
@@ -57,7 +60,7 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
         self.assertPlaying('Playback start', track_ids[0])
 
         self.client.playback_pause()
-        playing = self.client.playback_currently_playing()
+        playing = self.currently_playing()
         with self.subTest('Playback pause'):
             self.assertFalse(playing.is_playing)
         self.client.playback_start()
@@ -69,7 +72,7 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
         self.assertPlaying('Playback previous', track_ids[0])
 
         self.client.playback_seek(30 * 1000)
-        playing = self.client.playback_currently_playing()
+        playing = self.currently_playing()
         with self.subTest('Playback seek'):
             self.assertGreater(playing.progress_ms, 30 * 1000)
 
