@@ -44,15 +44,14 @@ along with a code to request the token with.
 
 .. code:: python
 
-    from spotipy import scopes, Scope
+    from spotipy.scope import every
     from spotipy.util import prompt_for_user_token
 
     client_id = 'your_token_here'
     client_secret = 'your_secret_here'
     redirect_uri = 'http://localhost'
 
-    scope = Scope(*scopes)
-    token = prompt_for_user_token(client_id, client_secret, redirect_uri, scope)
+    token = prompt_for_user_token(client_id, client_secret, redirect_uri, scope=every)
 
 
 Calling the API
