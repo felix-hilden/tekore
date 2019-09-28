@@ -2,7 +2,7 @@ from typing import Union
 
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
-from spotipy.model import FullTrack, AudioFeatures
+from spotipy.model import FullTrack, AudioFeatures, AudioAnalysis
 
 
 class SpotifyTrack(SpotifyBase):
@@ -52,7 +52,7 @@ class SpotifyTrack(SpotifyBase):
         json = self._get('tracks/?ids=' + ','.join(track_ids), market=market)
         return ModelList(FullTrack(**t) for t in json['tracks'])
 
-    def track_audio_analysis(self, track_id: str) -> dict:
+    def track_audio_analysis(self, track_id: str) -> AudioAnalysis:
         """
         Get a detailed audio analysis for a track.
 
@@ -61,10 +61,11 @@ class SpotifyTrack(SpotifyBase):
 
         Returns
         -------
-        dict
+        AudioAnalysis
             audio analysis
         """
-        return self._get('audio-analysis/' + track_id)
+        json = self._get('audio-analysis/' + track_id)
+        return AudioAnalysis(**json)
 
     def track_audio_features(self, track_id: str) -> AudioFeatures:
         """

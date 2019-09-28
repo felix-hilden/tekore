@@ -35,6 +35,7 @@ setuptools.setup(
             'pygments',
             'flake8',
             'flake8-bugbear',
+            'coverage',
             'sphinx',
             'sphinx-rtd-theme',
             'sphinx-autodoc-typehints'

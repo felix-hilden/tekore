@@ -54,6 +54,8 @@ class FullTrack(Track):
     linked_from: TrackLink = None
     is_playable: bool = None
     restrictions: Restrictions = None
+    episode: bool = None
+    track: bool = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -89,11 +91,11 @@ class Tracks(SerialisableDataclass):
 @dataclass
 class SavedTrack(SerialisableDataclass):
     added_at: Timestamp
-    track: Track
+    track: FullTrack
 
     def __post_init__(self):
         self.added_at = Timestamp(datetime=self.added_at)
-        self.track = Track(**self.track)
+        self.track = FullTrack(**self.track)
 
 
 @dataclass

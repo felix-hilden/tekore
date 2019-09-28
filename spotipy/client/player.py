@@ -1,12 +1,21 @@
-from typing import Union
+from typing import Union, List
 
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
-from spotipy.model import CurrentlyPlaying, PlayHistoryPaging, Device
+from spotipy.convert import to_uri
+from spotipy.model import (
+    CurrentlyPlayingContext,
+    CurrentlyPlayingTrack,
+    PlayHistoryPaging,
+    Device
+)
 
 
 class SpotifyPlayer(SpotifyBase):
-    def playback(self, market: Union[str, None] = 'from_token') -> dict:
+    def playback(
+            self,
+            market: Union[str, None] = 'from_token'
+    ) -> CurrentlyPlayingContext:
         """
         Get information about user's current playback.
 
@@ -20,15 +29,17 @@ class SpotifyPlayer(SpotifyBase):
 
         Returns
         -------
-        dict
+        CurrentlyPlayingContext
             information about current playback
         """
-        return self._get('me/player', market=market)
+        json = self._get('me/player', market=market)
+        if json is not None:
+            return CurrentlyPlayingContext(**json)
 
     def playback_currently_playing(
             self,
             market: Union[str, None] = 'from_token'
-    ) -> CurrentlyPlaying:
+    ) -> CurrentlyPlayingTrack:
         """
         Get user's currently playing track.
 
@@ -41,18 +52,18 @@ class SpotifyPlayer(SpotifyBase):
 
         Returns
         -------
-        CurrentlyPlaying
-            currently playing object if the information is available
+        CurrentlyPlayingTrack
+            information about the current track playing
         """
         json = self._get('me/player/currently-playing', market=market)
         if json is not None:
-            return CurrentlyPlaying(**json)
+            return CurrentlyPlayingTrack(**json)
 
     def playback_recently_played(
             self,
             limit: int = 20,
-            after: str = None,
-            before: str = None
+            after: int = None,
+            before: int = None
     ) -> PlayHistoryPaging:
         """
         Get tracks from the current user's recently played tracks.
@@ -65,9 +76,9 @@ class SpotifyPlayer(SpotifyBase):
         limit
             the number of items to return (1..50)
         after
-            a unix timestamp in milliseconds
+            a unix timestamp in milliseconds, must not be specified with 'before'
         before
-            a unix timestamp in milliseconds
+            a unix timestamp in milliseconds, must not be specified with 'after'
 
         Returns
         -------
@@ -82,7 +93,7 @@ class SpotifyPlayer(SpotifyBase):
         )
         return PlayHistoryPaging(**json)
 
-    def playback_devices(self) -> ModelList:
+    def playback_devices(self) -> List[Device]:
         """
         Get a user's available devices.
 
@@ -120,8 +131,8 @@ class SpotifyPlayer(SpotifyBase):
     def playback_start(
             self,
             context_uri: str = None,
-            uris: list = None,
-            offset: dict = None,
+            track_ids: list = None,
+            offset: Union[int, str] = None,
             position_ms: int = None,
             device_id: str = None
     ) -> None:
@@ -130,29 +141,41 @@ class SpotifyPlayer(SpotifyBase):
 
         Requires the user-modify-playback-state scope.
 
-        Provide a `context_uri` to start playback of
-        an album, artist, or playlist.
-        Provide a `uris` list to start playback of one or more tracks.
-        Provide `offset` as {"position": <int>} or {"uri": "<track uri>"}
-        to start playback at a particular offset.
+        Use a `context_uri` to start playback of an album, artist, or playlist.
+        Use `track_ids` to start playback of one or more tracks.
+        Provide `offset` as index or track ID to start playback at some offset.
+        Only available when context_uri is an album or playlist,
+        or when track_ids is used.
 
         Parameters
         ----------
         context_uri
-            spotify context uri to play
-        uris
-            spotify track uris
+            context uri to play, must not be specified with track_ids
+        track_ids
+            track IDs, must not be specified with context_uri
         offset
-            offset into context by index or track uri
+            offset into context by index or track ID
         position_ms
             position of track
         device_id
             device to start playback on
         """
+        if isinstance(offset, int):
+            offset_dict = {'position': offset}
+        elif isinstance(offset, str):
+            offset_dict = {'uri': to_uri('track', offset)}
+        else:
+            offset_dict = None
+
+        if track_ids is not None:
+            track_uris = [to_uri('track', t) for t in track_ids]
+        else:
+            track_uris = None
+
         payload = {
             'context_uri': context_uri,
-            'uris': uris,
-            'offset': offset,
+            'uris': track_uris,
+            'offset': offset_dict,
             'position_ms': position_ms,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
@@ -229,7 +252,7 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to set repeat on
         """
-        self._put('me/player/repeat', state=state, device_id=device_id)
+        self._put('me/player/repeat', state=str(state), device_id=device_id)
 
     def playback_shuffle(self, state: bool, device_id: str = None) -> None:
         """
@@ -260,11 +283,6 @@ class SpotifyPlayer(SpotifyBase):
         device_id
             device to set volume on
         """
-        if volume_percent < 0:
-            volume_percent = 0
-        elif volume_percent > 100:
-            volume_percent = 100
-
         self._put(
             'me/player/volume',
             volume_percent=volume_percent,

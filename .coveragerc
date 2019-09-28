@@ -1,0 +1,7 @@
+[run]
+source = spotipy
+
+[report]
+exclude_lines =
+    if __name__
+fail_under = 0.9

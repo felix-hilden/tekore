@@ -24,8 +24,8 @@ class SpotifyFollow(SpotifyBase):
             list of booleans in the same order that the user IDs were given
         """
         return self._get(
-            f'playlists/{playlist_id}/followers/contains?ids='
-            ','.join(user_ids)
+            f'playlists/{playlist_id}/followers/contains',
+            ids=','.join(user_ids)
         )
 
     def current_user_playlist_follow(
@@ -107,7 +107,9 @@ class SpotifyFollow(SpotifyBase):
             list of booleans in the same order that the artist IDs were given
         """
         return self._get(
-            'me/following/contains?type=artist&ids=' + ','.join(artist_ids)
+            'me/following/contains',
+            type='artist',
+            ids=','.join(artist_ids)
         )
 
     def current_user_artists_follow(self, artist_ids: list) -> None:
@@ -121,9 +123,7 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        self._put(
-            'me/following?type=artist&ids=' + ','.join(artist_ids)
-        )
+        self._put('me/following', type='artist', ids=','.join(artist_ids))
 
     def current_user_artists_unfollow(self, artist_ids: list) -> None:
         """
@@ -136,9 +136,7 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        self._delete(
-            'me/following?type=artist&ids=' + ','.join(artist_ids)
-        )
+        self._delete('me/following', type='artist', ids=','.join(artist_ids))
 
     def current_user_users_is_following(self, user_ids: list) -> List[bool]:
         """
@@ -157,7 +155,7 @@ class SpotifyFollow(SpotifyBase):
             list of booleans in the same order that the user IDs were given
         """
         return self._get(
-            'me/following/contains?type=user&ids=' + ','.join(user_ids)
+            'me/following/contains', type='user', ids=','.join(user_ids)
         )
 
     def current_user_users_follow(self, user_ids: list) -> None:
@@ -171,7 +169,7 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs
         """
-        self._put('me/following?type=user&ids=' + ','.join(user_ids))
+        self._put('me/following', type='user', ids=','.join(user_ids))
 
     def current_user_users_unfollow(self, user_ids: list) -> None:
         """
@@ -184,4 +182,4 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs
         """
-        self._delete('me/following?type=user&ids=' + ','.join(user_ids))
+        self._delete('me/following', type='user', ids=','.join(user_ids))

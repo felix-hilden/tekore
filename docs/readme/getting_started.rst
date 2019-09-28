@@ -35,7 +35,12 @@ along with a code to request the token with.
     client_secret = 'your_secret_here'
     redirect_uri = 'http://localhost'
 
-    token = prompt_for_user_token(client_id, client_secret, redirect_uri, scope=every)
+    token = prompt_for_user_token(
+        client_id,
+        client_secret,
+        redirect_uri,
+        scope=every
+    )
 
 Calling the API
 ---------------
@@ -54,5 +59,5 @@ To change device state ``Spotify.playback_transfer`` can be used.
 
     s = Spotify(token)
 
-    finlandia = 'spotify:track:3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start(uris=[finlandia])
+    finlandia = '3hHWhvw2hjwfngWcFjIzqr'
+    s.playback_start(track_ids=[finlandia])

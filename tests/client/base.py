@@ -32,14 +32,14 @@ class TestSpotifyBase(unittest.TestCase):
         paging.next = None
 
         next_ = self.client.next(paging)
-        self.assertTrue(next_ is None)
+        self.assertIsNone(next_)
 
     def test_previous_with_no_previous_set_returns_none(self):
         paging = MagicMock()
         paging.previous = None
 
         previous = self.client.previous(paging)
-        self.assertTrue(previous is None)
+        self.assertIsNone(previous)
 
     def test_next_returns_next_set(self):
         response = MagicMock()

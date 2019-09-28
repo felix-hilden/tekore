@@ -49,7 +49,6 @@ class Token(AccessToken):
     """
     def __init__(self, token_info: dict):
         self._access_token = token_info['access_token']
-        self._expires_in = token_info['expires_in']
         self.token_type = token_info['token_type']
         self.scope = token_info['scope']
 

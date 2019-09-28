@@ -1,5 +1,5 @@
 """
-Scope
+scope
 =====
 
 Scopes for user authorisation.

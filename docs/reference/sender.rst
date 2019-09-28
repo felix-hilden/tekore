@@ -1,6 +1,3 @@
-Senders
-=======
-
 .. automodule:: spotipy.sender
    :members:
    :undoc-members:

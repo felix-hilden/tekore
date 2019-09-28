@@ -37,6 +37,7 @@ class TestRefreshingToken(unittest.TestCase):
     def test_refreshing_token_has_same_attributes_as_regular(self):
         token_info = MagicMock()
         token = Token(token_info)
+        token.expires_at = 3000
         cred = MagicMock()
         auto_token = RefreshingToken(token, cred)
 
@@ -45,6 +46,7 @@ class TestRefreshingToken(unittest.TestCase):
 
         for attribute in token_attributes:
             with self.subTest(f'Attribute: `{attribute}`'):
+                auto_token.__getattribute__(attribute)
                 self.assertTrue(attribute in auto_attributes)
 
 
@@ -93,7 +95,8 @@ class TestPromptForToken(unittest.TestCase):
         input_ = MagicMock(return_value='http://example.com?code=1')
         with patch('spotipy.util.Credentials', cred),\
                 patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_):
+                patch('spotipy.util.input', input_),\
+                patch('spotipy.util.print', MagicMock()):
             prompt_for_user_token('', '', '')
             input_.assert_called_once()
 
@@ -104,7 +107,8 @@ class TestPromptForToken(unittest.TestCase):
         input_ = MagicMock(return_value='http://example.com?code=1')
         with patch('spotipy.util.Credentials', cred),\
                 patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_):
+                patch('spotipy.util.input', input_),\
+                patch('spotipy.util.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
             self.assertIsInstance(token, RefreshingToken)
 

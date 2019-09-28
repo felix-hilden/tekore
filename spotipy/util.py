@@ -1,4 +1,7 @@
 """
+util
+====
+
 Utility module for your convenience <3
 
 These functions and classes are meant for local use.

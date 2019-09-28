@@ -32,8 +32,10 @@ class FullArtist(Artist):
 @dataclass
 class FullArtistCursorPaging(CursorPaging):
     items: List[FullArtist]
+    total: int
 
     def __post_init__(self):
+        super().__post_init__()
         self.items = [FullArtist(**a) for a in self.items]
 
 
