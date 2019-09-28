@@ -1,4 +1,7 @@
 """
+convert
+=======
+
 Conversions between Spotify IDs, URIs and URLs.
 """
 
@@ -10,12 +13,13 @@ class ConversionError(Exception):
     pass
 
 
-class Type(Enum):
+class IdentifierType(Enum):
     """
     Enumerate valid types of Spotify IDs.
     """
     artist = 'artist'
     album = 'album'
+    playlist = 'playlist'
     track = 'track'
 
 
@@ -23,7 +27,7 @@ def check_type(type_: str):
     """
     Validate type of an ID and raise if invalid.
     """
-    if type_ not in Type.__members__:
+    if type_ not in IdentifierType.__members__:
         raise ConversionError(f'Invalid type "{type_}"!')
 
 
