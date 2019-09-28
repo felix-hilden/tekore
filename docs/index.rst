@@ -1,7 +1,7 @@
 ==============
 |spotipy_logo|
 ==============
-|travis|
+|travis| |coverage|
 
 A Python library for the
 `Spotify Web API <https://developer.spotify.com/documentation/web-api/>`_.
