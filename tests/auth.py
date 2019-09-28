@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from spotipy.auth import AccessToken, Token
+from spotipy.auth import AccessToken, Token, Credentials, OAuthError, request_token
 
 
 class TestAccessToken(unittest.TestCase):
@@ -61,3 +61,58 @@ class TestToken(unittest.TestCase):
         with patch('spotipy.auth.time', time):
             token = Token(make_token())
             self.assertEqual(token.is_expiring(), True)
+
+
+class TestCredentials(unittest.TestCase):
+    def test_credentials_takes_arguments(self):
+        Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
+
+    def test_request_token(self):
+        response = MagicMock()
+        response.status_code = 200
+
+        post_mock = MagicMock(return_value=response)
+        with patch('spotipy.auth.post', post_mock):
+            request_token('auth', {})
+            post_mock.assert_called_once()
+
+    def test_bad_code_raises_oauth_error(self):
+        response = MagicMock()
+        response.status_code = 400
+
+        post_mock = MagicMock(return_value=response)
+        with patch('spotipy.auth.post', post_mock):
+            with self.assertRaises(OAuthError):
+                request_token('auth', {})
+
+    def test_request_client_token(self):
+        c = Credentials('id', 'secret', 'uri')
+        mock = MagicMock()
+        with patch('spotipy.auth.request_token', mock):
+            c.request_client_token()
+            mock.assert_called_once()
+
+    def test_user_authorisation_url(self):
+        c = Credentials('id', 'secret', 'uri')
+        url = c.user_authorisation_url('scope', 'state')
+        self.assertIn('scope=scope', url)
+        self.assertIn('state=state', url)
+
+    def test_request_user_token(self):
+        c = Credentials('id', 'secret', 'uri')
+        mock = MagicMock()
+        with patch('spotipy.auth.request_token', mock):
+            c.request_user_token('code')
+            mock.assert_called_once()
+
+    def test_refresh_token_uses_old_if_not_returned(self):
+        c = Credentials('id', 'secret', 'uri')
+        old = MagicMock()
+        old.refresh_token = 'refresh'
+        new = MagicMock()
+        new.refresh_token = None
+
+        mock = MagicMock(return_value=new)
+        with patch('spotipy.auth.request_token', mock):
+            refreshed = c.refresh_token(old)
+            self.assertEqual(refreshed.refresh_token, old.refresh_token)

@@ -1,21 +1,22 @@
 """
-OAuth2 authentication for client credentials and authorisation code.
+auth
+====
+
+OAuth2 authentication for client credentials and authorisation code flows.
 """
 
 import time
-import requests
 
 from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
+from requests import HTTPError, post
 from urllib.parse import urlencode
-
-from spotipy.scope import Scope
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 
 
-class OAuthError(requests.HTTPError):
+class OAuthError(HTTPError):
     pass
 
 
@@ -76,6 +77,23 @@ class Token(AccessToken):
         return self.expires_in < 60
 
 
+def request_token(auth: str, payload: dict) -> Token:
+    headers = {'Authorization': f'Basic {auth}'}
+    response = post(
+        OAUTH_TOKEN_URL,
+        data=payload,
+        headers=headers
+    )
+
+    if response.status_code != 200:
+        raise OAuthError(
+            f'Access token request failed: '
+            f'{response.status_code}, {response.reason}'
+        )
+
+    return Token(response.json())
+
+
 class Credentials:
     """
     Client for retrieving access tokens.
@@ -93,8 +111,9 @@ class Credentials:
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
+        self._auth = b64encode(self.client_id + ':' + self.client_secret)
 
-    def request_client_credentials(self) -> Token:
+    def request_client_token(self) -> Token:
         """
         Request for access token using application credentials.
 
@@ -104,16 +123,28 @@ class Credentials:
             application access token
         """
         payload = {'grant_type': 'client_credentials'}
-        return self._post_token_request(payload)
+        return request_token(self._auth, payload)
 
-    def authorisation_url(self, scope: Scope = None, state: str = None) -> str:
+    @staticmethod
+    def _make_payload(scope, state, **kwargs):
+        payload = {}
+
+        if scope is not None:
+            payload['scope'] = str(scope)
+        if state is not None:
+            payload['state'] = state
+
+        payload.update(kwargs)
+        return payload
+
+    def user_authorisation_url(self, scope=None, state: str = None) -> str:
         """
         Construct an authorisation URL for Spotify login.
 
         Parameters
         ----------
         scope
-            access rights
+            access rights as a space-separated list
         state
             additional state
 
@@ -122,38 +153,19 @@ class Credentials:
         str
             URL for Spotify login
         """
-        payload = {
-            'client_id': self.client_id,
-            'response_type': 'code',
-            'redirect_uri': self.redirect_uri
-        }
-
-        if scope is not None:
-            payload['scope'] = str(scope)
-        if state is not None:
-            payload['state'] = state
-
+        payload = self._make_payload(
+            scope,
+            state,
+            client_id=self.client_id,
+            response_type='code',
+            redirect_uri=self.redirect_uri
+        )
         return OAUTH_AUTHORIZE_URL + '?' + urlencode(payload)
 
-    def _post_token_request(self, payload: dict) -> Token:
-        auth_header = b64encode(self.client_id + ':' + self.client_secret)
-        headers = {'Authorization': f'Basic {auth_header}'}
-        response = requests.post(
-            OAUTH_TOKEN_URL, data=payload, headers=headers
-        )
-
-        if response.status_code != 200:
-            raise OAuthError(
-                f'Access token request failed: '
-                f'{response.status_code}, {response.reason}'
-            )
-
-        return Token(response.json())
-
-    def request_access_token(
+    def request_user_token(
             self,
             code: str,
-            scope: Scope = None,
+            scope=None,
             state: str = None
     ) -> Token:
         """
@@ -165,7 +177,7 @@ class Credentials:
         code
             code from request parameters
         scope
-            access rights
+            access rights as a space-separated list
         state
             additional state
 
@@ -174,18 +186,14 @@ class Credentials:
         Token
             user access token
         """
-        payload = {
-            'code': code,
-            'redirect_uri': self.redirect_uri,
-            'grant_type': 'authorization_code'
-        }
-
-        if scope is not None:
-            payload['scope'] = str(scope)
-        if state is not None:
-            payload['state'] = state
-
-        return self._post_token_request(payload)
+        payload = self._make_payload(
+            scope,
+            state,
+            code=code,
+            redirect_uri=self.redirect_uri,
+            grant_type='authorization_code'
+        )
+        return request_token(self._auth, payload)
 
     def refresh_token(self, token: Token) -> Token:
         """
@@ -206,7 +214,7 @@ class Credentials:
             'grant_type': 'refresh_token'
         }
 
-        refreshed = self._post_token_request(payload)
+        refreshed = request_token(self._auth, payload)
 
         if refreshed.refresh_token is None:
             refreshed.refresh_token = token.refresh_token

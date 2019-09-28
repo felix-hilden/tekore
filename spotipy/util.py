@@ -109,7 +109,7 @@ def prompt_for_user_token(
         client_id: str,
         client_secret: str,
         redirect_uri: str,
-        scope: Scope = None
+        scope=None
 ) -> RefreshingToken:
     """
     Open a web browser for manual authentication.
@@ -123,14 +123,14 @@ def prompt_for_user_token(
     redirect_uri
         whitelisted redirect URI
     scope
-        access rights
+        access rights as a space-separated list
     """
     cred = Credentials(client_id, client_secret, redirect_uri)
-    url = cred.authorisation_url(scope)
+    url = cred.user_authorisation_url(scope)
 
     print('Opening browser for Spotify login...')
     webbrowser.open(url)
     redirected = input('Please paste redirect URL: ').strip()
     code = parse_code_from_url(redirected)
-    token = cred.request_access_token(code, scope)
+    token = cred.request_user_token(code, scope)
     return RefreshingToken(token, cred)
