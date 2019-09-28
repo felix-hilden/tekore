@@ -59,8 +59,8 @@ For situations involving a server, a two-step process should be implemented.
 
 For this use case, the utility function is essentially split in half.
 The two steps are covered by the ``Credentials.authorisation_url``
-and ``Credentials.request_access_token`` methods in the ``auth`` module.
-Note that ``request_access_token`` does not return
+and ``Credentials.request_user_token`` methods in the ``auth`` module.
+Note that ``request_user_token`` does not return
 an automatically refreshing token but an expiring one.
 
 

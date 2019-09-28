@@ -15,4 +15,4 @@ class TestCaseWithCredentials(TestCase):
         cls.redirect_uri = redirect
 
         cls.cred = Credentials(id_, secret, redirect)
-        cls.app_token = cls.cred.request_client_credentials()
+        cls.app_token = cls.cred.request_client_token()
