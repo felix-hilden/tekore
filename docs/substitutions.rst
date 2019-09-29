@@ -1,4 +1,6 @@
 .. |travis| image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
+   :target: https://travis-ci.org/felix-hilden/spotipy
+   :alt: build status
 
 .. |coverage| image:: https://api.codeclimate.com/v1/badges/6cbb70d77e31c4d3b4c6/test_coverage
    :target: https://codeclimate.com/github/felix-hilden/spotipy/test_coverage
