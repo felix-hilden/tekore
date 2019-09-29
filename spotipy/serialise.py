@@ -2,12 +2,19 @@
 serialise
 =========
 
-Provide serialisation for models via the `str` function.
+Serialisation and convenience methods for models returned from the client.
+
+The :class:`SerialisableDataclass` defined in this module along with other
+supporting classes makes it possible to access the original representations
+as dictionaries and JSON strings.
+Easy inspection of the data contents is made possible by
+the ``SerialisableDataclass.pprint`` function.
 """
 
 import json
 
 from enum import Enum
+from pprint import pprint
 from dataclasses import dataclass, asdict
 
 
@@ -24,6 +31,9 @@ class JSONEncoder(json.JSONEncoder):
     JSON Encoder capable of serialising enumerations.
     """
     def default(self, o):
+        """
+        Serialise enumerations using their name.
+        """
         if isinstance(o, Enum):
             return o.name
         else:
@@ -33,10 +43,34 @@ class JSONEncoder(json.JSONEncoder):
 @dataclass
 class SerialisableDataclass:
     """
-    Convert dataclasses to JSON strings recursively.
+    Convenience methods for dataclasses.
+
+    Convert dataclasses to JSON strings recursively using `str`.
     """
+    def asdict(self) -> dict:
+        """
+        Dictionary representation of the dataclass and its members.
+
+        Returns
+        -------
+        dict
+            dataclass and its members as a dictionary
+        """
+        return asdict(self)
+
+    def pprint(self, **pprint_kwargs) -> None:
+        """
+        Pretty print the dictionary representation of the dataclass.
+
+        Parameters
+        ----------
+        pprint_kwargs
+            additional keyword arguments for pprint.pprint
+        """
+        pprint(self.asdict(), **pprint_kwargs)
+
     def __str__(self):
-        return JSONEncoder().encode(asdict(self))
+        return JSONEncoder().encode(self.asdict())
 
 
 class ModelList(list):

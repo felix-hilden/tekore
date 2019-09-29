@@ -4,6 +4,8 @@ import unittest
 from enum import Enum
 from typing import List
 from dataclasses import dataclass
+from unittest.mock import MagicMock, patch
+
 from spotipy.serialise import (
     JSONEncoder,
     SerialisableDataclass,
@@ -23,6 +25,20 @@ class TestJSONEncoder(unittest.TestCase):
         enum = Enum('enum', 'a b c')
         encoded = JSONEncoder().encode(enum.a)
         self.assertEqual(encoded, '"a"')
+
+    def test_non_enum_encoded_is_preserved(self):
+        d = {'items': 'in', 'this': 'dict'}
+        encoded = JSONEncoder().encode(d)
+        default = json.dumps(d)
+        self.assertEqual(encoded, default)
+
+    def test_non_serialisable_item_raises(self):
+        class C:
+            pass
+
+        c = C()
+        with self.assertRaises(TypeError):
+            JSONEncoder().encode(c)
 
 
 @dataclass
@@ -53,6 +69,35 @@ class TestSerialisableDataclass(unittest.TestCase):
         data = Container(**dict_in)
         dict_out = json.loads(str(data))
         self.assertDictEqual(dict_in, dict_out)
+
+    def test_asdict_called_with_self(self):
+        asdict = MagicMock(return_value='dict')
+        data = Data(i=1)
+
+        with patch('spotipy.serialise.asdict', asdict):
+            data.asdict()
+            asdict.assert_called_with(data)
+
+    def test_asdict_returns_dict_representation(self):
+        data = Data(i=1)
+        d = data.asdict()
+        self.assertDictEqual(d, {'i': 1})
+
+    def test_pprint_called_with_dict(self):
+        pprint = MagicMock()
+        data = Data(i=1)
+
+        with patch('spotipy.serialise.pprint', pprint):
+            data.pprint()
+            pprint.assert_called_with({'i': 1})
+
+    def test_keyword_arguments_passed_to_pprint(self):
+        pprint = MagicMock()
+        data = Data(i=1)
+
+        with patch('spotipy.serialise.pprint', pprint):
+            data.pprint(kw='argument')
+            pprint.assert_called_with({'i': 1}, kw='argument')
 
 
 class TestModelList(unittest.TestCase):
