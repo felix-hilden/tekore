@@ -32,8 +32,8 @@ a function for reading those values is provided in the ``util`` module.
 
 .. code:: python
 
-   from spotipy.util import read_environment
-   client_id, client_secret, redirect_uri = read_environment()
+   from spotipy.util import credentials_from_environment
+   client_id, client_secret, redirect_uri = credentials_from_environment()
 
 Those values can then be passed to a :class:`Credentials` manager or
 ``prompt_for_user_token`` to retrieve access tokens.
@@ -43,7 +43,7 @@ Note that if all configuration values are defined, the following is possible.
 
    from spotipy import util
 
-   *env = util.read_environment()
+   *env = util.credentials_from_environment()
    c = util.prompt_for_user_token(*env)
 
 

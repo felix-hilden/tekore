@@ -65,13 +65,30 @@ class RefreshingToken(AccessToken):
         return self._token.is_expiring()
 
 
-def read_environment(
+def read_environment(*variables: str) -> tuple:
+    """
+    Read environment variables.
+
+    Parameters
+    ----------
+    variables
+        environment variable names to read
+
+    Returns
+    -------
+    tuple
+        variable values
+    """
+    return tuple(os.getenv(var, None) for var in variables)
+
+
+def credentials_from_environment(
         client_id_var: str = 'SPOTIPY_CLIENT_ID',
         client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
         redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
 ) -> (str, str, str):
     """
-    Read environment variables for application configuration.
+    Read environment variables for application credentials.
 
     Parameters
     ----------
@@ -87,10 +104,7 @@ def read_environment(
     tuple
         (client ID, client secret, redirect URI), None if not found
     """
-    client_id = os.getenv(client_id_var, None)
-    client_secret = os.getenv(client_secret_var, None)
-    redirect_uri = os.getenv(redirect_uri_var, None)
-    return client_id, client_secret, redirect_uri
+    return read_environment(client_id_var, client_secret_var, redirect_uri_var)
 
 
 def parse_code_from_url(url: str) -> str:

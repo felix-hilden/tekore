@@ -4,14 +4,14 @@ from unittest import TestCase, SkipTest
 from requests.exceptions import HTTPError
 
 from spotipy.auth import Credentials
-from spotipy.util import read_environment
+from spotipy.util import credentials_from_environment
 from spotipy.client import Spotify
 
 
 class TestCaseWithCredentials(TestCase):
     @classmethod
     def setUpClass(cls):
-        id_, secret, redirect = read_environment()
+        id_, secret, redirect = credentials_from_environment()
         if any(i is None for i in (id_, secret, redirect)):
             raise SkipTest('No application credentials!')
 

@@ -6,7 +6,7 @@ from spotipy.util import (
     RefreshingToken,
     parse_code_from_url,
     prompt_for_user_token,
-    read_environment
+    credentials_from_environment
 )
 
 
@@ -50,7 +50,7 @@ class TestRefreshingToken(unittest.TestCase):
                 self.assertTrue(attribute in auto_attributes)
 
 
-class TestReadEnvironment(unittest.TestCase):
+class TestCredentialsFromEnvironment(unittest.TestCase):
     def test_environment_read_according_to_specified_names(self):
         import os
         id_name = 'SP_client_id'
@@ -60,7 +60,12 @@ class TestReadEnvironment(unittest.TestCase):
         os.environ[secret_name] = 'secret'
         os.environ[uri_name] = 'uri'
 
-        id_, secret, uri = read_environment(id_name, secret_name, uri_name)
+        id_, secret, uri = credentials_from_environment(
+            client_id_var=id_name,
+            client_secret_var=secret_name,
+            redirect_uri_var=uri_name
+        )
+
         with self.subTest('Client ID'):
             self.assertEqual(id_, 'id')
         with self.subTest('Client secret'):
