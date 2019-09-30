@@ -29,7 +29,7 @@ class TestRefreshingToken(unittest.TestCase):
         expiring = make_token('expiring', True)
         refreshed = make_token('refreshed', False)
         cred = MagicMock()
-        cred.refresh_token.return_value = refreshed
+        cred.refresh.return_value = refreshed
 
         auto_token = RefreshingToken(expiring, cred)
         self.assertEqual(auto_token.access_token, 'refreshed')

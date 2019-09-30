@@ -1,7 +1,6 @@
 import os
 
 from unittest import TestCase, SkipTest
-from unittest.mock import MagicMock
 from requests.exceptions import HTTPError
 
 from spotipy.auth import Credentials
@@ -37,11 +36,8 @@ class TestCaseWithUserCredentials(TestCaseWithCredentials):
         if refresh is None:
             raise SkipTest('No user credentials!')
 
-        token_mock = MagicMock()
-        token_mock.refresh_token = refresh
-
         try:
-            cls.user_token = cls.cred.refresh_token(token_mock)
+            cls.user_token = cls.cred.request_refreshed_token(refresh)
         except HTTPError as e:
             raise SkipTest('Error in retrieving user token!') from e
 

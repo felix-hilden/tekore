@@ -194,9 +194,35 @@ class Credentials:
         )
         return request_token(self._auth, payload)
 
-    def refresh_token(self, token: Token) -> Token:
+    def request_refreshed_token(self, refresh_token: str) -> Token:
         """
         Request a refreshed access token.
+
+        Parameters
+        ----------
+        refresh_token
+            refresh token
+
+        Returns
+        -------
+        Token
+            refreshed access token
+        """
+        payload = {
+            'refresh_token': refresh_token,
+            'grant_type': 'refresh_token'
+        }
+
+        refreshed = request_token(self._auth, payload)
+
+        if refreshed.refresh_token is None:
+            refreshed.refresh_token = refresh_token
+
+        return refreshed
+
+    def refresh(self, token: Token) -> Token:
+        """
+        Refresh a token.
 
         Parameters
         ----------
@@ -208,14 +234,4 @@ class Credentials:
         Token
             refreshed access token
         """
-        payload = {
-            'refresh_token': token.refresh_token,
-            'grant_type': 'refresh_token'
-        }
-
-        refreshed = request_token(self._auth, payload)
-
-        if refreshed.refresh_token is None:
-            refreshed.refresh_token = token.refresh_token
-
-        return refreshed
+        return self.request_refreshed_token(token.refresh_token)

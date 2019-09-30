@@ -105,7 +105,7 @@ class TestCredentials(unittest.TestCase):
             c.request_user_token('code')
             mock.assert_called_once()
 
-    def test_refresh_token_uses_old_if_not_returned(self):
+    def test_refresh_uses_old_if_not_returned(self):
         c = Credentials('id', 'secret', 'uri')
         old = MagicMock()
         old.refresh_token = 'refresh'
@@ -114,5 +114,5 @@ class TestCredentials(unittest.TestCase):
 
         mock = MagicMock(return_value=new)
         with patch('spotipy.auth.request_token', mock):
-            refreshed = c.refresh_token(old)
+            refreshed = c.refresh(old)
             self.assertEqual(refreshed.refresh_token, old.refresh_token)

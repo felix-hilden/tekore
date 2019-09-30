@@ -37,7 +37,7 @@ class RefreshingToken(AccessToken):
     @property
     def access_token(self) -> str:
         if self._token.is_expiring():
-            self._token = self.credentials.refresh_token(self._token)
+            self._token = self.credentials.refresh(self._token)
 
         return self._token.access_token
 
