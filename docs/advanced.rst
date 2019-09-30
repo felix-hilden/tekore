@@ -43,8 +43,8 @@ Note that if all configuration values are defined, the following is possible.
 
    from spotipy import util
 
-   *env = util.credentials_from_environment()
-   c = util.prompt_for_user_token(*env)
+   conf = util.credentials_from_environment()
+   c = util.prompt_for_user_token(*conf)
 
 
 Retrieving user tokens
