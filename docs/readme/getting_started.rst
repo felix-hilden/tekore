@@ -10,13 +10,11 @@ though it is required for programmatic extraction of user access tokens.
 Installation
 ------------
 The package is not yet in PyPI.
-Until then the repository must be cloned and installed as a local package.
+Until then the repository must be installed via git.
 
 .. code:: sh
 
-    $ git clone https://github.com/felix-hilden/spotipy.git
-    $ cd spotipy
-    $ pip install .
+    $ pip install git+https://github.com/felix-hilden/spotipy.git
 
 Retrieving an access token
 --------------------------
