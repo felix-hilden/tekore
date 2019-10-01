@@ -16,12 +16,13 @@ A Python library for the
 
    readme/getting_started
    advanced
+   recipes/_recipes
 
 .. toctree::
    :maxdepth: 3
    :hidden:
    :glob:
-   :caption: Package Reference:
+   :caption: Package Reference
 
    reference/*
 
