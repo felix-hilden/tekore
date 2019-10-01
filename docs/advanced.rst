@@ -10,11 +10,9 @@ Firstly it accepts an access token in the constructor.
    s = Spotify(token)
    a = s.artist(artist_id)
 
-Secondly, a context manager ``Spotify.token_as`` is provided
-for using a particular token for requests within the context.
-This is particularly handy if one object is created for all requests
-but requests need to use different tokens,
-be it due to number of users, token refreshing or scopes.
+Secondly, the client can temporarily use another token to make requests.
+This is particularly handy if only one client instance is created but there are
+many users, tokens are manually refreshed or a user has different scopes.
 
 .. code:: python
 
@@ -35,8 +33,7 @@ a function for reading those values is provided in the ``util`` module.
    from spotipy.util import credentials_from_environment
    client_id, client_secret, redirect_uri = credentials_from_environment()
 
-Those values can then be passed to a :class:`Credentials` manager or
-``prompt_for_user_token`` to retrieve access tokens.
+Those values can then be used to retrieve access tokens.
 Note that if all configuration values are defined, the following is possible.
 
 .. code:: python
@@ -44,29 +41,28 @@ Note that if all configuration values are defined, the following is possible.
    from spotipy import util
 
    conf = util.credentials_from_environment()
-   c = util.prompt_for_user_token(*conf)
+   token = util.prompt_for_user_token(*conf)
 
 
 Retrieving user tokens
 ----------------------
-The ``util`` module defines a convenient way of retrieving an access token
-that refreshes automatically when about to expire (``prompt_for_user_token``).
+``util.prompt_for_user_token`` provides a convenient way of retrieving
+an access token that refreshes automatically when about to expire.
 However, it is intended for local use as it opens up a browser window.
 For situations involving a server, a two-step process should be implemented.
 
 - Redirect a user to a specific URL
 - Receive an access token as a result of the authentication
 
-For this use case, the utility function is essentially split in half.
-The two steps are covered by the ``Credentials.authorisation_url``
-and ``Credentials.request_user_token`` methods in the ``auth`` module.
+The steps are covered by ``user_authorisation_url`` and ``request_user_token``,
+two methods of the :class:``Credentials` class in the ``auth`` module.
 Note that ``request_user_token`` does not return
 an automatically refreshing token but an expiring one.
 
 
 Senders
 -------
-By default ``Spotipy`` doesn't do anything clever to requests that are sent.
+By default ``spotipy`` doesn't do anything clever to requests that are sent.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :class:`Sender` classes.
 They wrap around :class:`requests.Session` to provide new functionality and
