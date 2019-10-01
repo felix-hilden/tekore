@@ -6,7 +6,8 @@ from spotipy.util import (
     RefreshingToken,
     parse_code_from_url,
     prompt_for_user_token,
-    credentials_from_environment
+    credentials_from_environment,
+    token_from_refresh_token,
 )
 
 
@@ -116,6 +117,17 @@ class TestPromptForToken(unittest.TestCase):
                 patch('spotipy.util.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
             self.assertIsInstance(token, RefreshingToken)
+
+
+class TestTokenFromRefreshToken(unittest.TestCase):
+    def test_request_refreshed_token_called(self):
+        cred_instance = MagicMock()
+        cred = MagicMock(return_value=cred_instance)
+        cred_instance.request_refreshed_token.return_value = MagicMock()
+
+        with patch('spotipy.util.Credentials', cred):
+            token_from_refresh_token('', '', '', 'refresh')
+            cred_instance.request_refreshed_token.assert_called_with('refresh')
 
 
 if __name__ == '__main__':

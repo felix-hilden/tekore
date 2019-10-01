@@ -16,7 +16,6 @@ import webbrowser
 
 from urllib.parse import urlparse, parse_qs
 from spotipy.auth import AccessToken, Token, Credentials
-from spotipy.scope import Scope
 
 
 class RefreshingToken(AccessToken):
@@ -141,6 +140,11 @@ def prompt_for_user_token(
         whitelisted redirect URI
     scope
         access rights as a space-separated list
+
+    Returns
+    -------
+    RefreshingToken
+        automatically refreshing access token
     """
     cred = Credentials(client_id, client_secret, redirect_uri)
     url = cred.user_authorisation_url(scope)
@@ -150,4 +154,34 @@ def prompt_for_user_token(
     redirected = input('Please paste redirect URL: ').strip()
     code = parse_code_from_url(redirected)
     token = cred.request_user_token(code, scope)
+    return RefreshingToken(token, cred)
+
+
+def token_from_refresh_token(
+        client_id: str,
+        client_secret: str,
+        redirect_uri: str,
+        refresh_token: str
+) -> RefreshingToken:
+    """
+    Retrieve a token using a refresh token.
+
+    Parameters
+    ----------
+    client_id
+        client ID of a Spotify App
+    client_secret
+        client secret
+    redirect_uri
+        whitelisted redirect URI
+    refresh_token
+        refresh token
+
+    Returns
+    -------
+    RefreshingToken
+        automatically refreshing access token
+    """
+    cred = Credentials(client_id, client_secret, redirect_uri)
+    token = cred.request_refreshed_token(refresh_token)
     return RefreshingToken(token, cred)
