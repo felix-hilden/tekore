@@ -1,9 +1,9 @@
 from typing import List
 from dataclasses import dataclass
 
-from spotipy.serialise import SerialisableDataclass
+from spotipy.serialise import SerialisableDataclass, Timestamp
 from spotipy.model.album.base import Album
-from spotipy.model.member import Copyright, Restrictions, Timestamp
+from spotipy.model.member import Copyright, Restrictions
 from spotipy.model.track import SimpleTrackPaging
 from spotipy.model.paging import OffsetPaging
 
@@ -34,7 +34,7 @@ class SavedAlbum(SerialisableDataclass):
     album: FullAlbum
 
     def __post_init__(self):
-        self.added_at = Timestamp(datetime=self.added_at)
+        self.added_at = Timestamp.from_string(self.added_at)
         self.album = FullAlbum(**self.album)
 
 

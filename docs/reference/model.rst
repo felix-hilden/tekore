@@ -177,10 +177,6 @@ Play history
    :members:
    :undoc-members:
 
-.. autoclass:: spotipy.model.play_history.MillisecondTimestamp
-   :members:
-   :undoc-members:
-
 
 Playlist-related
 ----------------
@@ -324,10 +320,6 @@ Miscellaneous
    :undoc-members:
 
 .. autoclass:: spotipy.model.member.Restrictions
-   :members:
-   :undoc-members:
-
-.. autoclass:: spotipy.model.member.Timestamp
    :members:
    :undoc-members:
 

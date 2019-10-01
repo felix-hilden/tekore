@@ -1,35 +1,21 @@
-from datetime import datetime
 from typing import List
 from dataclasses import dataclass
 
 from spotipy.model.track import FullTrack
 from spotipy.model.context import Context
 from spotipy.model.paging import CursorPaging, Cursor
-from spotipy.serialise import SerialisableDataclass
-
-
-@dataclass
-class MillisecondTimestamp:
-    datetime: datetime
-
-    def __post_init__(self):
-        self.datetime = datetime.strptime(
-            self.datetime, '%Y-%m-%dT%H:%M:%S.%f%z'
-        )
-
-    def __str__(self):
-        return self.datetime.isoformat(timespec='milliseconds') + 'Z'
+from spotipy.serialise import SerialisableDataclass, MicrosecondTimestamp
 
 
 @dataclass
 class PlayHistory(SerialisableDataclass):
     track: FullTrack
-    played_at: MillisecondTimestamp
+    played_at: MicrosecondTimestamp
     context: Context = None
 
     def __post_init__(self):
         self.track = FullTrack(**self.track)
-        self.played_at = MillisecondTimestamp(datetime=self.played_at)
+        self.played_at = MicrosecondTimestamp.from_string(self.played_at)
 
         if self.context is not None:
             self.context = Context(**self.context)

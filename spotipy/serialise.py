@@ -15,6 +15,7 @@ import json
 
 from enum import Enum
 from pprint import pprint
+from datetime import datetime
 from dataclasses import dataclass, asdict
 
 
@@ -26,9 +27,49 @@ class SerialisableEnum(Enum):
         return self.name
 
 
+class Timestamp(datetime):
+    """
+    Timestamp whose string representation is its value
+    in ISO 8601 format with second precision.
+    """
+    format_str = '%Y-%m-%dT%H:%M:%SZ'
+
+    @classmethod
+    def from_string(cls, s: str) -> 'Timestamp':
+        """
+        Initialise instance from string.
+
+        Parameters
+        ----------
+        s
+            timestamp string
+
+        Returns
+        -------
+        Timestamp
+            new timestamp
+        """
+        return cls.strptime(s, cls.format_str)
+
+    def __str__(self):
+        return self.strftime(self.format_str)
+
+
+class MicrosecondTimestamp(Timestamp):
+    """
+    Timestamp whose string representation is its value
+    in ISO 8601 format with microsecond precision.
+    """
+    format_str = '%Y-%m-%dT%H:%M:%S.%fZ'
+
+    @classmethod
+    def from_string(cls, s: str) -> 'MicrosecondTimestamp':
+        return cls.strptime(s, cls.format_str)
+
+
 class JSONEncoder(json.JSONEncoder):
     """
-    JSON Encoder capable of serialising enumerations.
+    JSON Encoder capable of serialising enumerations and timestamps.
     """
     def default(self, o):
         """
@@ -36,6 +77,8 @@ class JSONEncoder(json.JSONEncoder):
         """
         if isinstance(o, Enum):
             return o.name
+        elif isinstance(o, Timestamp):
+            return str(o)
         else:
             return super().default(o)
 

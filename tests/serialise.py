@@ -10,7 +10,9 @@ from spotipy.serialise import (
     JSONEncoder,
     SerialisableDataclass,
     SerialisableEnum,
-    ModelList
+    ModelList,
+    Timestamp,
+    MicrosecondTimestamp,
 )
 
 
@@ -32,6 +34,12 @@ class TestJSONEncoder(unittest.TestCase):
         default = json.dumps(d)
         self.assertEqual(encoded, default)
 
+    def test_timestamp_encoded_is_quoted_str(self):
+        t = Timestamp.from_string('2019-01-01T12:00:00Z')
+        encoded = JSONEncoder().encode(t)
+
+        self.assertEqual(encoded, f'"{str(t)}"')
+
     def test_non_serialisable_item_raises(self):
         class C:
             pass
@@ -39,6 +47,32 @@ class TestJSONEncoder(unittest.TestCase):
         c = C()
         with self.assertRaises(TypeError):
             JSONEncoder().encode(c)
+
+
+class TestTimestamp(unittest.TestCase):
+    def test_timestamp_initialisable_from_string(self):
+        Timestamp.from_string('2019-01-01T12:00:00Z')
+
+    def test_incorrect_format_raises(self):
+        with self.assertRaises(ValueError):
+            Timestamp.from_string('2019-01-01')
+
+    def test_timestamp_formatted_back_to_string(self):
+        time_str = '2019-01-01T12:00:00Z'
+        t = Timestamp.from_string(time_str)
+        self.assertEqual(str(t), time_str)
+
+
+class TestMicrosecondTimestamp(unittest.TestCase):
+    def test_initialisable_from_string(self):
+        MicrosecondTimestamp.from_string('2019-01-01T12:00:00.000000Z')
+
+    def test_initialisable_with_less_precision(self):
+        MicrosecondTimestamp.from_string('2019-01-01T12:00:00.00Z')
+
+    def test_initialisation_with_second_precision_raises(self):
+        with self.assertRaises(ValueError):
+            MicrosecondTimestamp.from_string('2019-01-01T12:00:00Z')
 
 
 @dataclass

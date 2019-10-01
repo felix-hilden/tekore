@@ -5,8 +5,8 @@ from spotipy.model.base import Item
 from spotipy.model.user import PublicUser
 from spotipy.model.track import FullTrack, Tracks
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import Followers, Image, Timestamp
-from spotipy.serialise import SerialisableDataclass
+from spotipy.model.member import Followers, Image
+from spotipy.serialise import SerialisableDataclass, Timestamp
 
 
 @dataclass
@@ -19,7 +19,7 @@ class PlaylistTrack(SerialisableDataclass):
     video_thumbnail: Image
 
     def __post_init__(self):
-        self.added_at = Timestamp(datetime=self.added_at)
+        self.added_at = Timestamp.from_string(self.added_at)
         self.added_by = PublicUser(**self.added_by)
         self.track = FullTrack(**self.track)
         self.video_thumbnail = Image(**self.video_thumbnail)

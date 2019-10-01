@@ -5,8 +5,8 @@ from spotipy.model.base import Item
 from spotipy.model.album import SimpleAlbum
 from spotipy.model.artist import SimpleArtist
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.member import Restrictions, Timestamp
-from spotipy.serialise import SerialisableDataclass
+from spotipy.model.member import Restrictions
+from spotipy.serialise import SerialisableDataclass, Timestamp
 
 
 @dataclass
@@ -94,7 +94,7 @@ class SavedTrack(SerialisableDataclass):
     track: FullTrack
 
     def __post_init__(self):
-        self.added_at = Timestamp(datetime=self.added_at)
+        self.added_at = Timestamp.from_string(self.added_at)
         self.track = FullTrack(**self.track)
 
 
