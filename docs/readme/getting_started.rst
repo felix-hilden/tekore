@@ -21,8 +21,8 @@ Retrieving an access token
 First we'll retrieve an access token that has every possible right (scope)
 to a user's account.
 The script will open a web page prompting for a Spotify login.
-If successful, the client will be redirected to the specified address
-along with a code to request the token with.
+The user is then redirected back and the URL of the redirect is requested
+for parsing and retrieving the access token.
 
 .. code:: python
 
@@ -43,19 +43,23 @@ along with a code to request the token with.
 Calling the API
 ---------------
 Next the Spotify object should be created.
-An access token can be provided at initialisation.
-Otherwise the context manager ``Spotify.token_as`` can be used.
-
-The script below will play Sibelius' Finlandia if the user has
-an active (recently used) Spotify application open.
-If no active device is found, an error is thrown.
-To change device state ``Spotify.playback_transfer`` can be used.
+The following script will list some of the user's top tracks.
 
 .. code:: python
 
     from spotipy import Spotify
 
     s = Spotify(token)
+
+    tracks = s.current_user_top_tracks(limit=10)
+    for track in tracks.items:
+        print(track.name)
+
+The snippet below will play Sibelius' Finlandia if the user has
+an active (recently used) Spotify application open.
+If no active device is found, an error is thrown.
+
+.. code:: python
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     s.playback_start(track_ids=[finlandia])
