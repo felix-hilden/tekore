@@ -38,6 +38,9 @@ that does not have a private session enabled.
 An empty song queue is also required, as the Web API does not implement
 queue functionality, but skipping to the next song still consumes the queue.
 
+Optionally ``SPOTIPY_TEST_SKIP_IS_FAIL`` can be set to raise an error if some
+of the tests would be skipped because of the environment has not been configured.
+
 To measure test coverage and view uncovered lines or branches run ``coverage``.
 
 .. code:: sh

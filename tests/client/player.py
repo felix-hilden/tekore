@@ -1,7 +1,7 @@
 from time import sleep
-from unittest import SkipTest
+from requests import HTTPError
 
-from ._cred import TestCaseWithUserCredentials
+from ._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids
 from spotipy.client import SpotifyPlayer
 
@@ -23,22 +23,27 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
 
         try:
             devices = self.client.playback_devices()
-        except Exception as e:
-            raise SkipTest('Playback devices could not be retrieved!') from e
+        except HTTPError as e:
+            skip_or_fail(HTTPError, 'Playback devices could not be retrieved!', e)
 
         for device in devices:
             if not device.is_restricted and not device.is_private_session:
                 self.device = device
                 break
         else:
-            raise SkipTest('No unrestricted devices with public sessions found!')
+            skip_or_fail(
+                AssertionError,
+                'No unrestricted devices with public sessions found!'
+            )
 
         try:
             self.playback = self.client.playback()
-        except Exception as e:
-            raise SkipTest(
-                'Current playback information could not be retrieved!'
-            ) from e
+        except HTTPError as e:
+            skip_or_fail(
+                HTTPError,
+                'Current playback information could not be retrieved!',
+                e
+            )
 
     def currently_playing(self):
         sleep(2)
