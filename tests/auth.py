@@ -105,14 +105,32 @@ class TestCredentials(unittest.TestCase):
             c.request_user_token('code')
             mock.assert_called_once()
 
-    def test_refresh_uses_old_if_not_returned(self):
+    def test_request_refreshed_token(self):
         c = Credentials('id', 'secret', 'uri')
-        old = MagicMock()
-        old.refresh_token = 'refresh'
+        request_token_mock = MagicMock(return_value=MagicMock())
+        with patch('spotipy.auth.request_token', request_token_mock):
+            c.request_refreshed_token('refresh')
+
+    def test_request_refreshed_token_uses_old_if_not_returned(self):
+        c = Credentials('id', 'secret', 'uri')
         new = MagicMock()
         new.refresh_token = None
 
+        request_token_mock = MagicMock(return_value=new)
+        with patch('spotipy.auth.request_token', request_token_mock):
+            refreshed = c.request_refreshed_token('refresh')
+            self.assertEqual(refreshed.refresh_token, 'refresh')
+
+    def test_refresh_wraps_token_refresh_token(self):
+        token = MagicMock()
+        token.refresh_token = 'refresh'
+
+        new = MagicMock()
         mock = MagicMock(return_value=new)
-        with patch('spotipy.auth.request_token', mock):
-            refreshed = c.refresh(old)
-            self.assertEqual(refreshed.refresh_token, old.refresh_token)
+        with patch('spotipy.auth.Credentials.request_refreshed_token', mock):
+            c = Credentials('id', 'secret', 'uri')
+            refreshed = c.refresh(token)
+            with self.subTest('Refresh token extracted'):
+                mock.assert_called_with('refresh')
+            with self.subTest('Refreshed token returned as is'):
+                self.assertIs(refreshed, new)

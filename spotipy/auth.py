@@ -37,7 +37,7 @@ class AccessToken(ABC):
     @property
     @abstractmethod
     def access_token(self) -> str:
-        pass
+        raise NotImplementedError
 
     def __str__(self):
         return self.access_token

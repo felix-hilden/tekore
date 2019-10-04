@@ -46,7 +46,7 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
             )
 
     def currently_playing(self):
-        sleep(2)
+        sleep(5)
         return self.client.playback_currently_playing()
 
     def assertPlaying(self, msg: str, track_id: str):
@@ -60,6 +60,12 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
 
         with self.subTest('Transfer playback'):
             self.client.playback_transfer(self.device.id, force_play=True)
+
+        self.client.playback_start(track_ids=track_ids, offset=1)
+        self.assertPlaying('Playback start with offset index', track_ids[1])
+
+        self.client.playback_start(track_ids=track_ids, offset=track_ids[1])
+        self.assertPlaying('Playback start with offset uri', track_ids[1])
 
         self.client.playback_start(track_ids=track_ids)
         self.assertPlaying('Playback start', track_ids[0])
