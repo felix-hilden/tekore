@@ -4,13 +4,16 @@ Contributions are welcome!
 
 Issues
 ------
-Please submit any issues or questions to the GitHub repository
+If you have found a bug or would like to ask about the package,
+please submit an issue to the GitHub repository
 `here <https://github.com/felix-hilden/spotipy/issues>`_.
 
 Tests
 -----
+The repository contains a suite of test cases
+which can be studied and run to ensure the package works as intended.
 To get up and running, clone the repository,
-install it as an editable package and run tests.
+install it as an editable package and run the suite.
 
 .. code:: sh
 
@@ -49,5 +52,5 @@ Issues tagged ``consideration`` ought to be discussed further
 before implementation.
 `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
 is the canonical style guide for Python.
-In addition, ``flake8`` and ``flake8-bugbear`` are a great addition.
+In addition, ``flake8`` and ``flake8-bugbear`` are great tools for code style.
 See ``.travis.yml`` for the current style check.
