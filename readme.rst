@@ -32,6 +32,21 @@ Until then the repository must be installed via git.
 
     $ pip install git+https://github.com/felix-hilden/spotipy.git
 
+Documentation
+-------------
+Modules, classes and functions are documented in the source code.
+For a condensed and organised view, additional examples and other documents,
+documentation can be built locally.
+
+.. code:: sh
+
+    $ git clone https://github.com/felix-hilden/spotipy.git
+    $ cd spotipy
+    $ pip install -e .[dev]
+    $ cd docs && make html
+
+The main page ``index.html`` can be found in ``build/html``.
+
 Retrieving an access token
 --------------------------
 First we'll retrieve an access token that has every possible right (scope)
