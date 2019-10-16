@@ -1,12 +1,14 @@
 client
 ======
+:class:`Spotify` is a client to the Spotify Web API.
+Documentation on its endpoints can be viewed in the
+`Web API Reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
+Each method of the client corresponds to an API call, with some exceptions.
+The full client implements methods from Personalisation, Search and User APIs
+in addition to inheriting a number of other APIs documented below.
 
 Full client
 -----------
-
-The :class:`Spotify` client is a collection of
-all endpoints defined by the Spotify Web API.
-It implements a few methods and inherits a number of APIs each documented below.
 
 .. autoclass:: spotipy.client.Spotify
    :members:
@@ -15,6 +17,12 @@ It implements a few methods and inherits a number of APIs each documented below.
 
    .. automethod:: spotipy.client.Spotify.__init__
 
+Base class
+----------
+
+.. autoclass:: spotipy.client.base.SpotifyBase
+   :members:
+   :undoc-members:
 
 Album API
 ---------

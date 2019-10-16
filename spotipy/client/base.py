@@ -34,6 +34,9 @@ class SpotifyBase:
 
     @property
     def token(self):
+        """
+        Access token currently in use.
+        """
         return str(self._token)
 
     @token.setter
@@ -42,6 +45,19 @@ class SpotifyBase:
 
     @contextmanager
     def token_as(self, token) -> 'SpotifyBase':
+        """
+        Temporarily use a different token with requests.
+
+        Parameters
+        ----------
+        token
+            access token
+
+        Returns
+        -------
+        SpotifyBase
+            self
+        """
         self._token, old_token = token, self.token
         yield self
         self._token = old_token
