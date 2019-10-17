@@ -16,6 +16,11 @@ class TestSpotifyTrack(TestCaseWithCredentials):
         track = self.client.track(track_id, market=None)
         self.assertEqual(track.id, track_id)
 
+    def test_track_unplayable(self):
+        unplayable = '6F6CuSuM8EcD4UD0N3nuxN'
+        track = self.client.track(unplayable, market='SE')
+        self.assertEqual(track.id, unplayable)
+
     def test_tracks_with_market(self):
         tracks = self.client.tracks(track_ids, market='US')
         self.assertEqual(len(tracks), len(track_ids))

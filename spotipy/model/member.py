@@ -23,5 +23,4 @@ class Image(SerialisableDataclass):
 
 @dataclass
 class Restrictions(SerialisableDataclass):
-    key: str
-    value: str
+    reason: str
