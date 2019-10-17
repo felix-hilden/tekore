@@ -1,4 +1,4 @@
-from spotipy.model.album import SimpleAlbumPaging
+from spotipy.model.album import SimpleAlbumPaging, AlbumGroup
 from spotipy.model.album.full import FullAlbum, SavedAlbumPaging
 from spotipy.model.artist import (
     FullArtist,
@@ -21,7 +21,7 @@ from spotipy.model.playlist import (
     FullPlaylist,
     SimplePlaylistPaging,
 )
-from spotipy.model.recommendations import Recommendations
+from spotipy.model.recommendations import Recommendations, RecommendationAttribute
 from spotipy.model.track import (
     FullTrack,
     SimpleTrackPaging,

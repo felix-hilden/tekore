@@ -2,6 +2,7 @@ from ._cred import TestCaseWithCredentials
 from ._resources import artist_id, artist_ids
 
 from spotipy.client import SpotifyArtist
+from spotipy.model import AlbumGroup
 
 
 class TestSpotifyArtist(TestCaseWithCredentials):
@@ -23,6 +24,22 @@ class TestSpotifyArtist(TestCaseWithCredentials):
     def test_artist_albums_no_market(self):
         albums = self.client.artist_albums(artist_id, market=None)
         self.assertGreater(albums.total, 0)
+
+    def test_artist_albums_groups(self):
+        albums = self.client.artist_albums(
+            artist_id,
+            include_groups=[AlbumGroup.album, AlbumGroup.compilation],
+            market=None
+        )
+        self.assertGreater(albums.total, 0)
+
+    def test_artist_albums_no_groups_returns_empty(self):
+        albums = self.client.artist_albums(
+            artist_id,
+            include_groups=[],
+            market=None
+        )
+        self.assertEqual(albums.total, 0)
 
     def test_artist_top_tracks_with_country(self):
         tracks = self.client.artist_top_tracks(artist_id, country='US')

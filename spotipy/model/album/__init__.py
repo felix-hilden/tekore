@@ -1,12 +1,17 @@
-from enum import Enum
 from typing import List
 from dataclasses import dataclass
 
+from spotipy.serialise import SerialisableEnum
 from spotipy.model.member import Restrictions
 from spotipy.model.paging import OffsetPaging
-from spotipy.model.album.base import Album, AlbumType, ReleaseDatePrecision
+from spotipy.model.album.base import Album
 
-AlbumGroup = Enum('AlbumGroup', 'album single compilation appears_on')
+
+class AlbumGroup(SerialisableEnum):
+    album = 0,
+    appears_on = 1,
+    single = 2,
+    compilation = 3,
 
 
 @dataclass

@@ -11,6 +11,17 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
     def test_search(self):
         self.client.search('sheeran')
 
+    def test_search_paging_next(self):
+        cat, = self.client.search('sheeran', limit=1)
+        cat_next = self.client.next(cat)
+        self.assertGreater(cat_next.total, 0)
+
+    def test_search_paging_previous(self):
+        cat, = self.client.search('sheeran', limit=1)
+        cat_next = self.client.next(cat)
+        cat_prev = self.client.previous(cat_next)
+        self.assertEqual(cat.items[0].id, cat_prev.items[0].id)
+
     def test_user(self):
         user = self.client.user(user_id)
         self.assertEqual(user.id, user_id)
