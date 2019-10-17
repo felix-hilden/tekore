@@ -232,6 +232,7 @@ class SpotifyBrowse(SpotifyBase):
             params['market'] = market
 
         validate_attributes(attributes)
+        params.update(attributes)
 
         json = self._get('recommendations', **params)
         return Recommendations(**json)
