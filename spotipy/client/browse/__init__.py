@@ -213,8 +213,8 @@ class SpotifyBrowse(SpotifyBase):
             None, an ISO 3166-1 alpha-2 country code or 'from_token'
         attributes
             min/max/target_<attribute> - For the tuneable track
-            attributes listed in the documentation, these values
-            provide filters and targeting on results.
+            attributes enumerated in `spotipy.model.RecommendationAttribute`,
+            these values provide filters and targeting on results.
 
         Returns
         -------

@@ -1,48 +1,12 @@
-recommendation_prefixes = {'min', 'max', 'target'}
-recommendation_attributes = {
-    'acousticness',
-    'danceability',
-    'duration_ms',
-    'energy',
-    'instrumentalness',
-    'key',
-    'liveness',
-    'loudness',
-    'mode',
-    'popularity',
-    'speechiness',
-    'tempo',
-    'time_signature',
-    'valence'
-}
+from itertools import product
+from spotipy.model import RecommendationAttribute
+
+prefixes = {'min', 'max', 'target'}
+attributes = set(str(a) for a in RecommendationAttribute)
+valid = set('_'.join(i) for i in product(prefixes, attributes))
 
 
-def is_valid(attribute: str) -> bool:
-    """
-    Determine if a recommendation attribute is valid.
-
-    Parameters
-    ----------
-    attribute
-        attribute name
-
-    Returns
-    -------
-    bool
-        validity
-    """
-    if '_' not in attribute:
-        return False
-
-    p, a = attribute.split('_')
-
-    if p not in recommendation_prefixes or a not in recommendation_attributes:
-        return False
-
-    return True
-
-
-def validate_attributes(attributes: dict) -> None:
+def validate_attributes(candidates: dict) -> None:
     """
     Validate recommendation attributes.
 
@@ -50,9 +14,9 @@ def validate_attributes(attributes: dict) -> None:
 
     Parameters
     ----------
-    attributes
-        recommendation attributes
+    candidates
+        recommendation attributes to validate
     """
-    for name in attributes:
-        if not is_valid(name):
+    for name in candidates:
+        if name not in valid:
             raise ValueError(f'Invalid attribute `{name}`!')
