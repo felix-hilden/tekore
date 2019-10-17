@@ -1,8 +1,8 @@
-from typing import Union
+from typing import List, Union
 
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
-from spotipy.model import FullArtist, SimpleAlbumPaging, FullTrack
+from spotipy.model import FullArtist, SimpleAlbumPaging, FullTrack, AlbumGroup
 
 
 class SpotifyArtist(SpotifyBase):
@@ -43,7 +43,7 @@ class SpotifyArtist(SpotifyBase):
     def artist_albums(
             self,
             artist_id: str,
-            include_groups: list = None,
+            include_groups: List[Union[str, AlbumGroup]] = None,
             market: Union[str, None] = 'from_token',
             limit: int = 20,
             offset: int = 0
@@ -56,7 +56,7 @@ class SpotifyArtist(SpotifyBase):
         artist_id
             the artist ID
         include_groups
-            'album', 'single', 'appears_on', 'compilation'
+            album groups to include in the response
         market
             None, an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
@@ -69,6 +69,8 @@ class SpotifyArtist(SpotifyBase):
         SimpleAlbumPaging
             paging containing simple album objects
         """
+        if include_groups is not None:
+            include_groups = ','.join(str(g) for g in include_groups)
         json = self._get(
             f'artists/{artist_id}/albums',
             include_groups=include_groups,
