@@ -30,7 +30,10 @@ class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
     def __post_init__(self):
-        self.items = [PlaylistTrack(**t) for t in self.items]
+        self.items = [
+            PlaylistTrack(**t) for t in self.items
+            if t['track'] is not None   # TODO: remove with Web API issue 958
+        ]
 
 
 @dataclass
