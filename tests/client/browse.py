@@ -32,6 +32,17 @@ class TestSpotifyArtist(TestCaseWithCredentials):
         cat = self.client.categories()
         self.assertGreater(cat.total, 0)
 
+    def test_categories_paging_next(self):
+        cat = self.client.categories(limit=1)
+        cat_next = self.client.next(cat)
+        self.assertGreater(cat_next.total, 0)
+
+    def test_categories_paging_previous(self):
+        cat = self.client.categories(limit=1)
+        cat_next = self.client.next(cat)
+        cat_prev = self.client.previous(cat_next)
+        self.assertEqual(cat.items[0].id, cat_prev.items[0].id)
+
     def test_category_with_country(self):
         cat = self.client.category(category_id, country='US')
         self.assertEqual(cat.id, category_id)

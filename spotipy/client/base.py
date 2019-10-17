@@ -127,6 +127,16 @@ class SpotifyBase:
     def _put(self, url: str, payload=None, **params):
         return self._request('PUT', url, payload=payload, params=params)
 
+    def _get_paging_result(self, address: str):
+        result = self._get(address)
+
+        # If only one top-level key, the paging object is one level deeper
+        if len(result) == 1:
+            key = list(result.keys())[0]
+            result = result[key]
+
+        return result
+
     def next(self, result: Paging) -> Paging:
         """
         Retrieve the next result set of a paging object.
@@ -142,7 +152,8 @@ class SpotifyBase:
             paging object containing the next result set
         """
         if result.next is not None:
-            return type(result)(**self._get(result.next))
+            next_set = self._get_paging_result(result.next)
+            return type(result)(**next_set)
 
     def previous(self, result: OffsetPaging) -> OffsetPaging:
         """
@@ -159,4 +170,5 @@ class SpotifyBase:
             paging object containing the previous result set
         """
         if result.previous is not None:
-            return type(result)(**self._get(result.previous))
+            previous_set = self._get_paging_result(result.previous)
+            return type(result)(**previous_set)
