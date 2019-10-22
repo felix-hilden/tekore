@@ -6,8 +6,18 @@ from spotipy.model.context import Context
 from spotipy.model.device import Device
 from spotipy.model.track import FullTrack
 
-CurrentlyPlayingType = Enum('CurrentlyPlayingType', 'track episode ad unknown')
-RepeatState = SerialisableEnum('RepeatState', 'off track context')
+
+class CurrentlyPlayingType(Enum):
+    ad = 'ad'
+    episode = 'episode'
+    track = 'track'
+    unknown = 'unknown'
+
+
+class RepeatState(SerialisableEnum):
+    off = 'off'
+    track = 'track'
+    context = 'context'
 
 
 @dataclass

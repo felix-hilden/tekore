@@ -7,8 +7,16 @@ from spotipy.model.artist import SimpleArtist
 from spotipy.model.member import Image
 
 
-AlbumType = Enum('AlbumType', 'album single compilation')
-ReleaseDatePrecision = Enum('ReleaseDatePrecision', 'year month day')
+class AlbumType(Enum):
+    album = 'album'
+    compilation = 'compilation'
+    single = 'single'
+
+
+class ReleaseDatePrecision(Enum):
+    year = 'year'
+    month = 'month'
+    day = 'day'
 
 
 @dataclass

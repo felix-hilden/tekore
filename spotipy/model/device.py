@@ -2,11 +2,21 @@ from enum import Enum
 from dataclasses import dataclass
 from spotipy.model.base import Identifiable
 
-DeviceType = Enum(
-    'DeviceType',
-    'Computer Tablet Smartphone Speaker TV AVR STB AudioDongle '
-    'GameConsole CastVideo CastAudio Automobile Unknown'
-)
+
+class DeviceType(Enum):
+    Computer = 'Computer'
+    Tablet = 'Tablet'
+    Smartphone = 'Smartphone'
+    Speaker = 'Speaker'
+    TV = 'TV'
+    AVR = 'AVR'
+    STB = 'STB'
+    AudioDongle = 'AudioDongle'
+    GameConsole = 'GameConsole'
+    CastVideo = 'CastVideo'
+    CastAudio = 'CastAudio'
+    Automobile = 'Automobile'
+    Unknown = 'Unknown'
 
 
 @dataclass

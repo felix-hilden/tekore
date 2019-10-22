@@ -2,7 +2,11 @@ from enum import Enum
 from dataclasses import dataclass
 from spotipy.serialise import SerialisableDataclass
 
-ContextType = Enum('ContextType', 'album artist playlist')
+
+class ContextType(Enum):
+    album = 'album'
+    artist = 'artist'
+    playlist = 'playlist'
 
 
 @dataclass

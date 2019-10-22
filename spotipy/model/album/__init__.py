@@ -8,10 +8,10 @@ from spotipy.model.album.base import Album
 
 
 class AlbumGroup(SerialisableEnum):
-    album = 0,
-    appears_on = 1,
-    single = 2,
-    compilation = 3,
+    album = 'album',
+    appears_on = 'appears_on',
+    compilation = 'compilation',
+    single = 'single',
 
 
 @dataclass
