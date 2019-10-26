@@ -1,5 +1,29 @@
-import setuptools
+import sys
+
+python_requires = (3, 7)
+python_requires_str = '.'.join([str(i) for i in python_requires])
+
+error = """
+Spotipy 3.0+ supports Python {} and above, Python {} was detected.
+When using earlier versions, please install spotipy 2.4.5.
+
+See Spotipy on PyPI for more information:
+https://pypi.org/project/spotipy
+
+Try upgrading pip and retry.
+"""
+
+if sys.version_info < python_requires:
+    error.format(
+        python_requires_str,
+        '.'.join([str(i) for i in sys.version_info[:3]])
+    )
+    print(error, file=sys.stderr)
+    sys.exit(1)
+
 import os
+import setuptools
+
 from pathlib import Path
 
 root = Path(os.path.realpath(__file__)).parent
@@ -38,7 +62,7 @@ setuptools.setup(
         'spotipy': ['VERSION']
     },
 
-    python_requires='>=3.7',
+    python_requires='>=' + python_requires_str,
     install_requires=[
         'requests',
     ],
@@ -58,7 +82,7 @@ setuptools.setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: ' + python_requires_str,
         'Programming Language :: Python :: 3 :: Only',
     ],
 )
