@@ -84,11 +84,17 @@ def request_token(auth: str, payload: dict) -> Token:
         headers=headers
     )
 
-    if response.status_code != 200:
+    if 400 <= response.status_code < 500:
+        content = response.json()
         raise OAuthError(
-            f'Access token request failed: '
-            f'{response.status_code}, {response.reason}'
+            '{} {}: {}'.format(
+                response.status_code,
+                content['error'],
+                content['error_description']
+            )
         )
+    elif response.status_code >= 500:
+        raise HTTPError('Unexpected error!', response=response)
 
     return Token(response.json())
 

@@ -1,6 +1,4 @@
 from enum import Enum
-from dataclasses import dataclass
-from spotipy.serialise import SerialisableDataclass
 
 
 class PlayerErrorReason(Enum):
@@ -30,23 +28,3 @@ class PlayerErrorReason(Enum):
     NO_ACTIVE_DEVICE = 'Requires an active device and the user has none.'
     PREMIUM_REQUIRED = 'The request is prohibited for non-premium users.'
     UNKNOWN = 'Certain actions are restricted because of unknown reasons.'
-
-
-@dataclass
-class Error(SerialisableDataclass):
-    status: int
-    message: str
-
-
-@dataclass
-class PlayerError(Error):
-    reason: PlayerErrorReason
-
-    def __post_init__(self):
-        self.reason = PlayerErrorReason[self.reason]
-
-
-@dataclass
-class AuthenticationError(SerialisableDataclass):
-    error: str
-    error_description: str

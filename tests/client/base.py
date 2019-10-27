@@ -1,6 +1,9 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
+
+from requests import HTTPError
 from spotipy.client.base import SpotifyBase
+from spotipy.model.error import PlayerErrorReason
 
 
 class TestSpotifyBase(unittest.TestCase):
@@ -40,3 +43,26 @@ class TestSpotifyBase(unittest.TestCase):
 
         previous = self.client.previous(paging)
         self.assertIsNone(previous)
+
+    def test_bad_request_is_parsed_for_error_reason(self):
+        error = list(PlayerErrorReason)[0]
+
+        class BadResponse:
+            status_code = 400
+            url = 'example.com'
+
+            @staticmethod
+            def json():
+                return {
+                    'message': 'Error message',
+                    'reason': error.name
+                }
+
+        sender = MagicMock()
+        sender.send.return_value = BadResponse()
+        self.client.sender = sender
+
+        try:
+            self.client._get('example.com')
+        except HTTPError as e:
+            self.assertIn(error.value, str(e))
