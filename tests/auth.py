@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+from requests import HTTPError
 from spotipy.auth import AccessToken, Token, Credentials, OAuthError, request_token
 
 
@@ -83,6 +84,15 @@ class TestCredentials(unittest.TestCase):
         post_mock = MagicMock(return_value=response)
         with patch('spotipy.auth.post', post_mock):
             with self.assertRaises(OAuthError):
+                request_token('auth', {})
+
+    def test_server_error_raises_http_error(self):
+        response = MagicMock()
+        response.status_code = 500
+
+        post_mock = MagicMock(return_value=response)
+        with patch('spotipy.auth.post', post_mock):
+            with self.assertRaises(HTTPError):
                 request_token('auth', {})
 
     def test_request_client_token(self):
