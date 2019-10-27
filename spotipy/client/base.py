@@ -4,7 +4,12 @@ from contextlib import contextmanager
 from requests import Request, HTTPError
 
 from spotipy.sender import Sender, TransientSender
+from spotipy.model.error import PlayerErrorReason
 from spotipy.model.paging import Paging, OffsetPaging
+
+error_format = """Error in {url}:
+{code}: {msg}
+"""
 
 
 class SpotifyBase:
@@ -85,16 +90,20 @@ class SpotifyBase:
                 request.data = payload
 
     def _send(self, request: Request):
-        r = self.sender.send(request, **self.requests_kwargs)
+        response = self.sender.send(request, **self.requests_kwargs)
 
-        if r.status_code >= 400:
-            raise HTTPError(
-                f'Error ({r.status_code}) in {r.url}',
-                request=request,
-                response=r
+        if response.status_code >= 400:
+            content = self._parse_json(response)
+            error_str = error_format.format(
+                url=response.url,
+                code=response.status_code,
+                msg=content.get('message', None) or response.reason
             )
+            if 'reason' in content:
+                error_str += '\n' + PlayerErrorReason[content['reason']].value
+            raise HTTPError(error_str, request=request, response=response)
 
-        return r
+        return response
 
     @staticmethod
     def _parse_json(response):
