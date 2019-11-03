@@ -1,4 +1,4 @@
-from ._cred import TestCaseWithCredentials
+from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import artist_id, artist_ids
 
 from spotipy.client import SpotifyArtist
@@ -53,3 +53,16 @@ class TestSpotifyArtist(TestCaseWithCredentials):
     def test_artist_related_artists(self):
         artists = self.client.artist_related_artists(artist_id)
         self.assertGreater(len(artists), 0)
+
+
+class TestSpotifyArtistAsUser(TestCaseWithUserCredentials):
+    def setUp(self):
+        self.client = SpotifyArtist(self.user_token)
+
+    def test_artist_albums_from_token(self):
+        albums = self.client.artist_albums(artist_id, market='from_token')
+        self.assertGreater(albums.total, 0)
+
+    def test_artist_top_tracks_from_token(self):
+        tracks = self.client.artist_top_tracks(artist_id, country='from_token')
+        self.assertGreater(len(tracks), 0)
