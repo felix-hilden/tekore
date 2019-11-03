@@ -16,6 +16,7 @@ class AlbumGroup(SerialisableEnum):
 
 @dataclass
 class SimpleAlbum(Album):
+    is_playable: bool = None
     album_group: AlbumGroup = None
     available_markets: List[str] = None
     restrictions: Restrictions = None
