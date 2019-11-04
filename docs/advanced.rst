@@ -1,3 +1,5 @@
+.. _advanced-usage:
+
 Advanced usage
 ==============
 Providing tokens
@@ -26,7 +28,7 @@ many users, tokens are manually refreshed or a user has different scopes.
 Configuration with environment variables
 ----------------------------------------
 Should you want to use environment variables to provide application credentials,
-a function for reading those values is provided in the ``util`` module.
+a function for reading those values is provided in the :ref:`util <module-util>` module.
 
 .. code:: python
 
@@ -55,19 +57,20 @@ For situations involving a server, a two-step process should be implemented.
 - Receive an access token as a result of the authentication
 
 The steps are covered by ``user_authorisation_url`` and ``request_user_token``,
-two methods of the :class:``Credentials` class in the ``auth`` module.
+two methods of the :class:`Credentials` class in the :ref:`auth <module-auth>` module.
 Note that ``request_user_token`` does not return
 an automatically refreshing token but an expiring one.
 
+.. _advanced-senders:
 
 Senders
 -------
-By default ``spotipy`` doesn't do anything clever to requests that are sent.
+By default Spotipy doesn't do anything clever to requests that are sent.
 Its functionality, however, can be extended in a number of ways
-using different kinds of :class:`Sender` classes.
+using different kinds of :ref:`senders <module-sender>`.
 They provide the
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
-of using sessions and new functionality.
+of using sessions and can bring new functionality.
 Here's a short summary of the features of each sender.
 
 - :class:`TransientSender`: Creates a new session for each request (default)
@@ -84,13 +87,15 @@ For example:
 
    Spotify(sender=PersistentSender())
 
+.. _advanced-caching:
+
 Caching
 -------
 The Spotify Web API returns headers for caching requests.
 See the Web API
 `overview <https://developer.spotify.com/documentation/web-api/>`_
 for further information.
-``Spotipy`` does not implement response caching,
+Spotipy does not implement response caching,
 but `Senders`_ can be subclassed for arbitrary extension.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_

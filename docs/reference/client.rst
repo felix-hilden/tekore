@@ -1,8 +1,9 @@
+.. _module-client:
+
 client
 ======
-:class:`Spotify` is a client to the Spotify Web API.
-Documentation on its endpoints can be viewed in the
-`Web API Reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
+Further documentation on endpoints can be viewed in the Web API
+`reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
 Each method of the client corresponds to an API call, with some exceptions.
 The full client implements methods from Personalisation, Search and User APIs
 in addition to inheriting a number of other APIs documented below.

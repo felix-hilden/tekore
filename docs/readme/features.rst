@@ -1,42 +1,26 @@
 Features
 ========
-Spotipy replaces `plamere/spotipy <https://github.com/plamere/spotipy>`_,
-which has not been maintained since the end of 2017.
-Although refactored heavily from its original source, this package does
-rely on the original structure that was put in place by plamere.
+The `Web API`_ provides access to a plethora of data on music and users.
+Spotipy implements these most integral features completely.
 
-The equivalent functionality of the original Spotipy is already implemented.
-Some additional features are also provided and being developed.
-Below ``X`` indicates a complete feature and ``/`` an incomplete one.
+- :ref:`Authentication <module-auth>`: client credentials (application token)
+  and authorisation code (user token) flows according to the OAuth2 specification.
+- :ref:`API endpoints <module-client>`: access to every resource in the API.
+  Responses are parsed into :ref:`model classes <module-model>` with explicit
+  attributes to ease examining the contents of a response.
 
-Basic features
---------------
-+-------------------------+----------------------+-----------------+
-| Spotify Web API feature | felix-hilden/spotipy | plamere/spotipy |
-+=========================+======================+=================+
-| Authentication          | X                    | X               |
-+-------------------------+----------------------+-----------------+
-| Endpoints               | X                    | / (*)           |
-+-------------------------+----------------------+-----------------+
-| Conditional requests    | (**)                 |                 |
-+-------------------------+----------------------+-----------------+
+Additional features and various convenience modules are provided too.
+Please refer to the documentation of each module for more information.
 
-(*) Not all endpoints are implemented
+- :ref:`Request retries <advanced-senders>`
+- :ref:`Session persistence <advanced-senders>`
+- :ref:`Response caching <advanced-caching>` (possible, though not directly supported)
+- :ref:`ID, URI and URL conversions <module-convert>`
+- :ref:`Access right scopes <module-scope>`
+- :ref:`Response serialisation <module-serialise>`
+- :ref:`Response pretty-printing <module-serialise>`
+- :ref:`Self-refreshing tokens <module-util>`
+- :ref:`Credentials from environment variables <module-util>`
+- :ref:`Command line prompt for user autentication <module-util>`
 
-(**) While not directly supported,
-they are made possible by creating custom ``Sender`` classes.
-See documentation on advanced usage for further details.
-
-Additional features
--------------------
-+-------------------------+----------------------+-----------------+
-| Feature                 | felix-hilden/spotipy | plamere/spotipy |
-+=========================+======================+=================+
-| Request retries         | X                    | / (*)           |
-+-------------------------+----------------------+-----------------+
-| Auto-refreshing token   | X                    |                 |
-+-------------------------+----------------------+-----------------+
-| Model-based API         | X                    |                 |
-+-------------------------+----------------------+-----------------+
-
-(*) Retries implemented for GET requests
+.. _web api: https://developer.spotify.com/documentation/web-api

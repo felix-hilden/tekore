@@ -1,3 +1,5 @@
+.. _module-model:
+
 model
 =====
 Responses that are returned from :class:`Spotify` are parsed into model classes.
@@ -10,6 +12,7 @@ Base classes for some of the models.
    :members:
    :undoc-members:
    :show-inheritance:
+   :special-members: __init__
 
 Album-related
 -------------
@@ -74,6 +77,16 @@ Play history
 Playlist-related
 ----------------
 .. automodule:: spotipy.model.playlist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Local items
+***********
+Some playlists contain locally stored tracks.
+They contain mostly `None` values along with empty lists and dictionaries.
+
+.. automodule:: spotipy.model.local
    :members:
    :undoc-members:
    :show-inheritance:
