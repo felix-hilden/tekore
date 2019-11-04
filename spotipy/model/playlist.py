@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Union
 from dataclasses import dataclass
 
 from spotipy.model.base import Item
 from spotipy.model.user import PublicUser
+from spotipy.model.local import LocalTrack
 from spotipy.model.track import FullTrack, Tracks
 from spotipy.model.paging import OffsetPaging
 from spotipy.model.member import Followers, Image
@@ -14,14 +15,17 @@ class PlaylistTrack(SerialisableDataclass):
     added_at: Timestamp
     added_by: PublicUser
     is_local: bool
-    track: FullTrack
+    track: Union[FullTrack, LocalTrack]
     primary_color: str
     video_thumbnail: Image
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
         self.added_by = PublicUser(**self.added_by)
-        self.track = FullTrack(**self.track)
+        if self.is_local:
+            self.track = LocalTrack(**self.track)
+        else:
+            self.track = FullTrack(**self.track)
         self.video_thumbnail = Image(**self.video_thumbnail)
 
 
