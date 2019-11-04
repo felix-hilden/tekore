@@ -36,8 +36,8 @@ Please refer to the documentation of each module for more information.
    :hidden:
    :caption: Introduction
 
-   readme/getting_started
-   advanced
+   documents/getting_started
+   documents/advanced_usage
    recipes/_recipes
 
 .. toctree::
