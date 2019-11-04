@@ -7,7 +7,6 @@ A Python library for the
 `Spotify Web API <https://developer.spotify.com/documentation/web-api/>`_.
 
 .. include:: readme/features.rst
-.. include:: readme/contributing.rst
 
 .. toctree::
    :maxdepth: 1
