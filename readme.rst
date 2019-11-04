@@ -3,27 +3,28 @@
 ==============
 |travis| |coverage|
 
-A Python library for the Spotify `Web API`_.
+Welcome to the GitHub repository of Spotipy,
+a client of the Spotify Web API for Python!
+Spotipy allows you to interact with the Web API effortlessly.
+
+.. code:: python
+
+    from spotipy import Spotify
+
+    s = Spotify(token)
+
+    tracks = s.current_user_top_tracks(limit=10)
+    for track in tracks.items:
+        print(track.name)
+
+    finlandia = '3hHWhvw2hjwfngWcFjIzqr'
+    s.playback_start(track_ids=[finlandia])
+
+Please build `Documentation`_ for further examples, tutorials and a package reference.
 See also `Contributing`_ and available `Features`_.
 
-.. TODO: Keep duplicating content until inclusion in GitHub READMEs is resolved
-   which is most probably forever as the issue was opened in 2012.
-   There are several duplicates and the github/markup repository is not used
-   in rendering, only determining which markup library to use :(
-   https://github.com/github/markup/issues/172
-   https://github.com/github/markup/issues/346
-
-Getting started
-===============
-To use the Web API, you'll need to
-`register <https://developer.spotify.com/dashboard/applications>`_
-an application,
-get its credentials and define a redirect URI for authentication requests.
-Note that a server listening to that address isn't required for a demo,
-though it is required for programmatic extraction of user access tokens.
-
 Installation
-------------
+============
 The package is not yet in PyPI.
 Until then the repository must be installed via git.
 
@@ -32,7 +33,7 @@ Until then the repository must be installed via git.
     $ pip install git+https://github.com/felix-hilden/spotipy.git
 
 Documentation
--------------
+=============
 Modules, classes and functions are documented in the source code.
 For a condensed and organised view, additional examples and other documents,
 documentation can be built locally.
@@ -45,54 +46,6 @@ documentation can be built locally.
     $ cd docs && make html
 
 The main page ``index.html`` can be found in ``build/html``.
-
-Retrieving an access token
---------------------------
-First we'll retrieve an access token that has every possible right (scope)
-to a user's account.
-The script will open a web page prompting for a Spotify login.
-The user is then redirected back and the URL of the redirect is requested
-for parsing and retrieving the access token.
-
-.. code:: python
-
-    from spotipy.scope import every
-    from spotipy.util import prompt_for_user_token
-
-    client_id = 'your_token_here'
-    client_secret = 'your_secret_here'
-    redirect_uri = 'http://localhost'
-
-    token = prompt_for_user_token(
-        client_id,
-        client_secret,
-        redirect_uri,
-        scope=every
-    )
-
-Calling the API
----------------
-Next the Spotify object should be created.
-The following script will list some of the user's top tracks.
-
-.. code:: python
-
-    from spotipy import Spotify
-
-    s = Spotify(token)
-
-    tracks = s.current_user_top_tracks(limit=10)
-    for track in tracks.items:
-        print(track.name)
-
-The snippet below will play Sibelius' Finlandia if the user has
-an active (recently used) Spotify application open.
-If no active device is found, an error is thrown.
-
-.. code:: python
-
-    finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start(track_ids=[finlandia])
 
 Issues
 ======

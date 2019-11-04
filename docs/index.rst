@@ -2,7 +2,30 @@
 |spotipy_logo|
 ==============
 
-A Python library for the Spotify `Web API`_.
+Welcome to the online documentation of Spotipy,
+a client of the Spotify Web API for Python!
+Spotipy allows you to interact with the Web API effortlessly.
+
+.. code:: python
+
+    from spotipy import Spotify
+
+    s = Spotify(token)
+
+    tracks = s.current_user_top_tracks(limit=10)
+    for track in tracks.items:
+        print(track.name)
+
+    finlandia = '3hHWhvw2hjwfngWcFjIzqr'
+    s.playback_start(track_ids=[finlandia])
+
+See our homepage on `PyPI`_ for more information about the package,
+and repository on `GitHub`_ if you'd like to submit an issue
+or ask just about anything related to Spotipy.
+
+If you're new here, have a look at :ref:`getting-started`.
+After your first calls to the API you might want to look at :ref:`advanced-usage`.
+More ellaborate example scripts can be found in :ref:`recipes`.
 
 Features
 ========
@@ -53,5 +76,7 @@ Please refer to the documentation of each module for more information.
    :width: 275 px
    :target: `github`_
 
+.. TODO - change PyPI url to actually point to PyPI
+.. _pypi: https://github.com/felix-hilden/spotipy
 .. _github: https://github.com/felix-hilden/spotipy
 .. _web api: https://developer.spotify.com/documentation/web-api

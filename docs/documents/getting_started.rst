@@ -1,20 +1,12 @@
+.. _getting-started:
+
 Getting started
 ===============
-To use the Web API, you'll need to
-`register <https://developer.spotify.com/dashboard/applications>`_
-an application,
+To use the Web API, you'll need to register an
+`application <https://developer.spotify.com/dashboard/applications>`_,
 get its credentials and define a redirect URI for authentication requests.
 Note that a server listening to that address isn't required for a demo,
 though it is required for programmatic extraction of user access tokens.
-
-Installation
-------------
-The package is not yet in PyPI.
-Until then the repository must be installed via git.
-
-.. code:: sh
-
-    $ pip install git+https://github.com/felix-hilden/spotipy.git
 
 Retrieving an access token
 --------------------------
