@@ -8,6 +8,7 @@ category_id = 'pop'
 genres = ['pop', 'rock']
 
 playlist_id = '37i9dQZEVXbMDoHDwVN2tF'
+playlist_local = '1L09qNetvjqCFsPtkhgyuI'
 
 track_id = '6v3KW9xbzN5yKLt9YKDYA2'
 track_ids = [track_id, '5ZULALImTm80tzUbYQYM9d']
