@@ -1,15 +1,22 @@
+Issues
+======
+To file a bug report, ask about the package or voice any other concern,
+please `submit <https://github.com/felix-hilden/spotipy/issues>`_ an issue.
+We'll do our best to address each issue in a timely manner!
+
 Contributing
 ============
-Contributions are welcome!
+If you'd like to get involved beyond creating issues,
+please do submit a pull request for a fix or an enhancement!
 
-Issues
-------
-If you have found a bug or would like to ask about the package,
-please submit an issue to the GitHub repository
-`here <https://github.com/felix-hilden/spotipy/issues>`_.
+Issues tagged ``consideration`` ought to be discussed further before implementation.
+`PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
+is the canonical style guide for Python.
+In addition, ``flake8`` and ``flake8-bugbear`` are great tools for code style.
+See ``.travis.yml`` for the current style check.
 
-Tests
------
+Running tests
+=============
 The repository contains a suite of test cases
 which can be studied and run to ensure the package works as intended.
 To get up and running, clone the repository,
@@ -22,7 +29,7 @@ install it as an editable package and run the suite.
     $ pip install -e .[dev]
     $ python -m unittest discover tests -p "*.py"
 
-Tests for the Web API client use environment variables for credentials.
+Tests against the live Web API use environment variables for credentials.
 These tests manipulate your data and player,
 but try to restore previous state insofar as it is possible.
 Please refer to the description of each test class for details.
@@ -47,13 +54,3 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
 
     $ coverage run --branch -m unittest discover tests -p "*.py"
     $ coverage report -m
-
-Submitting code
----------------
-Direct contributions are encouraged!
-Issues tagged ``consideration`` ought to be discussed further
-before implementation.
-`PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
-is the canonical style guide for Python.
-In addition, ``flake8`` and ``flake8-bugbear`` are great tools for code style.
-See ``.travis.yml`` for the current style check.
