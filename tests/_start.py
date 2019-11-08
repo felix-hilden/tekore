@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from spotipy._verify import _check_version
+from spotipy._start import check_python_version
 
 
 class TestPackage(unittest.TestCase):
@@ -10,4 +10,4 @@ class TestPackage(unittest.TestCase):
 
         with patch('sys.version_info', version_info):
             with self.assertRaises(ImportError):
-                _check_version()
+                check_python_version()

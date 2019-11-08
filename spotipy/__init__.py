@@ -1,12 +1,10 @@
-import os as _os
-from pathlib import Path as _Path
+from spotipy._start import check_python_version as _check_python_version
+from spotipy._start import read_version_file as _read_version_file
+
+_check_python_version()
 
 from spotipy.auth import Token, Credentials
 from spotipy.scope import Scope, scopes
 from spotipy.client import Spotify
-from spotipy._verify import _check_version
 
-_version_file = _Path(_os.path.realpath(__file__)).parent / 'VERSION'
-__version__ = _version_file.read_text().strip()
-
-_check_version()
+__version__ = _read_version_file()

@@ -1,7 +1,8 @@
-import sys as _sys
+import os
+import sys
 
-_required_version = (3, 7)
-_error_msg = """You are running Spotipy 3.x on Python <{0}!
+required_version = (3, 7)
+error_msg = """You are running Spotipy 3.x on Python <{0}!
 
 Spotipy 3.0 and above are no longer compatible with Python <{0}, and you still
 ended up with this version installed. That's unfortunate; sorry about that.
@@ -24,10 +25,19 @@ https://pypi.org/project/spotipy
 """
 
 
-def _check_version():
+def check_python_version():
     """
     Verify that the Python version is acceptable.
     """
-    if _sys.version_info < _required_version:
-        _required_version_str = '.'.join(str(i) for i in _required_version)
-        raise ImportError(_error_msg.format(_required_version_str))
+    if sys.version_info < required_version:
+        _required_version_str = '.'.join(str(i) for i in required_version)
+        raise ImportError(error_msg.format(_required_version_str))
+
+
+def read_version_file() -> str:
+    """
+    Read version file to determine current Spotipy version.
+    """
+    from pathlib import Path
+    version_file = Path(os.path.realpath(__file__)).parent / 'VERSION'
+    return version_file.read_text().strip()
