@@ -109,7 +109,7 @@ class SpotifyBase:
     def _parse_json(response):
         try:
             return response.json()
-        except json.decoder.JSONDecodeError:
+        except ValueError:
             return None
 
     def _request(
