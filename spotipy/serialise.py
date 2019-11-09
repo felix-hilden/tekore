@@ -32,7 +32,8 @@ class Timestamp(datetime):
     Timestamp whose string representation is its value
     in ISO 8601 format with second precision.
     """
-    format_str = '%Y-%m-%dT%H:%M:%SZ'
+    f_second = '%Y-%m-%dT%H:%M:%SZ'
+    f_microsecond = '%Y-%m-%dT%H:%M:%S.%fZ'
 
     @classmethod
     def from_string(cls, s: str) -> 'Timestamp':
@@ -49,22 +50,16 @@ class Timestamp(datetime):
         Timestamp
             new timestamp
         """
-        return cls.strptime(s, cls.format_str)
+        for f in (cls.f_second, cls.f_microsecond):
+            try:
+                return cls.strptime(s, f)
+            except ValueError:
+                pass
+        else:
+            raise ValueError(f'Date `{s}` does not match accepted formats!')
 
     def __str__(self):
-        return self.strftime(self.format_str)
-
-
-class MicrosecondTimestamp(Timestamp):
-    """
-    Timestamp whose string representation is its value
-    in ISO 8601 format with microsecond precision.
-    """
-    format_str = '%Y-%m-%dT%H:%M:%S.%fZ'
-
-    @classmethod
-    def from_string(cls, s: str) -> 'MicrosecondTimestamp':
-        return cls.strptime(s, cls.format_str)
+        return self.strftime(self.f_second)
 
 
 class JSONEncoder(json.JSONEncoder):

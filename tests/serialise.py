@@ -12,7 +12,6 @@ from spotipy.serialise import (
     SerialisableEnum,
     ModelList,
     Timestamp,
-    MicrosecondTimestamp,
 )
 
 
@@ -62,17 +61,11 @@ class TestTimestamp(unittest.TestCase):
         t = Timestamp.from_string(time_str)
         self.assertEqual(str(t), time_str)
 
+    def test_initialisable_with_microsecond_precision(self):
+        Timestamp.from_string('2019-01-01T12:00:00.000000Z')
 
-class TestMicrosecondTimestamp(unittest.TestCase):
-    def test_initialisable_from_string(self):
-        MicrosecondTimestamp.from_string('2019-01-01T12:00:00.000000Z')
-
-    def test_initialisable_with_less_precision(self):
-        MicrosecondTimestamp.from_string('2019-01-01T12:00:00.00Z')
-
-    def test_initialisation_with_second_precision_raises(self):
-        with self.assertRaises(ValueError):
-            MicrosecondTimestamp.from_string('2019-01-01T12:00:00Z')
+    def test_initialisable_with_millisecond_precision(self):
+        Timestamp.from_string('2019-01-01T12:00:00.00Z')
 
 
 @dataclass
