@@ -9,7 +9,7 @@ class SpotifyTrack(SpotifyBase):
     def track(
             self,
             track_id: str,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> FullTrack:
         """
         Get information for a track.
@@ -19,7 +19,7 @@ class SpotifyTrack(SpotifyBase):
         track_id
             track ID
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -32,7 +32,7 @@ class SpotifyTrack(SpotifyBase):
     def tracks(
             self,
             track_ids: list,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> ModelList:
         """
         Get information for multiple tracks.
@@ -42,7 +42,7 @@ class SpotifyTrack(SpotifyBase):
         track_ids
             the track IDs
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

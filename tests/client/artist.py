@@ -42,13 +42,8 @@ class TestSpotifyArtist(TestCaseWithCredentials):
         self.assertEqual(albums.total, 0)
 
     def test_artist_top_tracks_with_country(self):
-        tracks = self.client.artist_top_tracks(artist_id, country='US')
+        tracks = self.client.artist_top_tracks(artist_id, market='US')
         self.assertGreater(len(tracks), 0)
-
-    def test_artist_top_tracks_no_country_raises(self):
-        from requests.exceptions import HTTPError
-        with self.assertRaises(HTTPError):
-            self.client.artist_top_tracks(artist_id, country=None)
 
     def test_artist_related_artists(self):
         artists = self.client.artist_related_artists(artist_id)
@@ -64,5 +59,5 @@ class TestSpotifyArtistAsUser(TestCaseWithUserCredentials):
         self.assertGreater(albums.total, 0)
 
     def test_artist_top_tracks_from_token(self):
-        tracks = self.client.artist_top_tracks(artist_id, country='from_token')
+        tracks = self.client.artist_top_tracks(artist_id, market='from_token')
         self.assertGreater(len(tracks), 0)

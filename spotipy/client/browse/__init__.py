@@ -193,7 +193,7 @@ class SpotifyBrowse(SpotifyBase):
             genres: list = None,
             track_ids: list = None,
             limit: int = 20,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             **attributes
     ) -> Recommendations:
         """
@@ -210,7 +210,7 @@ class SpotifyBrowse(SpotifyBase):
         limit
             the number of items to return (1..100)
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         attributes
             min/max/target_<attribute> - For the tuneable track
             attributes enumerated in `spotipy.model.RecommendationAttribute`,

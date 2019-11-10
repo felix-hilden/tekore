@@ -9,7 +9,7 @@ class SpotifyAlbum(SpotifyBase):
     def album(
             self,
             album_id: str,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> FullAlbum:
         """
         Get an album.
@@ -19,7 +19,7 @@ class SpotifyAlbum(SpotifyBase):
         album_id
             album ID
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -32,7 +32,7 @@ class SpotifyAlbum(SpotifyBase):
     def album_tracks(
             self,
             album_id: str,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             limit: int = 20,
             offset: int = 0
     ) -> SimpleTrackPaging:
@@ -44,7 +44,7 @@ class SpotifyAlbum(SpotifyBase):
         album_id
             album ID
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
@@ -66,7 +66,7 @@ class SpotifyAlbum(SpotifyBase):
     def albums(
             self,
             album_ids: list,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> ModelList:
         """
         Get multiple albums.
@@ -76,7 +76,7 @@ class SpotifyAlbum(SpotifyBase):
         album_ids
             list of album IDs (1..20)
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

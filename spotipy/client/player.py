@@ -14,7 +14,7 @@ from spotipy.model import (
 class SpotifyPlayer(SpotifyBase):
     def playback(
             self,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> CurrentlyPlayingContext:
         """
         Get information about user's current playback.
@@ -25,7 +25,7 @@ class SpotifyPlayer(SpotifyBase):
         Parameters
         ----------
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -38,7 +38,7 @@ class SpotifyPlayer(SpotifyBase):
 
     def playback_currently_playing(
             self,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> CurrentlyPlayingTrack:
         """
         Get user's currently playing track.
