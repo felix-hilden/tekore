@@ -44,7 +44,7 @@ class SpotifyArtist(SpotifyBase):
             self,
             artist_id: str,
             include_groups: List[Union[str, AlbumGroup]] = None,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             limit: int = 20,
             offset: int = 0
     ) -> SimpleAlbumPaging:
@@ -58,7 +58,7 @@ class SpotifyArtist(SpotifyBase):
         include_groups
             album groups to include in the response
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
@@ -83,7 +83,7 @@ class SpotifyArtist(SpotifyBase):
     def artist_top_tracks(
             self,
             artist_id: str,
-            country: str = 'from_token'
+            market: str
     ) -> ModelList:
         """
         Get an artist's top 10 tracks by country.
@@ -92,7 +92,7 @@ class SpotifyArtist(SpotifyBase):
         ----------
         artist_id
             the artist ID
-        country
+        market
             an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
@@ -100,7 +100,7 @@ class SpotifyArtist(SpotifyBase):
         ModelList
             list of full track objects
         """
-        json = self._get(f'artists/{artist_id}/top-tracks', country=country)
+        json = self._get(f'artists/{artist_id}/top-tracks', country=market)
         return ModelList(FullTrack(**t) for t in json['tracks'])
 
     def artist_related_artists(self, artist_id: str) -> ModelList:

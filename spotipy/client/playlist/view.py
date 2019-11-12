@@ -73,7 +73,7 @@ class SpotifyPlaylistView(SpotifyBase):
             self,
             playlist_id: str,
             fields: str = None,
-            market: Union[str, None] = 'from_token'
+            market: str = None
     ) -> FullPlaylist:
         """
         Get playlist of a user.
@@ -85,7 +85,7 @@ class SpotifyPlaylistView(SpotifyBase):
         fields
             which fields to return
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
@@ -117,7 +117,7 @@ class SpotifyPlaylistView(SpotifyBase):
             self,
             playlist_id: str,
             fields: str = None,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             limit: int = 100,
             offset: int = 0
     ) -> Union[PlaylistTrackPaging, object]:
@@ -135,7 +135,7 @@ class SpotifyPlaylistView(SpotifyBase):
         offset
             the index of the first item to return
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------

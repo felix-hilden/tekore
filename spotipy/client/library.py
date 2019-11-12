@@ -7,7 +7,7 @@ from spotipy.model import SavedAlbumPaging, SavedTrackPaging
 class SpotifyLibrary(SpotifyBase):
     def current_user_albums(
             self,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             limit: int = 20,
             offset: int = 0
     ) -> SavedAlbumPaging:
@@ -19,7 +19,7 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
@@ -79,7 +79,7 @@ class SpotifyLibrary(SpotifyBase):
 
     def current_user_tracks(
             self,
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             limit: int = 20,
             offset: int = 0
     ) -> SavedTrackPaging:
@@ -91,7 +91,7 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
