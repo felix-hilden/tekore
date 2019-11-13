@@ -42,7 +42,7 @@ class Spotify(
             self,
             query: str,
             types: tuple = ('track',),
-            market: Union[str, None] = 'from_token',
+            market: str = None,
             include_external: str = None,
             limit: int = 20,
             offset: int = 0
@@ -59,7 +59,7 @@ class Spotify(
         types
             items to return: 'artist', 'album', 'track' and/or 'playlist'
         market
-            None, an ISO 3166-1 alpha-2 country code or 'from_token'
+            an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
             the number of items to return (1..50)
         offset
