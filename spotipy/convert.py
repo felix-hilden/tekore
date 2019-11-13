@@ -21,6 +21,8 @@ class IdentifierType(Enum):
     album = 'album'
     playlist = 'playlist'
     track = 'track'
+    show = 'show'
+    episode = 'episode'
 
 
 def check_type(type_: str):
