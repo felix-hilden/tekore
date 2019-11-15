@@ -86,13 +86,12 @@ def request_token(auth: str, payload: dict) -> Token:
 
     if 400 <= response.status_code < 500:
         content = response.json()
-        raise OAuthError(
-            '{} {}: {}'.format(
-                response.status_code,
-                content['error'],
-                content['error_description']
-            )
+        error_str = '{} {}: {}'.format(
+            response.status_code,
+            content['error'],
+            content['error_description']
         )
+        raise OAuthError(error_str)
     elif response.status_code >= 500:
         raise HTTPError('Unexpected error!', response=response)
 
@@ -116,7 +115,10 @@ class Credentials:
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
-        self._auth = b64encode(self.client_id + ':' + self.client_secret)
+
+    @property
+    def _auth(self) -> str:
+        return b64encode(self.client_id + ':' + self.client_secret)
 
     def request_client_token(self) -> Token:
         """
