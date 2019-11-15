@@ -4,11 +4,11 @@ util
 
 Utility module for your convenience <3
 
-These functions and classes are meant for local use.
-For larger-scale use define your own types and routines,
-perhaps based on the ones found in this module.
-Particularly ``prompt_for_user_token`` cannot be used if the application
-runs on a web server, as it needs to open up a browser.
+These functions and classes exist to make developing applications easier.
+For larger-scale applications they might not be enough, so please do create
+versions of these routines that meet your needs.
+Particularly, ``prompt_for_user_token`` is only suited for local use
+as it opens up a web browser for the user to log in with.
 """
 
 import os
@@ -21,6 +21,10 @@ from spotipy.auth import AccessToken, Token, Credentials
 class RefreshingToken(AccessToken):
     """
     Automatically refreshing access token.
+
+    Uses an instance of a credentials manager to automatically request a new
+    access token when the old one is about to expire. This occurs when the
+    `access_token` property is read.
 
     Parameters
     ----------

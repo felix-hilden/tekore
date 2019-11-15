@@ -1,3 +1,5 @@
+.. _auth-server:
+
 Authenticating server
 =====================
 
