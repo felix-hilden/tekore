@@ -15,18 +15,20 @@ class PlaylistTrack(SerialisableDataclass):
     added_at: Timestamp
     added_by: PublicUser
     is_local: bool
-    track: Union[FullTrack, LocalTrack]
     primary_color: str
     video_thumbnail: Image
+    track: Union[FullTrack, LocalTrack] = None
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
         self.added_by = PublicUser(**self.added_by)
-        if self.is_local:
-            self.track = LocalTrack(**self.track)
-        else:
-            self.track = FullTrack(**self.track)
         self.video_thumbnail = Image(**self.video_thumbnail)
+
+        if self.track is not None:
+            if self.is_local:
+                self.track = LocalTrack(**self.track)
+            else:
+                self.track = FullTrack(**self.track)
 
 
 @dataclass
@@ -34,10 +36,7 @@ class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
     def __post_init__(self):
-        self.items = [
-            PlaylistTrack(**t) for t in self.items
-            if t['track'] is not None   # TODO: remove with Web API issue 958
-        ]
+        self.items = [PlaylistTrack(**t) for t in self.items]
 
 
 @dataclass
