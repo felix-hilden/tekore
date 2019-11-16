@@ -39,6 +39,12 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
     def test_cu_followed_artists(self):
         self.client.current_user_followed_artists()
 
+    def test_cu_followed_artists_paging_exhaust(self):
+        artists = self.client.current_user_followed_artists()
+        while artists.next:
+            artists = self.client.next(artists)
+        self.assertIsNone(artists.next)
+
     def test_cu_artists_follow(self):
         self.client.current_user_artists_follow(artist_ids)
 

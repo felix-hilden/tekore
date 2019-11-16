@@ -6,7 +6,7 @@ from ._resources import track_ids
 from spotipy.client import SpotifyPlayer
 
 
-class TestSpotifyPlayer(TestCaseWithUserCredentials):
+class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
     """
     Ordered test set to test player.
     As the Web API does not implement Queue functionality,
@@ -93,9 +93,6 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
         with self.subTest('Playback shuffle'):
             self.client.playback_shuffle(False)
 
-        with self.subTest('Recently played'):
-            self.client.playback_recently_played()
-
     def tearDown(self):
         if self.playback is None:
             self.client.playback_pause()
@@ -129,3 +126,27 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
         self.client.playback_repeat(self.playback.repeat_state)
 
         self.client.playback_volume(self.device.volume_percent, self.device.id)
+
+
+class TestSpotifyPlayer(TestCaseWithUserCredentials):
+    def setUp(self):
+        self.client = SpotifyPlayer(self.user_token)
+
+    def test_recently_played(self):
+        self.client.playback_recently_played()
+
+    def test_recently_played_paging_exhaust(self):
+        played = self.client.playback_recently_played()
+        while played.next:
+            played = self.client.next(played)
+        self.assertIsNone(played.next)
+
+    def test_recently_played_before_timestamp_next_is_before_current(self):
+        p1 = self.client.playback_recently_played(limit=1)
+        p2 = self.client.next(p1)
+        self.assertLess(p2.cursors.after, p1.cursors.after)
+
+    def test_recently_played_after_timestamp_next_is_after_current(self):
+        p1 = self.client.playback_recently_played(limit=1, after=1569888000)
+        p2 = self.client.next(p1)
+        self.assertGreater(p2.cursors.after, p1.cursors.after)
