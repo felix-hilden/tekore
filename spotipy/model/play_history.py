@@ -29,7 +29,9 @@ class PlayHistoryCursor(Cursor):
 @dataclass
 class PlayHistoryPaging(CursorPaging):
     items: List[PlayHistory]
+    cursors: PlayHistoryCursor
 
     def __post_init__(self):
-        self.cursors = PlayHistoryCursor(**self.cursors)
+        if self.cursors is not None:
+            self.cursors = PlayHistoryCursor(**self.cursors)
         self.items = [PlayHistory(**h) for h in self.items]
