@@ -17,7 +17,7 @@ class PlaylistTrack(SerialisableDataclass):
     is_local: bool
     primary_color: str
     video_thumbnail: Image
-    track: Union[FullTrack, LocalTrack] = None
+    track: Union[FullTrack, LocalTrack, None]
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)

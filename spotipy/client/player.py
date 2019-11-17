@@ -5,7 +5,7 @@ from spotipy.serialise import ModelList
 from spotipy.convert import to_uri
 from spotipy.model import (
     CurrentlyPlayingContext,
-    CurrentlyPlayingTrack,
+    CurrentlyPlaying,
     PlayHistoryPaging,
     RepeatState,
     Device
@@ -40,7 +40,7 @@ class SpotifyPlayer(SpotifyBase):
     def playback_currently_playing(
             self,
             market: str = None
-    ) -> CurrentlyPlayingTrack:
+    ) -> CurrentlyPlaying:
         """
         Get user's currently playing track.
 
@@ -53,12 +53,12 @@ class SpotifyPlayer(SpotifyBase):
 
         Returns
         -------
-        CurrentlyPlayingTrack
+        CurrentlyPlaying
             information about the current track playing
         """
         json = self._get('me/player/currently-playing', market=market)
         if json is not None:
-            return CurrentlyPlayingTrack(**json)
+            return CurrentlyPlaying(**json)
 
     def playback_recently_played(
             self,

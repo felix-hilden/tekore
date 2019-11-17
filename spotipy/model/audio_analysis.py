@@ -25,6 +25,9 @@ class Section(TimeInterval):
 
 @dataclass
 class Segment(TimeInterval):
+    """
+    Loudness end is sometimes not available.
+    """
     loudness_start: float
     loudness_max: float
     loudness_max_time: float

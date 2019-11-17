@@ -10,12 +10,19 @@ class Copyright(SerialisableDataclass):
 
 @dataclass
 class Followers(SerialisableDataclass):
-    href: str
+    """
+    Href is always None.
+    """
+    href: None
     total: int
 
 
 @dataclass
 class Image(SerialisableDataclass):
+    """
+    The Web API documentation reports that height and width
+    can be None or not available in the response.
+    """
     url: str
     height: int = None
     width: int = None

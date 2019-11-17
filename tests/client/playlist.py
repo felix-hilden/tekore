@@ -17,8 +17,18 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
     def test_playlist(self):
         self.client.playlist(playlist_id)
 
+    def test_playlist_track_has_episode_and_track(self):
+        track = self.client.playlist(playlist_id).tracks.items[0].track
+        self.assertTrue(all(i is not None for i in (track.episode, track.track)))
+
+    def test_playlist_owner_attributes(self):
+        owner = self.client.playlist(playlist_id).owner
+        nones = [i is None for i in (owner.followers, owner.images)]
+        self.assertTrue(all(nones))
+
     def test_playlist_with_local_track(self):
-        self.client.playlist(playlist_local)
+        playlist = self.client.playlist(playlist_local)
+        self.assertTrue(playlist.tracks.items[0].is_local)
 
     def test_playlist_cover_image(self):
         self.client.playlist_cover_image(playlist_id)
