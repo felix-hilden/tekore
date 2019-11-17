@@ -1,9 +1,11 @@
 import json
 
-from contextlib import contextmanager
+from typing import Generator
 from requests import Request, HTTPError
+from contextlib import contextmanager
 
 from spotipy.sender import Sender, TransientSender
+from spotipy.serialise import SerialisableDataclass
 from spotipy.model.error import PlayerErrorReason
 from spotipy.model.paging import Paging, OffsetPaging
 
@@ -146,13 +148,13 @@ class SpotifyBase:
 
         return result
 
-    def next(self, result: Paging) -> Paging:
+    def next(self, page: Paging) -> Paging:
         """
         Retrieve the next result set of a paging object.
 
         Parameters
         ----------
-        result
+        page
             paging object
 
         Returns
@@ -160,17 +162,17 @@ class SpotifyBase:
         Paging
             paging object containing the next result set
         """
-        if result.next is not None:
-            next_set = self._get_paging_result(result.next)
-            return type(result)(**next_set)
+        if page.next is not None:
+            next_set = self._get_paging_result(page.next)
+            return type(page)(**next_set)
 
-    def previous(self, result: OffsetPaging) -> OffsetPaging:
+    def previous(self, page: OffsetPaging) -> OffsetPaging:
         """
         Retrieve the previous result set of a paging object.
 
         Parameters
         ----------
-        result
+        page
             offset-based paging object
 
         Returns
@@ -178,6 +180,51 @@ class SpotifyBase:
         OffsetPaging
             paging object containing the previous result set
         """
-        if result.previous is not None:
-            previous_set = self._get_paging_result(result.previous)
-            return type(result)(**previous_set)
+        if page.previous is not None:
+            previous_set = self._get_paging_result(page.previous)
+            return type(page)(**previous_set)
+
+    def all_pages(self, page: Paging) -> Generator[Paging, None, None]:
+        """
+        Retrieve all pages of a paging.
+
+        Request and yield new (next) pages until the end of the paging.
+        The paging that was given as an argument is yielded as the first result.
+
+        Parameters
+        ----------
+        page
+            paging object
+
+        Returns
+        -------
+        Generator
+            all pages within a paging
+        """
+        yield page
+        while page.next is not None:
+            page = self.next(page)
+            yield page
+
+    def all_items(
+            self,
+            page: Paging
+    ) -> Generator[SerialisableDataclass, None, None]:
+        """
+        Retrieve all items from all pages of a paging.
+
+        Request and yield new (next) items until the end of the paging.
+        The items in the paging that was given as an argument are yielded first.
+
+        Parameters
+        ----------
+        page
+            paging object
+
+        Returns
+        -------
+        Generator
+            all items within a paging
+        """
+        for p in self.all_pages(page):
+            yield from p.items

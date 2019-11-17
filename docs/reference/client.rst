@@ -18,6 +18,8 @@ Full client
 
    .. automethod:: spotipy.client.Spotify.__init__
 
+.. _client-base:
+
 Base class
 ----------
 

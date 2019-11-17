@@ -135,12 +135,6 @@ class TestSpotifyPlayer(TestCaseWithUserCredentials):
     def test_recently_played(self):
         self.client.playback_recently_played()
 
-    def test_recently_played_paging_exhaust(self):
-        played = self.client.playback_recently_played()
-        while played.next:
-            played = self.client.next(played)
-        self.assertIsNone(played.next)
-
     def test_recently_played_before_timestamp_next_is_before_current(self):
         p1 = self.client.playback_recently_played(limit=1)
         p2 = self.client.next(p1)

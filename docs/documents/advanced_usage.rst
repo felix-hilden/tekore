@@ -123,3 +123,23 @@ but `Senders`_ can be subclassed for arbitrary extension.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_
 library provides caching algorithms that also wrap around :class:`Session`.
+
+Traversing paging objects
+-------------------------
+Many Web API endpoints that would return a large number of the same
+type of object return paging objects for performance reasons.
+The :ref:`client <client-base>` defines a number of ways to navigate these pagings.
+Next and previous pages can be requested one at a time.
+
+.. code:: python
+
+    tracks = spotify.playlist_tracks('37i9dQZEVXbMDoHDwVN2tF', limit=10)
+    t_next = spotify.next(tracks)
+    t_prev = spotify.previous(t_next)
+
+To retrieve the whole content additional methods are available.
+
+.. code:: python
+
+    pages = spotify.all_pages(tracks)
+    items = spotify.all_items(tracks)
