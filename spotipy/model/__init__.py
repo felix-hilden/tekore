@@ -11,6 +11,7 @@ from spotipy.model.category import Category, CategoryPaging
 from spotipy.model.currently_playing import (
     CurrentlyPlayingContext,
     CurrentlyPlayingTrack,
+    RepeatState,
 )
 from spotipy.model.device import Device
 from spotipy.model.error import PlayerErrorReason

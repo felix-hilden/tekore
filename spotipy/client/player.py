@@ -7,6 +7,7 @@ from spotipy.model import (
     CurrentlyPlayingContext,
     CurrentlyPlayingTrack,
     PlayHistoryPaging,
+    RepeatState,
     Device
 )
 
@@ -239,7 +240,11 @@ class SpotifyPlayer(SpotifyBase):
             device_id=device_id
         )
 
-    def playback_repeat(self, state: str, device_id: str = None) -> None:
+    def playback_repeat(
+            self,
+            state: Union[str, RepeatState],
+            device_id: str = None
+    ) -> None:
         """
         Set repeat mode for playback.
 
