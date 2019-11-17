@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 from dataclasses import dataclass
 from spotipy.model.base import Identifiable
 
@@ -26,7 +27,7 @@ class Device(Identifiable):
     is_restricted: bool
     name: str
     type: DeviceType
-    volume_percent: int = None
+    volume_percent: Optional[int]
 
     def __post_init__(self):
         self.type = DeviceType[self.type]

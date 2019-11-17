@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 from dataclasses import dataclass
 
 from spotipy.serialise import SerialisableDataclass, SerialisableEnum
@@ -44,10 +45,16 @@ class Actions(SerialisableDataclass):
 
 @dataclass
 class CurrentlyPlaying(SerialisableDataclass):
+    """
+    Context, progress_ms and item may be None e.g. during a private session.
+    """
     actions: Actions
     currently_playing_type: CurrentlyPlayingType
     is_playing: bool
     timestamp: int
+    context: Optional[Context]
+    progress_ms: Optional[int]
+    item: Optional[FullTrack]
 
     def __post_init__(self):
         self.actions = Actions(**self.actions)
@@ -55,36 +62,19 @@ class CurrentlyPlaying(SerialisableDataclass):
             self.currently_playing_type
         ]
 
+        if self.context is not None:
+            self.context = Context(**self.context)
+        if self.item is not None:
+            self.item = FullTrack(**self.item)
+
 
 @dataclass
 class CurrentlyPlayingContext(CurrentlyPlaying):
     device: Device
     repeat_state: RepeatState
     shuffle_state: bool
-    context: Context = None
-    progress_ms: int = None
-    item: FullTrack = None
 
     def __post_init__(self):
         super().__post_init__()
         self.device = Device(**self.device)
         self.repeat_state = RepeatState[self.repeat_state]
-
-        if self.context is not None:
-            self.context = Context(**self.context)
-        if self.item is not None:
-            self.item = FullTrack(**self.item)
-
-
-@dataclass
-class CurrentlyPlayingTrack(CurrentlyPlaying):
-    context: Context = None
-    progress_ms: int = None
-    item: FullTrack = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        if self.context is not None:
-            self.context = Context(**self.context)
-        if self.item is not None:
-            self.item = FullTrack(**self.item)

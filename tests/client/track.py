@@ -12,14 +12,41 @@ class TestSpotifyTrack(TestCaseWithCredentials):
         track = self.client.track(track_id, market='US')
         self.assertEqual(track.id, track_id)
 
+    def test_track_with_market_available_markets_not_in_response(self):
+        track = self.client.track(track_id, market='US')
+        self.assertIsNone(track.available_markets)
+
     def test_track_no_market(self):
         track = self.client.track(track_id, market=None)
         self.assertEqual(track.id, track_id)
 
+    def test_track_no_market_is_playable_not_in_response(self):
+        track = self.client.track(track_id, market=None)
+        self.assertIsNone(track.is_playable)
+
     def test_track_unplayable(self):
         unplayable = '6F6CuSuM8EcD4UD0N3nuxN'
         track = self.client.track(unplayable, market='SE')
-        self.assertEqual(track.id, unplayable)
+
+        with self.subTest('Playable'):
+            self.assertFalse(track.is_playable)
+        with self.subTest('Restrictions'):
+            self.assertEqual(track.restrictions.reason, 'market')
+
+    def test_track_relinking(self):
+        relinked = '6kLCHFM39wkFjOuyPGLGeQ'
+        track = self.client.track(relinked, market='US')
+
+        with self.subTest('ID not equal'):
+            self.assertNotEqual(relinked, track.id)
+        with self.subTest('ID equal to relinked'):
+            self.assertEqual(relinked, track.linked_from.id)
+        with self.subTest('Playable'):
+            self.assertTrue(track.is_playable)
+
+    def test_track_doesnt_have_episode_or_track(self):
+        track = self.client.track(track_id)
+        self.assertTrue(all(i is None for i in (track.episode, track.track)))
 
     def test_tracks_with_market(self):
         tracks = self.client.tracks(track_ids, market='US')

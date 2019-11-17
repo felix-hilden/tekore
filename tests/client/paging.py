@@ -16,7 +16,11 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
     def test_recently_played_paging_exhaust(self):
         played = self.client.playback_recently_played()
         pages = list(self.client.all_pages(played))
-        self.assertIsNone(pages[-1].next)
+
+        with self.subTest('Next is None'):
+            self.assertIsNone(pages[-1].next)
+        with self.subTest('Cursors is None'):
+            self.assertIsNone(pages[-1].cursors)
 
     def test_all_pages_from_cursor_paging(self):
         played = self.client.playback_recently_played()

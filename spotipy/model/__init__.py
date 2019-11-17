@@ -10,7 +10,7 @@ from spotipy.model.audio_features import AudioFeatures
 from spotipy.model.category import Category, CategoryPaging
 from spotipy.model.currently_playing import (
     CurrentlyPlayingContext,
-    CurrentlyPlayingTrack,
+    CurrentlyPlaying,
     RepeatState,
 )
 from spotipy.model.device import Device

@@ -16,6 +16,12 @@ class AlbumGroup(SerialisableEnum):
 
 @dataclass
 class SimpleAlbum(Album):
+    """
+    Available markets are not available when market is specified.
+    Is playable is not available when market is None.
+    Restrictions is available if restrictions have been placed on
+    the track, making it unplayable.
+    """
     is_playable: bool = None
     album_group: AlbumGroup = None
     available_markets: List[str] = None

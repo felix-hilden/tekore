@@ -64,6 +64,10 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
         self.client.playback_start(track_ids=track_ids, offset=1)
         self.assertPlaying('Playback start with offset index', track_ids[1])
 
+        playing = self.client.playback_currently_playing()
+        with self.subTest('Currently playing has item'):
+            self.assertIsNotNone(playing.item)
+
         self.client.playback_start(track_ids=track_ids, offset=track_ids[1])
         self.assertPlaying('Playback start with offset uri', track_ids[1])
 

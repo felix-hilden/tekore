@@ -32,6 +32,12 @@ class Track(Item):
 
 @dataclass
 class SimpleTrack(Track):
+    """
+    Available markets are not available when market is specified.
+    Is playable is not available when market is None.
+    Restrictions is available if restrictions have been placed on
+    the track, making it unplayable.
+    """
     available_markets: List[str] = None
     linked_from: TrackLink = None
     is_playable: bool = None
@@ -47,6 +53,14 @@ class SimpleTrack(Track):
 
 @dataclass
 class FullTrack(Track):
+    """
+    Available markets are not available when market is specified.
+    Is playable is not available when market is None.
+    Restrictions is available if restrictions have been placed on
+    the track, making it unplayable.
+
+    Episode and track are only available on a playlist.
+    """
     album: SimpleAlbum
     external_ids: dict
     popularity: int
