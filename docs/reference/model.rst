@@ -3,6 +3,19 @@
 model
 =====
 Responses that are returned from :class:`Spotify` are parsed into model classes.
+This allows accessing parts of the response directly as attributes.
+
+.. code:: python
+
+    from spotipy import Spotify
+
+    # Call the API
+    spotify = Spotify(app_token)
+    album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
+
+    # Use the response
+    for track in album.tracks.items:
+        print(track.track_number, track.name)
 
 Base classes
 ------------
