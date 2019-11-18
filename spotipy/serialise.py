@@ -9,6 +9,23 @@ supporting classes makes it possible to access the original representations
 as dictionaries and JSON strings.
 Easy inspection of the data contents is made possible by
 the ``SerialisableDataclass.pprint`` function.
+
+.. code:: python
+
+    from spotipy import Spotify
+
+    # Call the Web API
+    spotify = Spotify(user_token)
+    user = spotify.current_user()
+
+    # Inspect the content
+    user.pprint()
+
+    # Original dict representation
+    user.asdict()
+
+    # Original representation as a string
+    s = str(user)
 """
 
 import json

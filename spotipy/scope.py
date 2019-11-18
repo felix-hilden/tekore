@@ -2,9 +2,18 @@
 scope
 =====
 
-Scopes for user authorisation.
+Scopes are used in user authorisation to provide tokens with additional privileges.
 An enumeration with every possible right is defined in :class:`AuthorisationScopes`.
-They can be used with :class:`Scope` to provide flexible set-like functionality.
+They can be used with :class:`Scope` for flexible set-like functionality.
+
+.. code:: python
+
+    from spotipy.scope import Scope, scopes
+    from spotipy.util import prompt_for_user_token
+
+    cred = (client_id, client_secret, redirect_uri)
+    scope = Scope(scopes.user_read_email, scopes.user_read_private)
+    token = prompt_for_user_token(*cred, scope)
 
 Some ready-made scopes are also made available.
 

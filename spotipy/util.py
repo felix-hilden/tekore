@@ -4,9 +4,27 @@ util
 
 Utility module for your convenience <3
 
-These functions and classes exist to make developing applications easier.
-For larger-scale applications they might not be enough, so please do create
-versions of these routines that meet your needs.
+The main motivation for this module is to make authorisation effortless.
+That goal is achieved by three mechanisms: reading configuration from
+environment variables, an automatically refreshing access token and
+functions that implement everything needed to retrieve tokens.
+The effect is easy configuration, user authorisation and
+a strong independent token.
+
+.. code:: python
+
+    from spotipy import util
+
+    cred = util.credentials_from_environment()
+    everlasting = util.prompt_for_user_token(*cred)
+
+    # Save the refresh token to avoid authenticating again
+    refresh_token = ...     # Load refresh token
+    everlasting = util.token_from_refresh_token(*cred, refresh_token)
+
+This module exists solely to make developing applications easier.
+Some applications might have different needs,
+so please do create your own versions of these routines.
 Particularly, ``prompt_for_user_token`` is only suited for local use
 as it opens up a web browser for the user to log in with.
 """

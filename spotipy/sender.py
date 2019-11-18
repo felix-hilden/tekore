@@ -2,10 +2,26 @@
 sender
 ======
 
-Define request senders to be passed to and used by the Spotify client.
+Senders are used to extend the Spotify client's functionality.
 
 Senders wrap around :class:`requests.Session` providing different levels of
 persistence across requests and enabling retries on failed requests.
+Here's a short summary of the features of each sender.
+
+- :class:`TransientSender`: Creates a new session for each request (default)
+- :class:`PersistentSender`: Reuses a session for requests made on the same instance
+- :class:`SingletonSender`: Uses a global session for all instances and requests
+- :class:`RetryingSender`: Extends any sender to enable retries on failed requests
+
+Sender instances are passed to the client at initialisation.
+
+.. code:: python
+
+    from spotipy import Spotify
+    from spotipy.sender import PersistentSender, RetryingSender
+
+    sender = RetryingSender(retries=3, sender=PersistentSender())
+    spotify = Spotify(sender=sender)
 """
 
 import time

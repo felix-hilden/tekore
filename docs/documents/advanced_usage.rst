@@ -75,14 +75,15 @@ a function for reading those values is provided in the :ref:`util <module-util>`
    client_id, client_secret, redirect_uri = credentials_from_environment()
 
 Those values can then be used to retrieve access tokens.
-Note that if all configuration values are defined, the following is possible.
+Note that if all configuration values are defined,
+it is possible to use unpacking to provide the configuration.
 
 .. code:: python
 
    from spotipy import util
 
-   conf = util.credentials_from_environment()
-   token = util.prompt_for_user_token(*conf)
+   cred = util.credentials_from_environment()
+   token = util.prompt_for_user_token(*cred)
 
 .. _advanced-senders:
 
@@ -94,13 +95,6 @@ using different kinds of :ref:`senders <module-sender>`.
 They provide the
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
 of using sessions and can bring new functionality.
-Here's a short summary of the features of each sender.
-
-- :class:`TransientSender`: Creates a new session for each request (default)
-- :class:`PersistentSender`: Reuses a session for requests made on the same instance
-- :class:`SingletonSender`: Uses a global session for all instances and requests
-- :class:`RetryingSender`: Extends any sender to enable retries on failed requests
-
 For example:
 
 .. code:: python

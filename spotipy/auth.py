@@ -3,6 +3,25 @@ auth
 ====
 
 OAuth2 authentication for client credentials and authorisation code flows.
+
+Access tokens are used in authorisation by the Web API.
+The client credentials and authorisation code flows are used to retrieve
+application credentials and user credentials, respectively.
+
+.. code:: python
+
+    from spotipy import Spotify
+    from spotipy.auth import Credentials
+
+    cred = Credentials(client_id, client_secret, redirect_uri)
+
+    # Client credentials flow
+    app_token = cred.request_client_token()
+
+    # Authorisation code flow
+    url = cred.user_authorisation_url()
+    code = ...  # Redirect user to login and retrieve code
+    user_token = cred.request_user_token(code)
 """
 
 import time

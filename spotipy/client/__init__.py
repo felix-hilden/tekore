@@ -1,5 +1,3 @@
-from typing import Union
-
 from spotipy.client.album import SpotifyAlbum
 from spotipy.client.artist import SpotifyArtist
 from spotipy.client.browse import SpotifyBrowse
