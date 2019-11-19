@@ -30,7 +30,8 @@ Firstly an access token is accepted in the client's constructor.
 
 Secondly, the client can temporarily use another token for requests.
 This is particularly handy if only one client instance is created but there are
-many users, tokens are manually refreshed or a user has different scopes.
+many users, several tokens are associated with a single user perhaps due to
+different scopes, or tokens are manually refreshed.
 
 .. code:: python
 
@@ -53,6 +54,8 @@ For situations involving a server, a two-step process should be implemented.
 The steps are covered by ``user_authorisation_url`` and ``request_user_token``,
 two methods of the :class:`Credentials` class in the :ref:`auth <module-auth>` module.
 See this recipe on an :ref:`auth-server` for an example implementation.
+The same process can be implemented with the :ref:`util <module-util>` module
+using :class:`RefreshingCredentials`.
 
 Token persistence
 *****************
@@ -61,8 +64,6 @@ They also have the advantage of never expiring,
 so they are a perfect candidate to save to a file or a database.
 Whether you are using :ref:`auth <module-auth>` or :ref:`util <module-util>`,
 the refresh tokens can later be used to retrieve user access tokens.
-See ``auth.Credentials.request_refreshed_token`` and
-``util.token_from_refresh_token``.
 
 Configuration with environment variables
 ----------------------------------------

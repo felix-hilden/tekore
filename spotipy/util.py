@@ -15,12 +15,32 @@ a strong independent token.
 
     from spotipy import util
 
-    cred = util.credentials_from_environment()
-    everlasting = util.prompt_for_user_token(*cred)
+    conf = util.credentials_from_environment()
+    app_token = util.request_client_token(*conf)
+    user_token = util.prompt_for_user_token(*conf)
 
     # Save the refresh token to avoid authenticating again
     refresh_token = ...     # Load refresh token
-    everlasting = util.token_from_refresh_token(*cred, refresh_token)
+    user_token = util.request_refreshed_token(*conf, refresh_token)
+
+If you authenticate with a server but would still like to use
+:class:`RefreshingToken`, you can use the :class:`RefreshingCredentials`
+manager that is used by the functions above to create refreshing tokens.
+
+.. code:: python
+
+    cred = util.RefreshingCredentials(*conf)
+
+    # Client credentials flow
+    app_token = cred.request_client_token()
+
+    # Authorisation code flow
+    url = cred.user_authorisation_url()
+    code = ...  # Redirect user to login and retrieve code
+    user_token = cred.request_user_token(code)
+
+    # Reload a token
+    user_token = cred.request_refreshed_token(refresh_token)
 
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
@@ -86,6 +106,100 @@ class RefreshingToken(AccessToken):
         return self._token.is_expiring()
 
 
+class RefreshingCredentials:
+    """
+    Client for retrieving automatically refreshing access tokens.
+
+    Delegates to an underlying :class:`Credentials` manager
+    and parses tokens it returns to :class:`RefreshingToken`.
+
+    Parameters
+    ----------
+    client_id
+        client id
+    client_secret
+        client secret
+    redirect_uri
+        whitelisted redirect URI
+    """
+    def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
+        self._client = Credentials(client_id, client_secret, redirect_uri)
+
+    def request_client_token(self) -> RefreshingToken:
+        """
+        Request for refreshing access token using application credentials.
+
+        Returns
+        -------
+        RefreshingToken
+            automatically refreshing client token
+        """
+        token = self._client.request_client_token()
+        return RefreshingToken(token, self._client)
+
+    def user_authorisation_url(self, scope=None, state: str = None) -> str:
+        """
+        Construct an authorisation URL for Spotify login.
+
+        Parameters
+        ----------
+        scope
+            access rights as a space-separated list
+        state
+            additional state
+
+        Returns
+        -------
+        str
+            URL for Spotify login
+        """
+        return self._client.user_authorisation_url(scope, state)
+
+    def request_user_token(
+            self,
+            code: str,
+            scope=None,
+            state: str = None
+    ) -> RefreshingToken:
+        """
+        Request for refreshing access token using a code
+        provided by a request from the Spotify server.
+
+        Parameters
+        ----------
+        code
+            code from request parameters
+        scope
+            access rights as a space-separated list
+        state
+            additional state
+
+        Returns
+        -------
+        RefreshingToken
+            automatically refreshing user token
+        """
+        token = self._client.request_user_token(code, scope, state)
+        return RefreshingToken(token, self._client)
+
+    def request_refreshed_token(self, refresh_token: str) -> RefreshingToken:
+        """
+        Retrieve a token using a refresh token.
+
+        Parameters
+        ----------
+        refresh_token
+            refresh token
+
+        Returns
+        -------
+        RefreshingToken
+            automatically refreshing user token
+        """
+        token = self._client.request_refreshed_token(refresh_token)
+        return RefreshingToken(token, self._client)
+
+
 def read_environment(*variables: str) -> tuple:
     """
     Read environment variables.
@@ -143,6 +257,32 @@ def parse_code_from_url(url: str) -> str:
     return code[0]
 
 
+def request_client_token(
+        client_id: str,
+        client_secret: str,
+        redirect_uri: str
+) -> RefreshingToken:
+    """
+    Request for client credentials.
+
+    Parameters
+    ----------
+    client_id
+        client ID of a Spotify App
+    client_secret
+        client secret
+    redirect_uri
+        whitelisted redirect URI
+
+    Returns
+    -------
+    RefreshingToken
+        automatically refreshing client token
+    """
+    cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
+    return cred.request_client_token()
+
+
 def prompt_for_user_token(
         client_id: str,
         client_secret: str,
@@ -150,7 +290,10 @@ def prompt_for_user_token(
         scope=None
 ) -> RefreshingToken:
     """
-    Open a web browser for manual authentication.
+    Prompt for manual authentication.
+
+    Open a web browser for the user to log in with Spotify.
+    Prompt to paste the URL after logging in to parse the `code` URL parameter.
 
     Parameters
     ----------
@@ -166,20 +309,19 @@ def prompt_for_user_token(
     Returns
     -------
     RefreshingToken
-        automatically refreshing access token
+        automatically refreshing user token
     """
-    cred = Credentials(client_id, client_secret, redirect_uri)
+    cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
     url = cred.user_authorisation_url(scope)
 
     print('Opening browser for Spotify login...')
     webbrowser.open(url)
     redirected = input('Please paste redirect URL: ').strip()
     code = parse_code_from_url(redirected)
-    token = cred.request_user_token(code, scope)
-    return RefreshingToken(token, cred)
+    return cred.request_user_token(code, scope)
 
 
-def token_from_refresh_token(
+def request_refreshed_token(
         client_id: str,
         client_secret: str,
         redirect_uri: str,
@@ -202,8 +344,7 @@ def token_from_refresh_token(
     Returns
     -------
     RefreshingToken
-        automatically refreshing access token
+        automatically refreshing user token
     """
-    cred = Credentials(client_id, client_secret, redirect_uri)
-    token = cred.request_refreshed_token(refresh_token)
-    return RefreshingToken(token, cred)
+    cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
+    return cred.request_refreshed_token(refresh_token)

@@ -8,10 +8,44 @@ get its credentials and define a redirect URI for authentication requests.
 Note that a server listening to that address isn't required for a demo,
 though it is required for programmatic extraction of user access tokens.
 
-Retrieving an access token
---------------------------
-First we'll retrieve an access token that has every possible right (scope)
-to a user's account.
+Retrieving a client token
+-------------------------
+First we'll retrieve a client token for the Spotify application.
+It is a token associated with your registered application
+and can be used to make basic calls to the API.
+
+.. code:: python
+
+    from spotipy.util import request_client_token
+
+    client_id = 'your_token_here'
+    client_secret = 'your_secret_here'
+    redirect_uri = 'your_redirect_here'
+
+    app_token = request_client_token(client_id, client_secret, redirect_uri)
+
+Calling the API
+---------------
+Next the Spotify object should be created.
+The following script will list the track numbers and names of songs
+on an album given the album ID.
+
+.. code:: python
+
+    from spotipy import Spotify
+
+    spotify = Spotify(app_token)
+
+    album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
+    for track in album.tracks.items:
+        print(track.track_number, track.name)
+
+Retrieving a user token
+-----------------------
+User tokens are another type of access token.
+They are associated with a Spotify user account.
+Different privileges or `scopes` can be requested when authenticating.
+Below we'll retrieve a token that has every possible scope.
 The script will open a web page prompting for a Spotify login.
 The user is then redirected back and the URL of the redirect is requested
 for parsing and retrieving the access token.
@@ -21,27 +55,23 @@ for parsing and retrieving the access token.
     from spotipy.scope import every
     from spotipy.util import prompt_for_user_token
 
-    client_id = 'your_token_here'
-    client_secret = 'your_secret_here'
-    redirect_uri = 'http://localhost'
-
-    token = prompt_for_user_token(
+    user_token = prompt_for_user_token(
         client_id,
         client_secret,
         redirect_uri,
         scope=every
     )
 
-Calling the API
----------------
-Next the Spotify object should be created.
-The following script will list some of the user's top tracks.
+Calling the API as a user
+-------------------------
+Many endpoints require user authentication.
+Their names have a ``current_user`` prefix.
+The following script swaps in the user token and
+lists some of the user's most listened tracks.
 
 .. code:: python
 
-    from spotipy import Spotify
-
-    s = Spotify(token)
+    spotify.token = user_token
 
     tracks = s.current_user_top_tracks(limit=10)
     for track in tracks.items:

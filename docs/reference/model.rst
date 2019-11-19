@@ -10,7 +10,7 @@ This allows accessing parts of the response directly as attributes.
     from spotipy import Spotify
 
     # Call the API
-    spotify = Spotify(app_token)
+    spotify = Spotify(token)
     album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
 
     # Use the response

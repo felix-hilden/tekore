@@ -15,7 +15,7 @@ Further documentation on endpoints can be viewed in the Web API
     from spotipy import Spotify
 
     # Initialise the client
-    spotify = Spotify(app_token)
+    spotify = Spotify(token)
 
     # Call the API
     album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
