@@ -1,13 +1,16 @@
 import unittest
 from unittest.mock import MagicMock, patch
+from tests.client._cred import TestCaseWithCredentials
 
-from spotipy.auth import Token
+from spotipy.auth import Token, Credentials
 from spotipy.util import (
     RefreshingToken,
     parse_code_from_url,
     prompt_for_user_token,
     credentials_from_environment,
-    token_from_refresh_token,
+    request_refreshed_token,
+    request_client_token,
+    RefreshingCredentials,
 )
 
 
@@ -101,20 +104,8 @@ class TestParseCodeFromURL(unittest.TestCase):
         self.assertEqual(r, '1')
 
 
-class TestPromptForToken(unittest.TestCase):
-    def test_user_prompted_for_input(self):
-        cred = MagicMock()
-        cred.authorisation_url.return_value = 'http://example.com'
-        cred.request_access_token.return_value = MagicMock()
-        input_ = MagicMock(return_value='http://example.com?code=1')
-        with patch('spotipy.util.Credentials', cred),\
-                patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_),\
-                patch('spotipy.util.print', MagicMock()):
-            prompt_for_user_token('', '', '')
-            input_.assert_called_once()
-
-    def test_refreshing_token_returned(self):
+class TestTokenUtilityFunctions(TestCaseWithCredentials):
+    def test_prompt_for_user_token(self):
         cred = MagicMock()
         cred.authorisation_url.return_value = 'http://example.com'
         cred.request_access_token.return_value = MagicMock()
@@ -124,18 +115,54 @@ class TestPromptForToken(unittest.TestCase):
                 patch('spotipy.util.input', input_),\
                 patch('spotipy.util.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
+
+        with self.subTest('Input prompted'):
+            input_.assert_called_once()
+
+        with self.subTest('Refreshing token returned'):
             self.assertIsInstance(token, RefreshingToken)
 
-
-class TestTokenFromRefreshToken(unittest.TestCase):
-    def test_request_refreshed_token_called(self):
+    def test_request_refreshed_token_calls_credentials(self):
         cred_instance = MagicMock()
         cred = MagicMock(return_value=cred_instance)
         cred_instance.request_refreshed_token.return_value = MagicMock()
 
         with patch('spotipy.util.Credentials', cred):
-            token_from_refresh_token('', '', '', 'refresh')
+            request_refreshed_token('', '', '', 'refresh')
             cred_instance.request_refreshed_token.assert_called_with('refresh')
+
+    def test_request_client_token_returns_refreshing_token(self):
+        token = request_client_token(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri
+        )
+        self.assertIsInstance(token, RefreshingToken)
+
+
+class TestRefreshingCredentials(TestCaseWithCredentials):
+    def _initialise(self):
+        return RefreshingCredentials(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri
+        )
+
+    def test_initialisable(self):
+        self._initialise()
+
+    def test_request_client_token_returns_refreshing_token(self):
+        cred = self._initialise()
+        token = cred.request_client_token()
+        self.assertIsInstance(token, RefreshingToken)
+
+    def test_user_authorisation_url_equal_to_credentials(self):
+        auth = Credentials(self.client_id, self.client_secret, self.redirect_uri)
+        util = self._initialise()
+        self.assertEqual(
+            auth.user_authorisation_url(),
+            util.user_authorisation_url()
+        )
 
 
 if __name__ == '__main__':
