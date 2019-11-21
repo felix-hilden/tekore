@@ -96,7 +96,7 @@ using different kinds of :ref:`senders <module-sender>`.
 They provide the
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
 of using sessions and can bring new functionality.
-For example:
+For example persistent sessions can be enabled with a :class:`PersistentSender`.
 
 .. code:: python
 

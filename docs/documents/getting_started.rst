@@ -4,7 +4,8 @@ Getting started
 ===============
 To use the Web API, you'll need to register an
 `application <https://developer.spotify.com/dashboard/applications>`_,
-get its credentials and define a redirect URI for authentication requests.
+get its credentials and define a whitelisted redirect URI for authentication
+requests in your application settings.
 Note that a server listening to that address isn't required for a demo,
 though it is required for programmatic extraction of user access tokens.
 
@@ -64,8 +65,8 @@ for parsing and retrieving the access token.
 
 Calling the API as a user
 -------------------------
-Many endpoints require user authentication.
-Their names have a ``current_user`` prefix.
+Many endpoints require user authentication,
+like the ones with a ``current_user`` prefix and others related to playback.
 The following script swaps in the user token and
 lists some of the user's most listened tracks.
 
