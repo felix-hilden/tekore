@@ -64,6 +64,9 @@ class RefreshingToken(AccessToken):
     access token when the old one is about to expire. This occurs when the
     `access_token` property is read.
 
+    Both ``expires_in`` and ``expires_at`` always return ``None``,
+    and ``is_expiring`` is always ``False``.
+
     Parameters
     ----------
     token
@@ -83,6 +86,10 @@ class RefreshingToken(AccessToken):
         return self._token.access_token
 
     @property
+    def refresh_token(self):
+        return self._token.refresh_token
+
+    @property
     def token_type(self):
         return self._token.token_type
 
@@ -91,19 +98,16 @@ class RefreshingToken(AccessToken):
         return self._token.scope
 
     @property
-    def expires_in(self) -> int:
-        return self._token.expires_in
+    def expires_in(self) -> None:
+        return None
 
     @property
-    def expires_at(self) -> int:
-        return self._token.expires_at
+    def expires_at(self) -> None:
+        return None
 
-    @property
-    def refresh_token(self):
-        return self._token.refresh_token
-
-    def is_expiring(self) -> bool:
-        return self._token.is_expiring()
+    @staticmethod
+    def is_expiring() -> bool:
+        return False
 
 
 class RefreshingCredentials:
