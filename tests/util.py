@@ -52,14 +52,18 @@ class TestRefreshingToken(unittest.TestCase):
                 auto_token.__getattribute__(attribute)
                 self.assertTrue(attribute in auto_attributes)
 
-    def test_refreshing_token_is_expiring_calls_underlying_token(self):
+    def test_refreshing_token_expiration_attributes(self):
         token_info = MagicMock()
         token = Token(token_info)
         token.expires_at = 0
 
         auto_token = RefreshingToken(token, MagicMock())
-        expiring = auto_token.is_expiring()
-        self.assertTrue(expiring)
+        with self.subTest('is_expiring is False'):
+            self.assertFalse(auto_token.is_expiring())
+        with self.subTest('expires_in is None'):
+            self.assertIsNone(auto_token.expires_in)
+        with self.subTest('expires_at is None'):
+            self.assertIsNone(auto_token.expires_at)
 
 
 class TestCredentialsFromEnvironment(unittest.TestCase):
