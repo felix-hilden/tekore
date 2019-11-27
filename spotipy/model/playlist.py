@@ -49,6 +49,7 @@ class Playlist(Item):
     public: bool
     snapshot_id: str
     primary_color: str
+    description: str
 
     def __post_init__(self):
         self.images = [Image(**i) for i in self.images]
@@ -66,7 +67,6 @@ class SimplePlaylist(Playlist):
 
 @dataclass
 class FullPlaylist(Playlist):
-    description: str
     followers: Followers
     tracks: PlaylistTrackPaging
 
