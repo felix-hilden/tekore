@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 from spotipy.client.browse.validate import validate_attributes
 from spotipy.client.base import SpotifyBase

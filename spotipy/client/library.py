@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 
 from spotipy.client.base import SpotifyBase
 from spotipy.model import SavedAlbumPaging, SavedTrackPaging

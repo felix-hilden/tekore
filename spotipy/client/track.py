@@ -1,5 +1,3 @@
-from typing import Union
-
 from spotipy.client.base import SpotifyBase
 from spotipy.serialise import ModelList
 from spotipy.model import FullTrack, AudioFeatures, AudioAnalysis
