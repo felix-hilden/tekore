@@ -36,7 +36,7 @@ class SpotifyPlaylistModify(SpotifyBase):
             description: str = ''
     ) -> FullPlaylist:
         """
-        Create a playlist for a user.
+        Create a playlist.
 
         Requires the playlist-modify-public scope. To create a private playlist
         the playlist-modify-private scope is required.
@@ -74,7 +74,7 @@ class SpotifyPlaylistModify(SpotifyBase):
             description: str = None
     ) -> None:
         """
-        Change a playlist's name and/or public/private state.
+        Change a playlist's details.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -84,13 +84,13 @@ class SpotifyPlaylistModify(SpotifyBase):
         playlist_id
             playlist ID
         name
-            optional name of the playlist
+            name of the playlist
         public
-            optional is the playlist public
+            is the playlist public
         collaborative
-            optional is the playlist collaborative
+            is the playlist collaborative
         description
-            optional description of the playlist
+            description of the playlist
         """
         payload = {
             'name': name,
