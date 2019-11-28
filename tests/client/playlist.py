@@ -8,8 +8,8 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
     def setUp(self):
         self.client = SpotifyPlaylist(self.user_token)
 
-    def test_cu_playlists(self):
-        self.client.current_user_playlists()
+    def test_followed_playlists(self):
+        self.client.followed_playlists()
 
     def test_playlists(self):
         self.client.playlists(user_id)
@@ -150,4 +150,4 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
         finally:
             # Unfollow (delete) playlist to tear down
             follow = SpotifyFollow(self.user_token)
-            follow.current_user_playlist_unfollow(playlist.id)
+            follow.playlist_unfollow(playlist.id)

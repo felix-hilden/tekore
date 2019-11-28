@@ -16,10 +16,10 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
         client = SpotifyLibrary(cls.user_token)
 
         try:
-            cls.current_albums = client.current_user_albums_contains(
+            cls.current_albums = client.saved_albums_contains(
                 album_ids
             )
-            cls.current_tracks = client.current_user_tracks_contains(
+            cls.current_tracks = client.saved_tracks_contains(
                 track_ids
             )
         except Exception as e:
@@ -28,23 +28,23 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
     def setUp(self):
         self.client = SpotifyLibrary(self.user_token)
 
-    def test_cu_albums(self):
-        self.client.current_user_albums()
+    def test_saved_albums(self):
+        self.client.saved_albums()
 
-    def test_cu_albums_add(self):
-        self.client.current_user_albums_add(album_ids)
+    def test_saved_albums_add(self):
+        self.client.saved_albums_add(album_ids)
 
-    def test_cu_albums_delete(self):
-        self.client.current_user_albums_delete(album_ids)
+    def test_saved_albums_delete(self):
+        self.client.saved_albums_delete(album_ids)
 
-    def test_cu_tracks(self):
-        self.client.current_user_tracks()
+    def test_saved_tracks(self):
+        self.client.saved_tracks()
 
-    def test_cu_tracks_add(self):
-        self.client.current_user_tracks_add(track_ids)
+    def test_saved_tracks_add(self):
+        self.client.saved_tracks_add(track_ids)
 
-    def test_cu_tracks_delete(self):
-        self.client.current_user_tracks_delete(track_ids)
+    def test_saved_tracks_delete(self):
+        self.client.saved_tracks_delete(track_ids)
 
     @classmethod
     def tearDownClass(cls):
@@ -55,25 +55,25 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
             if cls.current_albums[i]
         ]
         if album_adds:
-            client.current_user_albums_add(album_adds)
+            client.saved_albums_add(album_adds)
 
         album_dels = [
             a for i, a in enumerate(album_ids)
             if not cls.current_albums[i]
         ]
         if album_dels:
-            client.current_user_albums_delete(album_dels)
+            client.saved_albums_delete(album_dels)
 
         track_adds = [
             t for i, t in enumerate(track_ids)
             if cls.current_tracks[i]
         ]
         if track_adds:
-            client.current_user_tracks_add(track_adds)
+            client.saved_tracks_add(track_adds)
 
         track_dels = [
             t for i, t in enumerate(track_ids)
             if not cls.current_tracks[i]
         ]
         if track_dels:
-            client.current_user_tracks_delete(track_dels)
+            client.saved_tracks_delete(track_dels)

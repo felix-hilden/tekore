@@ -11,7 +11,7 @@ from spotipy.model import (
 
 
 class SpotifyPlaylistView(SpotifyBase):
-    def current_user_playlists(
+    def followed_playlists(
             self,
             limit: int = 20,
             offset: int = 0
