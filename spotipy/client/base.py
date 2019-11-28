@@ -96,12 +96,13 @@ class SpotifyBase:
 
         if response.status_code >= 400:
             content = self._parse_json(response)
+            c_msg = content.get('message', None) if content is not None else None
             error_str = error_format.format(
                 url=response.url,
                 code=response.status_code,
-                msg=content.get('message', None) or response.reason
+                msg=c_msg or response.reason
             )
-            if 'reason' in content:
+            if content is not None and 'reason' in content:
                 error_str += '\n' + PlayerErrorReason[content['reason']].value
             raise HTTPError(error_str, request=request, response=response)
 
