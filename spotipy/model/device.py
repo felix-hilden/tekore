@@ -1,10 +1,11 @@
-from enum import Enum
 from typing import Optional
 from dataclasses import dataclass
+
+from spotipy.serialise import SerialisableEnum
 from spotipy.model.base import Identifiable
 
 
-class DeviceType(Enum):
+class DeviceType(SerialisableEnum):
     Computer = 'Computer'
     Tablet = 'Tablet'
     Smartphone = 'Smartphone'
