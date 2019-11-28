@@ -8,11 +8,11 @@ They can be used with :class:`Scope` for flexible set-like functionality.
 
 .. code:: python
 
-    from spotipy.scope import Scope, scopes
+    from spotipy.scope import scopes
     from spotipy.util import prompt_for_user_token
 
     cred = (client_id, client_secret, redirect_uri)
-    scope = Scope(scopes.user_read_email, scopes.user_read_private)
+    scope = scopes.user_read_email + scopes.user_read_private
     token = prompt_for_user_token(*cred, scope)
 
 Some ready-made scopes are also made available.
@@ -25,19 +25,30 @@ Some ready-made scopes are also made available.
 """
 
 from enum import Enum
-from typing import Union
 
 
 class AuthorisationScopes(Enum):
     """
-    Spotify Web API Authorisation Scopes.
+    Web API authorisation scopes, also accessable with the alias :class:`scopes`.
 
-    The string representation of an instance is its enum value.
+    The string representation of a member is its enum value.
 
     .. code:: python
 
-       s = AuthorisationScopes.user_read_email
+       s = scopes.user_read_email
        print(s)  # -> 'user-read-email'
+
+    Addition and subtraction of two members is supported.
+    Both operations return a :class:`Scope`.
+    Subtraction is mainly implemented for consistency with scope objects.
+    Subtracting any other scope simply returns the first operand,
+    and subtracting the same scope returns an empty scope.
+
+    .. code:: python
+
+        janet = scopes.user_read_private + scopes.user_top_read
+        mikey = scopes.user_follow_read - scopes.user_library_read
+        blank = scopes.user_read_email - scopes.user_read_email
     """
     user_read_email = 'user-read-email'
     user_read_private = 'user-read-private'
@@ -63,15 +74,32 @@ class AuthorisationScopes(Enum):
     def __str__(self):
         return self.value
 
+    def __add__(self, other: 'AuthorisationScopes') -> 'Scope':
+        if not isinstance(other, AuthorisationScopes):
+            return NotImplemented
+
+        return Scope(self, other)
+
+    def __sub__(self, other: 'AuthorisationScopes') -> 'Scope':
+        if not isinstance(other, AuthorisationScopes):
+            return NotImplemented
+
+        return Scope(self) - other
+
 
 scopes = AuthorisationScopes
 
 
 class Scope(frozenset):
     """
-    Set of AuthorisationScopes constituting a scope for a token.
+    Set of :class:`AuthorisationScopes` constituting a scope for a token.
 
-    Immutable, supports unpacking and flexible addition and subtraction.
+    Immutable, supports unpacking and flexible addition and subtraction
+    with :class:`Scope`, :class:`str` and :class:`AuthorisationScopes`.
+    Addition is a set-like union, subtraction is a set-like relative complement.
+    The addition operation is also supported with reflected operands.
+    Reflected subtraction tries to convert the left-side operand to a Scope.
+    If any operation is unsuccessful, :class:`NotImplementError` is raised.
 
     .. code:: python
 
@@ -80,6 +108,9 @@ class Scope(frozenset):
        timmy = Scope('ugc-image-upload', 'user-top-read')
        elise = Scope(*sally, *timmy, scopes.user_follow_modify)
        waldo = sally + timmy - 'user-read-email' + scopes.user_follow_read
+
+       r_add = 'playlist-read-private' + timmy
+       r_sub = 'user-top-read' - timmy
 
     The string representation of a :class:`Scope` is a sorted,
     space-separated concatenation of its members.
@@ -90,29 +121,35 @@ class Scope(frozenset):
        print(s)  # -> 'a b c'
     """
     def __new__(cls, *members):
-        if len(members) == 1 and isinstance(members[0], frozenset):
-            members = [*members[0]]
-        members = [str(m) for m in members]
-        return super().__new__(cls, members)
+        return super().__new__(cls, [str(m) for m in members])
 
     def __str__(self):
         return ' '.join(sorted(self))
 
-    def __add__(
-            self,
-            other: Union[set, frozenset, str, AuthorisationScopes]
-    ) -> 'Scope':
-        if type(other) in (str, AuthorisationScopes):
+    def __add__(self, other) -> 'Scope':
+        if isinstance(other, (str, AuthorisationScopes)):
             other = {str(other)}
-        return type(self)(self.union(other))
+        elif not isinstance(other, Scope):
+            e = f'Addition not defined for {type(self)} and {type(other)}!'
+            raise NotImplementedError(e)
+        return type(self)(*self.union(other))
 
-    def __sub__(
-            self,
-            other: Union[set, frozenset, str, AuthorisationScopes]
-    ) -> 'Scope':
-        if type(other) in (str, AuthorisationScopes):
+    def __radd__(self, other) -> 'Scope':
+        return self + other
+
+    def __sub__(self, other) -> 'Scope':
+        if isinstance(other, (str, AuthorisationScopes)):
             other = {str(other)}
-        return type(self)(self.difference(other))
+        elif not isinstance(other, Scope):
+            e = f'Difference not defined for {type(self)} and {type(other)}!'
+            raise NotImplementedError(e)
+        return type(self)(*self.difference(other))
+
+    def __rsub__(self, other) -> 'Scope':
+        if not isinstance(other, (str, AuthorisationScopes)):
+            e = f'Difference not defined for {type(other)} and {type(self)}!'
+            raise NotImplementedError(e)
+        return Scope(other) - self
 
 
 read = Scope(
