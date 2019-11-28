@@ -5,7 +5,7 @@ from spotipy.model import SavedAlbumPaging, SavedTrackPaging
 
 
 class SpotifyLibrary(SpotifyBase):
-    def current_user_albums(
+    def saved_albums(
             self,
             market: str = None,
             limit: int = 20,
@@ -33,7 +33,7 @@ class SpotifyLibrary(SpotifyBase):
         json = self._get('me/albums', market=market, limit=limit, offset=offset)
         return SavedAlbumPaging(**json)
 
-    def current_user_albums_contains(self, album_ids: list) -> List[bool]:
+    def saved_albums_contains(self, album_ids: list) -> List[bool]:
         """
         Check if user has saved albums.
 
@@ -51,7 +51,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/albums/contains?ids=' + ','.join(album_ids))
 
-    def current_user_albums_add(self, album_ids: list) -> None:
+    def saved_albums_add(self, album_ids: list) -> None:
         """
         Save albums for current user.
 
@@ -64,7 +64,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         self._put('me/albums?ids=' + ','.join(album_ids))
 
-    def current_user_albums_delete(self, album_ids: list) -> None:
+    def saved_albums_delete(self, album_ids: list) -> None:
         """
         Remove albums for current user.
 
@@ -77,7 +77,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         self._delete('me/albums?ids=' + ','.join(album_ids))
 
-    def current_user_tracks(
+    def saved_tracks(
             self,
             market: str = None,
             limit: int = 20,
@@ -86,7 +86,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         Get a list of the songs saved in the current user's Your Music library.
 
-        Requires the user-libray-read scope.
+        Requires the user-library-read scope.
 
         Parameters
         ----------
@@ -105,7 +105,7 @@ class SpotifyLibrary(SpotifyBase):
         json = self._get('me/tracks', market=market, limit=limit, offset=offset)
         return SavedTrackPaging(**json)
 
-    def current_user_tracks_contains(self, track_ids: list) -> List[bool]:
+    def saved_tracks_contains(self, track_ids: list) -> List[bool]:
         """
         Check if user has saved tracks.
 
@@ -123,7 +123,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/tracks/contains?ids=' + ','.join(track_ids))
 
-    def current_user_tracks_add(self, track_ids: list) -> None:
+    def saved_tracks_add(self, track_ids: list) -> None:
         """
         Save tracks for current user.
 
@@ -136,7 +136,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         self._put('me/tracks/?ids=' + ','.join(track_ids))
 
-    def current_user_tracks_delete(self, track_ids: list) -> None:
+    def saved_tracks_delete(self, track_ids: list) -> None:
         """
         Remove tracks for current user.
 

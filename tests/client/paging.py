@@ -8,8 +8,8 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
     def setUp(self):
         self.client = Spotify(self.user_token)
 
-    def test_cu_followed_artists_paging_exhaust(self):
-        artists = self.client.current_user_followed_artists()
+    def test_followed_artists_paging_exhaust(self):
+        artists = self.client.followed_artists()
         pages = list(self.client.all_pages(artists))
         self.assertIsNone(pages[-1].next)
 

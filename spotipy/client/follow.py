@@ -28,7 +28,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(user_ids)
         )
 
-    def current_user_playlist_follow(
+    def playlist_follow(
             self,
             playlist_id: str,
             public: bool = True
@@ -51,7 +51,7 @@ class SpotifyFollow(SpotifyBase):
         }
         self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
-    def current_user_playlist_unfollow(self, playlist_id: str) -> None:
+    def playlist_unfollow(self, playlist_id: str) -> None:
         """
         Unfollow a playlist as current user.
 
@@ -65,7 +65,7 @@ class SpotifyFollow(SpotifyBase):
         """
         self._delete(f'playlists/{playlist_id}/followers')
 
-    def current_user_followed_artists(
+    def followed_artists(
             self,
             limit: int = 20,
             after: str = None
@@ -90,7 +90,7 @@ class SpotifyFollow(SpotifyBase):
         json = self._get('me/following', type='artist', limit=limit, after=after)
         return FullArtistCursorPaging(**json['artists'])
 
-    def current_user_artists_is_following(self, artist_ids: list) -> List[bool]:
+    def artists_is_following(self, artist_ids: list) -> List[bool]:
         """
         Check if current user follows artists.
 
@@ -112,7 +112,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(artist_ids)
         )
 
-    def current_user_artists_follow(self, artist_ids: list) -> None:
+    def artists_follow(self, artist_ids: list) -> None:
         """
         Follow artists as current user.
 
@@ -125,7 +125,7 @@ class SpotifyFollow(SpotifyBase):
         """
         self._put('me/following', type='artist', ids=','.join(artist_ids))
 
-    def current_user_artists_unfollow(self, artist_ids: list) -> None:
+    def artists_unfollow(self, artist_ids: list) -> None:
         """
         Unfollow artists as current user.
 
@@ -138,7 +138,7 @@ class SpotifyFollow(SpotifyBase):
         """
         self._delete('me/following', type='artist', ids=','.join(artist_ids))
 
-    def current_user_users_is_following(self, user_ids: list) -> List[bool]:
+    def users_is_following(self, user_ids: list) -> List[bool]:
         """
         Check if current user follows users.
 
@@ -158,7 +158,7 @@ class SpotifyFollow(SpotifyBase):
             'me/following/contains', type='user', ids=','.join(user_ids)
         )
 
-    def current_user_users_follow(self, user_ids: list) -> None:
+    def users_follow(self, user_ids: list) -> None:
         """
         Follow users as current user.
 
@@ -171,7 +171,7 @@ class SpotifyFollow(SpotifyBase):
         """
         self._put('me/following', type='user', ids=','.join(user_ids))
 
-    def current_user_users_unfollow(self, user_ids: list) -> None:
+    def users_unfollow(self, user_ids: list) -> None:
         """
         Unfollow users as current user.
 
