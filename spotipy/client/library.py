@@ -14,7 +14,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         Get a list of the albums saved in the current user's Your Music library.
 
-        Requires the user-libray-read scope.
+        Requires the user-library-read scope.
 
         Parameters
         ----------

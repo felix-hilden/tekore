@@ -1,41 +1,62 @@
 import unittest
-
-from spotipy.scope import AuthorisationScopes, Scope
+from spotipy.scope import scopes, Scope
 
 
 class TestAuthorisationScopes(unittest.TestCase):
     def test_str_is_enum_value(self):
-        s = AuthorisationScopes.user_read_private
+        s = scopes.user_read_private
         self.assertEqual(str(s), 'user-read-private')
+
+    def test_addition(self):
+        s = scopes.user_library_read + scopes.user_read_private
+
+        with self.subTest('Returns scope'):
+            self.assertIsInstance(s, Scope)
+
+        with self.subTest('Returns correct members'):
+            self.assertEqual(str(s), 'user-library-read user-read-private')
+
+    def test_subtraction(self):
+        s = scopes.user_read_private - scopes.user_library_read
+
+        with self.subTest('Returns scope'):
+            self.assertIsInstance(s, Scope)
+
+        with self.subTest('Returns first operand'):
+            self.assertEqual(str(s), 'user-read-private')
+
+    def test_subtracting_same_scope_returns_empty(self):
+        s = scopes.user_library_read - scopes.user_library_read
+        self.assertSetEqual(s, set())
+
+    def test_adding_other_than_scopes_returns_not_implemented(self):
+        r = scopes.user_library_read.__add__(1)
+        self.assertIs(r, NotImplemented)
+
+    def test_subtracting_other_than_scopes_returns_not_implemented(self):
+        r = scopes.user_library_read.__sub__(1)
+        self.assertIs(r, NotImplemented)
 
 
 class TestScope(unittest.TestCase):
-    def test_empty_scope_initialisable(self):
-        Scope()
+    def test_empty_scope_equal_to_empty_set(self):
+        s = Scope()
+        self.assertSetEqual(s, set())
 
     def test_scope_initialisable_with_strings(self):
         s = Scope('b', 'a')
         self.assertEqual(str(s), 'a b')
 
     def test_scope_initialisable_with_enum(self):
-        s = Scope(AuthorisationScopes.user_read_private)
+        s = Scope(scopes.user_read_private)
         self.assertEqual(str(s), 'user-read-private')
 
     def test_scope_initialisable_with_combination(self):
-        s = Scope(
-            'a',
-            'b',
-            AuthorisationScopes.user_read_private
-        )
+        s = Scope('a', 'b', scopes.user_read_private)
         self.assertEqual(str(s), 'a b user-read-private')
 
-    def test_scope_initialisable_with_another_scope(self):
-        s1 = Scope('b', 'a')
-        s2 = Scope(s1)
-        self.assertSetEqual(s1, s2)
-
     def test_different_object_same_str_results_in_no_duplicates(self):
-        s = Scope(AuthorisationScopes.user_read_private, 'user-read-private')
+        s = Scope(scopes.user_read_private, 'user-read-private')
         self.assertSetEqual(s, {'user-read-private'})
 
     def test_scope_unpackable(self):
@@ -43,52 +64,89 @@ class TestScope(unittest.TestCase):
         s2 = Scope(*s1)
         self.assertSetEqual(s1, s2)
 
-    def test_adding_scopes_returns_scope(self):
+    def test_adding_scopes(self):
         s1 = Scope('b', 'a')
         s2 = Scope('c', 'b')
-        self.assertIsInstance(s1 + s2, Scope)
 
-    def test_adding_scopes_returns_union(self):
-        s1 = Scope('b', 'a')
-        s2 = Scope('c', 'b')
-        self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
+        with self.subTest('Returns scope'):
+            self.assertIsInstance(s1 + s2, Scope)
 
-    def test_adding_set_returns_union(self):
-        s1 = Scope('b', 'a')
-        s2 = {'c', 'b'}
-        self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
+        with self.subTest('Results in union'):
+            self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
 
-    def test_adding_str_converts_to_set(self):
+        with self.subTest('LHS retained'):
+            self.assertEqual(str(s1), 'a b')
+
+        with self.subTest('RHS retained'):
+            self.assertEqual(str(s2), 'b c')
+
+    def test_adding_str_successful(self):
         s1 = Scope('b', 'a')
         s2 = 'c'
         self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
 
-    def test_adding_authorisation_scope_converts_to_set(self):
+    def test_adding_authorisation_scope_successful(self):
         s1 = Scope('a')
-        s2 = AuthorisationScopes.user_read_private
+        s2 = scopes.user_read_private
         self.assertSetEqual(s1 + s2, {'user-read-private', 'a'})
 
-    def test_subtracting_scopes_returns_scope(self):
+    def test_r_adding_str_successful(self):
+        s1 = 'c'
+        s2 = Scope('b', 'a')
+        self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
+
+    def test_r_adding_authorisation_scope_successful(self):
+        s1 = scopes.user_read_private
+        s2 = Scope('a')
+        self.assertSetEqual(s1 + s2, {'user-read-private', 'a'})
+
+    def test_adding_unsupported_raises_not_implemented(self):
+        s = Scope('user-read-private', 'a')
+        with self.assertRaises(NotImplementedError):
+            s + 1
+
+    def test_subtracting_scopes(self):
         s1 = Scope('b', 'a')
         s2 = Scope('c', 'b')
-        self.assertIsInstance(s1 - s2, Scope)
 
-    def test_subtracting_scopes_returns_relative_complement(self):
-        s1 = Scope('b', 'a')
-        s2 = Scope('c', 'b')
-        self.assertSetEqual(s1 - s2, {'a'})
+        with self.subTest('Returns scope'):
+            self.assertIsInstance(s1 - s2, Scope)
 
-    def test_subtracting_set_returns_relative_complement(self):
-        s1 = Scope('b', 'a')
-        s2 = {'c', 'b'}
-        self.assertSetEqual(s1 - s2, {'a'})
+        with self.subTest('Results in relative complement'):
+            self.assertSetEqual(s1 - s2, {'a'})
 
-    def test_subtracting_str_converts_to_set(self):
+        with self.subTest('LHS retained'):
+            self.assertEqual(str(s1), 'a b')
+
+        with self.subTest('RHS retained'):
+            self.assertEqual(str(s2), 'b c')
+
+    def test_subtracting_str_successful(self):
         s1 = Scope('b', 'a')
         s2 = 'b'
         self.assertSetEqual(s1 - s2, {'a'})
 
-    def test_subtracting_authorisation_scope_converts_to_set(self):
+    def test_subtracting_authorisation_scope_successful(self):
         s1 = Scope('user-read-private', 'a')
-        s2 = AuthorisationScopes.user_read_private
+        s2 = scopes.user_read_private
         self.assertSetEqual(s1 - s2, {'a'})
+
+    def test_r_subtracting_str_successful(self):
+        s1 = 'b'
+        s2 = Scope('b', 'a')
+        self.assertSetEqual(s1 - s2, set())
+
+    def test_r_subtracting_authorisation_scope_successful(self):
+        s1 = scopes.user_read_private
+        s2 = Scope('user-read-private', 'a')
+        self.assertSetEqual(s1 - s2, set())
+
+    def test_subtracting_unsupported_raises_not_implemented(self):
+        s = Scope('user-read-private', 'a')
+        with self.assertRaises(NotImplementedError):
+            s - 1
+
+    def test_r_subtracting_unsupported_raises_not_implemented(self):
+        s = Scope('user-read-private', 'a')
+        with self.assertRaises(NotImplementedError):
+            1 - s
