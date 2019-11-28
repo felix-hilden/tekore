@@ -1,14 +1,13 @@
 from typing import List
 from dataclasses import dataclass
 
-from spotipy.model.base import Item
 from spotipy.serialise import SerialisableDataclass
 
 
 @dataclass
 class Paging(SerialisableDataclass):
     href: str
-    items: List[Item]
+    items: List[SerialisableDataclass]
     limit: int
     next: str
 
