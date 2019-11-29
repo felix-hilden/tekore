@@ -25,7 +25,7 @@ or ask just about anything related to Spotipy.
 
 If you're new here, have a look at :ref:`getting-started`.
 After your first calls to the API you might want to look at :ref:`advanced-usage`.
-More ellaborate example scripts can be found in :ref:`recipes`.
+More ellaborate example scripts can be found in :ref:`examples`.
 
 Features
 ========
@@ -60,7 +60,7 @@ Please refer to the documentation of each module for more information.
 
    documents/getting_started
    documents/advanced_usage
-   recipes/_recipes
+   examples
 
 .. toctree::
    :maxdepth: 3
