@@ -2,7 +2,6 @@
 
 Authenticating server
 =====================
-
 The script below starts up a simple Flask web server for authentication.
 
 The configured redirect URI must match ``http://localhost:5000/callback``

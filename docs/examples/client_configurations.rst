@@ -1,6 +1,5 @@
 Client configurations
 =====================
-
 Here are some examples of client configurations.
 Adjust the configurations based on the number of instances
 or type of :class:`Sender` you want.
