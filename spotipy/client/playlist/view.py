@@ -120,16 +120,20 @@ class SpotifyPlaylistView(SpotifyBase):
             market: str = None,
             limit: int = 100,
             offset: int = 0
-    ) -> Union[PlaylistTrackPaging, object]:
+    ) -> Union[PlaylistTrackPaging, dict]:
         """
         Get full details of the tracks of a playlist owned by a user.
+
+        Note that if `fields` is specified,
+        a raw dictionary is returned instead of a dataclass model.
 
         Parameters
         ----------
         playlist_id
             playlist ID
         fields
-            which fields to return
+            filters for the query as a comma-separated list,
+            see Web API documentation for more details
         limit
             the number of items to return (1..100)
         offset
