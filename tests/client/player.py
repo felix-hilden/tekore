@@ -79,6 +79,10 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
         with self.subTest('Playback pause'):
             self.assertFalse(playing.is_playing)
 
+        with self.subTest('Player error: already paused'):
+            with self.assertRaises(HTTPError):
+                self.client.playback_pause()
+
         self.client.playback_resume()
         playing = self.currently_playing()
         with self.subTest('Playback resume'):
