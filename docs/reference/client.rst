@@ -88,7 +88,11 @@ Library API
 Player API
 ----------
 
-.. autoclass:: spotipy.client.player.SpotifyPlayer
+.. autoclass:: spotipy.client.player.SpotifyPlayerView
+   :members:
+   :undoc-members:
+
+.. autoclass:: spotipy.client.player.SpotifyPlayerModify
    :members:
    :undoc-members:
 

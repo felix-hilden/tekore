@@ -85,4 +85,4 @@ If no active device is found, an error is thrown.
 .. code:: python
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start(track_ids=[finlandia])
+    s.playback_start_tracks([finlandia])
