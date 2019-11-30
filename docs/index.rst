@@ -17,7 +17,7 @@ Spotipy allows you to interact with the Web API effortlessly.
         print(track.name)
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start(track_ids=[finlandia])
+    s.playback_start_tracks([finlandia])
 
 See our homepage on `PyPI`_ for more information about the package,
 and repository on `GitHub`_ if you'd like to submit an issue

@@ -2,7 +2,7 @@ from time import sleep
 from requests import HTTPError
 
 from ._cred import TestCaseWithUserCredentials, skip_or_fail
-from ._resources import track_ids
+from ._resources import track_ids, album_id
 from spotipy.client import SpotifyPlayer
 
 
@@ -61,24 +61,28 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
         with self.subTest('Transfer playback'):
             self.client.playback_transfer(self.device.id, force_play=True)
 
-        self.client.playback_start(track_ids=track_ids, offset=1)
+        self.client.playback_start_tracks(track_ids, offset=1)
         self.assertPlaying('Playback start with offset index', track_ids[1])
 
         playing = self.client.playback_currently_playing()
         with self.subTest('Currently playing has item'):
             self.assertIsNotNone(playing.item)
 
-        self.client.playback_start(track_ids=track_ids, offset=track_ids[1])
+        self.client.playback_start_tracks(track_ids, offset=track_ids[1])
         self.assertPlaying('Playback start with offset uri', track_ids[1])
 
-        self.client.playback_start(track_ids=track_ids)
+        self.client.playback_start_tracks(track_ids)
         self.assertPlaying('Playback start', track_ids[0])
 
         self.client.playback_pause()
         playing = self.currently_playing()
         with self.subTest('Playback pause'):
             self.assertFalse(playing.is_playing)
-        self.client.playback_start()
+
+        self.client.playback_resume()
+        playing = self.currently_playing()
+        with self.subTest('Playback resume'):
+            self.assertTrue(playing.is_playing)
 
         self.client.playback_next()
         self.assertPlaying('Playback next', track_ids[1])
@@ -97,6 +101,9 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
         with self.subTest('Playback shuffle'):
             self.client.playback_shuffle(False)
 
+        with self.subTest('Playback start context'):
+            self.client.playback_start_context('spotify:album:' + album_id)
+
     def tearDown(self):
         if self.playback is None:
             self.client.playback_pause()
@@ -113,13 +120,13 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
             )
 
         if self.playback.context is None:
-            self.client.playback_start(
-                track_ids=[self.playback.item.id],
+            self.client.playback_start_tracks(
+                [self.playback.item.id],
                 position_ms=self.playback.progress_ms
             )
         else:
-            self.client.playback_start(
-                context_uri=self.playback.context.uri,
+            self.client.playback_start_context(
+                self.playback.context.uri,
                 offset=self.playback.item.id,
                 position_ms=self.playback.progress_ms
             )

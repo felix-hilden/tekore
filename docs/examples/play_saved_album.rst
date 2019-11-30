@@ -19,4 +19,4 @@ and you have an active Spotify application open.
     spotify = Spotify(token)
     album = spotify.saved_albums(limit=1).items[0].album
     album_uri = to_uri('album', album.id)
-    spotify.playback_start(context_uri=album_uri)
+    spotify.playback_start_context(album_uri)

@@ -1,113 +1,24 @@
-from typing import Union, List
+from typing import Union
 
-from spotipy.client.base import SpotifyBase
-from spotipy.serialise import ModelList
+from spotipy.model import RepeatState
 from spotipy.convert import to_uri
-from spotipy.model import (
-    CurrentlyPlayingContext,
-    CurrentlyPlaying,
-    PlayHistoryPaging,
-    RepeatState,
-    Device
-)
+from spotipy.client.base import SpotifyBase
 
 
-class SpotifyPlayer(SpotifyBase):
-    def playback(
-            self,
-            market: str = None
-    ) -> CurrentlyPlayingContext:
-        """
-        Get information about user's current playback.
+def offset_to_dict(offset: Union[int, str]):
+    """
+    Parse playback start offset to an appropriate payload member.
 
-        Requires the user-read-playback-state or
-        the user-read-currently-playing scope.
+    If offset is an integer, it is an index to a track position.
+    If it is a string, it is a URI of a specific track.
+    """
+    if isinstance(offset, int):
+        return {'position': offset}
+    elif isinstance(offset, str):
+        return {'uri': to_uri('track', offset)}
 
-        Parameters
-        ----------
-        market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
 
-        Returns
-        -------
-        CurrentlyPlayingContext
-            information about current playback
-        """
-        json = self._get('me/player', market=market)
-        if json is not None:
-            return CurrentlyPlayingContext(**json)
-
-    def playback_currently_playing(
-            self,
-            market: str = None
-    ) -> CurrentlyPlaying:
-        """
-        Get user's currently playing track.
-
-        Requires the user-read-playback-state scope.
-
-        Parameters
-        ----------
-        market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
-
-        Returns
-        -------
-        CurrentlyPlaying
-            information about the current track playing
-        """
-        json = self._get('me/player/currently-playing', market=market)
-        if json is not None:
-            return CurrentlyPlaying(**json)
-
-    def playback_recently_played(
-            self,
-            limit: int = 20,
-            after: int = None,
-            before: int = None
-    ) -> PlayHistoryPaging:
-        """
-        Get tracks from the current user's recently played tracks.
-
-        Only after or before should be specified at one time.
-        Requires the user-read-recently-played scope.
-
-        Parameters
-        ----------
-        limit
-            the number of items to return (1..50)
-        after
-            a unix timestamp in milliseconds, must not be specified with 'before'
-        before
-            a unix timestamp in milliseconds, must not be specified with 'after'
-
-        Returns
-        -------
-        PlayHistoryPaging
-            cursor-based paging containing play history objects
-        """
-        json = self._get(
-            'me/player/recently-played',
-            limit=limit,
-            after=after,
-            before=before
-        )
-        return PlayHistoryPaging(**json)
-
-    def playback_devices(self) -> List[Device]:
-        """
-        Get a user's available devices.
-
-        Requires the user-read-playback-state scope.
-
-        Returns
-        -------
-        ModelList
-            list of device objects
-        """
-        json = self._get('me/player/devices')
-        return ModelList(Device(**d) for d in json['devices'])
-
+class SpotifyPlayerModify(SpotifyBase):
     def playback_transfer(self, device_id: str, force_play: bool = False) -> None:
         """
         Transfer playback to another device.
@@ -129,54 +40,77 @@ class SpotifyPlayer(SpotifyBase):
         }
         self._put('me/player', payload=data)
 
-    def playback_start(
+    def playback_resume(self, device_id: str = None) -> None:
+        """
+        Resume user's playback.
+
+        Requires the user-modify-playback-state scope.
+
+        Parameters
+        ----------
+        device_id
+            device to start playback on
+        """
+        self._put('me/player/play', device_id=device_id)
+
+    def playback_start_tracks(
             self,
-            context_uri: str = None,
-            track_ids: list = None,
+            track_ids: list,
             offset: Union[int, str] = None,
             position_ms: int = None,
             device_id: str = None
     ) -> None:
         """
-        Start or resume user's playback.
+        Start playback of one or more tracks.
 
         Requires the user-modify-playback-state scope.
 
-        Use a `context_uri` to start playback of an album, artist, or playlist.
-        Use `track_ids` to start playback of one or more tracks.
-        Provide `offset` as index or track ID to start playback at some offset.
-        Only available when context_uri is an album or playlist,
-        or when track_ids is used.
+        Parameters
+        ----------
+        track_ids
+            track IDs to start playing
+        offset
+            offset into tracks by index or track ID
+        position_ms
+            initial position of first played track
+        device_id
+            device to start playback on
+        """
+        payload = {
+            'uris': [to_uri('track', t) for t in track_ids],
+            'offset': offset_to_dict(offset),
+            'position_ms': position_ms,
+        }
+        payload = {k: v for k, v in payload.items() if v is not None}
+        self._put('me/player/play', payload=payload, device_id=device_id)
+
+    def playback_start_context(
+            self,
+            context_uri: str,
+            offset: Union[int, str] = None,
+            position_ms: int = None,
+            device_id: str = None
+    ) -> None:
+        """
+        Start playback of a context: an album, artist or playlist.
+
+        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
         context_uri
-            context uri to play, must not be specified with track_ids
-        track_ids
-            track IDs, must not be specified with context_uri
+            context to start playing
         offset
-            offset into context by index or track ID
+            offset into context by index or track ID,
+            only available when context is an album or playlist
         position_ms
-            position of track
+            initial position of first played track
         device_id
             device to start playback on
         """
-        if isinstance(offset, int):
-            offset_dict = {'position': offset}
-        elif isinstance(offset, str):
-            offset_dict = {'uri': to_uri('track', offset)}
-        else:
-            offset_dict = None
-
-        if track_ids is not None:
-            track_uris = [to_uri('track', t) for t in track_ids]
-        else:
-            track_uris = None
-
         payload = {
             'context_uri': context_uri,
-            'uris': track_uris,
-            'offset': offset_dict,
+            'offset': offset_to_dict(offset),
             'position_ms': position_ms,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
