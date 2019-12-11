@@ -81,10 +81,15 @@ class SpotifyTrack(SpotifyBase):
         """
         Get audio feature information for multiple tracks.
 
+        Feature information for a track may be ``None`` if not available.
+
         Returns
         -------
         ModelList
             list of audio features objects
         """
         json = self._get('audio-features?ids=' + ','.join(track_ids))
-        return ModelList(AudioFeatures(**a) for a in json['audio_features'])
+        return ModelList(
+            AudioFeatures(**a) if a is not None else None
+            for a in json['audio_features']
+        )
