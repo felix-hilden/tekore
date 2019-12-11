@@ -14,7 +14,7 @@ class FullAlbum(Album):
     Available markets are not available when market is specified.
     Is playable is not available when market is None.
     Restrictions is available if restrictions have been placed on
-    the track, making it unplayable.
+    the album, making it unplayable.
     """
     copyrights: List[Copyright]
     external_ids: dict
