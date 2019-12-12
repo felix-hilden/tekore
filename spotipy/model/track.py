@@ -82,7 +82,7 @@ class FullTrack(Track):
 
 @dataclass
 class FullTrackPaging(OffsetPaging):
-    items: List[SimpleTrack]
+    items: List[FullTrack]
 
     def __post_init__(self):
         self.items = [FullTrack(**t) for t in self.items]
