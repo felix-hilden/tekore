@@ -43,8 +43,9 @@ on an album given the album ID.
 
 Retrieving a user token
 -----------------------
-User tokens are another type of access token.
-They are associated with a Spotify user account.
+Many endpoints require user authentication,
+for which another type of access token is needed.
+User tokens are associated with a Spotify user account.
 Different privileges or `scopes` can be requested when authenticating.
 Below we'll retrieve a token that has every possible scope.
 The script will open a web page prompting for a Spotify login.
@@ -65,8 +66,6 @@ for parsing and retrieving the access token.
 
 Calling the API as a user
 -------------------------
-Many endpoints require user authentication,
-like the ones with a ``current_user`` prefix and others related to playback.
 The following script swaps in the user token and
 lists some of the user's most listened tracks.
 
