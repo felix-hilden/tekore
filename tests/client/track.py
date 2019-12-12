@@ -1,11 +1,15 @@
 from requests.exceptions import HTTPError
 
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
-from ._resources import track_id, track_ids
+from ._resources import (
+    track_id,
+    track_ids,
+    track_relinked,
+    track_restricted,
+    track_no_audio_features,
+)
 
 from spotipy.client import SpotifyTrack
-
-track_no_audio_features = '7wpxbJPkrdnC40hwr4FPUa'
 
 
 class TestSpotifyTrack(TestCaseWithCredentials):
@@ -28,9 +32,8 @@ class TestSpotifyTrack(TestCaseWithCredentials):
         track = self.client.track(track_id, market=None)
         self.assertIsNone(track.is_playable)
 
-    def test_track_unplayable(self):
-        unplayable = '6F6CuSuM8EcD4UD0N3nuxN'
-        track = self.client.track(unplayable, market='SE')
+    def test_track_restricted(self):
+        track = self.client.track(track_restricted, market='SE')
 
         with self.subTest('Playable'):
             self.assertFalse(track.is_playable)
@@ -38,13 +41,12 @@ class TestSpotifyTrack(TestCaseWithCredentials):
             self.assertEqual(track.restrictions.reason, 'market')
 
     def test_track_relinking(self):
-        relinked = '6kLCHFM39wkFjOuyPGLGeQ'
-        track = self.client.track(relinked, market='US')
+        track = self.client.track(track_relinked, market='US')
 
         with self.subTest('ID not equal'):
-            self.assertNotEqual(relinked, track.id)
+            self.assertNotEqual(track_relinked, track.id)
         with self.subTest('ID equal to relinked'):
-            self.assertEqual(relinked, track.linked_from.id)
+            self.assertEqual(track_relinked, track.linked_from.id)
         with self.subTest('Playable'):
             self.assertTrue(track.is_playable)
 

@@ -1,5 +1,5 @@
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
-from ._resources import album_id, album_ids
+from ._resources import album_id, album_ids, album_relinked, album_restricted
 
 from spotipy.client import SpotifyAlbum
 
@@ -21,6 +21,21 @@ class TestSpotifyAlbum(TestCaseWithCredentials):
 
     def test_album_tracks_no_market(self):
         self.client.album_tracks(album_id, market=None)
+
+    def test_album_tracks_relinking(self):
+        tracks = self.client.album_tracks(album_relinked, market='US', limit=1)
+        track = tracks.items[0]
+
+        self.assertTrue(track.is_playable)
+
+    def test_album_tracks_restricted(self):
+        tracks = self.client.album_tracks(album_restricted, market='SE', limit=1)
+        track = tracks.items[0]
+
+        with self.subTest('Playable'):
+            self.assertFalse(track.is_playable)
+        with self.subTest('Restrictions'):
+            self.assertEqual(track.restrictions.reason, 'market')
 
     def test_albums_with_market(self):
         albums = self.client.albums(album_ids, market='US')
