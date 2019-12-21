@@ -1,12 +1,9 @@
-from requests.exceptions import HTTPError
-
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import (
     track_id,
     track_ids,
     track_relinked,
     track_restricted,
-    track_no_audio_features,
 )
 
 from spotipy.client import SpotifyTrack
@@ -69,17 +66,18 @@ class TestSpotifyTrack(TestCaseWithCredentials):
         features = self.client.track_audio_features(track_id)
         self.assertEqual(features.id, track_id)
 
-    def test_track_audio_features_not_found_raises(self):
-        with self.assertRaises(HTTPError):
-            self.client.track_audio_features(track_no_audio_features)
+    # No track without audio features
+    # def test_track_audio_features_not_found_raises(self):
+    #     with self.assertRaises(HTTPError):
+    #         self.client.track_audio_features(track_no_audio_features)
 
     def test_tracks_audio_features(self):
         features = self.client.tracks_audio_features(track_ids)
         self.assertListEqual([f.id for f in features], track_ids)
 
-    def test_tracks_audio_features_not_found_is_none(self):
-        features = self.client.tracks_audio_features([track_no_audio_features])
-        self.assertIsNone(features[0])
+    # def test_tracks_audio_features_not_found_is_none(self):
+    #     features = self.client.tracks_audio_features([track_no_audio_features])
+    #     self.assertIsNone(features[0])
 
 
 class TestSpotifyTrackAsUser(TestCaseWithUserCredentials):

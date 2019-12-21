@@ -16,7 +16,7 @@ track_id = '6v3KW9xbzN5yKLt9YKDYA2'
 track_ids = [track_id, '5ZULALImTm80tzUbYQYM9d']
 track_relinked = '6kLCHFM39wkFjOuyPGLGeQ'       # Relinked in market 'US'
 track_restricted = '6F6CuSuM8EcD4UD0N3nuxN'     # Restricted in market 'SE'
-track_no_audio_features = '7wpxbJPkrdnC40hwr4FPUa'
+track_no_audio_features = ''  # No known track
 
 user_id = 'spinninrecordsofficial'
 user_ids = [user_id, 'samsmithworld']
