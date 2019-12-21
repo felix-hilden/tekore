@@ -28,12 +28,11 @@ from pathlib import Path
 
 root = Path(os.path.realpath(__file__)).parent
 version_file = root / 'spotipy' / 'VERSION'
-readme_file = root / 'readme.rst'
+readme_file = root / 'readme_pypi.rst'
 
-# TODO: change URLs to refer to PyPI and Read The Docs when available
-pypi_url = 'https://github.com/felix-hilden/spotipy#installation'
+pypi_url = 'https://github.com/felix-hilden/spotipy'
 github_url = 'https://github.com/felix-hilden/spotipy'
-documentation_url = 'https://github.com/felix-hilden/spotipy#documentation'
+documentation_url = 'https://updated-spotipy-test.readthedocs.io'
 
 setuptools.setup(
     name='spotipy',

@@ -1,7 +1,7 @@
 ==============
 |spotipy_logo|
 ==============
-|travis| |coverage|
+|travis| |documentation| |coverage|
 
 Welcome to the GitHub repository of Spotipy,
 a client of the Spotify Web API for Python!
@@ -20,8 +20,8 @@ Spotipy allows you to interact with the Web API effortlessly.
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     s.playback_start_tracks([finlandia])
 
-Please build `Documentation`_ for further examples, tutorials and a package reference.
-See also `Contributing`_ and available `Features`_.
+See our online documentation on `Read The Docs`_ for tutorials,
+examples, package reference and a detailed description of features.
 
 Installation
 ============
@@ -34,9 +34,7 @@ Until then the repository must be installed via git.
 
 Documentation
 =============
-Modules, classes and functions are documented in the source code.
-For a condensed and organised view, additional examples and other documents,
-documentation can be built locally.
+Documentation can also be built locally.
 
 .. code:: sh
 
@@ -104,43 +102,22 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
     $ coverage run --branch -m unittest discover tests -p "*.py"
     $ coverage report -m
 
-Features
-========
-The `Web API`_ provides access to a plethora of data on music and users.
-Spotipy implements these most integral features completely.
-
-- Authentication: client credentials (application token)
-  and authorisation code (user token) flows according to the OAuth2 specification.
-- API endpoints: access to every resource in the API.
-  Responses are parsed into model classes with explicit
-  attributes to ease examining the contents of a response.
-
-Additional features and various convenience modules are provided too.
-Please refer to the documentation of each module for more information.
-
-- Request retries
-- Session persistence
-- Response caching (possible, though not directly supported)
-- ID, URI and URL conversions
-- Access right scopes
-- Response serialisation
-- Response pretty-printing
-- Self-refreshing tokens
-- Credentials from environment variables
-- Command line prompt for user autentication
-
+.. |spotipy_logo| image:: docs/spotipy_logo_small.png
+   :target: `pypi`_
+   :alt: spotipy logo
 
 .. |travis| image:: https://travis-ci.org/felix-hilden/spotipy.svg?branch=master
    :target: https://travis-ci.org/felix-hilden/spotipy
    :alt: build status
 
+.. |documentation| image:: https://readthedocs.org/projects/updated-spotipy-test/badge/?version=latest
+   :target: https://updated-spotipy-test.readthedocs.io/en/latest
+   :alt: documentation status
+
 .. |coverage| image:: https://api.codeclimate.com/v1/badges/6cbb70d77e31c4d3b4c6/test_coverage
    :target: https://codeclimate.com/github/felix-hilden/spotipy/test_coverage
    :alt: test coverage
 
-.. |spotipy_logo| image:: docs/spotipy_logo_small.png
-   :alt: spotipy logo
-   :target: `github`_
-
-.. _github: https://github.com/felix-hilden/spotipy
+.. _pypi: https://github.com/felix-hilden/spotipy
 .. _web api: https://developer.spotify.com/documentation/web-api
+.. _read the docs: https://updated-spotipy-test.readthedocs.io

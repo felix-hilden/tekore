@@ -27,6 +27,9 @@ If you're new here, have a look at :ref:`getting-started`.
 After your first calls to the API you might want to look at :ref:`advanced-usage`.
 More ellaborate example scripts can be found in :ref:`examples`.
 
+Using an older version?
+See the `legacy documentation <rtd old_>`_ for Spotipy 2.
+
 Features
 ========
 The `Web API`_ provides access to a plethora of data on music and users.
@@ -52,7 +55,6 @@ Please refer to the documentation of each module for more information.
 - :ref:`Credentials from environment variables <module-util>`
 - :ref:`Command line prompt for user autentication <module-util>`
 
-
 .. toctree::
    :maxdepth: 1
    :hidden:
@@ -70,13 +72,12 @@ Please refer to the documentation of each module for more information.
 
    reference/*
 
-
 .. |spotipy_logo| image:: spotipy_logo.png
    :alt: spotipy logo
    :width: 275 px
-   :target: `github`_
+   :target: `pypi`_
 
-.. TODO - change PyPI url to actually point to PyPI
 .. _pypi: https://github.com/felix-hilden/spotipy
 .. _github: https://github.com/felix-hilden/spotipy
+.. _rtd old: https://spotipy.readthedocs.io
 .. _web api: https://developer.spotify.com/documentation/web-api
