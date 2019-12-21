@@ -64,7 +64,7 @@ setuptools.setup(
 
     python_requires='>=' + python_requires_str,
     install_requires=[
-        'requests',
+        'requests>=2.19,<3',
     ],
     extras_require={
         'dev': [
