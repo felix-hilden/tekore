@@ -60,7 +60,11 @@ class RefreshingToken(AccessToken):
     """
     Automatically refreshing access token.
 
-    Uses an instance of a credentials manager to automatically request a new
+    Returned from utility functions and :class:`RefreshingCredentials`.
+    It shouldn't have to be instantiated outside of the functions,
+    unless you are sure that you want to.
+
+    Uses an instance of :class:`Credentials` to automatically request a new
     access token when the old one is about to expire. This occurs when the
     `access_token` property is read.
 
@@ -76,12 +80,15 @@ class RefreshingToken(AccessToken):
     """
     def __init__(self, token: Token, credentials: Credentials):
         self._token = token
-        self.credentials = credentials
+        self._credentials = credentials
 
     @property
     def access_token(self) -> str:
         if self._token.is_expiring():
-            self._token = self.credentials.refresh(self._token)
+            if self.refresh_token is None:
+                self._token = self._credentials.request_client_token()
+            else:
+                self._token = self._credentials.refresh(self._token)
 
         return self._token.access_token
 

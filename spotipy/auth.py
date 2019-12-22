@@ -65,6 +65,9 @@ class AccessToken(ABC):
 class Token(AccessToken):
     """
     Spotify OAuth access token.
+
+    Represents both client and user tokens.
+    The refresh token of a client token is ``None``.
     """
     def __init__(self, token_info: dict):
         self._access_token = token_info['access_token']
