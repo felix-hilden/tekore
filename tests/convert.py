@@ -2,7 +2,7 @@ import unittest
 
 from spotipy.convert import (
     check_id, check_type, ConversionError,
-    to_url, to_uri, from_url, from_uri
+    to_url, to_uri, from_url, from_uri, IdentifierType
 )
 
 
@@ -29,13 +29,16 @@ class TestCheckID(unittest.TestCase):
 
 class TestCheckType(unittest.TestCase):
     def test_valid(self):
-        for t in ('artist', 'album', 'track'):
+        for t in ('artist', 'album', 'playlist', 'track'):
             with self.subTest(f'Type: {t}'):
                 check_type(t)
 
     def test_invalid(self):
         with self.assertRaises(ConversionError):
             check_type('invalid')
+
+    def test_identifier_type_instance(self):
+        check_type(IdentifierType.album)
 
 
 class TestToURI(unittest.TestCase):

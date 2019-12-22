@@ -18,16 +18,18 @@ Conversions between Spotify IDs, URIs and URLs.
 """
 
 import re
-from enum import Enum
+
+from typing import Union
+from spotipy.serialise import SerialisableEnum
 
 
 class ConversionError(Exception):
     pass
 
 
-class IdentifierType(Enum):
+class IdentifierType(SerialisableEnum):
     """
-    Enumerate valid types of Spotify IDs.
+    Valid types of Spotify IDs.
     """
     artist = 'artist'
     album = 'album'
@@ -35,11 +37,11 @@ class IdentifierType(Enum):
     track = 'track'
 
 
-def check_type(type_: str):
+def check_type(type_: Union[str, IdentifierType]):
     """
     Validate type of an ID and raise if invalid.
     """
-    if type_ not in IdentifierType.__members__:
+    if str(type_) not in IdentifierType.__members__:
         raise ConversionError(f'Invalid type "{type_}"!')
 
 
@@ -49,24 +51,48 @@ all_base62 = re.compile('^[0-9a-zA-Z]*$')
 
 def check_id(id_: str):
     """
-    Validate Spotify ID and raise if invalid.
+    Validate resource ID and raise if invalid.
     """
     if id_ == '' or all_base62.search(id_) is None:
         raise ConversionError(f'Invalid id: "{id_}"!')
 
 
-def to_uri(type_: str, id_: str) -> str:
+def to_uri(type_: Union[str, IdentifierType], id_: str) -> str:
     """
     Convert an ID to an URI of the appropriate type.
+
+    Parameters
+    ----------
+    type_
+        valid :class:`IdentifierType`
+    id_
+        resource identifier
+
+    Returns
+    -------
+    str
+        converted URI
     """
     check_type(type_)
     check_id(id_)
     return f'spotify:{type_}:{id_}'
 
 
-def to_url(type_: str, id_: str) -> str:
+def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
     """
     Convert an ID to an URL of the appropriate type.
+
+    Parameters
+    ----------
+    type_
+        valid :class:`IdentifierType`
+    id_
+        resource identifier
+
+    Returns
+    -------
+    str
+        converted URL
     """
     check_type(type_)
     check_id(id_)
@@ -76,6 +102,16 @@ def to_url(type_: str, id_: str) -> str:
 def from_uri(uri: str) -> tuple:
     """
     Parse type and ID from an URI.
+
+    Parameters
+    ----------
+    uri
+        URI to parse
+
+    Returns
+    -------
+    tuple
+        (type, ID) parsed from the URI
     """
     spotify, type_, id_ = uri.split(':')
 
@@ -90,6 +126,16 @@ def from_uri(uri: str) -> tuple:
 def from_url(url: str) -> tuple:
     """
     Parse type and ID from an URL.
+
+    Parameters
+    ----------
+    url
+        URL to parse
+
+    Returns
+    -------
+    tuple
+        (type, ID) parsed from the URL
     """
     *prefix, type_, id_ = url.split('/')
     prefix = '/'.join(prefix)
