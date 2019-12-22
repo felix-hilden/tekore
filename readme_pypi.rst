@@ -11,14 +11,14 @@ Spotipy allows you to interact with the Web API effortlessly.
 
     from spotipy import Spotify
 
-    s = Spotify(token)
+    spotify = Spotify(token)
 
-    tracks = s.current_user_top_tracks(limit=10)
+    tracks = spotify.current_user_top_tracks(limit=10)
     for track in tracks.items:
         print(track.name)
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start_tracks([finlandia])
+    spotify.playback_start_tracks([finlandia])
 
 See our online documentation on `Read The Docs`_ for tutorials,
 examples, package reference and a detailed description of features.

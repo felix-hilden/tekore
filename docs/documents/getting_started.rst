@@ -3,9 +3,9 @@
 Getting started
 ===============
 To use the Web API, you'll need to register an
-`application <https://developer.spotify.com/dashboard/applications>`_,
-get its credentials and define a whitelisted redirect URI for authentication
-requests in your application settings.
+`application <https://developer.spotify.com/dashboard/applications>`_.
+From its page retrieve the client ID and secret,
+and define a whitelisted redirect URI in application settings.
 Note that a server listening to that address isn't required for a demo,
 though it is required for programmatic extraction of user access tokens.
 
@@ -19,7 +19,7 @@ and can be used to make basic calls to the API.
 
     from spotipy.util import request_client_token
 
-    client_id = 'your_token_here'
+    client_id = 'your_id_here'
     client_secret = 'your_secret_here'
     redirect_uri = 'your_redirect_here'
 
@@ -48,9 +48,10 @@ for which another type of access token is needed.
 User tokens are associated with a Spotify user account.
 Different privileges or `scopes` can be requested when authenticating.
 Below we'll retrieve a token that has every possible scope.
-The script will open a web page prompting for a Spotify login.
-The user is then redirected back and the URL of the redirect is requested
-for parsing and retrieving the access token.
+
+The script below will open a web page prompting for a Spotify login.
+The user is then redirected back to the whitelisted redirect URI.
+Paste the redirected URI in full to the shell to finalise token retrieval.
 
 .. code:: python
 
@@ -66,14 +67,14 @@ for parsing and retrieving the access token.
 
 Calling the API as a user
 -------------------------
-The following script swaps in the user token and
+The following script replaces the application token with a user token and
 lists some of the user's most listened tracks.
 
 .. code:: python
 
     spotify.token = user_token
 
-    tracks = s.current_user_top_tracks(limit=10)
+    tracks = spotify.current_user_top_tracks(limit=10)
     for track in tracks.items:
         print(track.name)
 
@@ -84,4 +85,4 @@ If no active device is found, an error is thrown.
 .. code:: python
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    s.playback_start_tracks([finlandia])
+    spotify.playback_start_tracks([finlandia])
