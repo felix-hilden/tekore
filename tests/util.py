@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from tests.client._cred import TestCaseWithCredentials
+from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
 from spotipy.auth import Token, Credentials
 from spotipy.util import (
@@ -108,7 +108,7 @@ class TestParseCodeFromURL(unittest.TestCase):
         self.assertEqual(r, '1')
 
 
-class TestTokenUtilityFunctions(TestCaseWithCredentials):
+class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
     def test_prompt_for_user_token(self):
         cred = MagicMock()
         cred.authorisation_url.return_value = 'http://example.com'
@@ -126,14 +126,25 @@ class TestTokenUtilityFunctions(TestCaseWithCredentials):
         with self.subTest('Refreshing token returned'):
             self.assertIsInstance(token, RefreshingToken)
 
-    def test_request_refreshed_token_calls_credentials(self):
-        cred_instance = MagicMock()
-        cred = MagicMock(return_value=cred_instance)
-        cred_instance.request_refreshed_token.return_value = MagicMock()
+    def test_request_refreshed_token_returns_refreshing_token(self):
+        token = request_refreshed_token(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri,
+            self.user_token.refresh_token
+        )
+        self.assertIsInstance(token, RefreshingToken)
 
-        with patch('spotipy.util.Credentials', cred):
-            request_refreshed_token('', '', '', 'refresh')
-            cred_instance.request_refreshed_token.assert_called_with('refresh')
+    def test_expiring_user_token_refreshed(self):
+        token = request_refreshed_token(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri,
+            self.user_token.refresh_token
+        )
+        old_token = str(token)
+        token._token.expires_at -= token._token.expires_in - 30
+        self.assertNotEqual(old_token, str(token))
 
     def test_request_client_token_returns_refreshing_token(self):
         token = request_client_token(
@@ -142,6 +153,16 @@ class TestTokenUtilityFunctions(TestCaseWithCredentials):
             self.redirect_uri
         )
         self.assertIsInstance(token, RefreshingToken)
+
+    def test_expiring_client_token_refreshed(self):
+        token = request_client_token(
+            self.client_id,
+            self.client_secret,
+            self.redirect_uri
+        )
+        old_token = str(token)
+        token._token.expires_at -= token._token.expires_in - 30
+        self.assertNotEqual(old_token, str(token))
 
 
 class TestRefreshingCredentials(TestCaseWithCredentials):
