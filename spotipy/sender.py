@@ -10,7 +10,7 @@ Here's a short summary of the features of each sender.
 
 - :class:`TransientSender`: Creates a new session for each request (default)
 - :class:`PersistentSender`: Reuses a session for requests made on the same instance
-- :class:`SingletonSender`: Uses a global session for all instances and requests
+- :class:`SingletonSender`: Uses a common session for all instances and requests
 - :class:`RetryingSender`: Extends any sender to enable retries on failed requests
 
 Sender instances are passed to the client at initialisation.
@@ -50,7 +50,7 @@ class Sender(ABC):
 
 class TransientSender(Sender):
     """
-    Create a session for each request.
+    Create a new session for each request.
     """
     def send(self, request: Request, **requests_kwargs) -> Response:
         with Session() as sess:
@@ -60,7 +60,7 @@ class TransientSender(Sender):
 
 class SingletonSender(Sender):
     """
-    Use a global session to send requests.
+    Use one session for all instances and requests.
     """
     session = Session()
 
@@ -99,7 +99,7 @@ class RetryingSender(Sender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        sender to use when sending requests, TransientSender by default
+        sender to use for sending requests, :class:`TransientSender` by default
 
     Examples
     --------

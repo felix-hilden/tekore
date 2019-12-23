@@ -138,7 +138,7 @@ class RefreshingCredentials:
 
     def request_client_token(self) -> RefreshingToken:
         """
-        Request for refreshing access token using application credentials.
+        Request a refreshing client token.
 
         Returns
         -------
@@ -150,7 +150,10 @@ class RefreshingCredentials:
 
     def user_authorisation_url(self, scope=None, state: str = None) -> str:
         """
-        Construct an authorisation URL for Spotify login.
+        Construct an authorisation URL.
+
+        Step 1/2 in authorisation code flow.
+        User should be redirected to the resulting URL for authorisation.
 
         Parameters
         ----------
@@ -162,7 +165,7 @@ class RefreshingCredentials:
         Returns
         -------
         str
-            URL for Spotify login
+            login URL
         """
         return self._client.user_authorisation_url(scope, state)
 
@@ -173,13 +176,16 @@ class RefreshingCredentials:
             state: str = None
     ) -> RefreshingToken:
         """
-        Request for refreshing access token using a code
-        provided by a request from the Spotify server.
+        Request a new refreshing user token.
+
+        Step 2/2 in authorisation code flow.
+        Code is provided as a URL parameter in the redirect URI
+        after login in step 1.
 
         Parameters
         ----------
         code
-            code from request parameters
+            code from redirect parameters
         scope
             access rights as a space-separated list
         state
@@ -195,7 +201,7 @@ class RefreshingCredentials:
 
     def request_refreshed_token(self, refresh_token: str) -> RefreshingToken:
         """
-        Retrieve a token using a refresh token.
+        Request a refreshing user token.
 
         Parameters
         ----------
@@ -279,7 +285,7 @@ def request_client_token(
     Parameters
     ----------
     client_id
-        client ID of a Spotify App
+        client ID
     client_secret
         client secret
     redirect_uri
@@ -309,7 +315,7 @@ def prompt_for_user_token(
     Parameters
     ----------
     client_id
-        client ID of a Spotify App
+        client ID
     client_secret
         client secret
     redirect_uri
@@ -344,7 +350,7 @@ def request_refreshed_token(
     Parameters
     ----------
     client_id
-        client ID of a Spotify App
+        client ID
     client_secret
         client secret
     redirect_uri

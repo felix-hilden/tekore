@@ -144,12 +144,12 @@ class Credentials:
 
     def request_client_token(self) -> Token:
         """
-        Request for access token using application credentials.
+        Request a client token.
 
         Returns
         -------
         Token
-            application access token
+            client access token
         """
         payload = {'grant_type': 'client_credentials'}
         return request_token(self._auth, payload)
@@ -168,7 +168,10 @@ class Credentials:
 
     def user_authorisation_url(self, scope=None, state: str = None) -> str:
         """
-        Construct an authorisation URL for Spotify login.
+        Construct an authorisation URL.
+
+        Step 1/2 in authorisation code flow.
+        User should be redirected to the resulting URL for authorisation.
 
         Parameters
         ----------
@@ -180,7 +183,7 @@ class Credentials:
         Returns
         -------
         str
-            URL for Spotify login
+            login URL
         """
         payload = self._make_payload(
             scope,
@@ -198,13 +201,16 @@ class Credentials:
             state: str = None
     ) -> Token:
         """
-        Request for access token using a code
-        provided by a request from the Spotify server.
+        Request a new user token.
+
+        Step 2/2 in authorisation code flow.
+        Code is provided as a URL parameter in the redirect URI
+        after login in step 1.
 
         Parameters
         ----------
         code
-            code from request parameters
+            code from redirect parameters
         scope
             access rights as a space-separated list
         state
@@ -226,7 +232,7 @@ class Credentials:
 
     def request_refreshed_token(self, refresh_token: str) -> Token:
         """
-        Request a refreshed access token.
+        Request a refreshed user token.
 
         Parameters
         ----------
@@ -252,7 +258,7 @@ class Credentials:
 
     def refresh(self, token: Token) -> Token:
         """
-        Refresh a token.
+        Refresh a user token.
 
         Parameters
         ----------

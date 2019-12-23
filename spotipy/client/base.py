@@ -50,7 +50,7 @@ class SpotifyBase:
         token
             bearer token for requests
         sender
-            request sender, TransientSender by default
+            request sender, :class:`TransientSender` by default
         requests_kwargs
             keyword arguments for requests.request
         """
