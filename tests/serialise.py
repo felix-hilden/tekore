@@ -22,13 +22,13 @@ class TestSerialisableEnum(unittest.TestCase):
 
 
 class TestJSONEncoder(unittest.TestCase):
-    def test_enum_encoded_is_name(self):
+    def test_enum_encoded_is_quoted_str(self):
         enum = Enum('enum', 'a b c')
         encoded = JSONEncoder().encode(enum.a)
-        self.assertEqual(encoded, '"a"')
+        self.assertEqual(encoded, f'"{str(enum.a)}"')
 
-    def test_non_enum_encoded_is_preserved(self):
-        d = {'items': 'in', 'this': 'dict'}
+    def test_default_types_preserved(self):
+        d = {'items': 'in', 'this': 1}
         encoded = JSONEncoder().encode(d)
         default = json.dumps(d)
         self.assertEqual(encoded, default)
@@ -125,6 +125,29 @@ class TestSerialisableDataclass(unittest.TestCase):
         with patch('spotipy.serialise.pprint', pprint):
             data.pprint(kw='argument')
             pprint.assert_called_with({'i': 1}, kw='argument')
+
+    def test_enum_in_dataclass(self):
+        e = SerialisableEnum('e', 'a b c')
+        @dataclass
+        class C(SerialisableDataclass):
+            v: e
+
+        c = C(e.a)
+        with self.subTest('No conversion in asdict'):
+            self.assertIsInstance(c.asdict()['v'], SerialisableEnum)
+        with self.subTest('Conversion in str'):
+            self.assertEqual(str(c), '{"v": "a"}')
+
+    def test_timestamp_in_dataclass(self):
+        @dataclass
+        class C(SerialisableDataclass):
+            v: Timestamp
+
+        c = C(Timestamp.from_string('2019-01-01T12:00:00Z'))
+        with self.subTest('No conversion in asdict'):
+            self.assertIsInstance(c.asdict()['v'], Timestamp)
+        with self.subTest('Conversion in str'):
+            self.assertEqual(str(c), '{"v": "2019-01-01T12:00:00Z"}')
 
 
 class TestModelList(unittest.TestCase):

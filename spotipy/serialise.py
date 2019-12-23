@@ -5,10 +5,8 @@ serialise
 Serialisation and convenience methods for models returned from the client.
 
 The :class:`SerialisableDataclass` defined in this module along with other
-supporting classes makes it possible to access the original representations
-as dictionaries and JSON strings.
-Easy inspection of the data contents is made possible by
-the ``SerialisableDataclass.pprint`` function.
+supporting classes makes it possible to access dictionary and original
+JSON representations of responses.
 
 .. code:: python
 
@@ -21,11 +19,11 @@ the ``SerialisableDataclass.pprint`` function.
     # Inspect the content
     user.pprint()
 
-    # Original dict representation
+    # Dictionary representation
     user.asdict()
 
-    # Original representation as a string
-    s = str(user)
+    # Original JSON representation
+    str(user)
 """
 
 import json
@@ -81,15 +79,16 @@ class Timestamp(datetime):
 
 class JSONEncoder(json.JSONEncoder):
     """
-    JSON Encoder capable of serialising enumerations and timestamps.
+    JSON Encoder for :class:`SerialisableDataclass`.
     """
     def default(self, o):
         """
-        Serialise enumerations using their name.
+        Serialiser for individual members.
+
+        Instances of :class:`Enum` and :class:`Timestamp` are serialised
+        using their string representations.
         """
-        if isinstance(o, Enum):
-            return o.name
-        elif isinstance(o, Timestamp):
+        if isinstance(o, (Enum, Timestamp)):
             return str(o)
         else:
             return super().default(o)
@@ -100,11 +99,24 @@ class SerialisableDataclass:
     """
     Convenience methods for dataclasses.
 
-    Convert dataclasses to JSON strings recursively using `str`.
+    Convert dataclasses to JSON strings recursively using ``str``.
+    Note that calling ``str`` on the dataclass and its dictionary representation
+    are not equivalent, because the former uses a :class:`JSONEncoder`.
+
+    .. code:: python
+
+        data = ...  # Dataclass
+        s = str(data)
+        d = data.asdict()
+
+        str(d)  # Skips type conversions!
     """
     def asdict(self) -> dict:
         """
         Dictionary representation of the dataclass and its members.
+
+        Note that no type conversions take place besides converting
+        the dataclass hierarchy to dictionaries.
 
         Returns
         -------
