@@ -1,7 +1,6 @@
 """
 sender
 ======
-
 Senders are used to extend the Spotify client's functionality.
 
 Senders wrap around :class:`requests.Session` providing different levels of
@@ -22,6 +21,23 @@ Sender instances are passed to the client at initialisation.
 
     sender = RetryingSender(retries=3, sender=PersistentSender())
     spotify = Spotify(sender=sender)
+
+A custom :class:`Session` can be passed in to a sender.
+
+.. code:: python
+
+    from requests import Session
+    from spotipy.sender import PresistentSender, SingletonSender
+
+    session = Session()
+    session.proxies = {
+        'http': 'http://10.10.10.10:8000',
+        'https': 'http://10.10.10.10:8000',
+    }
+
+    # Attach the session to a sender
+    PersistentSender(session)
+    SingletonSender.session = session
 """
 
 import time
@@ -72,9 +88,14 @@ class SingletonSender(Sender):
 class PersistentSender(Sender):
     """
     Use a per-instance session to send requests.
+
+    Parameters
+    ----------
+    session
+        :class:`Session` to use when sending requests
     """
-    def __init__(self):
-        self.session = Session()
+    def __init__(self, session: Session = None):
+        self.session = session or Session()
 
     def send(self, request: Request, **requests_kwargs) -> Response:
         prepared = self.session.prepare_request(request)
