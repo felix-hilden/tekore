@@ -104,9 +104,10 @@ class TestCredentials(unittest.TestCase):
 
     def test_user_authorisation_url(self):
         c = Credentials('id', 'secret', 'uri')
-        url = c.user_authorisation_url('scope', 'state')
+        url = c.user_authorisation_url('scope', 'state', True)
         self.assertIn('scope=scope', url)
         self.assertIn('state=state', url)
+        self.assertIn('show_dialog=true', url)
 
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')

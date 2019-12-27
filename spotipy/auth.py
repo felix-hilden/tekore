@@ -154,19 +154,12 @@ class Credentials:
         payload = {'grant_type': 'client_credentials'}
         return request_token(self._auth, payload)
 
-    @staticmethod
-    def _make_payload(scope, state, **kwargs):
-        payload = {}
-
-        if scope is not None:
-            payload['scope'] = str(scope)
-        if state is not None:
-            payload['state'] = state
-
-        payload.update(kwargs)
-        return payload
-
-    def user_authorisation_url(self, scope=None, state: str = None) -> str:
+    def user_authorisation_url(
+            self,
+            scope=None,
+            state: str = None,
+            show_dialog: bool = False
+    ) -> str:
         """
         Construct an authorisation URL.
 
@@ -179,27 +172,29 @@ class Credentials:
             access rights as a space-separated list
         state
             additional state
+        show_dialog
+            force login dialog even if previously authorised
 
         Returns
         -------
         str
             login URL
         """
-        payload = self._make_payload(
-            scope,
-            state,
-            client_id=self.client_id,
-            response_type='code',
-            redirect_uri=self.redirect_uri
-        )
+        payload = {
+            'show_dialog': str(show_dialog).lower(),
+            'client_id': self.client_id,
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri
+        }
+
+        if scope is not None:
+            payload['scope'] = str(scope)
+        if state is not None:
+            payload['state'] = state
+
         return OAUTH_AUTHORIZE_URL + '?' + urlencode(payload)
 
-    def request_user_token(
-            self,
-            code: str,
-            scope=None,
-            state: str = None
-    ) -> Token:
+    def request_user_token(self, code: str) -> Token:
         """
         Request a new user token.
 
@@ -211,23 +206,17 @@ class Credentials:
         ----------
         code
             code from redirect parameters
-        scope
-            access rights as a space-separated list
-        state
-            additional state
 
         Returns
         -------
         Token
             user access token
         """
-        payload = self._make_payload(
-            scope,
-            state,
-            code=code,
-            redirect_uri=self.redirect_uri,
-            grant_type='authorization_code'
-        )
+        payload = {
+            'code': code,
+            'redirect_uri': self.redirect_uri,
+            'grant_type': 'authorization_code'
+        }
         return request_token(self._auth, payload)
 
     def request_refreshed_token(self, refresh_token: str) -> Token:
