@@ -53,7 +53,7 @@ Logging out deletes the cookie and server-stored user information.
         def login_callback():
             code = request.args.get('code', None)
 
-            token = cred.request_user_token(code, scope=every)
+            token = cred.request_user_token(code)
             with spotify.token_as(token):
                 info = spotify.current_user()
 

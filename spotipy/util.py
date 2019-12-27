@@ -45,8 +45,9 @@ manager that is used by the functions above to create refreshing tokens.
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
 so please do create your own versions of these routines.
-Particularly, ``prompt_for_user_token`` is only suited for local use
-as it opens up a web browser for the user to log in with.
+Particularly, ``prompt_for_user_token`` opens up a web browser
+for the user to log in with, doesn't expose all parameters that are available
+when using lower-level functions, and forces the login dialog to be shown.
 """
 
 import os
@@ -148,7 +149,12 @@ class RefreshingCredentials:
         token = self._client.request_client_token()
         return RefreshingToken(token, self._client)
 
-    def user_authorisation_url(self, scope=None, state: str = None) -> str:
+    def user_authorisation_url(
+            self,
+            scope=None,
+            state: str = None,
+            show_dialog: bool = False
+    ) -> str:
         """
         Construct an authorisation URL.
 
@@ -161,20 +167,17 @@ class RefreshingCredentials:
             access rights as a space-separated list
         state
             additional state
+        show_dialog
+            force login dialog even if previously authorised
 
         Returns
         -------
         str
             login URL
         """
-        return self._client.user_authorisation_url(scope, state)
+        return self._client.user_authorisation_url(scope, state, show_dialog)
 
-    def request_user_token(
-            self,
-            code: str,
-            scope=None,
-            state: str = None
-    ) -> RefreshingToken:
+    def request_user_token(self, code: str) -> RefreshingToken:
         """
         Request a new refreshing user token.
 
@@ -186,17 +189,13 @@ class RefreshingCredentials:
         ----------
         code
             code from redirect parameters
-        scope
-            access rights as a space-separated list
-        state
-            additional state
 
         Returns
         -------
         RefreshingToken
             automatically refreshing user token
         """
-        token = self._client.request_user_token(code, scope, state)
+        token = self._client.request_user_token(code)
         return RefreshingToken(token, self._client)
 
     def request_refreshed_token(self, refresh_token: str) -> RefreshingToken:
@@ -329,13 +328,13 @@ def prompt_for_user_token(
         automatically refreshing user token
     """
     cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
-    url = cred.user_authorisation_url(scope)
+    url = cred.user_authorisation_url(scope, show_dialog=True)
 
     print('Opening browser for Spotify login...')
     webbrowser.open(url)
     redirected = input('Please paste redirect URL: ').strip()
     code = parse_code_from_url(redirected)
-    return cred.request_user_token(code, scope)
+    return cred.request_user_token(code)
 
 
 def request_refreshed_token(
