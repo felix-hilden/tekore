@@ -45,8 +45,9 @@ manager that is used by the functions above to create refreshing tokens.
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
 so please do create your own versions of these routines.
-Particularly, ``prompt_for_user_token`` is only suited for local use
-as it opens up a web browser for the user to log in with.
+Particularly, ``prompt_for_user_token`` opens up a web browser
+for the user to log in with, doesn't expose all parameters that are available
+when using lower-level functions, and forces the login dialog to be shown.
 """
 
 import os
@@ -327,7 +328,7 @@ def prompt_for_user_token(
         automatically refreshing user token
     """
     cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
-    url = cred.user_authorisation_url(scope)
+    url = cred.user_authorisation_url(scope, show_dialog=True)
 
     print('Opening browser for Spotify login...')
     webbrowser.open(url)
