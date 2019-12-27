@@ -98,13 +98,14 @@ it is possible to use unpacking to provide the configuration.
 
 Senders
 -------
-By default Spotipy doesn't do anything clever to requests that are sent.
+By default Spotipy doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <module-sender>`.
-They provide the
+They provide the immediate
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
-of using sessions and can bring new functionality.
-For example persistent sessions can be enabled with a :class:`PersistentSender`.
+of using a :class:`requests.Session`, can bring new functionality
+and may also use user-defined sessions.
+For example per-instance sessions can be enabled with a :class:`PersistentSender`.
 
 .. code:: python
 
@@ -118,14 +119,12 @@ For example persistent sessions can be enabled with a :class:`PersistentSender`.
 Caching
 -------
 The Spotify Web API returns headers for caching requests.
-See the Web API
-`overview <https://developer.spotify.com/documentation/web-api/>`_
-for further information.
-Spotipy does not implement response caching,
-but `Senders`_ can be subclassed for arbitrary extension.
+Spotipy does not implement response caching, but `Senders`_ can be extended.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_
 library provides caching algorithms that also wrap around :class:`Session`.
+For further information see the Web API
+`overview <https://developer.spotify.com/documentation/web-api/>`_.
 
 Traversing paging objects
 -------------------------
