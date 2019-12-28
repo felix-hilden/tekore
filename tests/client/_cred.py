@@ -5,7 +5,7 @@ from spotipy.auth import Credentials
 from spotipy.util import credentials_from_environment, read_environment
 from spotipy.client import Spotify
 
-skip_is_fail = read_environment('SPOTIPY_TEST_SKIP_IS_FAIL')
+skip_is_fail, = read_environment('SPOTIPY_TEST_SKIP_IS_FAIL')
 
 
 def skip_or_fail(ex_type: type, msg: str, ex: Exception = None):
