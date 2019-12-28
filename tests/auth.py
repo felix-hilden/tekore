@@ -61,7 +61,7 @@ class TestToken(unittest.TestCase):
 
         with patch('spotipy.auth.time', time):
             token = Token(make_token())
-            self.assertEqual(token.is_expiring(), True)
+            self.assertEqual(token.is_expiring, True)
 
 
 class TestCredentials(unittest.TestCase):

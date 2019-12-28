@@ -16,7 +16,7 @@ from spotipy.util import (
 
 def make_token(value: str, expiring: bool):
     token = MagicMock()
-    token.is_expiring.return_value = expiring
+    token.is_expiring = expiring
     token.access_token = value
     return token
 
@@ -59,7 +59,7 @@ class TestRefreshingToken(unittest.TestCase):
 
         auto_token = RefreshingToken(token, MagicMock())
         with self.subTest('is_expiring is False'):
-            self.assertFalse(auto_token.is_expiring())
+            self.assertFalse(auto_token.is_expiring)
         with self.subTest('expires_in is None'):
             self.assertIsNone(auto_token.expires_in)
         with self.subTest('expires_at is None'):

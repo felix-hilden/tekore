@@ -91,6 +91,7 @@ class Token(AccessToken):
         """
         return self.expires_at - int(time.time())
 
+    @property
     def is_expiring(self) -> bool:
         """
         Determine whether token is about to expire.
