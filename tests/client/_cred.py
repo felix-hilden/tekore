@@ -48,7 +48,7 @@ class TestCaseWithUserCredentials(TestCaseWithCredentials):
             skip_or_fail(KeyError, 'No application credentials!')
 
         try:
-            cls.user_token = cls.cred.request_refreshed_token(refresh)
+            cls.user_token = cls.cred.refresh_user_token(refresh)
         except HTTPError as e:
             skip_or_fail(HTTPError, 'Error in retrieving user token!', e)
 

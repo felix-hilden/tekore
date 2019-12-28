@@ -1,16 +1,16 @@
 """
 auth
 ====
-
 OAuth2 authentication for client credentials and authorisation code flows.
 
 Access tokens are used in authorisation by the Web API.
 The client credentials and authorisation code flows are used to retrieve
 application credentials and user credentials, respectively.
+The former can be used in generic endpoints like the ones for albums,
+the latter is required for endpoints that involve a specific user.
 
 .. code:: python
 
-    from spotipy import Spotify
     from spotipy.auth import Credentials
 
     cred = Credentials(client_id, client_secret, redirect_uri)
@@ -22,6 +22,22 @@ application credentials and user credentials, respectively.
     url = cred.user_authorisation_url()
     code = ...  # Redirect user to login and retrieve code
     user_token = cred.request_user_token(code)
+
+Tokens expire after an hour.
+Their expiration status can be determined via :class:`Token.is_expiring`.
+Client tokens can simply be retrieved again.
+To avoid another authorisation when using user tokens, a refresh token
+can be used to request a new access token with an equivalent scope.
+
+.. code:: python
+
+    # Specialised refresh
+    app_token = cred.request_client_token()
+    user_token = cred.refresh_user_token(user_token.refresh_token)
+
+    # Type-agnostic refresh
+    app_token = cred.refresh(app_token)
+    user_token = cred.refresh(user_token)
 """
 
 import time
@@ -220,7 +236,7 @@ class Credentials:
         }
         return request_token(self._auth, payload)
 
-    def request_refreshed_token(self, refresh_token: str) -> Token:
+    def refresh_user_token(self, refresh_token: str) -> Token:
         """
         Request a refreshed user token.
 
@@ -232,7 +248,7 @@ class Credentials:
         Returns
         -------
         Token
-            refreshed access token
+            refreshed user access token
         """
         payload = {
             'refresh_token': refresh_token,
@@ -248,7 +264,11 @@ class Credentials:
 
     def refresh(self, token: Token) -> Token:
         """
-        Refresh a user token.
+        Refresh an access token.
+
+        Both client and user tokens are accepted and refreshed.
+        For client tokens, a new token is returned.
+        For user tokens, a refreshed token is returned.
 
         Parameters
         ----------
@@ -260,4 +280,7 @@ class Credentials:
         Token
             refreshed access token
         """
-        return self.request_refreshed_token(token.refresh_token)
+        if token.refresh_token is None:
+            return self.request_client_token()
+        else:
+            return self.refresh_user_token(token.refresh_token)

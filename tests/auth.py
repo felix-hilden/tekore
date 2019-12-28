@@ -120,7 +120,7 @@ class TestCredentials(unittest.TestCase):
         c = Credentials('id', 'secret', 'uri')
         request_token_mock = MagicMock(return_value=MagicMock())
         with patch('spotipy.auth.request_token', request_token_mock):
-            c.request_refreshed_token('refresh')
+            c.refresh_user_token('refresh')
 
     def test_request_refreshed_token_uses_old_if_not_returned(self):
         c = Credentials('id', 'secret', 'uri')
@@ -129,7 +129,7 @@ class TestCredentials(unittest.TestCase):
 
         request_token_mock = MagicMock(return_value=new)
         with patch('spotipy.auth.request_token', request_token_mock):
-            refreshed = c.request_refreshed_token('refresh')
+            refreshed = c.refresh_user_token('refresh')
             self.assertEqual(refreshed.refresh_token, 'refresh')
 
     def test_refresh_wraps_token_refresh_token(self):
@@ -138,7 +138,7 @@ class TestCredentials(unittest.TestCase):
 
         new = MagicMock()
         mock = MagicMock(return_value=new)
-        with patch('spotipy.auth.Credentials.request_refreshed_token', mock):
+        with patch('spotipy.auth.Credentials.refresh_user_token', mock):
             c = Credentials('id', 'secret', 'uri')
             refreshed = c.refresh(token)
             with self.subTest('Refresh token extracted'):

@@ -8,7 +8,7 @@ from spotipy.util import (
     parse_code_from_url,
     prompt_for_user_token,
     credentials_from_environment,
-    request_refreshed_token,
+    refresh_user_token,
     request_client_token,
     RefreshingCredentials,
 )
@@ -127,7 +127,7 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
             self.assertIsInstance(token, RefreshingToken)
 
     def test_request_refreshed_token_returns_refreshing_token(self):
-        token = request_refreshed_token(
+        token = refresh_user_token(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
@@ -136,7 +136,7 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         self.assertIsInstance(token, RefreshingToken)
 
     def test_expiring_user_token_refreshed(self):
-        token = request_refreshed_token(
+        token = refresh_user_token(
             self.client_id,
             self.client_secret,
             self.redirect_uri,
