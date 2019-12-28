@@ -28,7 +28,7 @@ Save the refresh token to avoid authenticating again when restarting.
 
     # Load refresh token
     refresh_token = ...
-    token = util.token_from_refresh_token(*conf, refresh_token)
+    token = util.refresh_user_token(*conf, refresh_token)
 
 
 Server application or multiple users

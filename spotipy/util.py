@@ -21,7 +21,7 @@ a strong independent token.
 
     # Save the refresh token to avoid authenticating again
     refresh_token = ...     # Load refresh token
-    user_token = util.request_refreshed_token(*conf, refresh_token)
+    user_token = util.refresh_user_token(*conf, refresh_token)
 
 If you authenticate with a server but would still like to use
 :class:`RefreshingToken`, you can use the :class:`RefreshingCredentials`
@@ -40,7 +40,7 @@ manager that is used by the functions above to create refreshing tokens.
     user_token = cred.request_user_token(code)
 
     # Reload a token
-    user_token = cred.request_refreshed_token(refresh_token)
+    user_token = cred.refresh_user_token(refresh_token)
 
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
@@ -86,10 +86,7 @@ class RefreshingToken(AccessToken):
     @property
     def access_token(self) -> str:
         if self._token.is_expiring:
-            if self.refresh_token is None:
-                self._token = self._credentials.request_client_token()
-            else:
-                self._token = self._credentials.refresh(self._token)
+            self._token = self._credentials.refresh(self._token)
 
         return self._token.access_token
 
@@ -198,9 +195,9 @@ class RefreshingCredentials:
         token = self._client.request_user_token(code)
         return RefreshingToken(token, self._client)
 
-    def request_refreshed_token(self, refresh_token: str) -> RefreshingToken:
+    def refresh_user_token(self, refresh_token: str) -> RefreshingToken:
         """
-        Request a refreshing user token.
+        Request an automatically refreshing user token with a refresh token.
 
         Parameters
         ----------
@@ -212,7 +209,7 @@ class RefreshingCredentials:
         RefreshingToken
             automatically refreshing user token
         """
-        token = self._client.request_refreshed_token(refresh_token)
+        token = self._client.refresh_user_token(refresh_token)
         return RefreshingToken(token, self._client)
 
 
@@ -337,14 +334,14 @@ def prompt_for_user_token(
     return cred.request_user_token(code)
 
 
-def request_refreshed_token(
+def refresh_user_token(
         client_id: str,
         client_secret: str,
         redirect_uri: str,
         refresh_token: str
 ) -> RefreshingToken:
     """
-    Retrieve a token using a refresh token.
+    Request a refreshed user token.
 
     Parameters
     ----------
@@ -363,4 +360,4 @@ def request_refreshed_token(
         automatically refreshing user token
     """
     cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
-    return cred.request_refreshed_token(refresh_token)
+    return cred.refresh_user_token(refresh_token)

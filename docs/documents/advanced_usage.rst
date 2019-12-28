@@ -16,6 +16,7 @@ The :ref:`auth <module-auth>` module parses tokens into ordinary objects.
 These tokens expire and their bearer tokens are invalid after expiration.
 The :ref:`util <module-util>` module parses tokens into refreshing tokens,
 which appear to never expire due to being automatically refreshed.
+See the documentation of each module for more information and examples.
 
 Providing tokens
 ****************
