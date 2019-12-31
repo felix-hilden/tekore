@@ -52,6 +52,7 @@ when using lower-level functions, and forces the login dialog to be shown.
 
 import os
 import webbrowser
+import configparser
 
 from urllib.parse import urlparse, parse_qs
 from spotipy.auth import AccessToken, Token, Credentials
@@ -267,6 +268,67 @@ def credentials_from_environment(
         (client ID, client secret, redirect URI), None if not found
     """
     return read_environment(client_id_var, client_secret_var, redirect_uri_var)
+
+
+def read_configfile(*variables: str, config: dict) -> tuple:
+    """
+    Read environment variables from the parsed config dict.
+
+    Parameters
+    ----------
+    variables
+        environment variable names to read
+    config
+        the parsed config dict
+
+    Returns
+    -------
+    tuple
+        variable values
+    """
+    return tuple(config.get(var, None) for var in variables)
+
+
+def credentials_from_configfile(
+    file_path: str,
+    section_name: str,
+    client_id_var: str = 'SPOTIPY_CLIENT_ID',
+    client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
+    redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
+) -> (str, str, str):
+    """
+    Read environment variables from a config file for application credentials.
+
+    Parameters
+    ----------
+    file_path
+        path of the file containing the credential variables
+    section_name
+        the name of the section in the file
+    client_id_var
+        name of the variable containing a client ID
+    client_secret_var
+        name of the variable containing a client secret
+    redirect_uri_var
+        name of the variable containing a redirect URI
+
+    Returns
+    -------
+    tuple
+        (client ID, client secret, redirect URI), None if not found
+    """
+    c = configparser.ConfigParser()
+    c.optionxform = lambda option: option
+
+    c.read(file_path)
+    config = dict(c[section_name])
+
+    return read_configfile(
+        client_id_var,
+        client_secret_var,
+        redirect_uri_var,
+        config=config
+    )
 
 
 def parse_code_from_url(url: str) -> str:
