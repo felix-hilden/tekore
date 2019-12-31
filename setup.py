@@ -14,11 +14,11 @@ Try upgrading pip and retry.
 """
 
 if sys.version_info < python_requires:
-    error.format(
+    formatted_error = error.format(
         python_requires_str,
         '.'.join([str(i) for i in sys.version_info[:3]])
     )
-    print(error, file=sys.stderr)
+    print(formatted_error, file=sys.stderr)
     sys.exit(1)
 
 import os
