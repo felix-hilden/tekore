@@ -1,7 +1,7 @@
 import os
 import sys
 
-required_version = (3, 7)
+required_version = (3, 6)
 error_msg = """You are running Spotipy 3.x on Python <{0}!
 
 Spotipy 3.0 and above are no longer compatible with Python <{0}, and you still
