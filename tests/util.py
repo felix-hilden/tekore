@@ -130,7 +130,6 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         token = refresh_user_token(
             self.client_id,
             self.client_secret,
-            self.redirect_uri,
             self.user_token.refresh_token
         )
         self.assertIsInstance(token, RefreshingToken)
@@ -139,7 +138,6 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         token = refresh_user_token(
             self.client_id,
             self.client_secret,
-            self.redirect_uri,
             self.user_token.refresh_token
         )
         old_token = str(token)
@@ -149,16 +147,14 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
     def test_request_client_token_returns_refreshing_token(self):
         token = request_client_token(
             self.client_id,
-            self.client_secret,
-            self.redirect_uri
+            self.client_secret
         )
         self.assertIsInstance(token, RefreshingToken)
 
     def test_expiring_client_token_refreshed(self):
         token = request_client_token(
             self.client_id,
-            self.client_secret,
-            self.redirect_uri
+            self.client_secret
         )
         old_token = str(token)
         token._token.expires_at -= token._token.expires_in - 30

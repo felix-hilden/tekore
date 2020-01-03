@@ -141,6 +141,8 @@ class Credentials:
     """
     Client for retrieving access tokens.
 
+    Specifying a ``redirect_uri`` is required only when authorising users.
+
     Parameters
     ----------
     client_id
@@ -150,7 +152,12 @@ class Credentials:
     redirect_uri
         whitelisted redirect URI
     """
-    def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
+    def __init__(
+            self,
+            client_id: str,
+            client_secret: str,
+            redirect_uri: str = None
+    ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
