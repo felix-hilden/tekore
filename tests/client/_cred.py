@@ -19,18 +19,57 @@ def skip_or_fail(ex_type: type, msg: str, ex: Exception = None):
         raise err(msg) from ex
 
 
-class TestCaseWithCredentials(TestCase):
+class TestCaseWithAppEnvironment(TestCase):
+    """
+    Test case that retrieves application credentials from the environment.
+    """
     @classmethod
     def setUpClass(cls):
-        id_, secret, redirect = credentials_from_environment()
-        if any(i is None for i in (id_, secret, redirect)):
+        super().setUpClass()
+
+        cred = credentials_from_environment()
+        if any(i is None for i in cred):
             skip_or_fail(KeyError, 'No application credentials!')
 
-        cls.client_id = id_
-        cls.client_secret = secret
-        cls.redirect_uri = redirect
+        cls.client_id, cls.client_secret, cls.redirect_uri = cred
 
-        cls.cred = Credentials(id_, secret, redirect)
+
+class TestCaseWithUserEnvironment(TestCase):
+    """
+    Test case that retrieves user credentials from the environment.
+    """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_refresh, = read_environment('SPOTIPY_USER_REFRESH')
+        if cls.user_refresh is None:
+            skip_or_fail(KeyError, 'No application credentials!')
+
+
+class TestCaseWithEnvironment(
+    TestCaseWithAppEnvironment,
+    TestCaseWithUserEnvironment
+):
+    """
+    Test case that retrieves both application and user credentials
+    from the environment.
+    """
+
+
+class TestCaseWithCredentials(TestCaseWithAppEnvironment):
+    """
+    Test case that provides an application token based on the environment.
+    """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.cred = Credentials(
+            cls.client_id,
+            cls.client_secret,
+            cls.redirect_uri
+        )
 
         try:
             cls.app_token = cls.cred.request_client_token()
@@ -38,17 +77,19 @@ class TestCaseWithCredentials(TestCase):
             skip_or_fail(HTTPError, 'Error in retrieving application token!', e)
 
 
-class TestCaseWithUserCredentials(TestCaseWithCredentials):
+class TestCaseWithUserCredentials(
+    TestCaseWithCredentials,
+    TestCaseWithUserEnvironment
+):
+    """
+    Test case that provides both application and user tokens.
+    """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        refresh = read_environment('SPOTIPY_USER_REFRESH')
-        if refresh is None:
-            skip_or_fail(KeyError, 'No application credentials!')
-
         try:
-            cls.user_token = cls.cred.refresh_user_token(refresh)
+            cls.user_token = cls.cred.refresh_user_token(cls.user_refresh)
         except HTTPError as e:
             skip_or_fail(HTTPError, 'Error in retrieving user token!', e)
 

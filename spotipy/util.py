@@ -130,14 +130,22 @@ class RefreshingCredentials:
         client secret
     redirect_uri
         whitelisted redirect URI
+    requests_kwargs
+        keyword arguments for requests.request
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
-            redirect_uri: str = None
+            redirect_uri: str = None,
+            requests_kwargs: dict = None
     ):
-        self._client = Credentials(client_id, client_secret, redirect_uri)
+        self._client = Credentials(
+            client_id,
+            client_secret,
+            redirect_uri,
+            requests_kwargs
+        )
 
     def request_client_token(self) -> RefreshingToken:
         """

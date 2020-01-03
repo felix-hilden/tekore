@@ -115,28 +115,6 @@ class Token(AccessToken):
         return self.expires_in < 60
 
 
-def request_token(auth: str, payload: dict) -> Token:
-    headers = {'Authorization': f'Basic {auth}'}
-    response = post(
-        OAUTH_TOKEN_URL,
-        data=payload,
-        headers=headers
-    )
-
-    if 400 <= response.status_code < 500:
-        content = response.json()
-        error_str = '{} {}: {}'.format(
-            response.status_code,
-            content['error'],
-            content['error_description']
-        )
-        raise OAuthError(error_str)
-    elif response.status_code >= 500:
-        raise HTTPError('Unexpected error!', response=response)
-
-    return Token(response.json())
-
-
 class Credentials:
     """
     Client for retrieving access tokens.
@@ -151,20 +129,46 @@ class Credentials:
         client secret
     redirect_uri
         whitelisted redirect URI
+    requests_kwargs
+            keyword arguments for requests.request
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
-            redirect_uri: str = None
+            redirect_uri: str = None,
+            requests_kwargs: dict = None
     ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
+        self.requests_kwargs = requests_kwargs or {}
 
     @property
     def _auth(self) -> str:
         return b64encode(self.client_id + ':' + self.client_secret)
+
+    def _request_token(self, payload: dict) -> Token:
+        headers = {'Authorization': f'Basic {self._auth}'}
+        response = post(
+            OAUTH_TOKEN_URL,
+            data=payload,
+            headers=headers,
+            **self.requests_kwargs
+        )
+
+        if 400 <= response.status_code < 500:
+            content = response.json()
+            error_str = '{} {}: {}'.format(
+                response.status_code,
+                content['error'],
+                content['error_description']
+            )
+            raise OAuthError(error_str)
+        elif response.status_code >= 500:
+            raise HTTPError('Unexpected error!', response=response)
+
+        return Token(response.json())
 
     def request_client_token(self) -> Token:
         """
@@ -176,7 +180,7 @@ class Credentials:
             client access token
         """
         payload = {'grant_type': 'client_credentials'}
-        return request_token(self._auth, payload)
+        return self._request_token(payload)
 
     def user_authorisation_url(
             self,
@@ -241,7 +245,7 @@ class Credentials:
             'redirect_uri': self.redirect_uri,
             'grant_type': 'authorization_code'
         }
-        return request_token(self._auth, payload)
+        return self._request_token(payload)
 
     def refresh_user_token(self, refresh_token: str) -> Token:
         """
@@ -262,7 +266,7 @@ class Credentials:
             'grant_type': 'refresh_token'
         }
 
-        refreshed = request_token(self._auth, payload)
+        refreshed = self._request_token(payload)
 
         if refreshed.refresh_token is None:
             refreshed.refresh_token = refresh_token
