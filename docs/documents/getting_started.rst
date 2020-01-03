@@ -21,9 +21,8 @@ and can be used to make basic calls to the API.
 
     client_id = 'your_id_here'
     client_secret = 'your_secret_here'
-    redirect_uri = 'your_redirect_here'
 
-    app_token = request_client_token(client_id, client_secret, redirect_uri)
+    app_token = request_client_token(client_id, client_secret)
 
 Calling the API
 ---------------
@@ -57,6 +56,8 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
 
     from spotipy.scope import every
     from spotipy.util import prompt_for_user_token
+
+    redirect_uri = 'your_uri_here'
 
     user_token = prompt_for_user_token(
         client_id,

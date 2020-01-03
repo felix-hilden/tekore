@@ -16,12 +16,12 @@ a strong independent token.
     from spotipy import util
 
     conf = util.credentials_from_environment()
-    app_token = util.request_client_token(*conf)
+    app_token = util.request_client_token(*conf[:2])
     user_token = util.prompt_for_user_token(*conf)
 
     # Save the refresh token to avoid authenticating again
     refresh_token = ...     # Load refresh token
-    user_token = util.refresh_user_token(*conf, refresh_token)
+    user_token = util.refresh_user_token(*conf[:2], refresh_token)
 
 If you authenticate with a server but would still like to use
 :class:`RefreshingToken`, you can use the :class:`RefreshingCredentials`
@@ -131,7 +131,12 @@ class RefreshingCredentials:
     redirect_uri
         whitelisted redirect URI
     """
-    def __init__(self, client_id: str, client_secret: str, redirect_uri: str):
+    def __init__(
+            self,
+            client_id: str,
+            client_secret: str,
+            redirect_uri: str = None
+    ):
         self._client = Credentials(client_id, client_secret, redirect_uri)
 
     def request_client_token(self) -> RefreshingToken:
@@ -272,8 +277,7 @@ def parse_code_from_url(url: str) -> str:
 
 def request_client_token(
         client_id: str,
-        client_secret: str,
-        redirect_uri: str
+        client_secret: str
 ) -> RefreshingToken:
     """
     Request for client credentials.
@@ -284,15 +288,13 @@ def request_client_token(
         client ID
     client_secret
         client secret
-    redirect_uri
-        whitelisted redirect URI
 
     Returns
     -------
     RefreshingToken
         automatically refreshing client token
     """
-    cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
+    cred = RefreshingCredentials(client_id, client_secret)
     return cred.request_client_token()
 
 
@@ -337,7 +339,6 @@ def prompt_for_user_token(
 def refresh_user_token(
         client_id: str,
         client_secret: str,
-        redirect_uri: str,
         refresh_token: str
 ) -> RefreshingToken:
     """
@@ -349,8 +350,6 @@ def refresh_user_token(
         client ID
     client_secret
         client secret
-    redirect_uri
-        whitelisted redirect URI
     refresh_token
         refresh token
 
@@ -359,5 +358,5 @@ def refresh_user_token(
     RefreshingToken
         automatically refreshing user token
     """
-    cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
+    cred = RefreshingCredentials(client_id, client_secret)
     return cred.refresh_user_token(refresh_token)
