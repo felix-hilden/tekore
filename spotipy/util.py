@@ -55,6 +55,7 @@ import webbrowser
 
 from urllib.parse import urlparse, parse_qs
 from spotipy.auth import AccessToken, Token, Credentials
+from spotipy.sender import Sender
 
 
 class RefreshingToken(AccessToken):
@@ -130,14 +131,22 @@ class RefreshingCredentials:
         client secret
     redirect_uri
         whitelisted redirect URI
+    sender
+        request sender
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
-            redirect_uri: str = None
+            redirect_uri: str = None,
+            sender: Sender = None
     ):
-        self._client = Credentials(client_id, client_secret, redirect_uri)
+        self._client = Credentials(
+            client_id,
+            client_secret,
+            redirect_uri,
+            sender
+        )
 
     def request_client_token(self) -> RefreshingToken:
         """

@@ -104,8 +104,9 @@ Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <module-sender>`.
 They provide the immediate
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
-of using a :class:`requests.Session`, can bring new functionality
-and may also use user-defined sessions.
+of using a :class:`requests.Session`.
+They can bring new functionality, use user-defined sessions
+and pass additional keyword arguments to :class:`Session.send`.
 For example per-instance sessions can be enabled with a :class:`PersistentSender`.
 
 .. code:: python
