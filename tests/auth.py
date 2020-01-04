@@ -99,8 +99,8 @@ class TestCredentialsOffline(unittest.TestCase):
     def test_server_error_raises_http_error(self):
         c = Credentials('id', 'secret')
 
-        post_mock = MagicMock(return_value=mock_response(500))
-        with patch('spotipy.auth.post', post_mock):
+        send = MagicMock(return_value=mock_response(500))
+        with patch('spotipy.auth.Credentials._send', send):
             with self.assertRaises(HTTPError):
                 c.request_client_token()
 
@@ -113,10 +113,10 @@ class TestCredentialsOffline(unittest.TestCase):
 
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
-        post = MagicMock(return_value=mock_response())
-        with patch('spotipy.auth.post', post):
+        send = MagicMock(return_value=mock_response())
+        with patch('spotipy.auth.Credentials._send', send):
             c.request_user_token('code')
-            post.assert_called_once()
+            send.assert_called_once()
 
     def test_refresh_user_token_uses_old_refresh_if_not_returned(self):
         c = Credentials('id', 'secret', 'uri')
@@ -124,8 +124,8 @@ class TestCredentialsOffline(unittest.TestCase):
         token['refresh_token'] = None
         response = mock_response(content=token)
 
-        post = MagicMock(return_value=response)
-        with patch('spotipy.auth.post', post):
+        send = MagicMock(return_value=response)
+        with patch('spotipy.auth.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
             self.assertEqual(refreshed.refresh_token, 'refresh')
 
@@ -134,8 +134,8 @@ class TestCredentialsOffline(unittest.TestCase):
         token = make_token()
         response = mock_response(content=token)
 
-        post = MagicMock(return_value=response)
-        with patch('spotipy.auth.post', post):
+        send = MagicMock(return_value=response)
+        with patch('spotipy.auth.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
             self.assertEqual(refreshed.refresh_token, token['refresh_token'])
 

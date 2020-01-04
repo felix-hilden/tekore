@@ -1,7 +1,9 @@
 """
 sender
 ======
-Senders are used to extend the Spotify client's functionality.
+Senders are used to extend the functionality of a client,
+that is :class:`client.Spotify`, :class:`auth.Credentials`
+and by extension :class:`util.RefreshingCredentials`.
 
 Senders wrap around :class:`requests.Session` providing different levels of
 persistence across requests and enabling retries on failed requests.
@@ -12,12 +14,19 @@ Here's a short summary of the features of each sender.
 - :class:`SingletonSender`: Uses a common session for all instances and requests
 - :class:`RetryingSender`: Extends any sender to enable retries on failed requests
 
-Sender instances are passed to the client at initialisation.
+Sender instances are passed to a client at initialisation.
 
 .. code:: python
 
-    from spotipy import Spotify
+    from spotipy import Spotify, Credentials
     from spotipy.sender import PersistentSender, RetryingSender
+
+    cred = Credentials(
+        client_id,
+        client_secred,
+        redirect_uri,
+        sender = PersistentSender()
+    )
 
     sender = RetryingSender(retries=3, sender=PersistentSender())
     spotify = Spotify(sender=sender)
@@ -38,6 +47,15 @@ A custom :class:`Session` can be passed in to a sender.
     # Attach the session to a sender
     PersistentSender(session)
     SingletonSender.session = session
+
+The default sender can be changed.
+Note that this requires importing the whole sender module.
+
+.. code:: python
+
+    from spotipy import sender
+
+    sender.default_sender_type = sender.PersistentSender
 """
 
 import time
@@ -102,6 +120,9 @@ class PersistentSender(Sender):
         return self.session.send(prepared, **requests_kwargs)
 
 
+default_sender_type = TransientSender   #: Sender to instantiate by default
+
+
 class RetryingSender(Sender):
     """
     Retry requests if unsuccessful.
@@ -120,7 +141,7 @@ class RetryingSender(Sender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        sender to use for sending requests, :class:`TransientSender` by default
+        request sender, :class:`default_sender_type` used if not specified
 
     Examples
     --------
@@ -139,7 +160,7 @@ class RetryingSender(Sender):
     """
     def __init__(self, retries: int = 0, sender: Sender = None):
         self.retries = retries
-        self.sender = sender or TransientSender()
+        self.sender = sender or default_sender_type()
 
     def send(self, request: Request, **requests_kwargs) -> Response:
         tries = self.retries + 1
@@ -157,3 +178,22 @@ class RetryingSender(Sender):
                 delay_seconds *= 2
             else:
                 return r
+
+
+class Client:
+    """
+    Base class for clients.
+
+    Parameters
+    ----------
+    sender
+        request sender, :class:`default_sender_type` used if not specified
+    requests_kwargs
+        keyword arguments for requests.request
+    """
+    def __init__(self, sender: Sender, requests_kwargs: dict):
+        self.sender = sender or default_sender_type()
+        self.requests_kwargs = requests_kwargs or {}
+
+    def _send(self, request: Request) -> Response:
+        return self.sender.send(request, **self.requests_kwargs)

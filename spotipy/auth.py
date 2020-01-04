@@ -44,8 +44,11 @@ import time
 
 from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
-from requests import HTTPError, post
+
+from requests import HTTPError, Request
 from urllib.parse import urlencode
+
+from spotipy.sender import Sender, Client
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
@@ -115,7 +118,7 @@ class Token(AccessToken):
         return self.expires_in < 60
 
 
-class Credentials:
+class Credentials(Client):
     """
     Client for retrieving access tokens.
 
@@ -129,20 +132,23 @@ class Credentials:
         client secret
     redirect_uri
         whitelisted redirect URI
+    sender
+        request sender
     requests_kwargs
-            keyword arguments for requests.request
+        keyword arguments for requests.request
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
+            sender: Sender = None,
             requests_kwargs: dict = None
     ):
+        super().__init__(sender, requests_kwargs)
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
-        self.requests_kwargs = requests_kwargs or {}
 
     @property
     def _auth(self) -> str:
@@ -150,12 +156,13 @@ class Credentials:
 
     def _request_token(self, payload: dict) -> Token:
         headers = {'Authorization': f'Basic {self._auth}'}
-        response = post(
+        request = Request(
+            'POST',
             OAUTH_TOKEN_URL,
             data=payload,
-            headers=headers,
-            **self.requests_kwargs
+            headers=headers
         )
+        response = self._send(request)
 
         if 400 <= response.status_code < 500:
             content = response.json()

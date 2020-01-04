@@ -191,5 +191,27 @@ class TestRetryingSender(unittest.TestCase):
         self.assertEqual(sender.send.call_count, 4)
 
 
+class TestDefaultSender(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from spotipy.sender import default_sender_type
+        cls.old_default = default_sender_type
+
+    def test_modify_default_sender_type(self):
+        instance = MagicMock()
+        type_mock = MagicMock(return_value=instance)
+
+        from spotipy import sender, Spotify
+        sender.default_sender_type = type_mock
+
+        s = Spotify()
+        self.assertIs(s.sender, instance)
+
+    @classmethod
+    def tearDownClass(cls):
+        from spotipy import sender
+        sender.default_sender_type = cls.old_default
+
+
 if __name__ == '__main__':
     unittest.main()

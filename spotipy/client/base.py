@@ -4,7 +4,7 @@ from typing import Generator
 from requests import Request, HTTPError
 from contextlib import contextmanager
 
-from spotipy.sender import Sender, TransientSender
+from spotipy.sender import Sender, Client
 from spotipy.serialise import SerialisableDataclass
 from spotipy.model.error import PlayerErrorReason
 from spotipy.model.paging import Paging, OffsetPaging
@@ -33,7 +33,19 @@ def parse_error_reason(response):
     return reason
 
 
-class SpotifyBase:
+class SpotifyBase(Client):
+    """
+    Create a Spotify API object.
+
+    Parameters
+    ----------
+    token
+        bearer token for requests
+    sender
+        request sender
+    requests_kwargs
+        keyword arguments for requests.request
+    """
     prefix = 'https://api.spotify.com/v1/'
 
     def __init__(
@@ -42,21 +54,8 @@ class SpotifyBase:
             sender: Sender = None,
             requests_kwargs: dict = None
     ):
-        """
-        Create a Spotify API object.
-
-        Parameters
-        ----------
-        token
-            bearer token for requests
-        sender
-            request sender, :class:`TransientSender` by default
-        requests_kwargs
-            keyword arguments for requests.request
-        """
+        super().__init__(sender, requests_kwargs)
         self._token = token
-        self.requests_kwargs = requests_kwargs or {}
-        self.sender = sender or TransientSender()
 
     @property
     def token(self):
@@ -110,9 +109,8 @@ class SpotifyBase:
             else:
                 request.data = payload
 
-    def _send(self, request: Request):
-        response = self.sender.send(request, **self.requests_kwargs)
-
+    @staticmethod
+    def _handle_errors(request, response) -> None:
         if response.status_code >= 400:
             error_str = error_format.format(
                 url=response.url,
@@ -120,8 +118,6 @@ class SpotifyBase:
                 msg=parse_error_reason(response)
             )
             raise HTTPError(error_str, request=request, response=response)
-
-        return response
 
     def _request(
             self,
@@ -133,6 +129,7 @@ class SpotifyBase:
         request = self._build_request(method, url)
         self._set_content(request, payload, params)
         response = self._send(request)
+        self._handle_errors(request, response)
         return parse_json(response)
 
     def _get(self, url: str, payload=None, **params):

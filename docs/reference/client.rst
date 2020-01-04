@@ -22,16 +22,6 @@ Further documentation on endpoints can be viewed in the Web API
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
-Full client
------------
-
-.. autoclass:: spotipy.client.Spotify
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: spotipy.client.Spotify.__init__
-
 .. _client-base:
 
 Base class
@@ -44,6 +34,15 @@ but also exposes a number of useful methods related to paging and tokens.
 .. autoclass:: spotipy.client.base.SpotifyBase
    :members:
    :undoc-members:
+   :show-inheritance:
+
+Full client
+-----------
+
+.. autoclass:: spotipy.client.Spotify
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Album API
 ---------
