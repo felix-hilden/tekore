@@ -43,18 +43,15 @@ class SpotifyBase(Client):
         bearer token for requests
     sender
         request sender
-    requests_kwargs
-        keyword arguments for requests.request
     """
     prefix = 'https://api.spotify.com/v1/'
 
     def __init__(
             self,
             token=None,
-            sender: Sender = None,
-            requests_kwargs: dict = None
+            sender: Sender = None
     ):
-        super().__init__(sender, requests_kwargs)
+        super().__init__(sender)
         self._token = token
 
     @property

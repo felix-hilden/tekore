@@ -46,9 +46,9 @@ class TestSingletonSender(unittest.TestCase):
         mock = MockSessionFactory()
         kwargs = dict(k1='k1', k2='k2')
         with patch('spotipy.sender.SingletonSender.session', mock()):
-            s = SingletonSender()
+            s = SingletonSender(**kwargs)
             r = Request()
-            s.send(r, **kwargs)
+            s.send(r)
             mock.instances[0].send.assert_called_with(
                 mock.prepare_return,
                 **kwargs
@@ -68,8 +68,8 @@ def test_keywords_passed_to_session(sender_type):
     mock = MockSessionFactory()
     kwargs = dict(k1='k1', k2='k2')
     with patch('spotipy.sender.Session', mock):
-        s = sender_type()
-        s.send(Request(), **kwargs)
+        s = sender_type(**kwargs)
+        s.send(Request())
         mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
@@ -191,11 +191,12 @@ class TestRetryingSender(unittest.TestCase):
         self.assertEqual(sender.send.call_count, 4)
 
 
-class TestDefaultSender(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        from spotipy.sender import default_sender_type
-        cls.old_default = default_sender_type
+class TestSenderDefaults(unittest.TestCase):
+    def setUp(self):
+        from spotipy import sender
+        self.old_default_type = sender.default_sender_type
+        self.old_default_instance = sender.default_sender_instance
+        self.old_default_kwargs = sender.default_requests_kwargs
 
     def test_modify_default_sender_type(self):
         instance = MagicMock()
@@ -207,10 +208,54 @@ class TestDefaultSender(unittest.TestCase):
         s = Spotify()
         self.assertIs(s.sender, instance)
 
-    @classmethod
-    def tearDownClass(cls):
+    def test_modify_default_sender_instance(self):
+        instance = MagicMock()
+
+        from spotipy import sender, Spotify
+        sender.default_sender_instance = instance
+
+        s = Spotify()
+        self.assertIs(s.sender, instance)
+
+    def test_instance_has_precedence_over_type(self):
+        instance = MagicMock()
+        type_mock = MagicMock(return_value=MagicMock())
+
+        from spotipy import sender, Spotify
+        sender.default_sender_type = type_mock
+        sender.default_sender_instance = instance
+
+        s = Spotify()
+        self.assertIs(s.sender, instance)
+
+    def test_retrying_sender_as_default_type_recurses(self):
         from spotipy import sender
-        sender.default_sender_type = cls.old_default
+        sender.default_sender_type = sender.RetryingSender
+
+        with self.assertRaises(RecursionError):
+            RetryingSender()
+
+    def test_default_kwargs_used_if_none_specified(self):
+        kwargs = {'arg': 'val'}
+
+        from spotipy import sender
+        sender.default_requests_kwargs = kwargs
+        s = sender.TransientSender()
+        self.assertDictEqual(s.requests_kwargs, kwargs)
+
+    def test_default_kwargs_ignored_if_kwargs_specified(self):
+        kwargs = {'arg': 'val'}
+
+        from spotipy import sender
+        sender.default_requests_kwargs = kwargs
+        s = sender.TransientSender(kw='value')
+        self.assertNotIn('arg', s.requests_kwargs)
+
+    def tearDown(self):
+        from spotipy import sender
+        sender.default_sender_type = self.old_default_type
+        sender.default_sender_instance = self.old_default_instance
+        sender.default_requests_kwargs = self.old_default_kwargs
 
 
 if __name__ == '__main__':

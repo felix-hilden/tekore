@@ -134,18 +134,15 @@ class Credentials(Client):
         whitelisted redirect URI
     sender
         request sender
-    requests_kwargs
-        keyword arguments for requests.request
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: Sender = None,
-            requests_kwargs: dict = None
+            sender: Sender = None
     ):
-        super().__init__(sender, requests_kwargs)
+        super().__init__(sender)
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri

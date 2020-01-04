@@ -133,23 +133,19 @@ class RefreshingCredentials:
         whitelisted redirect URI
     sender
         request sender
-    requests_kwargs
-        keyword arguments for requests.request
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: Sender = None,
-            requests_kwargs: dict = None
+            sender: Sender = None
     ):
         self._client = Credentials(
             client_id,
             client_secret,
             redirect_uri,
-            sender,
-            requests_kwargs
+            sender
         )
 
     def request_client_token(self) -> RefreshingToken:
