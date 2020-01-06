@@ -52,18 +52,7 @@ class SpotifyBase(Client):
             sender: Sender = None
     ):
         super().__init__(sender)
-        self._token = token
-
-    @property
-    def token(self):
-        """
-        Access token currently in use.
-        """
-        return str(self._token)
-
-    @token.setter
-    def token(self, value):
-        self._token = value
+        self.token = token
 
     @contextmanager
     def token_as(self, token) -> 'SpotifyBase':
@@ -80,16 +69,16 @@ class SpotifyBase(Client):
         SpotifyBase
             self
         """
-        self._token, old_token = token, self.token
+        self.token, old_token = token, self.token
         yield self
-        self._token = old_token
+        self.token = old_token
 
     def _build_request(self, method: str, url: str, headers: dict = None) -> Request:
         if not url.startswith('http'):
             url = self.prefix + url
 
         default_headers = {
-            'Authorization': f'Bearer {self.token}',
+            'Authorization': f'Bearer {str(self.token)}',
             'Content-Type': 'application/json'
         }
         default_headers.update(headers or {})

@@ -14,16 +14,14 @@ class TestSpotifyBaseUnits(unittest.TestCase):
     def setUp(self):
         self.client = SpotifyBase('token')
 
-    def test_token_equals_given_token(self):
-        self.assertEqual(self.client.token, 'token')
+    def test_token_is_given_token(self):
+        token = MagicMock()
+        client = SpotifyBase(token)
+        self.assertIs(token, client.token)
 
     def test_token_assignable(self):
         self.client.token = 'new'
         self.assertEqual(self.client.token, 'new')
-
-    def test_token_equals_str_of_given_value(self):
-        self.client.token = 1
-        self.assertEqual(self.client.token, '1')
 
     def test_new_token_used_in_context(self):
         with self.client.token_as('new'):
