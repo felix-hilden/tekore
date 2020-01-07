@@ -5,8 +5,8 @@ util
 Utility module for your convenience <3
 
 The main motivation for this module is to make authorisation effortless.
-That goal is achieved by three mechanisms: reading configuration from
-environment variables, an automatically refreshing access token and
+That goal is achieved by three mechanisms:
+reading configuration, an automatically refreshing access token and
 functions that implement everything needed to retrieve tokens.
 The effect is easy configuration, user authorisation and
 a strong independent token.
@@ -41,6 +41,12 @@ manager that is used by the functions above to create refreshing tokens.
 
     # Reload a token
     user_token = cred.refresh_user_token(refresh_token)
+
+Reading configuration from INI files is also possible.
+
+.. code:: python
+
+    cred = util.credentials_from_configfile(filename)
 
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
@@ -251,7 +257,7 @@ def credentials_from_environment(
         redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
 ) -> (str, str, str):
     """
-    Read environment variables for application credentials.
+    Read credentials from environment variables.
 
     Parameters
     ----------
@@ -272,14 +278,14 @@ def credentials_from_environment(
 
 def read_configfile(*variables: str, config: dict) -> tuple:
     """
-    Read environment variables from the parsed config dict.
+    Read variables from a config dict.
 
     Parameters
     ----------
     variables
-        environment variable names to read
+        variable names to read
     config
-        the parsed config dict
+        parsed config dict
 
     Returns
     -------
@@ -290,21 +296,24 @@ def read_configfile(*variables: str, config: dict) -> tuple:
 
 
 def credentials_from_configfile(
-    file_path: str,
-    section_name: str,
-    client_id_var: str = 'SPOTIPY_CLIENT_ID',
-    client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
-    redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
+        file_path: str,
+        section: str = 'DEFAULT',
+        client_id_var: str = 'SPOTIPY_CLIENT_ID',
+        client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
+        redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
 ) -> (str, str, str):
     """
-    Read environment variables from a config file for application credentials.
+    Read credentials from a config file.
+
+    The configuration must be in INI format
+    as accepted by :class:`configparser.ConfigParser`.
 
     Parameters
     ----------
     file_path
         path of the file containing the credential variables
-    section_name
-        the name of the section in the file
+    section
+        name of the section to read variables from
     client_id_var
         name of the variable containing a client ID
     client_secret_var
@@ -318,16 +327,15 @@ def credentials_from_configfile(
         (client ID, client secret, redirect URI), None if not found
     """
     c = configparser.ConfigParser()
-    c.optionxform = lambda option: option
-
-    c.read(file_path)
-    config = dict(c[section_name])
+    c.optionxform = str
+    with open(file_path, 'r') as f:
+        c.read_file(f)
 
     return read_configfile(
         client_id_var,
         client_secret_var,
         redirect_uri_var,
-        config=config
+        config=c[section]
     )
 
 

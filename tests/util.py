@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
 from spotipy.auth import Token, Credentials
 from spotipy.util import (
@@ -11,7 +10,9 @@ from spotipy.util import (
     refresh_user_token,
     request_client_token,
     RefreshingCredentials,
+    credentials_from_configfile
 )
+from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
 
 def make_token(value: str, expiring: bool):
@@ -184,6 +185,79 @@ class TestRefreshingCredentials(TestCaseWithCredentials):
             auth.user_authorisation_url(),
             util.user_authorisation_url()
         )
+
+
+class TestCredentialsFromConfigfile(unittest.TestCase):
+    test_config_path = 'test_config.ini'
+    test_config = """
+[DEFAULT]
+SPOTIPY_CLIENT_ID = df_id
+SPOTIPY_CLIENT_SECRET = df_secret
+SPOTIPY_REDIRECT_URI = df_uri
+
+[ANOTHER]
+CLIENT_ID = an_id
+CLIENT_SECRET = an_secret
+REDIRECT_URI = an_uri
+
+[MISSING]
+WHATEVER = something
+"""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(cls.test_config_path, 'w') as f:
+            f.write(cls.test_config)
+
+    @classmethod
+    def tearDownClass(cls):
+        import os
+        os.remove(cls.test_config_path)
+
+    def test_default_section(self):
+        conf = credentials_from_configfile(self.test_config_path)
+        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
+
+    def test_another_section(self):
+        conf = credentials_from_configfile(
+            self.test_config_path,
+            'ANOTHER',
+            client_id_var='CLIENT_ID',
+            client_secret_var='CLIENT_SECRET',
+            redirect_uri_var='REDIRECT_URI'
+        )
+        self.assertTupleEqual(conf, ('an_id', 'an_secret', 'an_uri'))
+
+    def test_missing_variables_returns_none(self):
+        conf = credentials_from_configfile(
+            self.test_config_path,
+            'MISSING',
+            client_id_var='CLIENT_ID',
+            client_secret_var='CLIENT_SECRET',
+            redirect_uri_var='REDIRECT_URI'
+        )
+        self.assertTrue(all(c is None for c in conf))
+
+    def test_another_section_is_case_sensitive(self):
+        conf = credentials_from_configfile(
+            self.test_config_path,
+            client_id_var='client_id'
+        )
+        self.assertTupleEqual(conf, (None, 'df_secret', 'df_uri'))
+
+    def test_nonexistent_file_raises(self):
+        with self.assertRaises(FileNotFoundError):
+            credentials_from_configfile('not_file.ini')
+
+    def test_nonexistent_section_raises(self):
+        with self.assertRaises(KeyError):
+            credentials_from_configfile(self.test_config_path, 'NOTSECTION')
+
+    def test_pathlib_path_accepted(self):
+        from pathlib import Path
+        path = Path(self.test_config_path)
+        conf = credentials_from_configfile(path)
+        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
 
 if __name__ == '__main__':
