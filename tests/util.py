@@ -67,30 +67,6 @@ class TestRefreshingToken(unittest.TestCase):
             self.assertIsNone(auto_token.expires_at)
 
 
-class TestCredentialsFromEnvironment(unittest.TestCase):
-    def test_environment_read_according_to_specified_names(self):
-        import os
-        id_name = 'SP_client_id'
-        secret_name = 'SP_client_secret'
-        uri_name = 'SP_redirect_uri'
-        os.environ[id_name] = 'id'
-        os.environ[secret_name] = 'secret'
-        os.environ[uri_name] = 'uri'
-
-        id_, secret, uri = config_from_environment(
-            client_id_var=id_name,
-            client_secret_var=secret_name,
-            redirect_uri_var=uri_name
-        )
-
-        with self.subTest('Client ID'):
-            self.assertEqual(id_, 'id')
-        with self.subTest('Client secret'):
-            self.assertEqual(secret, 'secret')
-        with self.subTest('Redirect URI'):
-            self.assertEqual(uri, 'uri')
-
-
 class TestParseCodeFromURL(unittest.TestCase):
     def test_empty_url_raises(self):
         with self.assertRaises(KeyError):
@@ -187,13 +163,14 @@ class TestRefreshingCredentials(TestCaseWithCredentials):
         )
 
 
-class TestCredentialsFromConfigfile(unittest.TestCase):
+class TestReadConfig(unittest.TestCase):
     test_config_path = 'test_config.ini'
     test_config = """
 [DEFAULT]
 SPOTIPY_CLIENT_ID = df_id
 SPOTIPY_CLIENT_SECRET = df_secret
 SPOTIPY_REDIRECT_URI = df_uri
+SPOTIPY_USER_REFRESH = df_refresh
 
 [ANOTHER]
 CLIENT_ID = an_id
@@ -209,51 +186,98 @@ WHATEVER = something
         with open(cls.test_config_path, 'w') as f:
             f.write(cls.test_config)
 
+        from spotipy.util import config
+        cls.client_id_var = config.client_id_var
+        cls.client_secret_var = config.client_secret_var
+        cls.redirect_uri_var = config.redirect_uri_var
+        cls.user_refresh_var = config.user_refresh_var
+
+    @staticmethod
+    def _config_names_set(id_, secret, uri, refresh):
+        from spotipy.util import config
+        config.client_id_var = id_
+        config.client_secret_var = secret
+        config.redirect_uri_var = uri
+        config.user_refresh_var = refresh
+
+    def tearDown(self):
+        self._config_names_set(
+            self.client_id_var,
+            self.client_secret_var,
+            self.redirect_uri_var,
+            self.user_refresh_var
+        )
+
     @classmethod
     def tearDownClass(cls):
         import os
         os.remove(cls.test_config_path)
 
-    def test_default_section(self):
+    def test_environment_user_refresh_returned(self):
+        _, _, _, _ = config_from_environment(return_refresh=True)
+
+    def test_environment_read_modified_names(self):
+        import os
+        from spotipy.util import config
+
+        config.client_id_var = 'client_id'
+        config.client_secret_var = 'client_secret'
+        config.redirect_uri_var = 'redirect_uri'
+        os.environ[config.client_id_var] = 'id'
+        os.environ[config.client_secret_var] = 'secret'
+        os.environ[config.redirect_uri_var] = 'uri'
+
+        conf = config_from_environment()
+        self.assertTupleEqual(conf, ('id', 'secret', 'uri'))
+
+    def test_file_default_section(self):
         conf = config_from_file(self.test_config_path)
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
-    def test_another_section(self):
-        conf = config_from_file(
-            self.test_config_path,
-            'ANOTHER',
-            client_id_var='CLIENT_ID',
-            client_secret_var='CLIENT_SECRET',
-            redirect_uri_var='REDIRECT_URI'
+    def test_file_refresh_returned(self):
+        conf = config_from_file(self.test_config_path, return_refresh=True)
+        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri', 'df_refresh'))
+
+    def test_file_another_section(self):
+        self._config_names_set(
+            'CLIENT_ID',
+            'CLIENT_SECRET',
+            'REDIRECT_URI',
+            '_'
         )
+
+        conf = config_from_file(self.test_config_path, 'ANOTHER')
         self.assertTupleEqual(conf, ('an_id', 'an_secret', 'an_uri'))
 
-    def test_missing_variables_returns_none(self):
-        conf = config_from_file(
-            self.test_config_path,
-            'MISSING',
-            client_id_var='CLIENT_ID',
-            client_secret_var='CLIENT_SECRET',
-            redirect_uri_var='REDIRECT_URI'
+    def test_file_missing_variables_returns_none(self):
+        self._config_names_set(
+            'CLIENT_ID',
+            'CLIENT_SECRET',
+            'REDIRECT_URI',
+            '_'
         )
-        self.assertTrue(all(c is None for c in conf))
+        conf = config_from_file(self.test_config_path, 'MISSING')
+        self.assertTupleEqual(conf, (None, None, None))
 
-    def test_another_section_is_case_sensitive(self):
-        conf = config_from_file(
-            self.test_config_path,
-            client_id_var='client_id'
+    def test_file_another_section_is_case_sensitive(self):
+        self._config_names_set(
+            'client_id',
+            'client_secret',
+            'redirect_uri',
+            '_'
         )
-        self.assertTupleEqual(conf, (None, 'df_secret', 'df_uri'))
+        conf = config_from_file(self.test_config_path)
+        self.assertTupleEqual(conf, (None, None, None))
 
-    def test_nonexistent_file_raises(self):
+    def test_file_nonexistent_file_raises(self):
         with self.assertRaises(FileNotFoundError):
             config_from_file('not_file.ini')
 
-    def test_nonexistent_section_raises(self):
+    def test_file_nonexistent_section_raises(self):
         with self.assertRaises(KeyError):
             config_from_file(self.test_config_path, 'NOTSECTION')
 
-    def test_pathlib_path_accepted(self):
+    def test_file_pathlib_path_accepted(self):
         from pathlib import Path
         path = Path(self.test_config_path)
         conf = config_from_file(path)
