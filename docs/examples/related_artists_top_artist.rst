@@ -11,9 +11,9 @@ and you have used Spotify enough to have top artists.
     from spotipy import util, Spotify
     from spotipy.scope import scopes
 
-    cred = util.credentials_from_environment()
+    conf = util.config_from_environment()
     scope = scopes.user_top_read + scopes.user_follow_read
-    token = util.prompt_for_user_token(*cred, scope=scope)
+    token = util.prompt_for_user_token(*conf, scope=scope)
 
     spotify = Spotify(token)
     artist = spotify.current_user_top_artists(limit=1).items[0]

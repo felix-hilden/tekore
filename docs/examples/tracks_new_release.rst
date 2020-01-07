@@ -9,8 +9,8 @@ there is at least new release in the Spotify catalogue.
 
     from spotipy import util, Spotify
 
-    cred = util.credentials_from_environment()
-    token = util.request_client_token(*cred)
+    conf = util.config_from_environment()
+    token = util.request_client_token(*conf[:2])
 
     spotify = Spotify(token)
     simple_album = spotify.new_releases(limit=1).items[0]

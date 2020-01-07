@@ -15,7 +15,7 @@ a strong independent token.
 
     from spotipy import util
 
-    conf = util.credentials_from_environment()
+    conf = util.config_from_environment()
     app_token = util.request_client_token(*conf[:2])
     user_token = util.prompt_for_user_token(*conf)
 
@@ -46,7 +46,7 @@ Reading configuration from INI files is also possible.
 
 .. code:: python
 
-    util.credentials_from_configfile(filename)
+    util.config_from_file(filename)
 
 This module exists solely to make developing applications easier.
 Some applications might have different needs,
@@ -57,8 +57,8 @@ when using lower-level functions, and forces the login dialog to be shown.
 """
 
 from spotipy.util.config import (
-    credentials_from_configfile,
-    credentials_from_environment,
+    config_from_environment,
+    config_from_file,
 )
 from spotipy.util.credentials import (
     parse_code_from_url,

@@ -2,30 +2,32 @@ import os
 import configparser
 
 
-def read_environment(*variables: str) -> tuple:
+def read_dict(d: dict, *variables: str) -> tuple:
     """
-    Read environment variables.
+    Read variables from dictionary.
 
     Parameters
     ----------
+    d
+        dictionary to read from
     variables
-        environment variable names to read
+        variable names to read
 
     Returns
     -------
     tuple
         variable values
     """
-    return tuple(os.getenv(var, None) for var in variables)
+    return tuple(d.get(var, None) for var in variables)
 
 
-def credentials_from_environment(
+def config_from_environment(
         client_id_var: str = 'SPOTIPY_CLIENT_ID',
         client_secret_var: str = 'SPOTIPY_CLIENT_SECRET',
         redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
 ) -> (str, str, str):
     """
-    Read credentials from environment variables.
+    Read application credentials from environment variables.
 
     Parameters
     ----------
@@ -41,29 +43,15 @@ def credentials_from_environment(
     tuple
         (client ID, client secret, redirect URI), None if not found
     """
-    return read_environment(client_id_var, client_secret_var, redirect_uri_var)
+    return read_dict(
+        os.environ,
+        client_id_var,
+        client_secret_var,
+        redirect_uri_var
+    )
 
 
-def read_configfile(*variables: str, config: dict) -> tuple:
-    """
-    Read variables from a config dict.
-
-    Parameters
-    ----------
-    variables
-        variable names to read
-    config
-        parsed config dict
-
-    Returns
-    -------
-    tuple
-        variable values
-    """
-    return tuple(config.get(var, None) for var in variables)
-
-
-def credentials_from_configfile(
+def config_from_file(
         file_path: str,
         section: str = 'DEFAULT',
         client_id_var: str = 'SPOTIPY_CLIENT_ID',
@@ -71,7 +59,7 @@ def credentials_from_configfile(
         redirect_uri_var: str = 'SPOTIPY_REDIRECT_URI'
 ) -> (str, str, str):
     """
-    Read credentials from a config file.
+    Read application credentials from a config file.
 
     The configuration must be in INI format
     as accepted by :class:`configparser.ConfigParser`.
@@ -99,9 +87,9 @@ def credentials_from_configfile(
     with open(file_path, 'r') as f:
         c.read_file(f)
 
-    return read_configfile(
+    return read_dict(
+        c[section],
         client_id_var,
         client_secret_var,
-        redirect_uri_var,
-        config=c[section]
+        redirect_uri_var
     )

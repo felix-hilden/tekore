@@ -10,8 +10,8 @@ you have followed or created at least one playlist and it has a track on it.
 
     from spotipy import util, Spotify
 
-    cred = util.credentials_from_environment()
-    token = util.prompt_for_user_token(*cred)
+    conf = util.config_from_environment()
+    token = util.prompt_for_user_token(*conf)
 
     spotify = Spotify(token)
     playlist = spotify.followed_playlists(limit=1).items[0]

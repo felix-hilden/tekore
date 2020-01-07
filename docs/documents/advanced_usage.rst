@@ -82,15 +82,9 @@ are provided in the :ref:`util <module-util>` module.
 
 .. code:: python
 
-   from spotipy.util import credentials_from_environment
-   client_id, client_secret, redirect_uri = credentials_from_environment()
-
-Similarly for configuration files.
-
-.. code:: python
-
-    from spotipy.util import credentials_from_configfile
-    credentials_from_configfile(filename)
+   from spotipy.util import config_from_environment, config_from_file
+   client_id, client_secret, redirect_uri = config_from_environment()
+   client_id, client_secret, redirect_uri = config_from_file(filename)
 
 Those values can then be used to retrieve access tokens.
 Note that if all configuration values are defined,
@@ -100,8 +94,8 @@ it is possible to use unpacking to provide the configuration.
 
    from spotipy import util
 
-   cred = util.credentials_from_environment()
-   token = util.prompt_for_user_token(*cred)
+   conf = util.config_from_environment()
+   token = util.prompt_for_user_token(*conf)
 
 .. _advanced-senders:
 

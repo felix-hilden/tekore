@@ -6,11 +6,11 @@ from spotipy.util import (
     RefreshingToken,
     parse_code_from_url,
     prompt_for_user_token,
-    credentials_from_environment,
+    config_from_environment,
     refresh_user_token,
     request_client_token,
     RefreshingCredentials,
-    credentials_from_configfile
+    config_from_file
 )
 from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
@@ -77,7 +77,7 @@ class TestCredentialsFromEnvironment(unittest.TestCase):
         os.environ[secret_name] = 'secret'
         os.environ[uri_name] = 'uri'
 
-        id_, secret, uri = credentials_from_environment(
+        id_, secret, uri = config_from_environment(
             client_id_var=id_name,
             client_secret_var=secret_name,
             redirect_uri_var=uri_name
@@ -215,11 +215,11 @@ WHATEVER = something
         os.remove(cls.test_config_path)
 
     def test_default_section(self):
-        conf = credentials_from_configfile(self.test_config_path)
+        conf = config_from_file(self.test_config_path)
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
     def test_another_section(self):
-        conf = credentials_from_configfile(
+        conf = config_from_file(
             self.test_config_path,
             'ANOTHER',
             client_id_var='CLIENT_ID',
@@ -229,7 +229,7 @@ WHATEVER = something
         self.assertTupleEqual(conf, ('an_id', 'an_secret', 'an_uri'))
 
     def test_missing_variables_returns_none(self):
-        conf = credentials_from_configfile(
+        conf = config_from_file(
             self.test_config_path,
             'MISSING',
             client_id_var='CLIENT_ID',
@@ -239,7 +239,7 @@ WHATEVER = something
         self.assertTrue(all(c is None for c in conf))
 
     def test_another_section_is_case_sensitive(self):
-        conf = credentials_from_configfile(
+        conf = config_from_file(
             self.test_config_path,
             client_id_var='client_id'
         )
@@ -247,16 +247,16 @@ WHATEVER = something
 
     def test_nonexistent_file_raises(self):
         with self.assertRaises(FileNotFoundError):
-            credentials_from_configfile('not_file.ini')
+            config_from_file('not_file.ini')
 
     def test_nonexistent_section_raises(self):
         with self.assertRaises(KeyError):
-            credentials_from_configfile(self.test_config_path, 'NOTSECTION')
+            config_from_file(self.test_config_path, 'NOTSECTION')
 
     def test_pathlib_path_accepted(self):
         from pathlib import Path
         path = Path(self.test_config_path)
-        conf = credentials_from_configfile(path)
+        conf = config_from_file(path)
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
 

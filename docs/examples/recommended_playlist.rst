@@ -11,9 +11,9 @@ and you have used Spotify enough to have top tracks.
     from spotipy import util, Spotify
     from spotipy.scope import scopes
 
-    cred = util.credentials_from_environment()
+    conf = util.config_from_environment()
     scope = scopes.user_top_read + scopes.playlist_modify_private
-    token = util.prompt_for_user_token(*cred, scope=scope)
+    token = util.prompt_for_user_token(*conf, scope=scope)
 
     spotify = Spotify(token)
     top_tracks = spotify.current_user_top_tracks(limit=5).items
