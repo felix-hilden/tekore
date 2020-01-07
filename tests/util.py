@@ -115,10 +115,10 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         cred.authorisation_url.return_value = 'http://example.com'
         cred.request_access_token.return_value = MagicMock()
         input_ = MagicMock(return_value='http://example.com?code=1')
-        with patch('spotipy.util.Credentials', cred),\
-                patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_),\
-                patch('spotipy.util.print', MagicMock()):
+        with patch('spotipy.util.credentials.Credentials', cred),\
+                patch('spotipy.util.credentials.webbrowser', MagicMock()),\
+                patch('spotipy.util.credentials.input', input_),\
+                patch('spotipy.util.credentials.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
 
         with self.subTest('Input prompted'):
