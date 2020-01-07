@@ -79,6 +79,23 @@ Application configuration
 Should you want to use environment variables or configuration files
 to provide application credentials, functions for reading those values
 are provided in the :ref:`util <module-util>` module.
+Set values in your environment or write a configuration file.
+
+.. code:: sh
+
+    export SPOTIPY_CLIENT_ID=your_id
+    export SPOTIPY_CLIENT_SECRET=your_secret
+    export SPOTIPY_REDIRECT_URI=your_uri
+
+.. code::
+
+    [DEFAULT]
+    SPOTIPY_CLIENT_ID=your_id
+    SPOTIPY_CLIENT_SECRET=your_secret
+    SPOTIPY_REDIRECT_URI=your_uri
+
+Then read those values.
+Functions that read configuration return a 3-tuple of configuration variables.
 
 .. code:: python
 
@@ -86,7 +103,7 @@ are provided in the :ref:`util <module-util>` module.
    client_id, client_secret, redirect_uri = config_from_environment()
    client_id, client_secret, redirect_uri = config_from_file(filename)
 
-Those values can then be used to retrieve access tokens.
+They can then be used to retrieve access tokens.
 Note that if all configuration values are defined,
 it is possible to use unpacking to provide the configuration.
 
@@ -96,6 +113,14 @@ it is possible to use unpacking to provide the configuration.
 
    conf = util.config_from_environment()
    token = util.prompt_for_user_token(*conf)
+
+Configuring a user refresh token is also possible.
+Define ``SPOTIPY_USER_REFRESH`` and pass in a boolean flag
+to read it as a fourth configuration value.
+
+.. code:: python
+
+    config_from_environment(return_refresh=True)
 
 .. _advanced-senders:
 

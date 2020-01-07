@@ -1,3 +1,39 @@
+"""
+Credentials provides automatically refreshing access tokens
+and functions for easily retrieving those tokens.
+
+.. code:: python
+
+    from spotipy import util
+
+    conf = util.config_from_environment()
+    app_token = util.request_client_token(*conf[:2])
+    user_token = util.prompt_for_user_token(*conf)
+
+    # Save the refresh token to avoid authenticating again
+    refresh_token = ...     # Load refresh token
+    user_token = util.refresh_user_token(*conf[:2], refresh_token)
+
+If you authenticate with a server but would still like to use a
+:class:`RefreshingToken`, you can use the :class:`RefreshingCredentials`
+client that is used by the functions above to create refreshing tokens.
+
+.. code:: python
+
+    cred = util.RefreshingCredentials(*conf)
+
+    # Client credentials flow
+    app_token = cred.request_client_token()
+
+    # Authorisation code flow
+    url = cred.user_authorisation_url()
+    code = ...  # Redirect user to login and retrieve code
+    user_token = cred.request_user_token(code)
+
+    # Reload a token
+    user_token = cred.refresh_user_token(refresh_token)
+"""
+
 import webbrowser
 
 from urllib.parse import urlparse, parse_qs
