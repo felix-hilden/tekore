@@ -1,17 +1,18 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
 from spotipy.auth import Token, Credentials
 from spotipy.util import (
     RefreshingToken,
     parse_code_from_url,
     prompt_for_user_token,
-    credentials_from_environment,
+    config_from_environment,
     refresh_user_token,
     request_client_token,
     RefreshingCredentials,
+    config_from_file
 )
+from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
 
 def make_token(value: str, expiring: bool):
@@ -76,7 +77,7 @@ class TestCredentialsFromEnvironment(unittest.TestCase):
         os.environ[secret_name] = 'secret'
         os.environ[uri_name] = 'uri'
 
-        id_, secret, uri = credentials_from_environment(
+        id_, secret, uri = config_from_environment(
             client_id_var=id_name,
             client_secret_var=secret_name,
             redirect_uri_var=uri_name
@@ -114,10 +115,10 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         cred.authorisation_url.return_value = 'http://example.com'
         cred.request_access_token.return_value = MagicMock()
         input_ = MagicMock(return_value='http://example.com?code=1')
-        with patch('spotipy.util.Credentials', cred),\
-                patch('spotipy.util.webbrowser', MagicMock()),\
-                patch('spotipy.util.input', input_),\
-                patch('spotipy.util.print', MagicMock()):
+        with patch('spotipy.util.credentials.Credentials', cred),\
+                patch('spotipy.util.credentials.webbrowser', MagicMock()),\
+                patch('spotipy.util.credentials.input', input_),\
+                patch('spotipy.util.credentials.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
 
         with self.subTest('Input prompted'):
@@ -184,6 +185,79 @@ class TestRefreshingCredentials(TestCaseWithCredentials):
             auth.user_authorisation_url(),
             util.user_authorisation_url()
         )
+
+
+class TestCredentialsFromConfigfile(unittest.TestCase):
+    test_config_path = 'test_config.ini'
+    test_config = """
+[DEFAULT]
+SPOTIPY_CLIENT_ID = df_id
+SPOTIPY_CLIENT_SECRET = df_secret
+SPOTIPY_REDIRECT_URI = df_uri
+
+[ANOTHER]
+CLIENT_ID = an_id
+CLIENT_SECRET = an_secret
+REDIRECT_URI = an_uri
+
+[MISSING]
+WHATEVER = something
+"""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(cls.test_config_path, 'w') as f:
+            f.write(cls.test_config)
+
+    @classmethod
+    def tearDownClass(cls):
+        import os
+        os.remove(cls.test_config_path)
+
+    def test_default_section(self):
+        conf = config_from_file(self.test_config_path)
+        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
+
+    def test_another_section(self):
+        conf = config_from_file(
+            self.test_config_path,
+            'ANOTHER',
+            client_id_var='CLIENT_ID',
+            client_secret_var='CLIENT_SECRET',
+            redirect_uri_var='REDIRECT_URI'
+        )
+        self.assertTupleEqual(conf, ('an_id', 'an_secret', 'an_uri'))
+
+    def test_missing_variables_returns_none(self):
+        conf = config_from_file(
+            self.test_config_path,
+            'MISSING',
+            client_id_var='CLIENT_ID',
+            client_secret_var='CLIENT_SECRET',
+            redirect_uri_var='REDIRECT_URI'
+        )
+        self.assertTrue(all(c is None for c in conf))
+
+    def test_another_section_is_case_sensitive(self):
+        conf = config_from_file(
+            self.test_config_path,
+            client_id_var='client_id'
+        )
+        self.assertTupleEqual(conf, (None, 'df_secret', 'df_uri'))
+
+    def test_nonexistent_file_raises(self):
+        with self.assertRaises(FileNotFoundError):
+            config_from_file('not_file.ini')
+
+    def test_nonexistent_section_raises(self):
+        with self.assertRaises(KeyError):
+            config_from_file(self.test_config_path, 'NOTSECTION')
+
+    def test_pathlib_path_accepted(self):
+        from pathlib import Path
+        path = Path(self.test_config_path)
+        conf = config_from_file(path)
+        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
 
 if __name__ == '__main__':

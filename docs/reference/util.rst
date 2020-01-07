@@ -3,3 +3,4 @@
 .. automodule:: spotipy.util
    :members:
    :undoc-members:
+   :imported-members:

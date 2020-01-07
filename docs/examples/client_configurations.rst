@@ -16,7 +16,7 @@ authentication can be completed with some manual work.
     from spotipy.scope import every
     from spotipy.sender import PersistentSender
 
-    conf = util.credentials_from_environment()
+    conf = util.config_from_environment()
     token = util.prompt_for_user_token(*conf, scope=every)
     s = Spotify(token=token, sender=PersistentSender())
 
@@ -40,10 +40,10 @@ using the application token and swapping in user tokens.
 .. code:: python
 
     from spotipy import Spotify, Credentials
-    from spotipy.util import credentials_from_environment
+    from spotipy.util import config_from_environment
     from spotipy.sender import PersistentSender
 
-    conf = credentials_from_environment()
+    conf = config_from_environment()
     cred = Credentials(*conf)
     app_token = cred.request_client_token()
 

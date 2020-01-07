@@ -10,9 +10,9 @@ It assumes that your credentials are saved in the environment.
     from spotipy import util, Spotify
     from spotipy.scope import scopes
 
-    cred = util.credentials_from_environment()
+    conf = util.config_from_environment()
     scope = scopes.playlist_modify_private
-    token = util.prompt_for_user_token(*cred, scope=scope)
+    token = util.prompt_for_user_token(*conf, scope=scope)
 
     spotify = Spotify(token)
     category = spotify.categories(limit=1).items[0]

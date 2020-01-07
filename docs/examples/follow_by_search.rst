@@ -9,9 +9,9 @@ It assumes that your credentials are saved in the environment.
     from spotipy import util, Spotify
     from spotipy.scope import scopes
 
-    cred = util.credentials_from_environment()
+    conf = util.config_from_environment()
     scope = scopes.user_follow_modify
-    token = util.prompt_for_user_token(*cred, scope=scope)
+    token = util.prompt_for_user_token(*conf, scope=scope)
 
     spotify = Spotify(token)
     artists, = spotify.search('sheeran', types=('artist',), limit=1)

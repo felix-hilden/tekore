@@ -74,15 +74,17 @@ so the new recent token should be used instead.
 The most recent refresh token is always returned when refreshing a token,
 but any saved refresh tokens need to be updated too.
 
-Configuration with environment variables
-----------------------------------------
-Should you want to use environment variables to provide application credentials,
-a function for reading those values is provided in the :ref:`util <module-util>` module.
+Application configuration
+-------------------------
+Should you want to use environment variables or configuration files
+to provide application credentials, functions for reading those values
+are provided in the :ref:`util <module-util>` module.
 
 .. code:: python
 
-   from spotipy.util import credentials_from_environment
-   client_id, client_secret, redirect_uri = credentials_from_environment()
+   from spotipy.util import config_from_environment, config_from_file
+   client_id, client_secret, redirect_uri = config_from_environment()
+   client_id, client_secret, redirect_uri = config_from_file(filename)
 
 Those values can then be used to retrieve access tokens.
 Note that if all configuration values are defined,
@@ -92,8 +94,8 @@ it is possible to use unpacking to provide the configuration.
 
    from spotipy import util
 
-   cred = util.credentials_from_environment()
-   token = util.prompt_for_user_token(*cred)
+   conf = util.config_from_environment()
+   token = util.prompt_for_user_token(*conf)
 
 .. _advanced-senders:
 
