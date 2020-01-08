@@ -1,7 +1,8 @@
-.. _module-client:
-
 client
 ======
+
+.. automodule:: spotipy.client
+
 Defines a client to the Spotify Web API.
 
 Each method of the client corresponds to an API call, with some exceptions.
@@ -22,12 +23,9 @@ Further documentation on endpoints can be viewed in the Web API
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
-.. _client-base:
-
 Base class
 ----------
-:class:`SpotifyBase` is the base class of each individual API
-and by extension the full client as well.
+The base class of each individual API and by extension the full client as well.
 Internally it is mainly responsible for sending requests and parsing responses
 but also exposes a number of useful methods related to paging and tokens.
 

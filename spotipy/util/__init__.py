@@ -8,11 +8,14 @@ and functions that can be used to easily retrieve those tokens.
 
 Some applications might have different needs,
 so please do create your own versions of these routines.
-Particularly, :class:`prompt_for_user_token` opens up a web browser
-for the user to log in with, doesn't expose all parameters that are available
+Particularly,
+:func:`prompt_for_user_token <spotipy.util.credentials.prompt_for_user_token>`
+opens up a web browser for the user to log in with,
+doesn't expose all parameters that are available
 when using lower-level functions, and forces the login dialog to be shown.
 
-Almost everything in submodules is imported to :class:`util` for easy access.
+Almost everything defined in submodules is imported to
+:mod:`util <spotipy.util>` for easy access.
 """
 
 from spotipy.util.config import (

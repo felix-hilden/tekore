@@ -8,7 +8,7 @@ Config provides convenient ways of importing application credentials.
     client_id, client_secret, redirect_uri = config_from_environment()
     client_id, client_secret, redirect_uri = config_from_file(filename)
 
-By default, only client ID, client secret and redirect URI is returned.
+By default, only client ID, client secret and redirect URI are returned.
 To return a user's refresh token as well, set a boolean flag.
 
 .. code:: python
@@ -81,7 +81,7 @@ def config_from_environment(return_refresh: bool = False) -> tuple:
     Read application credentials from environment variables.
 
     Environment variables are read according to
-    names set in :class:`spotipy.util.config`.
+    names set in :mod:`config <spotipy.util.config>`.
 
     Parameters
     ----------
@@ -131,7 +131,7 @@ def config_from_file(
     The configuration must be in INI format
     as accepted by :class:`configparser.ConfigParser`.
     Configuration variables are read according to
-    names set in :class:`spotipy.util.config`.
+    names set in :mod:`config <spotipy.util.config>`.
 
     Parameters
     ----------
@@ -175,7 +175,7 @@ def config_to_file(
     --------
     Configuration can be written in different ways.
     Pass in an iterable to use variable names that have been set in
-    :class:`spotipy.util.config`.
+    :mod:`config <spotipy.util.config>`.
     The values should be ordered as returned when reading configuration:
     ``client_id, client_secret, redirect_uri, user_refresh``.
 

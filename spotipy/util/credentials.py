@@ -49,12 +49,13 @@ class RefreshingToken(AccessToken):
     It shouldn't have to be instantiated outside of the functions,
     unless you are sure that you want to.
 
-    Uses an instance of :class:`Credentials` to automatically request a new
-    access token when the old one is about to expire. This occurs when the
-    `access_token` property is read.
+    Uses an instance of :class:`Credentials <spotipy.auth.Credentials>`
+    to automatically request a new access token
+    when the old one is about to expire.
+    This occurs when the `access_token` property is read.
 
-    Both ``expires_in`` and ``expires_at`` are always ``None``,
-    and ``is_expiring`` is always ``False``.
+    Both :attr:`expires_in` and :attr:`expires_at` are always ``None``,
+    and :attr:`is_expiring` is always ``False``.
 
     Parameters
     ----------
@@ -103,8 +104,8 @@ class RefreshingCredentials:
     """
     Client for retrieving automatically refreshing access tokens.
 
-    Delegates to an underlying :class:`Credentials` manager
-    and parses tokens it returns to :class:`RefreshingToken`.
+    Delegates to an underlying :class:`Credentials <spotipy.auth.Credentials>`
+    manager and parses tokens it returns into :class:`RefreshingToken`.
 
     Parameters
     ----------

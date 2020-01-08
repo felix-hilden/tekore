@@ -35,25 +35,34 @@ Features
 The `Web API`_ provides access to a plethora of data on music and users.
 Spotipy implements these most integral features completely.
 
-- :ref:`Authentication <module-auth>`: client credentials (application token)
-  and authorisation code (user token) flows according to the OAuth2 specification.
-- :ref:`API endpoints <module-client>`: access to every resource in the API.
-  Responses are parsed into :ref:`model classes <module-model>` with explicit
+- :mod:`spotipy.auth`: authentication for application and user tokens
+- :mod:`spotipy.client`: endpoints for access to every resource in the API.
+  Responses are parsed into :mod:`models <spotipy.model>` with explicit
   attributes to ease examining the contents of a response.
 
 Additional features and various convenience modules are provided too.
 Please refer to the documentation of each module for more information.
 
-- :ref:`Request retries <advanced-senders>`
-- :ref:`Session persistence <advanced-senders>`
-- :ref:`Response caching <advanced-caching>` (possible, though not directly supported)
-- :ref:`ID, URI and URL conversions <module-convert>`
-- :ref:`Access right scopes <module-scope>`
-- :ref:`Response serialisation <module-serialise>`
-- :ref:`Response pretty-printing <module-serialise>`
-- :ref:`Self-refreshing tokens <module-util>`
-- :ref:`Credentials from environment variables <module-util>`
-- :ref:`Command line prompt for user autentication <module-util>`
+- :mod:`spotipy.util`
+
+  - Command line prompt for user autentication
+  - Self-refreshing access tokens
+  - Read and write configuration from files and environment variables
+
+- :mod:`spotipy.sender`
+
+  - Session persistence
+  - Request retries
+  - Response caching
+    (:ref:`possible <advanced-caching>` but not directly supported)
+
+- :mod:`spotipy.convert` ID, URI and URL conversions
+- :mod:`spotipy.scope` Access right scopes for user tokens
+- :mod:`spotipy.serialise`
+
+  - Response model serialisation
+  - Response model pretty-printing
+
 
 .. toctree::
    :maxdepth: 1
