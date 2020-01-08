@@ -1,4 +1,6 @@
 import unittest
+
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from spotipy.auth import Token, Credentials
@@ -10,7 +12,8 @@ from spotipy.util import (
     refresh_user_token,
     request_client_token,
     RefreshingCredentials,
-    config_from_file
+    config_from_file,
+    config_to_file,
 )
 from tests.client._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 
@@ -282,6 +285,76 @@ WHATEVER = something
         path = Path(self.test_config_path)
         conf = config_from_file(path)
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
+
+
+class TestConfigToFile(unittest.TestCase):
+    test_config_path = Path('test_config.ini')
+    test_config = """
+[DEFAULT]
+SOMETHING = whatever
+SPOTIPY_CLIENT_ID = df_id
+SPOTIPY_CLIENT_SECRET = df_secret
+SPOTIPY_REDIRECT_URI = df_uri
+SPOTIPY_USER_REFRESH = df_refresh
+
+[SECTION]
+WHATEVER = something
+"""
+
+    def tearDown(self):
+        if self.test_config_path.exists():
+            self.test_config_path.unlink()
+
+    def _write_default(self):
+        self.test_config_path.write_text(self.test_config)
+
+    def test_pathlib_path_accepted(self):
+        config_to_file(self.test_config_path, ('a', 'b', 'c'))
+
+    def test_config_written_with_tuple(self):
+        written = ('id', 'secret', 'uri')
+        config_to_file(self.test_config_path, written)
+        loaded = config_from_file(self.test_config_path)
+        self.assertTupleEqual(written, loaded)
+
+    def test_config_written_with_dict(self):
+        from spotipy.util import config
+        written = {config.client_secret_var: 'secret'}
+
+        config_to_file(self.test_config_path, written)
+        loaded = config_from_file(self.test_config_path)
+        self.assertTupleEqual((None, 'secret', None), loaded)
+
+    def test_config_write_to_section(self):
+        written = ('id', 'secret', 'uri')
+        config_to_file(self.test_config_path, written, section='SEC')
+        loaded = config_from_file(self.test_config_path, section='SEC')
+        self.assertTupleEqual(written, loaded)
+
+    def test_config_written_with_tuple_refresh_token(self):
+        written = ('id', 'secret', 'uri', 'refresh')
+        config_to_file(self.test_config_path, written)
+        loaded = config_from_file(self.test_config_path, return_refresh=True)
+        self.assertTupleEqual(written, loaded)
+
+    def test_config_tuple_nones_not_written(self):
+        original = ('id', 'secret', 'uri')
+        config_to_file(self.test_config_path, original)
+
+        written = (None, 'another', None)
+        config_to_file(self.test_config_path, written)
+
+        loaded = config_from_file(self.test_config_path)
+        self.assertTupleEqual(('id', 'another', 'uri'), loaded)
+
+    def test_existing_configuration_preserved(self):
+        self._write_default()
+        config_to_file(self.test_config_path, ('a', 'b', 'c'))
+        text = self.test_config_path.read_text()
+        self.assertTupleEqual(
+            (True, True, True),
+            tuple(i in text for i in ('SOMETHING', 'WHATEVER', 'SECTION'))
+        )
 
 
 if __name__ == '__main__':

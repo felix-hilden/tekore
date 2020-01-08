@@ -120,7 +120,14 @@ to read it as a fourth configuration value.
 
 .. code:: python
 
-    config_from_environment(return_refresh=True)
+    util.config_from_environment(return_refresh=True)
+
+Configuration files can be written using another utility function.
+This is handy if a user's refresh token needs to be stored.
+
+.. code:: python
+
+    util.config_to_file(filename, (id_, secret, uri, refresh))
 
 .. _advanced-senders:
 

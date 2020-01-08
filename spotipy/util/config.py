@@ -26,10 +26,17 @@ Note that changing values requires importing the whole config module.
     config.client_secret_var = 'your_secret_name'
     config.redirect_uri_var = 'your_uri_name'
     config.user_refresh_var = 'your_refresh_name'
+
+Configuration can be written to file.
+
+.. code:: python
+
+    config_to_file(filename, (id_, secret, uri, refresh))
 """
 
-import os
-import configparser
+from os import environ
+from typing import Union, Iterable
+from configparser import ConfigParser
 
 client_id_var: str = 'SPOTIPY_CLIENT_ID'
 """Configuration variable name for a client ID."""
@@ -87,7 +94,30 @@ def config_from_environment(return_refresh: bool = False) -> tuple:
         (client ID, client secret, redirect URI), None if not found.
         If return_refresh is True, also return user refresh token.
     """
-    return _read_configuration(os.environ, return_refresh)
+    return _read_configuration(environ, return_refresh)
+
+
+def _read_configfile(file_path: str, force: bool = True) -> ConfigParser:
+    """
+    Read configuration from INI file.
+
+    Parameters
+    ----------
+    file_path
+        path of the configuration file
+    force
+        force reading of the file, fail if not found
+    """
+    c = ConfigParser()
+    c.optionxform = str
+
+    if force:
+        with open(file_path, 'r') as f:
+            c.read_file(f)
+    else:
+        c.read(file_path)
+
+    return c
 
 
 def config_from_file(
@@ -118,9 +148,81 @@ def config_from_file(
         (client ID, client secret, redirect URI), None if not found.
         If return_refresh is True, also return user refresh token.
     """
-    c = configparser.ConfigParser()
-    c.optionxform = str
-    with open(file_path, 'r') as f:
-        c.read_file(f)
-
+    c = _read_configfile(file_path)
     return _read_configuration(c[section], return_refresh)
+
+
+def config_to_file(
+        file_path: str,
+        values: Union[Iterable, dict],
+        section: str = 'DEFAULT'
+) -> None:
+    """
+    Write application credentials to a config file.
+
+    Existing configuration is preserved if it's not in conflict.
+
+    Parameters
+    ----------
+    file_path
+        path of the configuration file
+    values
+        configuration values to write, dict or iterable, see below for examples
+    section
+        name of the section to write to
+
+    Examples
+    --------
+    Configuration can be written in different ways.
+    Pass in an iterable to use variable names that have been set in
+    :class:`spotipy.util.config`.
+    The values should be ordered as returned when reading configuration:
+    ``client_id, client_secret, redirect_uri, user_refresh``.
+
+    .. code:: python
+
+        config_to_file(filename, (client_id, client_secret, redirect_uri))
+
+    A shorter iterable may be passed.
+    It may also contain ``None`` values. They are discarded.
+
+    .. code:: python
+
+        # Write partial information
+        config_to_file(filename, (client_id, client_secret))
+
+        # Fill the missing configuration
+        conf = (None, None, redirect_uri, user_refresh)
+        config_to_file(filename, conf)
+
+    A dictionary is also accepted.
+    Default variable names are ignored, and the keys used instead.
+
+    .. code:: python
+
+        config_to_file(filename, {'REFRESH_TOKEN': refresh_token})
+    """
+    if isinstance(values, dict):
+        val_dict = values
+    else:
+        names = (
+            client_id_var,
+            client_secret_var,
+            redirect_uri_var,
+            user_refresh_var
+        )
+        val_dict = {
+            name: value
+            for name, value in zip(names, values)
+            if value is not None
+        }
+
+    c = _read_configfile(file_path, force=False)
+
+    if section not in c:
+        c[section] = {}
+
+    c[section].update(val_dict)
+
+    with open(file_path, 'w') as f:
+        c.write(f)
