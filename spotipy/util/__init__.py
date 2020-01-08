@@ -3,8 +3,8 @@ Utility module for your convenience <3
 
 The main motivation for this module is to make authorisation effortless.
 That goal is achieved by three mechanisms:
-reading configuration, an automatically refreshing access token and
-functions that implement everything needed to retrieve tokens.
+reading and writing configuration, automatically refreshing access tokens,
+and functions that can be used to easily retrieve those tokens.
 
 Some applications might have different needs,
 so please do create your own versions of these routines.
@@ -18,6 +18,7 @@ Almost everything in submodules is imported to :class:`util` for easy access.
 from spotipy.util.config import (
     config_from_environment,
     config_from_file,
+    config_to_file,
 )
 from spotipy.util.credentials import (
     parse_code_from_url,
