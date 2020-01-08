@@ -1,5 +1,3 @@
-.. _module-util:
-
 util
 ====
 .. automodule:: spotipy.util

@@ -59,10 +59,10 @@ A custom :class:`Session` can also be used.
 
 The default senders and keyword arguments can be changed.
 Note that this requires importing the whole sender module.
-``default_sender_instance`` has precedence over :class:`default_sender_type`.
+:attr:`default_sender_instance` has precedence over :attr:`default_sender_type`.
 Using a :class:`RetryingSender` as the default type will raise an error
 as it tries to instantiate itself recursively.
-Use ``default_sender_instance`` instead.
+Use :attr:`default_sender_instance` instead.
 
 .. code:: python
 
@@ -117,7 +117,7 @@ class TransientSender(Sender):
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :class:`Session.send`
+        keyword arguments for :meth:`Session.send`
     """
     def __init__(self, **requests_kwargs):
         self.requests_kwargs = requests_kwargs or default_requests_kwargs
@@ -135,7 +135,7 @@ class SingletonSender(Sender):
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :class:`Session.send`
+        keyword arguments for :meth:`Session.send`
     """
     session = Session()
 
@@ -156,7 +156,7 @@ class PersistentSender(Sender):
     session
         :class:`Session` to use when sending requests
     requests_kwargs
-        keyword arguments for :class:`Session.send`
+        keyword arguments for :meth:`Session.send`
     """
     def __init__(self, session: Session = None, **requests_kwargs):
         self.session = session or Session()
@@ -191,7 +191,7 @@ class RetryingSender(Sender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        request sender, :class:`default_sender_type` used if not specified
+        request sender, :attr:`default_sender_type` used if not specified
 
     Examples
     --------
@@ -233,7 +233,7 @@ class RetryingSender(Sender):
 default_sender_instance = None
 """
 Default sender instance to use in clients.
-If specified, overrides :class:`default_sender_type`.
+If specified, overrides :attr:`default_sender_type`.
 """
 
 
@@ -244,8 +244,8 @@ class Client:
     Parameters
     ----------
     sender
-        request sender - If not specified, using ``default_sender_instance`` is
-        attempted first, then :class:`default_sender_type` is instantiated.
+        request sender - If not specified, using :attr:`default_sender_instance`
+        is attempted first, then :attr:`default_sender_type` is instantiated.
     """
     def __init__(self, sender: Sender):
         self.sender = sender or default_sender_instance or default_sender_type()

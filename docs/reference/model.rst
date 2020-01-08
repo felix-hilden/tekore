@@ -1,8 +1,10 @@
-.. _module-model:
-
 model
 =====
-Responses that are returned from :class:`Spotify` are parsed into model classes.
+
+.. automodule:: spotipy.model
+
+Responses that are returned from :mod:`Spotify <spotipy.client>`
+are parsed into model classes.
 This allows accessing parts of the response directly as attributes.
 
 .. code:: python

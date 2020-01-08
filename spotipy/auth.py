@@ -24,7 +24,7 @@ the latter is required for endpoints that involve a specific user.
     user_token = cred.request_user_token(code)
 
 Tokens expire after an hour.
-Their expiration status can be determined via :class:`Token.is_expiring`.
+Their expiration status can be determined via :attr:`Token.is_expiring`.
 Client tokens can simply be retrieved again.
 To avoid another authorisation when using user tokens, a refresh token
 can be used to request a new access token with an equivalent scope.
@@ -69,8 +69,8 @@ class AccessToken(ABC):
     """
     Token object.
 
-    Has an 'access_token' property, which is also
-    the string representation of the instance.
+    Has an :attr:`access_token <AccessToken.access_token>`
+    property, which is also the string representation of the instance.
     """
     @property
     @abstractmethod
