@@ -67,19 +67,12 @@ Please refer to the documentation of each module for more information.
 .. toctree::
    :maxdepth: 1
    :hidden:
-   :caption: Introduction
+   :caption: Spotipy documentation
 
    documents/getting_started
    documents/advanced_usage
    examples
-
-.. toctree::
-   :maxdepth: 3
-   :hidden:
-   :glob:
-   :caption: Package Reference
-
-   reference/*
+   reference
 
 .. |spotipy_logo| image:: spotipy_logo.png
    :alt: spotipy logo

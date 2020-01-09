@@ -16,6 +16,18 @@ when using lower-level functions, and forces the login dialog to be shown.
 
 Almost everything defined in submodules is imported to
 :mod:`util <spotipy.util>` for easy access.
+
+config
+------
+.. automodule:: spotipy.util.config
+   :members:
+   :undoc-members:
+
+credentials
+-----------
+.. automodule:: spotipy.util.credentials
+   :members:
+   :undoc-members:
 """
 
 from spotipy.util.config import (

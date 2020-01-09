@@ -1,6 +1,5 @@
 """
-scope
-=====
+User access token privileges.
 
 Scopes are used in user authorisation to provide tokens with additional privileges.
 An enumeration with every possible right is defined in :class:`AuthorisationScopes`.

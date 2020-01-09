@@ -1,7 +1,4 @@
 """
-convert
-=======
-
 Conversions between Spotify IDs, URIs and URLs.
 
 .. code:: python

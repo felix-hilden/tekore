@@ -1,8 +1,5 @@
 """
-serialise
-=========
-
-Serialisation and convenience methods for models returned from the client.
+Serialisation and convenience methods for :mod:`models <spotipy.model>`.
 
 The :class:`SerialisableDataclass` defined in this module along with other
 supporting classes makes it possible to access dictionary and original

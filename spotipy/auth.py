@@ -1,11 +1,10 @@
 """
-auth
-====
-OAuth2 authentication for client credentials and authorisation code flows.
+Web API authorisation.
 
 Access tokens are used in authorisation by the Web API.
-The client credentials and authorisation code flows are used to retrieve
-application credentials and user credentials, respectively.
+There are two methods of authorisation, called
+client credentials flow and authorisation code flow.
+They are used to retrieve application and user credentials, respectively.
 The former can be used in generic endpoints like the ones for albums,
 the latter is required for endpoints that involve a specific user.
 

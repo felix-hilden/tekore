@@ -20,6 +20,7 @@ coverage.xml
 
 # Sphinx
 docs/build
+docs/reference
 
 # Environments
 .env

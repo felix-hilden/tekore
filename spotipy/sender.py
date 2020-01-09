@@ -1,7 +1,5 @@
 """
-sender
-======
-Senders are used to manipulate the way clients send requests.
+Manipulate the way clients send requests.
 
 Senders wrap around :class:`requests.Session` providing different levels of
 persistence across requests and enabling retries on failed requests.
