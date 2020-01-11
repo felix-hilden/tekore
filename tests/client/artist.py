@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import artist_id, artist_ids
 
-from spotipy.client import SpotifyArtist
+from spotipy.client.api import SpotifyArtist
 from spotipy.model import AlbumGroup
 
 

@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithUserCredentials
 from ._resources import user_id, playlist_id, playlist_local, track_ids, image
 
-from spotipy.client import SpotifyPlaylist, SpotifyFollow
+from spotipy.client.api import SpotifyPlaylist, SpotifyFollow
 
 
 class TestSpotifyPlaylistView(TestCaseWithUserCredentials):

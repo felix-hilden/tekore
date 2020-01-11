@@ -2,7 +2,7 @@ from unittest import SkipTest
 from ._cred import TestCaseWithUserCredentials
 from ._resources import playlist_id, artist_ids, user_ids
 
-from spotipy.client import SpotifyFollow
+from spotipy.client.api import SpotifyFollow
 
 
 class TestSpotifyFollow(TestCaseWithUserCredentials):

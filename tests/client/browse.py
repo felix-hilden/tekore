@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithCredentials
 from ._resources import artist_ids, category_id, genres, track_id
 
-from spotipy.client import SpotifyBrowse
+from spotipy.client.api import SpotifyBrowse
 
 
 class TestSpotifyArtist(TestCaseWithCredentials):
@@ -31,17 +31,6 @@ class TestSpotifyArtist(TestCaseWithCredentials):
     def test_categories_no_country(self):
         cat = self.client.categories()
         self.assertGreater(cat.total, 0)
-
-    def test_categories_paging_next(self):
-        cat = self.client.categories(limit=1)
-        cat_next = self.client.next(cat)
-        self.assertGreater(cat_next.total, 0)
-
-    def test_categories_paging_previous(self):
-        cat = self.client.categories(limit=1)
-        cat_next = self.client.next(cat)
-        cat_prev = self.client.previous(cat_next)
-        self.assertEqual(cat.items[0].id, cat_prev.items[0].id)
 
     def test_category_with_country(self):
         cat = self.client.category(category_id, country='US')

@@ -168,7 +168,7 @@ Traversing paging objects
 -------------------------
 Many Web API endpoints that would return a large number of the same
 type of object return paging objects for performance reasons.
-The :class:`client <spotipy.client.base.SpotifyBase>`
+The :class:`client <spotipy.client.Spotify>`
 defines a few ways to navigate these pagings.
 Next and previous pages can be requested one at a time.
 

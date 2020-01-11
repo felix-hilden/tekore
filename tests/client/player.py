@@ -3,7 +3,8 @@ from requests import HTTPError
 
 from ._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id
-from spotipy.client import SpotifyPlayer
+from spotipy.client.api import SpotifyPlayer
+from spotipy.client import Spotify
 
 
 class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
@@ -145,7 +146,7 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
 
 class TestSpotifyPlayer(TestCaseWithUserCredentials):
     def setUp(self):
-        self.client = SpotifyPlayer(self.user_token)
+        self.client = Spotify(self.user_token)
 
     def test_recently_played(self):
         self.client.playback_recently_played()

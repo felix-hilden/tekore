@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
-from spotipy.client import SpotifyAlbum
+from spotipy.client.api import SpotifyAlbum
 
 
 class TestSpotifyAlbum(TestCaseWithCredentials):

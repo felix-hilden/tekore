@@ -6,7 +6,7 @@ from ._resources import (
     track_restricted,
 )
 
-from spotipy.client import SpotifyTrack
+from spotipy.client.api import SpotifyTrack
 
 
 class TestSpotifyTrack(TestCaseWithCredentials):
