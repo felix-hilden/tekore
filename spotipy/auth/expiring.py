@@ -1,44 +1,3 @@
-"""
-Web API authorisation.
-
-Access tokens are used in authorisation by the Web API.
-There are two methods of authorisation, called
-client credentials flow and authorisation code flow.
-They are used to retrieve application and user credentials, respectively.
-The former can be used in generic endpoints like the ones for albums,
-the latter is required for endpoints that involve a specific user.
-
-.. code:: python
-
-    from spotipy.auth import Credentials
-
-    cred = Credentials(client_id, client_secret, redirect_uri)
-
-    # Client credentials flow
-    app_token = cred.request_client_token()
-
-    # Authorisation code flow
-    url = cred.user_authorisation_url()
-    code = ...  # Redirect user to login and retrieve code
-    user_token = cred.request_user_token(code)
-
-Tokens expire after an hour.
-Their expiration status can be determined via :attr:`Token.is_expiring`.
-Client tokens can simply be retrieved again.
-To avoid another authorisation when using user tokens, a refresh token
-can be used to request a new access token with an equivalent scope.
-
-.. code:: python
-
-    # Specialised refresh
-    app_token = cred.request_client_token()
-    user_token = cred.refresh_user_token(user_token.refresh_token)
-
-    # Type-agnostic refresh
-    app_token = cred.refresh(app_token)
-    user_token = cred.refresh(user_token)
-"""
-
 import time
 
 from abc import ABC, abstractmethod
@@ -67,13 +26,15 @@ def b64encode(msg: str) -> str:
 class AccessToken(ABC):
     """
     Token object.
-
-    Has an :attr:`access_token <AccessToken.access_token>`
-    property, which is also the string representation of the instance.
     """
     @property
     @abstractmethod
     def access_token(self) -> str:
+        """
+        Bearer token value.
+
+        Used as the string representation of the instance.
+        """
         raise NotImplementedError
 
     def __str__(self):
@@ -89,18 +50,27 @@ class Token(AccessToken):
     """
     def __init__(self, token_info: dict):
         self._access_token = token_info['access_token']
-        self.token_type = token_info['token_type']
-        self.scope = token_info['scope']
+        self._token_type = token_info['token_type']
+        self._scope = token_info['scope']
 
-        self.refresh_token = token_info.get('refresh_token', None)
-        self.expires_at = int(time.time()) + token_info['expires_in']
+        self._refresh_token = token_info.get('refresh_token', None)
+        self._expires_at = int(time.time()) + token_info['expires_in']
 
     @property
     def access_token(self) -> str:
-        """
-        Bearer token value.
-        """
         return self._access_token
+
+    @property
+    def refresh_token(self) -> str:
+        return self._refresh_token
+
+    @property
+    def token_type(self) -> str:
+        return self._token_type
+
+    @property
+    def scope(self) -> str:
+        return self._scope
 
     @property
     def expires_in(self) -> int:
@@ -108,6 +78,10 @@ class Token(AccessToken):
         Seconds until token expiration.
         """
         return self.expires_at - int(time.time())
+
+    @property
+    def expires_at(self) -> int:
+        return self._expires_at
 
     @property
     def is_expiring(self) -> bool:
@@ -272,7 +246,7 @@ class Credentials(Client):
         refreshed = self._request_token(payload)
 
         if refreshed.refresh_token is None:
-            refreshed.refresh_token = refresh_token
+            refreshed._refresh_token = refresh_token
 
         return refreshed
 

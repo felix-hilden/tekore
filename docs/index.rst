@@ -26,6 +26,7 @@ or ask just about anything related to Spotipy.
 If you're new here, have a look at :ref:`getting-started`.
 After your first calls to the API you might want to look at :ref:`advanced-usage`.
 More ellaborate example scripts can be found in :ref:`examples`.
+Detailed information can be found in our concise :ref:`reference`.
 
 Using an older version?
 See the `legacy documentation <rtd old_>`_ for Spotipy 2.
@@ -35,18 +36,17 @@ Features
 The `Web API`_ provides access to a plethora of data on music and users.
 Spotipy implements these most integral features completely.
 
-- :mod:`spotipy.auth`: authentication for application and user tokens
+- :mod:`spotipy.auth`: authentication for application and user tokens,
+  self-refreshing tokens
 - :mod:`spotipy.client`: endpoints for access to every resource in the API.
   Responses are parsed into :mod:`models <spotipy.model>` with explicit
   attributes to ease examining the contents of a response.
 
 Additional features and various convenience modules are provided too.
-Please refer to the documentation of each module for more information.
 
 - :mod:`spotipy.util`
 
   - Command line prompt for user autentication
-  - Self-refreshing access tokens
   - Read and write configuration from files and environment variables
 
 - :mod:`spotipy.sender`
