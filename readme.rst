@@ -114,7 +114,7 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
    :target: https://tekore.readthedocs.io/en/latest
    :alt: documentation status
 
-.. |coverage| image:: https://api.codeclimate.com/v1/badges/6cbb70d77e31c4d3b4c6/test_coverage
+.. |coverage| image:: https://api.codeclimate.com/v1/badges/627ab5f90253b59d4c8f/test_coverage
    :target: https://codeclimate.com/github/felix-hilden/tekore/test_coverage
    :alt: test coverage
 
