@@ -1,5 +1,5 @@
 from ._cred import TestCaseWithUserCredentials
-from spotipy.client.api import SpotifySearch
+from tekore.client.api import SpotifySearch
 
 
 class TestSpotifySearch(TestCaseWithUserCredentials):

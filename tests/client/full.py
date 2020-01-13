@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from ._cred import TestCaseWithUserCredentials
 from ._resources import playlist_id
-from spotipy.client import Spotify
+from tekore.client import Spotify
 
 
 class TestSpotifyBaseUnits(TestCase):

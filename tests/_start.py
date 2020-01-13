@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from spotipy._start import check_python_version
+from tekore._start import check_python_version
 
 
 class TestPackage(unittest.TestCase):

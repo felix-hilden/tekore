@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithUserCredentials
 from ._resources import user_id
 
-from spotipy.client.api import SpotifyUser
+from tekore.client.api import SpotifyUser
 
 
 class TestSpotifyUser(TestCaseWithUserCredentials):

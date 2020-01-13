@@ -2,7 +2,7 @@ Client configurations
 =====================
 Here are some examples of client configurations.
 Adjust the configurations based on the number of instances
-or type of :class:`Sender` you want.
+or type of :class:`Sender <tekore.sender.Sender>` you want.
 
 Local application, single user
 ------------------------------
@@ -12,9 +12,9 @@ authentication can be completed with some manual work.
 
 .. code:: python
 
-    from spotipy import Spotify, util
-    from spotipy.scope import every
-    from spotipy.sender import PersistentSender
+    from tekore import Spotify, util
+    from tekore.scope import every
+    from tekore.sender import PersistentSender
 
     conf = util.config_from_environment()
     token = util.prompt_for_user_token(*conf, scope=every)
@@ -28,7 +28,7 @@ Save the refresh token to avoid authenticating again when restarting.
 
     # Load refresh token
     refresh_token = ...
-    token = util.refresh_user_token(*conf, refresh_token)
+    token = util.refresh_user_token(*conf[:2], refresh_token)
 
 
 Server application or multiple users
@@ -39,9 +39,9 @@ using the application token and swapping in user tokens.
 
 .. code:: python
 
-    from spotipy import Spotify, Credentials
-    from spotipy.util import config_from_environment
-    from spotipy.sender import PersistentSender
+    from tekore import Spotify, Credentials
+    from tekore.util import config_from_environment
+    from tekore.sender import PersistentSender
 
     conf = config_from_environment()
     cred = Credentials(*conf)
@@ -56,4 +56,4 @@ using the application token and swapping in user tokens.
         user = s.current_user()
 
 If multiple clients are instantiated,
-consider using a :class:`SingletonSender` instead.
+consider using a :class:`SingletonSender <tekore.sender.SingletonSender>` instead.

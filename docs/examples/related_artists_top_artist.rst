@@ -8,8 +8,8 @@ and you have used Spotify enough to have top artists.
 
 .. code:: python
 
-    from spotipy import util, Spotify
-    from spotipy.scope import scopes
+    from tekore import util, Spotify
+    from tekore.scope import scopes
 
     conf = util.config_from_environment()
     scope = scopes.user_top_read + scopes.user_follow_read

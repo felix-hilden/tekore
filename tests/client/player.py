@@ -3,8 +3,8 @@ from requests import HTTPError
 
 from ._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id
-from spotipy.client.api import SpotifyPlayer
-from spotipy.client import Spotify
+from tekore.client.api import SpotifyPlayer
+from tekore.client import Spotify
 
 
 class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):

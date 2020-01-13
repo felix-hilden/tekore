@@ -8,9 +8,9 @@ and you have an active Spotify application open.
 
 .. code:: python
 
-    from spotipy import util, Spotify
-    from spotipy.scope import scopes
-    from spotipy.convert import to_uri
+    from tekore import util, Spotify
+    from tekore.scope import scopes
+    from tekore.convert import to_uri
 
     conf = util.config_from_environment()
     scope = scopes.user_library_read + scopes.user_modify_playback_state

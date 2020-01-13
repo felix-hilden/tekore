@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from requests import HTTPError
-from spotipy.auth.expiring import AccessToken, Token, Credentials, OAuthError
-from spotipy.auth.refreshing import RefreshingCredentials, RefreshingToken
+from tekore.auth.expiring import AccessToken, Token, Credentials, OAuthError
+from tekore.auth.refreshing import RefreshingCredentials, RefreshingToken
 
 from tests.client._cred import TestCaseWithEnvironment, TestCaseWithCredentials
 
@@ -38,7 +38,7 @@ class TestToken(unittest.TestCase):
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch('spotipy.auth.expiring.time', time):
+        with patch('tekore.auth.expiring.time', time):
             token = Token(make_token_dict())
             self.assertEqual(token.access_token, 'accesstoken')
 
@@ -46,7 +46,7 @@ class TestToken(unittest.TestCase):
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch('spotipy.auth.expiring.time', time):
+        with patch('tekore.auth.expiring.time', time):
             token = Token(make_token_dict())
             self.assertEqual(token.expires_in, 3600)
 
@@ -54,7 +54,7 @@ class TestToken(unittest.TestCase):
         time = MagicMock()
         time.time.side_effect = [0, 1]
 
-        with patch('spotipy.auth.expiring.time', time):
+        with patch('tekore.auth.expiring.time', time):
             token = Token(make_token_dict())
             self.assertEqual(token.expires_in, 3599)
 
@@ -62,7 +62,7 @@ class TestToken(unittest.TestCase):
         time = MagicMock()
         time.time.side_effect = [0, 3600]
 
-        with patch('spotipy.auth.expiring.time', time):
+        with patch('tekore.auth.expiring.time', time):
             token = Token(make_token_dict())
             self.assertEqual(token.is_expiring, True)
 
@@ -101,7 +101,7 @@ class TestCredentialsOffline(unittest.TestCase):
         c = Credentials('id', 'secret')
 
         send = MagicMock(return_value=mock_response(500))
-        with patch('spotipy.auth.Credentials._send', send):
+        with patch('tekore.auth.Credentials._send', send):
             with self.assertRaises(HTTPError):
                 c.request_client_token()
 
@@ -115,7 +115,7 @@ class TestCredentialsOffline(unittest.TestCase):
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
         send = MagicMock(return_value=mock_response())
-        with patch('spotipy.auth.Credentials._send', send):
+        with patch('tekore.auth.Credentials._send', send):
             c.request_user_token('code')
             send.assert_called_once()
 
@@ -126,7 +126,7 @@ class TestCredentialsOffline(unittest.TestCase):
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch('spotipy.auth.Credentials._send', send):
+        with patch('tekore.auth.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
             self.assertEqual(refreshed.refresh_token, 'refresh')
 
@@ -136,7 +136,7 @@ class TestCredentialsOffline(unittest.TestCase):
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch('spotipy.auth.Credentials._send', send):
+        with patch('tekore.auth.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
             self.assertEqual(refreshed.refresh_token, token['refresh_token'])
 
@@ -146,7 +146,7 @@ class TestCredentialsOffline(unittest.TestCase):
         token.refresh_token = None
 
         mock = MagicMock()
-        with patch('spotipy.auth.Credentials.request_client_token', mock):
+        with patch('tekore.auth.Credentials.request_client_token', mock):
             c.refresh(token)
             mock.assert_called_once()
 
@@ -156,7 +156,7 @@ class TestCredentialsOffline(unittest.TestCase):
         token.refresh_token = 'refresh'
 
         mock = MagicMock()
-        with patch('spotipy.auth.Credentials.refresh_user_token', mock):
+        with patch('tekore.auth.Credentials.refresh_user_token', mock):
             c.refresh(token)
             mock.assert_called_once()
 

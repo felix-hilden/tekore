@@ -6,10 +6,10 @@ _root = Path(os.path.realpath(__file__)).parent.parent
 sys.path.insert(0, _root)
 
 
-project = 'spotipy'
+project = 'tekore'
 author = 'Felix Hildén'
 copyright = '2019, Felix Hildén'
-release = Path(_root, 'spotipy', 'VERSION').read_text().strip()
+release = Path(_root, 'tekore', 'VERSION').read_text().strip()
 
 extensions = [
     'sphinx.ext.autodoc',

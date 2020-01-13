@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithUserCredentials
 from ._resources import user_id, playlist_id, playlist_local, track_ids, image
 
-from spotipy.client.api import SpotifyPlaylist, SpotifyFollow
+from tekore.client.api import SpotifyPlaylist, SpotifyFollow
 
 
 class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
@@ -59,9 +59,9 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
     def test_playlist_modifications(self):
         playlist = self.client.playlist_create(
             self.current_user_id,
-            'spotipy-test',
+            'tekore-test',
             public=False,
-            description='Temporary test playlist for Spotipy'
+            description='Temporary test playlist for Tekore'
         )
         with self.subTest('Playlist created'):
             self.assertIsNotNone(playlist)
@@ -70,11 +70,11 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
             # Upload new cover, assert last to wait for server
             self.client.playlist_cover_image_upload(playlist.id, image)
 
-            new_name = 'spotipy-test-modified'
+            new_name = 'tekore-test-modified'
             self.client.playlist_change_details(
                 playlist.id,
                 name=new_name,
-                description='Temporary test playlist for Spotipy (modified)'
+                description='Temporary test playlist for Tekore (modified)'
             )
             playlist = self.client.playlist(playlist.id)
             with self.subTest('Details changed'):

@@ -6,7 +6,7 @@ Reference
 All public modules and objects are documented here.
 Here's a short summary of each module.
 
-.. currentmodule:: spotipy
+.. currentmodule:: tekore
 .. autosummary::
    :toctree: reference
 
@@ -19,6 +19,6 @@ Here's a short summary of each module.
    serialise
    util
 
-Two classes, :class:`Credentials <spotipy.auth.Credentials>` and
-:class:`Spotify <spotipy.client.Spotify>`
-are available in the :mod:`spotipy` namespace.
+Two classes, :class:`Credentials <tekore.auth.expiring.Credentials>` and
+:class:`Spotify <tekore.client.Spotify>`
+are made available in the top level :mod:`tekore` namespace.

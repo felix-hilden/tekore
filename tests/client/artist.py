@@ -1,8 +1,8 @@
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import artist_id, artist_ids
 
-from spotipy.client.api import SpotifyArtist
-from spotipy.model import AlbumGroup
+from tekore.client.api import SpotifyArtist
+from tekore.model import AlbumGroup
 
 
 class TestSpotifyArtist(TestCaseWithCredentials):

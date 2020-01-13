@@ -1,5 +1,5 @@
 import unittest
-from spotipy.scope import scopes, Scope
+from tekore.scope import scopes, Scope
 
 
 class TestAuthorisationScopes(unittest.TestCase):

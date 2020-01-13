@@ -7,8 +7,8 @@ It assumes that your credentials are saved in the environment.
 
 .. code:: python
 
-    from spotipy import util, Spotify
-    from spotipy.scope import scopes
+    from tekore import util, Spotify
+    from tekore.scope import scopes
 
     conf = util.config_from_environment()
     scope = scopes.playlist_modify_private

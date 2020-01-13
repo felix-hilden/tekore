@@ -6,7 +6,7 @@ Working with access tokens
 --------------------------
 Retrieving user tokens
 **********************
-:func:`prompt_for_user_token <spotipy.util.credentials.prompt_for_user_token>`
+:func:`prompt_for_user_token <tekore.util.credentials.prompt_for_user_token>`
 provides a convenient way of retrieving
 an access token that refreshes automatically when about to expire.
 However, it is intended for local use as it opens up a browser window.
@@ -16,14 +16,14 @@ For situations involving a server, a two-step process should be implemented.
 - Receive an access token as a result of the authentication
 
 The steps are covered by two methods of the
-:class:`Credentials <spotipy.auth.Credentials>` class.
+:class:`Credentials <tekore.auth.expiring.Credentials>` class.
 See this recipe on an :ref:`auth-server` for an example implementation.
 The same process can be implemented using
-:class:`RefreshingCredentials <spotipy.auth.refreshing.RefreshingCredentials>`.
+:class:`RefreshingCredentials <tekore.auth.refreshing.RefreshingCredentials>`.
 
 Providing tokens
 ****************
-The :mod:`client <spotipy.client>` provides two ways of authenticating requests.
+The :mod:`client <tekore.client>` provides two ways of authenticating requests.
 Firstly an access token is accepted in the client's constructor.
 
 .. code:: python
@@ -48,8 +48,8 @@ Token persistence
 *****************
 A refresh token is enough to request new user access tokens,
 making them a perfect candidate to save to a file or a database.
-Whether you are using :mod:`auth <spotipy.auth>` or
-:mod:`util <spotipy.util.credentials>`,
+Whether you are using :mod:`auth <tekore.auth>` or
+:mod:`util <tekore.util.credentials>`,
 the refresh tokens can later be used to retrieve user access tokens.
 
 A refresh token is valid until the user manually revokes it from Spotify.
@@ -66,28 +66,28 @@ Application configuration
 -------------------------
 Should you want to use environment variables or configuration files
 to provide application credentials, functions for reading those values
-are provided in the :mod:`util <spotipy.util.config>` module.
+are provided in the :mod:`util <tekore.util.config>` module.
 Set values in your environment or write a configuration file.
 
 .. code:: sh
 
-    export SPOTIPY_CLIENT_ID=your_id
-    export SPOTIPY_CLIENT_SECRET=your_secret
-    export SPOTIPY_REDIRECT_URI=your_uri
+    export SPOTIFY_CLIENT_ID=your_id
+    export SPOTIFY_CLIENT_SECRET=your_secret
+    export SPOTIFY_REDIRECT_URI=your_uri
 
 .. code::
 
     [DEFAULT]
-    SPOTIPY_CLIENT_ID=your_id
-    SPOTIPY_CLIENT_SECRET=your_secret
-    SPOTIPY_REDIRECT_URI=your_uri
+    SPOTIFY_CLIENT_ID=your_id
+    SPOTIFY_CLIENT_SECRET=your_secret
+    SPOTIFY_REDIRECT_URI=your_uri
 
 Then read those values.
 Functions that read configuration return a 3-tuple of configuration variables.
 
 .. code:: python
 
-   from spotipy.util import config_from_environment, config_from_file
+   from tekore.util import config_from_environment, config_from_file
    client_id, client_secret, redirect_uri = config_from_environment()
    client_id, client_secret, redirect_uri = config_from_file(filename)
 
@@ -97,13 +97,13 @@ it is possible to use unpacking to provide the configuration.
 
 .. code:: python
 
-   from spotipy import util
+   from tekore import util
 
    conf = util.config_from_environment()
    token = util.prompt_for_user_token(*conf)
 
 Configuring a user refresh token is also possible.
-Define ``SPOTIPY_USER_REFRESH`` and pass in a boolean flag
+Define ``SPOTIFY_USER_REFRESH`` and pass in a boolean flag
 to read it as a fourth configuration value.
 
 .. code:: python
@@ -119,21 +119,21 @@ This is handy if a user's refresh token needs to be stored.
 
 Sending requests
 ----------------
-By default Spotipy doesn't do anything clever when sending requests.
+By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
-using different kinds of :mod:`senders <spotipy.sender>`.
+using different kinds of :mod:`senders <tekore.sender>`.
 They provide the immediate
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
 of using a :class:`requests.Session`.
 They can bring new functionality, use user-defined sessions
 and pass additional keyword arguments to :class:`Session.send`.
 For example per-instance sessions can be enabled with a
-:class:`PersistentSender <spotipy.sender.PersistentSender>`.
+:class:`PersistentSender <tekore.sender.PersistentSender>`.
 
 .. code:: python
 
-   from spotipy import Spotify
-   from spotipy.sender import PersistentSender
+   from tekore import Spotify
+   from tekore.sender import PersistentSender
 
    Spotify(sender=PersistentSender())
 
@@ -142,7 +142,7 @@ For example per-instance sessions can be enabled with a
 Response caching
 ----------------
 The Spotify Web API returns headers for caching responses.
-Spotipy does not implement caching, but a :mod:`sender <spotipy.sender>`
+Tekore does not implement caching, but a :mod:`sender <tekore.sender>`
 can be implemented to provide it.
 For example the
 `CacheControl <https://pypi.org/project/CacheControl/>`_
@@ -154,7 +154,7 @@ Traversing paging objects
 -------------------------
 Many Web API endpoints that would return a large number of the same
 type of object return paging objects for performance reasons.
-The :class:`client <spotipy.client.Spotify>`
+The :class:`client <tekore.client.Spotify>`
 defines a few ways to navigate these pagings.
 Next and previous pages can be requested one at a time.
 

@@ -4,11 +4,10 @@ python_requires = (3, 6)
 python_requires_str = '.'.join([str(i) for i in python_requires])
 
 error = """
-Spotipy 3.0+ supports Python {} and above, Python {} was detected.
-When using earlier versions, please install spotipy 2.4.5.
+Tekore supports Python {} and above, Python {} was detected.
 
 See Spotipy on PyPI for more information:
-https://pypi.org/project/spotipy
+https://pypi.org/project/tekore
 
 Try upgrading pip and retry.
 """
@@ -27,15 +26,15 @@ import setuptools
 from pathlib import Path
 
 root = Path(os.path.realpath(__file__)).parent
-version_file = root / 'spotipy' / 'VERSION'
+version_file = root / 'tekore' / 'VERSION'
 readme_file = root / 'readme_pypi.rst'
 
-pypi_url = 'https://github.com/felix-hilden/spotipy'
-github_url = 'https://github.com/felix-hilden/spotipy'
-documentation_url = 'https://updated-spotipy-test.readthedocs.io'
+pypi_url = 'https://github.com/felix-hilden/tekore'
+github_url = 'https://github.com/felix-hilden/tekore'
+documentation_url = 'https://tekore.readthedocs.io'
 
 setuptools.setup(
-    name='spotipy',
+    name='tekore',
     version=version_file.read_text().strip(),
     description='Client for the Spotify Web API',
     long_description=readme_file.read_text(),
@@ -58,7 +57,7 @@ setuptools.setup(
     keywords='spotify web api client',
     packages=setuptools.find_packages(),
     package_data={
-        'spotipy': ['VERSION']
+        'tekore': ['VERSION']
     },
 
     python_requires='>=' + python_requires_str,

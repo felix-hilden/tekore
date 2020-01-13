@@ -2,9 +2,9 @@ import unittest
 from unittest.mock import MagicMock
 
 from requests import HTTPError
-from spotipy.client import Spotify
-from spotipy.client.base import SpotifyBase
-from spotipy.model.error import PlayerErrorReason
+from tekore.client import Spotify
+from tekore.client.base import SpotifyBase
+from tekore.model.error import PlayerErrorReason
 
 from ._cred import TestCaseWithUserCredentials
 from ._resources import album_id

@@ -8,7 +8,7 @@ you have followed or created at least one playlist and it has a track on it.
 
 .. code:: python
 
-    from spotipy import util, Spotify
+    from tekore import util, Spotify
 
     conf = util.config_from_environment()
     token = util.prompt_for_user_token(*conf)

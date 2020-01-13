@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
-from spotipy.client.api import SpotifyAlbum
+from tekore.client.api import SpotifyAlbum
 
 
 class TestSpotifyAlbum(TestCaseWithCredentials):

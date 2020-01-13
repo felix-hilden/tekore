@@ -8,8 +8,8 @@ and you have used Spotify enough to have top tracks.
 
 .. code:: python
 
-    from spotipy import util, Spotify
-    from spotipy.scope import scopes
+    from tekore import util, Spotify
+    from tekore.scope import scopes
 
     conf = util.config_from_environment()
     scope = scopes.user_top_read + scopes.playlist_modify_private
@@ -23,7 +23,7 @@ and you have used Spotify enough to have top tracks.
     user = spotify.current_user()
     playlist = spotify.playlist_create(
         user.id,
-        'Spotipy Recommendations',
+        'Tekore Recommendations',
         public=False,
         description='Recommendations based on your top tracks <3'
     )

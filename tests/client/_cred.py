@@ -3,11 +3,11 @@ import os
 from unittest import TestCase, SkipTest
 from requests.exceptions import HTTPError
 
-from spotipy.auth import Credentials
-from spotipy.util import config_from_environment
-from spotipy.client import Spotify
+from tekore.auth import Credentials
+from tekore.util import config_from_environment
+from tekore.client import Spotify
 
-skip_is_fail = os.getenv('SPOTIPY_TEST_SKIP_IS_FAIL', None)
+skip_is_fail = os.getenv('TEKORE_TEST_SKIP_IS_FAIL', None)
 
 
 def skip_or_fail(ex_type: type, msg: str, ex: Exception = None):
@@ -44,7 +44,7 @@ class TestCaseWithUserEnvironment(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user_refresh = os.getenv('SPOTIPY_USER_REFRESH', None)
+        cls.user_refresh = os.getenv('SPOTIFY_USER_REFRESH', None)
         if cls.user_refresh is None:
             skip_or_fail(KeyError, 'No application credentials!')
 

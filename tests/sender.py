@@ -2,7 +2,7 @@ import unittest
 
 from unittest.mock import patch, MagicMock
 from requests import Request
-from spotipy.sender import (
+from tekore.sender import (
     Sender, TransientSender, SingletonSender, PersistentSender, RetryingSender
 )
 
@@ -36,7 +36,7 @@ class TestSingletonSender(unittest.TestCase):
 
     def test_request_prepared(self):
         mock = MockSessionFactory()
-        with patch('spotipy.sender.SingletonSender.session', mock()):
+        with patch('tekore.sender.SingletonSender.session', mock()):
             s = SingletonSender()
             r = Request()
             s.send(r)
@@ -45,7 +45,7 @@ class TestSingletonSender(unittest.TestCase):
     def test_keywords_passed_to_session(self):
         mock = MockSessionFactory()
         kwargs = dict(k1='k1', k2='k2')
-        with patch('spotipy.sender.SingletonSender.session', mock()):
+        with patch('tekore.sender.SingletonSender.session', mock()):
             s = SingletonSender(**kwargs)
             r = Request()
             s.send(r)
@@ -57,7 +57,7 @@ class TestSingletonSender(unittest.TestCase):
 
 def test_request_prepared(sender_type):
     mock = MockSessionFactory()
-    with patch('spotipy.sender.Session', mock):
+    with patch('tekore.sender.Session', mock):
         s = sender_type()
         r = Request()
         s.send(r)
@@ -67,14 +67,14 @@ def test_request_prepared(sender_type):
 def test_keywords_passed_to_session(sender_type):
     mock = MockSessionFactory()
     kwargs = dict(k1='k1', k2='k2')
-    with patch('spotipy.sender.Session', mock):
+    with patch('tekore.sender.Session', mock):
         s = sender_type(**kwargs)
         s.send(Request())
         mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
 class TestPersistentSender(unittest.TestCase):
-    @patch('spotipy.sender.Session', MagicMock)
+    @patch('tekore.sender.Session', MagicMock)
     def test_session_is_reused(self):
         s = PersistentSender()
         sess1 = s.session
@@ -98,7 +98,7 @@ class TestPersistentSender(unittest.TestCase):
 class TestTransientSender(unittest.TestCase):
     def test_session_is_not_reused(self):
         mock = MockSessionFactory()
-        with patch('spotipy.sender.Session', mock):
+        with patch('tekore.sender.Session', mock):
             s = TransientSender()
             s.send(Request())
             s.send(Request())
@@ -140,7 +140,7 @@ class TestRetryingSender(unittest.TestCase):
         sender.send.side_effect = [fail, success]
 
         s = RetryingSender(sender=sender)
-        with patch('spotipy.sender.time', time):
+        with patch('tekore.sender.time', time):
             s.send(Request())
             time.sleep.assert_called_once_with(1)
 
@@ -161,7 +161,7 @@ class TestRetryingSender(unittest.TestCase):
         sender.send.side_effect = [fail, fail, fail, success]
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('spotipy.sender.time', MagicMock()):
+        with patch('tekore.sender.time', MagicMock()):
             s.send(Request())
         self.assertEqual(sender.send.call_count, 3)
 
@@ -172,7 +172,7 @@ class TestRetryingSender(unittest.TestCase):
         sender.send.side_effect = [fail, fail, success, fail, success]
 
         s = RetryingSender(retries=5, sender=sender)
-        with patch('spotipy.sender.time', MagicMock()):
+        with patch('tekore.sender.time', MagicMock()):
             s.send(Request())
         self.assertEqual(sender.send.call_count, 3)
 
@@ -185,7 +185,7 @@ class TestRetryingSender(unittest.TestCase):
         sender.send.side_effect = [fail, rate, fail, success]
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('spotipy.sender.time', MagicMock()):
+        with patch('tekore.sender.time', MagicMock()):
             s.send(Request())
 
         self.assertEqual(sender.send.call_count, 4)
@@ -193,7 +193,7 @@ class TestRetryingSender(unittest.TestCase):
 
 class TestSenderDefaults(unittest.TestCase):
     def setUp(self):
-        from spotipy import sender
+        from tekore import sender
         self.old_default_type = sender.default_sender_type
         self.old_default_instance = sender.default_sender_instance
         self.old_default_kwargs = sender.default_requests_kwargs
@@ -202,7 +202,7 @@ class TestSenderDefaults(unittest.TestCase):
         instance = MagicMock()
         type_mock = MagicMock(return_value=instance)
 
-        from spotipy import sender, Spotify
+        from tekore import sender, Spotify
         sender.default_sender_type = type_mock
 
         s = Spotify()
@@ -211,7 +211,7 @@ class TestSenderDefaults(unittest.TestCase):
     def test_modify_default_sender_instance(self):
         instance = MagicMock()
 
-        from spotipy import sender, Spotify
+        from tekore import sender, Spotify
         sender.default_sender_instance = instance
 
         s = Spotify()
@@ -221,7 +221,7 @@ class TestSenderDefaults(unittest.TestCase):
         instance = MagicMock()
         type_mock = MagicMock(return_value=MagicMock())
 
-        from spotipy import sender, Spotify
+        from tekore import sender, Spotify
         sender.default_sender_type = type_mock
         sender.default_sender_instance = instance
 
@@ -229,7 +229,7 @@ class TestSenderDefaults(unittest.TestCase):
         self.assertIs(s.sender, instance)
 
     def test_retrying_sender_as_default_type_recurses(self):
-        from spotipy import sender
+        from tekore import sender
         sender.default_sender_type = sender.RetryingSender
 
         with self.assertRaises(RecursionError):
@@ -238,7 +238,7 @@ class TestSenderDefaults(unittest.TestCase):
     def test_default_kwargs_used_if_none_specified(self):
         kwargs = {'arg': 'val'}
 
-        from spotipy import sender
+        from tekore import sender
         sender.default_requests_kwargs = kwargs
         s = sender.TransientSender()
         self.assertDictEqual(s.requests_kwargs, kwargs)
@@ -246,13 +246,13 @@ class TestSenderDefaults(unittest.TestCase):
     def test_default_kwargs_ignored_if_kwargs_specified(self):
         kwargs = {'arg': 'val'}
 
-        from spotipy import sender
+        from tekore import sender
         sender.default_requests_kwargs = kwargs
         s = sender.TransientSender(kw='value')
         self.assertNotIn('arg', s.requests_kwargs)
 
     def tearDown(self):
-        from spotipy import sender
+        from tekore import sender
         sender.default_sender_type = self.old_default_type
         sender.default_sender_instance = self.old_default_instance
         sender.default_requests_kwargs = self.old_default_kwargs

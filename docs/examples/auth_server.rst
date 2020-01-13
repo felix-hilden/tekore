@@ -22,9 +22,9 @@ Logging out deletes the cookie and server-stored user information.
 
     from flask import Flask, request, redirect, session
 
-    from spotipy import Spotify, Credentials
-    from spotipy.util import config_from_environment
-    from spotipy.scope import every
+    from tekore import Spotify, Credentials
+    from tekore.util import config_from_environment
+    from tekore.scope import every
 
     conf = config_from_environment()
     cred = Credentials(*conf)

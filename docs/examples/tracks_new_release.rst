@@ -7,7 +7,7 @@ there is at least new release in the Spotify catalogue.
 
 .. code:: python
 
-    from spotipy import util, Spotify
+    from tekore import util, Spotify
 
     conf = util.config_from_environment()
     token = util.request_client_token(*conf[:2])

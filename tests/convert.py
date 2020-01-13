@@ -1,6 +1,6 @@
 import unittest
 
-from spotipy.convert import (
+from tekore.convert import (
     check_id, check_type, ConversionError,
     to_url, to_uri, from_url, from_uri, IdentifierType
 )

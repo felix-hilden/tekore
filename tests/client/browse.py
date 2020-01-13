@@ -1,7 +1,7 @@
 from ._cred import TestCaseWithCredentials
 from ._resources import artist_ids, category_id, genres, track_id
 
-from spotipy.client.api import SpotifyBrowse
+from tekore.client.api import SpotifyBrowse
 
 
 class TestSpotifyArtist(TestCaseWithCredentials):

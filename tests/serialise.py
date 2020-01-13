@@ -6,7 +6,7 @@ from typing import List
 from dataclasses import dataclass
 from unittest.mock import MagicMock, patch
 
-from spotipy.serialise import (
+from tekore.serialise import (
     JSONEncoder,
     SerialisableDataclass,
     SerialisableEnum,
@@ -101,7 +101,7 @@ class TestSerialisableDataclass(unittest.TestCase):
         asdict = MagicMock(return_value='dict')
         data = Data(i=1)
 
-        with patch('spotipy.serialise.asdict', asdict):
+        with patch('tekore.serialise.asdict', asdict):
             data.asdict()
             asdict.assert_called_with(data)
 
@@ -114,7 +114,7 @@ class TestSerialisableDataclass(unittest.TestCase):
         pprint = MagicMock()
         data = Data(i=1)
 
-        with patch('spotipy.serialise.pprint', pprint):
+        with patch('tekore.serialise.pprint', pprint):
             data.pprint()
             pprint.assert_called_with({'i': 1})
 
@@ -122,12 +122,13 @@ class TestSerialisableDataclass(unittest.TestCase):
         pprint = MagicMock()
         data = Data(i=1)
 
-        with patch('spotipy.serialise.pprint', pprint):
+        with patch('tekore.serialise.pprint', pprint):
             data.pprint(kw='argument')
             pprint.assert_called_with({'i': 1}, kw='argument')
 
     def test_enum_in_dataclass(self):
         e = SerialisableEnum('e', 'a b c')
+
         @dataclass
         class C(SerialisableDataclass):
             v: e

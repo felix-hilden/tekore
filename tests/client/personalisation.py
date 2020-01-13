@@ -1,5 +1,5 @@
 from ._cred import TestCaseWithUserCredentials
-from spotipy.client.api import SpotifyPersonalisation
+from tekore.client.api import SpotifyPersonalisation
 
 
 class TestSpotifyPersonalisation(TestCaseWithUserCredentials):

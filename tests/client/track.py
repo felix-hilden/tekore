@@ -6,7 +6,7 @@ from ._resources import (
     track_restricted,
 )
 
-from spotipy.client.api import SpotifyTrack
+from tekore.client.api import SpotifyTrack
 
 
 class TestSpotifyTrack(TestCaseWithCredentials):

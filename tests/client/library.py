@@ -2,7 +2,7 @@ from unittest import SkipTest
 from ._cred import TestCaseWithUserCredentials
 from ._resources import album_ids, track_ids
 
-from spotipy.client.api import SpotifyLibrary
+from tekore.client.api import SpotifyLibrary
 
 
 class TestSpotifyFollow(TestCaseWithUserCredentials):

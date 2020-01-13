@@ -1,5 +1,5 @@
 [run]
-source = spotipy
+source = tekore
 
 [report]
 exclude_lines =

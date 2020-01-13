@@ -3,8 +3,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from spotipy.auth.refreshing import RefreshingToken
-from spotipy.util import (
+from tekore.auth.refreshing import RefreshingToken
+from tekore.util import (
     parse_code_from_url,
     prompt_for_user_token,
     config_from_environment,
@@ -40,10 +40,10 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
         cred.authorisation_url.return_value = 'http://example.com'
         cred.request_access_token.return_value = MagicMock()
         input_ = MagicMock(return_value='http://example.com?code=1')
-        with patch('spotipy.auth.refreshing.Credentials', cred),\
-                patch('spotipy.util.credentials.webbrowser', MagicMock()),\
-                patch('spotipy.util.credentials.input', input_),\
-                patch('spotipy.util.credentials.print', MagicMock()):
+        with patch('tekore.auth.refreshing.Credentials', cred),\
+                patch('tekore.util.credentials.webbrowser', MagicMock()),\
+                patch('tekore.util.credentials.input', input_),\
+                patch('tekore.util.credentials.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
 
         with self.subTest('Input prompted'):
@@ -91,10 +91,10 @@ class TestReadConfig(unittest.TestCase):
     test_config_path = 'test_config.ini'
     test_config = """
 [DEFAULT]
-SPOTIPY_CLIENT_ID = df_id
-SPOTIPY_CLIENT_SECRET = df_secret
-SPOTIPY_REDIRECT_URI = df_uri
-SPOTIPY_USER_REFRESH = df_refresh
+SPOTIFY_CLIENT_ID = df_id
+SPOTIFY_CLIENT_SECRET = df_secret
+SPOTIFY_REDIRECT_URI = df_uri
+SPOTIFY_USER_REFRESH = df_refresh
 
 [ANOTHER]
 CLIENT_ID = an_id
@@ -110,7 +110,7 @@ WHATEVER = something
         with open(cls.test_config_path, 'w') as f:
             f.write(cls.test_config)
 
-        from spotipy.util import config
+        from tekore.util import config
         cls.client_id_var = config.client_id_var
         cls.client_secret_var = config.client_secret_var
         cls.redirect_uri_var = config.redirect_uri_var
@@ -118,7 +118,7 @@ WHATEVER = something
 
     @staticmethod
     def _config_names_set(id_, secret, uri, refresh):
-        from spotipy.util import config
+        from tekore.util import config
         config.client_id_var = id_
         config.client_secret_var = secret
         config.redirect_uri_var = uri
@@ -142,7 +142,7 @@ WHATEVER = something
 
     def test_environment_read_modified_names(self):
         import os
-        from spotipy.util import config
+        from tekore.util import config
 
         config.client_id_var = 'client_id'
         config.client_secret_var = 'client_secret'
@@ -213,10 +213,10 @@ class TestConfigToFile(unittest.TestCase):
     test_config = """
 [DEFAULT]
 SOMETHING = whatever
-SPOTIPY_CLIENT_ID = df_id
-SPOTIPY_CLIENT_SECRET = df_secret
-SPOTIPY_REDIRECT_URI = df_uri
-SPOTIPY_USER_REFRESH = df_refresh
+SPOTIFY_CLIENT_ID = df_id
+SPOTIFY_CLIENT_SECRET = df_secret
+SPOTIFY_REDIRECT_URI = df_uri
+SPOTIFY_USER_REFRESH = df_refresh
 
 [SECTION]
 WHATEVER = something
@@ -239,7 +239,7 @@ WHATEVER = something
         self.assertTupleEqual(written, loaded)
 
     def test_config_written_with_dict(self):
-        from spotipy.util import config
+        from tekore.util import config
         written = {config.client_secret_var: 'secret'}
 
         config_to_file(self.test_config_path, written)

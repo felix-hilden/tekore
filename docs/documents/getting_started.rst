@@ -17,7 +17,7 @@ and can be used to make basic calls to the API.
 
 .. code:: python
 
-    from spotipy.util import request_client_token
+    from tekore.util import request_client_token
 
     client_id = 'your_id_here'
     client_secret = 'your_secret_here'
@@ -32,7 +32,7 @@ on an album given the album ID.
 
 .. code:: python
 
-    from spotipy import Spotify
+    from tekore import Spotify
 
     spotify = Spotify(app_token)
 
@@ -54,8 +54,8 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
 
 .. code:: python
 
-    from spotipy.scope import every
-    from spotipy.util import prompt_for_user_token
+    from tekore.scope import every
+    from tekore.util import prompt_for_user_token
 
     redirect_uri = 'your_uri_here'
 
