@@ -19,8 +19,9 @@ Tekore allows you to interact with the Web API effortlessly.
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     spotify.playback_start_tracks([finlandia])
 
-See our homepage on `PyPI`_ for more information about the package,
-and repository on `GitHub`_ if you'd like to submit an issue
+See our homepage on `PyPI`_ for more information
+about the package and its versions.
+Visit our repository on `GitHub`_ if you'd like to submit an issue
 or ask just about anything related to Tekore.
 
 If you're new here, have a look at :ref:`getting-started`.
@@ -76,6 +77,6 @@ Additional features and various convenience modules are provided too.
    :width: 432 px
    :target: `pypi`_
 
-.. _pypi: https://github.com/felix-hilden/tekore
+.. _pypi: https://pypi.org/project/tekore
 .. _github: https://github.com/felix-hilden/tekore
 .. _web api: https://developer.spotify.com/documentation/web-api

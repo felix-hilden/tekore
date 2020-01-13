@@ -20,17 +20,10 @@ Tekore allows you to interact with the Web API effortlessly.
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     spotify.playback_start_tracks([finlandia])
 
-See our online documentation on `Read The Docs`_ for tutorials,
+See our homepage on `PyPI`_ for more information
+about the package and its versions.
+Visit our online documentation on `Read The Docs`_ for tutorials,
 examples, package reference and a detailed description of features.
-
-Installation
-============
-The package is not yet in PyPI.
-Until then the repository must be installed via git.
-
-.. code:: sh
-
-    $ pip install git+https://github.com/felix-hilden/tekore.git
 
 Documentation
 =============
@@ -118,6 +111,6 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
    :target: https://codeclimate.com/github/felix-hilden/tekore/test_coverage
    :alt: test coverage
 
-.. _pypi: https://github.com/felix-hilden/tekore
+.. _pypi: https://pypi.org/project/tekore
 .. _web api: https://developer.spotify.com/documentation/web-api
 .. _read the docs: https://tekore.readthedocs.io

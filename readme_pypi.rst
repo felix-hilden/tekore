@@ -1,6 +1,5 @@
-======
 |logo|
-======
+
 |python|
 
 Welcome to the Python Package Index page of Tekore,
@@ -33,15 +32,18 @@ Tekore can be installed from the Package Index via ``pip``.
 
     $ pip install tekore
 
+Changelog
+=========
+0.1.0
+-----
+Initial release of Tekore!
 
-.. |logo| image:: docs/logo_small.png
-   :target: `pypi`_
+
+.. |logo| image:: https://raw.githubusercontent.com/felix-hilden/tekore/master/docs/logo_small.png
    :alt: logo
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/tekore
-   :target: `pypi`_
    :alt: python version
 
-.. _pypi: https://github.com/felix-hilden/tekore
 .. _github: https://github.com/felix-hilden/tekore
 .. _read the docs: https://tekore.readthedocs.io

@@ -6,7 +6,7 @@ python_requires_str = '.'.join([str(i) for i in python_requires])
 error = """
 Tekore supports Python {} and above, Python {} was detected.
 
-See Spotipy on PyPI for more information:
+See Tekore on PyPI for more information:
 https://pypi.org/project/tekore
 
 Try upgrading pip and retry.
@@ -29,7 +29,7 @@ root = Path(os.path.realpath(__file__)).parent
 version_file = root / 'tekore' / 'VERSION'
 readme_file = root / 'readme_pypi.rst'
 
-pypi_url = 'https://github.com/felix-hilden/tekore'
+pypi_url = 'https://pypi.org/project/tekore'
 github_url = 'https://github.com/felix-hilden/tekore'
 documentation_url = 'https://tekore.readthedocs.io'
 
