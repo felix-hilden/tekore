@@ -7,19 +7,19 @@ from tekore.serialise import SerialisableDataclass, SerialisableEnum
 
 
 class RecommendationAttribute(SerialisableEnum):
-    acousticness = 'acousticness',
-    danceability = 'danceability',
-    duration_ms = 'duration_ms',
-    energy = 'energy',
-    instrumentalness = 'instrumentalness',
-    key = 'key',
-    liveness = 'liveness',
-    loudness = 'loudness',
-    mode = 'mode',
-    popularity = 'popularity',
-    speechiness = 'speechiness',
-    tempo = 'tempo',
-    time_signature = 'time_signature',
+    acousticness = 'acousticness'
+    danceability = 'danceability'
+    duration_ms = 'duration_ms'
+    energy = 'energy'
+    instrumentalness = 'instrumentalness'
+    key = 'key'
+    liveness = 'liveness'
+    loudness = 'loudness'
+    mode = 'mode'
+    popularity = 'popularity'
+    speechiness = 'speechiness'
+    tempo = 'tempo'
+    time_signature = 'time_signature'
     valence = 'valence'
 
 
