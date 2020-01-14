@@ -55,7 +55,7 @@ setuptools.setup(
 
     license='MIT',
     keywords='spotify web api client',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=('tests', 'tests.*',)),
     package_data={
         'tekore': ['VERSION']
     },
@@ -81,6 +81,11 @@ setuptools.setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only',
+        'Topic :: Multimedia :: Sound/Audio',
     ],
 )
