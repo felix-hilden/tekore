@@ -32,6 +32,19 @@ Tekore can be installed from the Package Index via ``pip``.
 
     $ pip install tekore
 
+Versioning
+==========
+Tekore provides both stable and beta endpoints of the Web API.
+However, beta endpoints may be changed by Spotify without prior notice,
+so older versions of the library may have unintended issues.
+Because of this, Tekore follows a modified form of
+`Semantic Versioning <https://semver.org/>`_.
+Incompatible changes in the library are still introduced in major versions,
+and new features and endpoints are added in minor versions.
+But endpoints removed by Spotify are removed in minor versions and changes
+to endpoints are implemented as bugfixes.
+See the Web API `documentation <web api_>`_ for further information on beta endpoints.
+
 Changelog
 =========
 0.1.0
@@ -47,3 +60,4 @@ Initial release of Tekore!
 
 .. _github: https://github.com/felix-hilden/tekore
 .. _read the docs: https://tekore.readthedocs.io
+.. _web api: https://developer.spotify.com/documentation/web-api
