@@ -47,6 +47,11 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
+1.0.0
+-----
+- Packaging improvements
+- Declare versioning scheme
+
 0.1.0
 -----
 Initial release of Tekore!
