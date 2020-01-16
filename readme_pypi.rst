@@ -47,6 +47,12 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
+1.x.x
+-----
+Bugfixes
+********
+- Accept missing video thumbnail in PlaylistTrack (#132)
+
 1.0.0
 -----
 - Packaging improvements

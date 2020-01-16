@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from dataclasses import dataclass
 
 from tekore.model.base import Item
@@ -16,13 +16,15 @@ class PlaylistTrack(SerialisableDataclass):
     added_by: PublicUser
     is_local: bool
     primary_color: str
-    video_thumbnail: Image
+    video_thumbnail: Optional[Image]
     track: Union[FullTrack, LocalTrack, None]
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
         self.added_by = PublicUser(**self.added_by)
-        self.video_thumbnail = Image(**self.video_thumbnail)
+
+        if self.video_thumbnail is not None:
+            self.video_thumbnail = Image(**self.video_thumbnail)
 
         if self.track is not None:
             if self.is_local:
