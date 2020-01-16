@@ -81,8 +81,11 @@ Use :attr:`default_sender_instance` instead.
 
 import time
 
+from typing import Optional
+
 from abc import ABC, abstractmethod
 from requests import Request, Response, Session
+from httpx import AsyncClient
 
 
 class Sender(ABC):
@@ -250,3 +253,44 @@ class Client:
 
     def _send(self, request: Request) -> Response:
         return self.sender.send(request)
+
+
+class SenderAsync:
+    """
+    Use a per-instance session to send requests asynchronously.
+
+    Parameters
+    ----------
+    session
+        :class:`AsyncClient` to use when sending requests
+    requests_kwargs
+        keyword arguments for :meth:`AsyncClient.send`
+    """
+    def __init__(self, session: Optional[AsyncClient] = None):
+        self.session = session or AsyncClient(http2=True)
+
+    async def send(self, request: Request) -> Response:
+        async with self.session as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers
+            )
+
+
+class ClientAsync:
+    """
+    Base class for async clients.
+
+    Parameters
+    ----------
+    sender
+        request sender - If not specified, using :class:`AsyncClient`.
+    """
+    def __init__(self, sender: SenderAsync):
+        self.sender = sender or SenderAsync()
+
+    async def _send(self, request: Request) -> Response:
+        return await self.sender.send(request)

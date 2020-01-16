@@ -93,4 +93,4 @@ User API
    :members:
 """
 
-from tekore.client.full import Spotify
+from tekore.client.full import Spotify, SpotifyAsync

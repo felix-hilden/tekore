@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, AsyncGenerator
 from contextlib import contextmanager
 
 from tekore.model.paging import Paging, OffsetPaging
@@ -6,6 +6,7 @@ from tekore.serialise import SerialisableDataclass
 
 from tekore.client.api import (
     SpotifyAlbum,
+    SpotifyAlbumAsync,
     SpotifyArtist,
     SpotifyBrowse,
     SpotifyFollow,
@@ -133,3 +134,120 @@ class Spotify(
         """
         for p in self.all_pages(page):
             yield from p.items
+
+
+class SpotifyAsync(
+    SpotifyAlbumAsync,
+    SpotifyArtist,
+    SpotifyBrowse,
+    SpotifyFollow,
+    SpotifyLibrary,
+    SpotifyPersonalisation,
+    SpotifyPlayer,
+    SpotifyPlaylist,
+    SpotifySearch,
+    SpotifyTrack,
+    SpotifyUser,
+):
+    @contextmanager
+    def token_as(self, token) -> 'Spotify':
+        """
+        Temporarily use a different token with requests.
+
+        Parameters
+        ----------
+        token
+            access token
+
+        Returns
+        -------
+        Spotify
+            self
+
+
+        """
+        self.token, old_token = token, self.token
+        yield self
+        self.token = old_token
+
+    async def next(self, page: Paging) -> Paging:
+        """
+        Retrieve the next result set of a paging object.
+
+        Parameters
+        ----------
+        page
+            paging object
+
+        Returns
+        -------
+        Paging
+            paging object containing the next result set
+        """
+        if page.next is not None:
+            next_set = await self._get_paging_result(page.next)
+            return type(page)(**next_set)
+
+    async def previous(self, page: OffsetPaging) -> OffsetPaging:
+        """
+        Retrieve the previous result set of a paging object.
+
+        Parameters
+        ----------
+        page
+            offset-based paging object
+
+        Returns
+        -------
+        OffsetPaging
+            paging object containing the previous result set
+        """
+        if page.previous is not None:
+            previous_set = await self._get_paging_result(page.previous)
+            return type(page)(**previous_set)
+
+    async def all_pages(self, page: Paging) -> AsyncGenerator[Paging, None]:
+        """
+        Retrieve all pages of a paging.
+
+        Request and yield new (next) pages until the end of the paging.
+        The paging that was given as an argument is yielded as the first result.
+
+        Parameters
+        ----------
+        page
+            paging object
+
+        Returns
+        -------
+        AsyncGenerator
+            all pages within a paging
+        """
+        yield page
+        while page.next is not None:
+            page = await self.next(page)
+            yield page
+
+    async def all_items(
+            self,
+            page: Paging
+    ) -> AsyncGenerator[SerialisableDataclass, None]:
+        """
+        Retrieve all items from all pages of a paging.
+
+        Request and yield new (next) items until the end of the paging.
+        The items in the paging that was given as an argument are yielded first.
+
+        Parameters
+        ----------
+        page
+            paging object
+
+        Returns
+        -------
+        AsyncGenerator
+            all items within a paging
+        """
+        async for p in await self.all_pages(page):
+            for item in p.items:
+                yield item
