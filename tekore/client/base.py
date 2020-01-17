@@ -29,6 +29,26 @@ def parse_error_reason(response):
     return reason
 
 
+def set_content(request: Request, payload=None, params: dict = None) -> None:
+    params = params or {}
+    request.params = {k: v for k, v in params.items() if v is not None}
+    if payload is not None:
+        if request.headers['Content-Type'] == 'application/json':
+            request.data = json.dumps(payload)
+        else:
+            request.data = payload
+
+
+def handle_errors(request, response) -> None:
+    if response.status_code >= 400:
+        error_str = error_format.format(
+            url=response.url,
+            code=response.status_code,
+            msg=parse_error_reason(response)
+        )
+        raise HTTPError(error_str, request=request, response=response)
+
+
 class SpotifyBase(Client):
     prefix = 'https://api.spotify.com/v1/'
 
@@ -62,26 +82,6 @@ class SpotifyBase(Client):
 
         return Request(method, url, headers=default_headers)
 
-    @staticmethod
-    def _set_content(request: Request, payload=None, params: dict = None) -> None:
-        params = params or {}
-        request.params = {k: v for k, v in params.items() if v is not None}
-        if payload is not None:
-            if request.headers['Content-Type'] == 'application/json':
-                request.data = json.dumps(payload)
-            else:
-                request.data = payload
-
-    @staticmethod
-    def _handle_errors(request, response) -> None:
-        if response.status_code >= 400:
-            error_str = error_format.format(
-                url=response.url,
-                code=response.status_code,
-                msg=parse_error_reason(response)
-            )
-            raise HTTPError(error_str, request=request, response=response)
-
     def _request(
             self,
             method: str,
@@ -90,9 +90,9 @@ class SpotifyBase(Client):
             params: dict = None
     ):
         request = self._build_request(method, url)
-        self._set_content(request, payload, params)
+        set_content(request, payload, params)
         response = self._send(request)
-        self._handle_errors(request, response)
+        handle_errors(request, response)
         return parse_json(response)
 
     def _get(self, url: str, payload=None, **params):
@@ -151,26 +151,6 @@ class SpotifyBaseAsync(ClientAsync):
 
         return Request(method, url, headers=default_headers)
 
-    @staticmethod
-    def _set_content(request: Request, payload=None, params: dict = None) -> None:
-        params = params or {}
-        request.params = {k: v for k, v in params.items() if v is not None}
-        if payload is not None:
-            if request.headers['Content-Type'] == 'application/json':
-                request.data = json.dumps(payload)
-            else:
-                request.data = payload
-
-    @staticmethod
-    def _handle_errors(request, response) -> None:
-        if response.status_code >= 400:
-            error_str = error_format.format(
-                url=response.url,
-                code=response.status_code,
-                msg=parse_error_reason(response)
-            )
-            raise HTTPError(error_str, request=request, response=response)
-
     async def _request(
             self,
             method: str,
@@ -179,9 +159,9 @@ class SpotifyBaseAsync(ClientAsync):
             params: dict = None
     ):
         request = self._build_request(method, url)
-        self._set_content(request, payload, params)
+        set_content(request, payload, params)
         response = await self._send(request)
-        self._handle_errors(request, response)
+        handle_errors(request, response)
         return parse_json(response)
 
     async def _get(self, url: str, payload=None, **params):
