@@ -164,17 +164,17 @@ class SpotifyBaseAsync(ClientAsync):
         handle_errors(request, response)
         return parse_json(response)
 
-    async def _get(self, url: str, payload=None, **params):
-        return await self._request('GET', url, payload=payload, params=params)
+    def _get(self, url: str, payload=None, **params):
+        return self._request('GET', url, payload=payload, params=params)
 
-    async def _post(self, url: str, payload=None, **params):
-        return await self._request('POST', url, payload=payload, params=params)
+    def _post(self, url: str, payload=None, **params):
+        return self._request('POST', url, payload=payload, params=params)
 
-    async def _delete(self, url: str, payload=None, **params):
-        return await self._request('DELETE', url, payload=payload, params=params)
+    def _delete(self, url: str, payload=None, **params):
+        return self._request('DELETE', url, payload=payload, params=params)
 
-    async def _put(self, url: str, payload=None, **params):
-        return await self._request('PUT', url, payload=payload, params=params)
+    def _put(self, url: str, payload=None, **params):
+        return self._request('PUT', url, payload=payload, params=params)
 
     async def _get_paging_result(self, address: str):
         result = await self._get(address)
