@@ -47,7 +47,7 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
-1.x.x
+1.0.1
 -----
 Bugfixes
 ********
