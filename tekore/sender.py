@@ -231,6 +231,33 @@ class RetryingSender(Sender):
                 return r
 
 
+class AsyncSender(Sender):
+    """
+    Use a per-instance session to send requests asynchronously.
+
+    Parameters
+    ----------
+    session
+        :class:`AsyncClient` to use when sending requests
+    requests_kwargs
+        keyword arguments for :meth:`AsyncClient.request`
+    """
+    def __init__(self, session: Optional[AsyncClient] = None, **requests_kwargs):
+        self.session = session or AsyncClient(http2=True)
+        self.requests_kwargs = requests_kwargs or default_requests_kwargs
+
+    async def send(self, request: Request) -> Response:
+        async with self.session as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers,
+                **self.requests_kwargs,
+            )
+
+
 default_sender_instance = None
 """
 Default sender instance to use in clients.
@@ -250,47 +277,7 @@ class Client:
     """
     def __init__(self, sender: Sender):
         self.sender = sender or default_sender_instance or default_sender_type()
+        self.is_async = isinstance(sender, AsyncSender)
 
     def _send(self, request: Request) -> Response:
         return self.sender.send(request)
-
-
-class SenderAsync:
-    """
-    Use a per-instance session to send requests asynchronously.
-
-    Parameters
-    ----------
-    session
-        :class:`AsyncClient` to use when sending requests
-    requests_kwargs
-        keyword arguments for :meth:`AsyncClient.send`
-    """
-    def __init__(self, session: Optional[AsyncClient] = None):
-        self.session = session or AsyncClient(http2=True)
-
-    async def send(self, request: Request) -> Response:
-        async with self.session as client:
-            return await client.request(
-                request.method,
-                request.url,
-                data=request.data or None,
-                params=request.params or None,
-                headers=request.headers
-            )
-
-
-class ClientAsync:
-    """
-    Base class for async clients.
-
-    Parameters
-    ----------
-    sender
-        request sender - If not specified, using :class:`AsyncClient`.
-    """
-    def __init__(self, sender: SenderAsync):
-        self.sender = sender or SenderAsync()
-
-    async def _send(self, request: Request) -> Response:
-        return await self.sender.send(request)

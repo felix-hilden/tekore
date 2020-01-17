@@ -1,8 +1,7 @@
 import asyncio
 
-from httpx import AsyncClient
-
-from tekore import SpotifyAsync
+from tekore import Spotify
+from tekore.sender import AsyncSender
 from tekore.util import request_client_token
 
 client_id = 'fb0cb8329a2d4711b35bcf125a5e3d43'
@@ -10,7 +9,7 @@ client_secret = 'c745313550404335b44524df80455b50'
 
 # Can also be converted to async
 app_token = request_client_token(client_id, client_secret)
-spotify = SpotifyAsync(app_token)
+spotify = Spotify(app_token, sender=AsyncSender())
 
 async def main():
     album = await spotify.album('3RBULTZJ97bvVzZLpxcB0j')

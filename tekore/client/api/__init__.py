@@ -1,4 +1,4 @@
-from tekore.client.api.album import SpotifyAlbum, SpotifyAlbumAsync
+from tekore.client.api.album import SpotifyAlbum
 from tekore.client.api.artist import SpotifyArtist
 from tekore.client.api.browse import SpotifyBrowse
 from tekore.client.api.follow import SpotifyFollow

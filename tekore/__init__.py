@@ -5,6 +5,6 @@ _check_python_version()
 
 from tekore import scope, util
 from tekore.auth import Credentials
-from tekore.client import Spotify, SpotifyAsync
+from tekore.client import Spotify
 
 __version__ = _read_version_file()

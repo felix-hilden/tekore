@@ -2,7 +2,7 @@ import json
 
 from requests import Request, HTTPError
 
-from tekore.sender import Sender, Client, SenderAsync, ClientAsync
+from tekore.sender import Sender, Client
 from tekore.model.error import PlayerErrorReason
 
 error_format = """Error in {url}:
@@ -91,75 +91,15 @@ class SpotifyBase(Client):
     ):
         request = self._build_request(method, url)
         set_content(request, payload, params)
+        # If async sender - return Awaitable
+        if self.is_async:
+            return self.__request_async(request)
+
         response = self._send(request)
         handle_errors(request, response)
         return parse_json(response)
 
-    def _get(self, url: str, payload=None, **params):
-        return self._request('GET', url, payload=payload, params=params)
-
-    def _post(self, url: str, payload=None, **params):
-        return self._request('POST', url, payload=payload, params=params)
-
-    def _delete(self, url: str, payload=None, **params):
-        return self._request('DELETE', url, payload=payload, params=params)
-
-    def _put(self, url: str, payload=None, **params):
-        return self._request('PUT', url, payload=payload, params=params)
-
-    def _get_paging_result(self, address: str):
-        result = self._get(address)
-
-        # If only one top-level key, the paging object is one level deeper
-        if len(result) == 1:
-            key = list(result.keys())[0]
-            result = result[key]
-
-        return result
-
-
-class SpotifyBaseAsync(ClientAsync):
-    prefix = 'https://api.spotify.com/v1/'
-
-    def __init__(
-            self,
-            token=None,
-            sender: SenderAsync = None
-    ):
-        """
-        Create a Spotify API object.
-
-        Parameters
-        ----------
-        token
-            bearer token for requests
-        sender
-            request sender
-        """
-        super().__init__(sender)
-        self.token = token
-
-    def _build_request(self, method: str, url: str, headers: dict = None) -> Request:
-        if not url.startswith('http'):
-            url = self.prefix + url
-
-        default_headers = {
-            'Authorization': f'Bearer {str(self.token)}',
-            'Content-Type': 'application/json'
-        }
-        default_headers.update(headers or {})
-
-        return Request(method, url, headers=default_headers)
-
-    async def _request(
-            self,
-            method: str,
-            url: str,
-            payload=None,
-            params: dict = None
-    ):
-        request = self._build_request(method, url)
-        set_content(request, payload, params)
+    async def __request_async(self, request: Request):
         response = await self._send(request)
         handle_errors(request, response)
         return parse_json(response)
@@ -176,7 +116,21 @@ class SpotifyBaseAsync(ClientAsync):
     def _put(self, url: str, payload=None, **params):
         return self._request('PUT', url, payload=payload, params=params)
 
-    async def _get_paging_result(self, address: str):
+    def _get_paging_result(self, address: str):
+        # If async sender - return Awaitable
+        if self.is_async:
+            return self.__get_paging_result_async(address)
+
+        result = self._get(address)
+
+        # If only one top-level key, the paging object is one level deeper
+        if len(result) == 1:
+            key = list(result.keys())[0]
+            result = result[key]
+
+        return result
+    
+    async def __get_paging_result_async(self, address: str):
         result = await self._get(address)
 
         # If only one top-level key, the paging object is one level deeper
