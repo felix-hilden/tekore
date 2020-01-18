@@ -53,6 +53,16 @@ class Spotify(
         yield self
         self.token = old_token
 
+    def _get_paging_result(self, address: str):
+        result = self._get(address)
+
+        # If only one top-level key, the paging object is one level deeper
+        if len(result) == 1:
+            key = list(result.keys())[0]
+            result = result[key]
+
+        return result
+
     def next(self, page: Paging) -> Paging:
         """
         Retrieve the next result set of a paging object.
