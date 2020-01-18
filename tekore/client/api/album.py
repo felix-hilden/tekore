@@ -24,20 +24,7 @@ class SpotifyAlbum(SpotifyBase):
         FullAlbum
             full album object
         """
-        # If async sender - return Awaitable
-        if self.is_async:
-            return self.__album_async(album_id, market)
-
-        json = self._get(f'albums/{album_id}', market=market)
-        return FullAlbum(**json)
-
-    async def __album_async(
-        self,
-        album_id: str,
-        market: str = None
-    ) -> FullAlbum:
-        json = await self._get(f'albums/{album_id}', market=market)
-        return FullAlbum(**json)
+        return self._get(f'albums/{album_id}', cast_type=FullAlbum, market=market)
 
     def album_tracks(
             self,
@@ -65,32 +52,13 @@ class SpotifyAlbum(SpotifyBase):
         SimpleTrackPaging
             paging containing simplified track objects
         """
-        # If async sender - return Awaitable
-        if self.is_async:
-            return self.__album_tracks_async(album_id, market, limit, offset)
-
-        json = self._get(
+        return self._get(
             f'albums/{album_id}/tracks',
+            cast_type=SimpleTrackPaging,
             market=market,
             limit=limit,
-            offset=offset
+            offset=offset,
         )
-        return SimpleTrackPaging(**json)
-
-    async def __album_tracks_async(
-        self,
-        album_id: str,
-        market: str = None,
-        limit: int = 20,
-        offset: int = 0
-    ) -> SimpleTrackPaging:
-        json = await self._get(
-            f'albums/{album_id}/tracks',
-            market=market,
-            limit=limit,
-            offset=offset
-        )
-        return SimpleTrackPaging(**json)
 
     def albums(
             self,
@@ -116,6 +84,7 @@ class SpotifyAlbum(SpotifyBase):
         if self.is_async:
             return self.__albums_async(album_ids, market)
 
+        # Can't do the same trick as above with this
         json = self._get(f'albums/?ids={",".join(album_ids)}', market=market)
         return ModelList(FullAlbum(**a) for a in json['albums'])
 

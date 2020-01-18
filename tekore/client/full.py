@@ -67,18 +67,8 @@ class Spotify(
         Paging
             paging object containing the next result set
         """
-        # If async sender - return Awaitable
-        if self.is_async:
-            return self.__next_async(page)
-
         if page.next is not None:
-            next_set = self._get_paging_result(page.next)
-            return type(page)(**next_set)
-
-    async def __next_async(self, page: Paging) -> Paging:
-        if page.next is not None:
-            next_set = await self._get_paging_result(page.next)
-            return type(page)(**next_set)
+            return self._get_paging_result(page.next, type(page))
 
     def previous(self, page: OffsetPaging) -> OffsetPaging:
         """
@@ -94,18 +84,8 @@ class Spotify(
         OffsetPaging
             paging object containing the previous result set
         """
-        # If async sender - return Awaitable
-        if self.is_async:
-            return self.__previous_async(page)
-
         if page.previous is not None:
-            previous_set = self._get_paging_result(page.previous)
-            return type(page)(**previous_set)
-
-    async def __previous_async(self, page: OffsetPaging) -> OffsetPaging:
-        if page.previous is not None:
-            previous_set = await self._get_paging_result(page.previous)
-            return type(page)(**previous_set)
+            return self._get_paging_result(page.previous, type(page))
 
     def all_pages(self, page: Paging) -> Generator[Paging, None, None]:
         """
@@ -136,7 +116,7 @@ class Spotify(
     async def __all_pages_async(self, page: Paging) -> AsyncGenerator[Paging, None]:
         yield page
         while page.next is not None:
-            page = await self.__next_async(page)
+            page = await self.next(page)
             yield page
 
     def all_items(

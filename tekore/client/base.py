@@ -1,5 +1,7 @@
 import json
 
+from typing import Type, Optional
+
 from requests import Request, HTTPError
 
 from tekore.sender import Sender, Client
@@ -49,6 +51,23 @@ def handle_errors(request, response) -> None:
         raise HTTPError(error_str, request=request, response=response)
 
 
+def process_response(request, response, cast_type: Optional[Type] = None):
+    handle_errors(request, response)
+    parsed = parse_json(response)
+    if cast_type is None:
+        return parsed
+    
+    return cast_type(**parsed)
+
+
+def process_paging_object(paging: dict, cast_type: Type):
+    # If only one top-level key, the paging object is one level deeper
+    if len(paging) == 1:
+        key = list(paging.keys())[0]
+        paging = paging[key]
+
+    return cast_type(**paging)
+
 class SpotifyBase(Client):
     prefix = 'https://api.spotify.com/v1/'
 
@@ -87,55 +106,64 @@ class SpotifyBase(Client):
             method: str,
             url: str,
             payload=None,
-            params: dict = None
+            params: dict = None,
+            cast_type: Optional[Type] = None,
     ):
         request = self._build_request(method, url)
         set_content(request, payload, params)
         # If async sender - return Awaitable
         if self.is_async:
-            return self.__request_async(request)
+            return self.__request(request, cast_type)
 
         response = self._send(request)
-        handle_errors(request, response)
-        return parse_json(response)
+        return process_response(request, response, cast_type)
 
-    async def __request_async(self, request: Request):
+    async def __request(self, request: Request, cast_type: Optional[Type] = None):
         response = await self._send(request)
-        handle_errors(request, response)
-        return parse_json(response)
+        return process_response(request, response, cast_type)
 
-    def _get(self, url: str, payload=None, **params):
-        return self._request('GET', url, payload=payload, params=params)
+    def _get(self, url: str, payload=None, cast_type: Optional[Type] = None, **params):
+        return self._request(
+            'GET',
+            url,
+            payload=payload,
+            params=params,
+            cast_type=cast_type
+        )
 
-    def _post(self, url: str, payload=None, **params):
-        return self._request('POST', url, payload=payload, params=params)
+    def _post(self, url: str, payload=None, cast_type: Optional[Type] = None, **params):
+        return self._request(
+            'POST',
+            url,
+            payload=payload,
+            params=params,
+            cast_type=cast_type
+        )
 
-    def _delete(self, url: str, payload=None, **params):
-        return self._request('DELETE', url, payload=payload, params=params)
+    def _delete(self, url: str, payload=None, cast_type: Optional[Type] = None, **params):
+        return self._request(
+            'DELETE',
+            url,
+            payload=payload,
+            params=params,
+            cast_type=cast_type
+        )
 
-    def _put(self, url: str, payload=None, **params):
-        return self._request('PUT', url, payload=payload, params=params)
+    def _put(self, url: str, payload=None, cast_type: Optional[Type] = None, **params):
+        return self._request(
+            'PUT',
+            url,
+            payload=payload,
+            params=params,
+            cast_type=cast_type
+        )
 
-    def _get_paging_result(self, address: str):
+    def _get_paging_result(self, address: str, cast_type: Type):
         # If async sender - return Awaitable
         if self.is_async:
-            return self.__get_paging_result_async(address)
+            return self.__get_paging_result(address, cast_type)
 
-        result = self._get(address)
-
-        # If only one top-level key, the paging object is one level deeper
-        if len(result) == 1:
-            key = list(result.keys())[0]
-            result = result[key]
-
-        return result
+        return process_paging_object(self._get(address), cast_type)
     
-    async def __get_paging_result_async(self, address: str):
-        result = await self._get(address)
-
-        # If only one top-level key, the paging object is one level deeper
-        if len(result) == 1:
-            key = list(result.keys())[0]
-            result = result[key]
-
-        return result
+    async def __get_paging_result(self, address: str, cast_type: Type):
+        return process_paging_object(await self._get(address), cast_type)
