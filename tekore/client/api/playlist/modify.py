@@ -1,4 +1,6 @@
-from tekore.client.base import SpotifyBase
+from requests import Request
+
+from tekore.client.base import SpotifyBase, build_url, handle_errors
 from tekore.model import FullPlaylist
 
 
@@ -17,16 +19,14 @@ class SpotifyPlaylistModify(SpotifyBase):
         image
             image data as a base64-encoded string
         """
-        headers = {
-            'Content-Type': 'image/jpeg'
-        }
-        r = self._build_request(
-            'PUT',
-            f'playlists/{playlist_id}/images',
-            headers
+        request = Request(
+            method='PUT',
+            url=build_url(f'playlists/{playlist_id}/images'),
+            headers=self._create_headers(content_type='image/jpeg'),
+            data=image
         )
-        self._set_content(r, payload=image)
-        self._send(r)
+        response = self._send(request)
+        handle_errors(request, response)
 
     def playlist_create(
             self,
