@@ -19,11 +19,6 @@ Further documentation on endpoints can be viewed in the Web API
 
 Full client
 -----------
-Client to the Web API.
-
-The full client implements a number of useful methods in addition to
-inheriting endpoints of each individual API.
-
 .. currentmodule:: tekore.client
 
 .. autoclass:: Spotify
@@ -31,6 +26,14 @@ inheriting endpoints of each individual API.
    :show-inheritance:
 
    .. automethod:: __init__
+
+Paging navigation
+-----------------
+
+.. currentmodule:: tekore.client.paging
+
+.. autoclass:: SpotifyPaging
+   :members:
 
 .. currentmodule:: tekore.client.api
 

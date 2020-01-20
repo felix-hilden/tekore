@@ -1,5 +1,6 @@
 import json
 
+from functools import wraps
 from requests import Request, Response, HTTPError
 
 from tekore.sender import Sender, Client
@@ -19,7 +20,7 @@ def build_url(url: str) -> str:
 
 def parse_url_params(params: dict = None) -> dict:
     params = params or {}
-    return {k: v for k, v in params.items() if v is not None}
+    return {k: v for k, v in params.items() if v is not None} or None
 
 
 def parse_json(response):
@@ -31,14 +32,16 @@ def parse_json(response):
 
 def parse_error_reason(response):
     content = parse_json(response)
+    reason = getattr(response, 'reason', '')
+
     if content is None:
-        return response.reason
+        return reason
 
     error = content['error']
-    reason = error.get('message', response.reason)
+    message = error.get('message', reason)
     if 'reason' in error:
-        reason += '\n' + PlayerErrorReason[error['reason']].value
-    return reason
+        message += '\n' + PlayerErrorReason[error['reason']].value
+    return message
 
 
 def handle_errors(request: Request, response: Response) -> None:
@@ -51,14 +54,53 @@ def handle_errors(request: Request, response: Response) -> None:
         raise HTTPError(error_str, request=request, response=response)
 
 
+def send_and_process(post_func: callable) -> callable:
+    """
+    Decorate a function to send a request and process its content.
+
+    The first parameter of a decorated function must be the instance (self)
+    of a client with a :meth:`_send` method.
+    The instance must also have :attr:`is_async`, based on which a synchronous
+    or an asynchronous function is used in the process.
+    The decorated function must return a :class:`requests.Request`.
+    The result of ``post_func`` is returned to the caller.
+
+    Parameters
+    ----------
+    post_func
+        function to call with response JSON content
+    """
+    def decorator(function: callable) -> callable:
+        async def async_send(self, request: Request):
+            response = await self._send(request)
+            handle_errors(request, response)
+            content = parse_json(response)
+            return post_func(content)
+
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            request = function(self, *args, **kwargs)
+
+            if self.is_async:
+                return async_send(self, request)
+
+            response = self._send(request)
+            handle_errors(request, response)
+            content = parse_json(response)
+            return post_func(content)
+        return wrapper
+    return decorator
+
+
 class SpotifyBase(Client):
     def __init__(
             self,
             token=None,
-            sender: Sender = None
+            sender: Sender = None,
+            asynchronous: bool = None,
     ):
         """
-        Create a Spotify API object.
+        Client to Web API endpoints.
 
         Parameters
         ----------
@@ -66,8 +108,10 @@ class SpotifyBase(Client):
             bearer token for requests
         sender
             request sender
+        asynchronous
+            synchronicity requirement
         """
-        super().__init__(sender)
+        super().__init__(sender, asynchronous)
         self.token = token
 
     def _create_headers(self, content_type: str = 'application/json'):
@@ -83,16 +127,13 @@ class SpotifyBase(Client):
             payload=None,
             params: dict = None
     ):
-        request = Request(
+        return Request(
             method=method,
             url=build_url(url),
             headers=self._create_headers(),
             params=parse_url_params(params),
             data=json.dumps(payload) if payload is not None else None
         )
-        response = self._send(request)
-        handle_errors(request, response)
-        return parse_json(response)
 
     def _get(self, url: str, payload=None, **params):
         return self._request('GET', url, payload=payload, params=params)

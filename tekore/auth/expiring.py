@@ -2,8 +2,9 @@ import time
 
 from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
+from functools import wraps
 
-from requests import HTTPError, Request
+from requests import HTTPError, Request, Response
 from urllib.parse import urlencode
 
 from tekore.sender import Sender, Client
@@ -91,6 +92,68 @@ class Token(AccessToken):
         return self.expires_in < 60
 
 
+def handle_errors(response: Response) -> None:
+    if 400 <= response.status_code < 500:
+        content = response.json()
+        error_str = '{} {}: {}'.format(
+            response.status_code,
+            content['error'],
+            content['error_description']
+        )
+        raise OAuthError(error_str)
+    elif response.status_code >= 500:
+        raise HTTPError('Unexpected error!', response=response)
+
+
+def parse_token(response):
+    handle_errors(response)
+    content = response.json()
+    return Token(content)
+
+
+def send_and_process_token(function: callable) -> callable:
+    async def async_send(self, request: Request):
+        response = await self._send(request)
+        return parse_token(response)
+
+    @wraps(function)
+    def wrapper(self, *args, **kwargs):
+        request = function(self, *args, **kwargs)
+
+        if self.is_async:
+            return async_send(self, request)
+
+        response = self._send(request)
+        return parse_token(response)
+    return wrapper
+
+
+def parse_refreshed_token(response, refresh_token: str):
+    refreshed = parse_token(response)
+
+    if refreshed.refresh_token is None:
+        refreshed._refresh_token = refresh_token
+
+    return refreshed
+
+
+def send_and_process_refreshed_token(function: callable) -> callable:
+    async def async_send(self, request: Request, refresh_token: str):
+        response = await self._send(request)
+        return parse_refreshed_token(response, refresh_token)
+
+    @wraps(function)
+    def wrapper(self, *args, **kwargs):
+        request, refresh_token = function(self, *args, **kwargs)
+
+        if self.is_async:
+            return async_send(self, request, refresh_token)
+
+        response = self._send(request)
+        return parse_refreshed_token(response, refresh_token)
+    return wrapper
+
+
 class Credentials(Client):
     """
     Client for retrieving access tokens.
@@ -107,15 +170,18 @@ class Credentials(Client):
         whitelisted redirect URI
     sender
         request sender
+    asynchronous
+        synchronicity requirement
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: Sender = None
+            sender: Sender = None,
+            asynchronous: bool = None,
     ):
-        super().__init__(sender)
+        super().__init__(sender, asynchronous)
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -124,29 +190,11 @@ class Credentials(Client):
     def _auth(self) -> str:
         return b64encode(self.client_id + ':' + self.client_secret)
 
-    def _request_token(self, payload: dict) -> Token:
+    def _request_token(self, payload: dict):
         headers = {'Authorization': f'Basic {self._auth}'}
-        request = Request(
-            'POST',
-            OAUTH_TOKEN_URL,
-            data=payload,
-            headers=headers
-        )
-        response = self._send(request)
+        return Request('POST', OAUTH_TOKEN_URL, data=payload, headers=headers)
 
-        if 400 <= response.status_code < 500:
-            content = response.json()
-            error_str = '{} {}: {}'.format(
-                response.status_code,
-                content['error'],
-                content['error_description']
-            )
-            raise OAuthError(error_str)
-        elif response.status_code >= 500:
-            raise HTTPError('Unexpected error!', response=response)
-
-        return Token(response.json())
-
+    @send_and_process_token
     def request_client_token(self) -> Token:
         """
         Request a client token.
@@ -199,6 +247,7 @@ class Credentials(Client):
 
         return OAUTH_AUTHORIZE_URL + '?' + urlencode(payload)
 
+    @send_and_process_token
     def request_user_token(self, code: str) -> Token:
         """
         Request a new user token.
@@ -224,6 +273,7 @@ class Credentials(Client):
         }
         return self._request_token(payload)
 
+    @send_and_process_refreshed_token
     def refresh_user_token(self, refresh_token: str) -> Token:
         """
         Request a refreshed user token.
@@ -243,12 +293,7 @@ class Credentials(Client):
             'grant_type': 'refresh_token'
         }
 
-        refreshed = self._request_token(payload)
-
-        if refreshed.refresh_token is None:
-            refreshed._refresh_token = refresh_token
-
-        return refreshed
+        return self._request_token(payload), refresh_token
 
     def refresh(self, token: Token) -> Token:
         """

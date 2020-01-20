@@ -1,9 +1,19 @@
 import unittest
+import warnings
 
 from unittest.mock import patch, MagicMock
+from contextlib import contextmanager
 from requests import Request
+
 from tekore.sender import (
-    Sender, TransientSender, SingletonSender, PersistentSender, RetryingSender
+    Sender,
+    TransientSender,
+    SingletonSender,
+    PersistentSender,
+    RetryingSender,
+    AsyncTransientSender,
+    SenderConflictWarning,
+    Client,
 )
 
 
@@ -130,14 +140,19 @@ def failed_response() -> MagicMock:
     return response
 
 
+def mock_sender(*responses):
+    sender = MagicMock()
+    sender.is_async = False
+    sender.send.side_effect = responses
+    return sender
+
+
 class TestRetryingSender(unittest.TestCase):
     def test_rate_limited_request_retried_after_set_seconds(self):
         time = MagicMock()
-        sender = MagicMock()
-
         fail = rate_limit_response()
         success = ok_response()
-        sender.send.side_effect = [fail, success]
+        sender = mock_sender(fail, success)
 
         s = RetryingSender(sender=sender)
         with patch('tekore.sender.time', time):
@@ -145,20 +160,17 @@ class TestRetryingSender(unittest.TestCase):
             time.sleep.assert_called_once_with(1)
 
     def test_failing_request_but_no_retries_returns_failed(self):
-        sender = MagicMock()
         fail = failed_response()
         success = ok_response()
-        sender.send.side_effect = [fail, success]
-
+        sender = mock_sender(fail, success)
         s = RetryingSender(sender=sender)
         r = s.send(Request())
         self.assertTrue(r is fail)
 
     def test_failing_request_retried_max_times(self):
-        sender = MagicMock()
         fail = failed_response()
         success = ok_response()
-        sender.send.side_effect = [fail, fail, fail, success]
+        sender = mock_sender(fail, fail, fail, success)
 
         s = RetryingSender(retries=2, sender=sender)
         with patch('tekore.sender.time', MagicMock()):
@@ -166,10 +178,9 @@ class TestRetryingSender(unittest.TestCase):
         self.assertEqual(sender.send.call_count, 3)
 
     def test_retry_returns_on_first_success(self):
-        sender = MagicMock()
         fail = failed_response()
         success = ok_response()
-        sender.send.side_effect = [fail, fail, success, fail, success]
+        sender = mock_sender(fail, fail, success, fail, success)
 
         s = RetryingSender(retries=5, sender=sender)
         with patch('tekore.sender.time', MagicMock()):
@@ -177,12 +188,10 @@ class TestRetryingSender(unittest.TestCase):
         self.assertEqual(sender.send.call_count, 3)
 
     def test_rate_limited_retry_doesnt_decrease_retry_count(self):
-        sender = MagicMock()
-
         fail = failed_response()
         rate = rate_limit_response()
         success = ok_response()
-        sender.send.side_effect = [fail, rate, fail, success]
+        sender = mock_sender(fail, rate, fail, success)
 
         s = RetryingSender(retries=2, sender=sender)
         with patch('tekore.sender.time', MagicMock()):
@@ -256,6 +265,43 @@ class TestSenderDefaults(unittest.TestCase):
         sender.default_sender_type = self.old_default_type
         sender.default_sender_instance = self.old_default_instance
         sender.default_requests_kwargs = self.old_default_kwargs
+
+
+@contextmanager
+def handle_warnings(filt: str = 'ignore'):
+    warnings.simplefilter(filt)
+    yield
+    warnings.resetwarnings()
+
+
+class TestClient(unittest.TestCase):
+    @staticmethod
+    def _client(sender_async: bool, asynchronous: bool = None):
+        sender = AsyncTransientSender if sender_async else TransientSender
+        return Client(sender(), asynchronous=asynchronous)
+
+    def test_is_async_reflects_sync_sender(self):
+        c = self._client(sender_async=False)
+        self.assertFalse(c.is_async)
+
+    def test_is_async_reflects_async_sender(self):
+        c = self._client(sender_async=True)
+        self.assertTrue(c.is_async)
+
+    def test_sync_sender_conflict_resolved_to_asynchronous_argument(self):
+        with handle_warnings():
+            c = self._client(False, True)
+        self.assertTrue(c.is_async)
+
+    def test_async_sender_conflict_resolved_to_asynchronous_argument(self):
+        with handle_warnings():
+            c = self._client(True, False)
+        self.assertFalse(c.is_async)
+
+    def test_sender_conflict_issues_warning(self):
+        with handle_warnings('error'):
+            with self.assertRaises(SenderConflictWarning):
+                self._client(True, False)
 
 
 if __name__ == '__main__':
