@@ -80,8 +80,12 @@ Use :attr:`default_sender_instance` instead.
 """
 
 import time
+import asyncio
 
 from abc import ABC, abstractmethod
+from warnings import warn
+
+from httpx import AsyncClient
 from requests import Request, Response, Session
 
 
@@ -100,22 +104,53 @@ class Sender(ABC):
             :class:`Request` to send
         """
 
+    @property
+    @abstractmethod
+    def is_async(self) -> bool:
+        """
+        :class:`True` if the sender is asynchronous, :class:`False` otherwise.
+        """
+
 
 default_requests_kwargs = {}
 """
-Default keyword arguments to send with.
+Default keyword arguments to send with in synchronous mode.
+Not used when any other keyword arguments are passed in.
+"""
+
+default_httpx_kwargs = {}
+"""
+Default keyword arguments to send with in asynchronous mode.
 Not used when any other keyword arguments are passed in.
 """
 
 
-class TransientSender(Sender):
+class SyncSender(Sender, ABC):
+    """
+    Synchronous request sender base class.
+    """
+    @property
+    def is_async(self) -> bool:
+        return False
+
+
+class AsyncSender(Sender, ABC):
+    """
+    Asynchronous request sender base class.
+    """
+    @property
+    def is_async(self) -> bool:
+        return True
+
+
+class TransientSender(SyncSender):
     """
     Create a new session for each request.
 
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     def __init__(self, **requests_kwargs):
         self.requests_kwargs = requests_kwargs or default_requests_kwargs
@@ -126,14 +161,38 @@ class TransientSender(Sender):
             return sess.send(prepared, **self.requests_kwargs)
 
 
-class SingletonSender(Sender):
+class AsyncTransientSender(AsyncSender):
+    """
+    Create a new asynchronous client for each request.
+
+    Parameters
+    ----------
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    def __init__(self, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+
+    async def send(self, request: Request) -> Response:
+        async with AsyncClient() as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers,
+                **self.httpx_kwargs,
+            )
+
+
+class SingletonSender(SyncSender):
     """
     Use one session for all instances and requests.
 
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     session = Session()
 
@@ -145,24 +204,76 @@ class SingletonSender(Sender):
         return SingletonSender.session.send(prepared, **self.requests_kwargs)
 
 
-class PersistentSender(Sender):
+class AsyncSingletonSender(AsyncSender):
+    """
+    Use one client for all instances and requests.
+
+    Parameters
+    ----------
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    client = AsyncClient()
+
+    def __init__(self, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+
+    async def send(self, request: Request) -> Response:
+        return await AsyncSingletonSender.client.request(
+            request.method,
+            request.url,
+            data=request.data or None,
+            params=request.params or None,
+            headers=request.headers,
+            **self.httpx_kwargs,
+        )
+
+
+class PersistentSender(SyncSender):
     """
     Use a per-instance session to send requests.
 
     Parameters
     ----------
     session
-        :class:`Session` to use when sending requests
+        :class:`requests.Session` to use when sending requests
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     def __init__(self, session: Session = None, **requests_kwargs):
-        self.session = session or Session()
         self.requests_kwargs = requests_kwargs or default_requests_kwargs
+        self.session = session or Session()
 
     def send(self, request: Request) -> Response:
         prepared = self.session.prepare_request(request)
         return self.session.send(prepared, **self.requests_kwargs)
+
+
+class AsyncPersistentSender(AsyncSender):
+    """
+    Use a per-instance client to send requests asynchronously.
+
+    Parameters
+    ----------
+    session
+        :class:`httpx.AsyncClient` to use when sending requests
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    def __init__(self, client: AsyncClient = None, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+        self.client = client or AsyncClient()
+
+    async def send(self, request: Request) -> Response:
+        async with self.client as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers,
+                **self.httpx_kwargs,
+            )
 
 
 default_sender_type = TransientSender
@@ -189,7 +300,7 @@ class RetryingSender(Sender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        request sender, :attr:`default_sender_type` used if not specified
+        request sender, :attr:`default_sender_type` instantiated if not specified
 
     Examples
     --------
@@ -210,7 +321,14 @@ class RetryingSender(Sender):
         self.retries = retries
         self.sender = sender or default_sender_type()
 
+    @property
+    def is_async(self) -> bool:
+        return self.sender.is_async
+
     def send(self, request: Request) -> Response:
+        if self.is_async:
+            return self._async_send(request)
+
         tries = self.retries + 1
         delay_seconds = 1
 
@@ -227,12 +345,37 @@ class RetryingSender(Sender):
             else:
                 return r
 
+    async def _async_send(self, request: Request) -> Response:
+        tries = self.retries + 1
+        delay_seconds = 1
+
+        while tries > 0:
+            r = await self.sender.send(request)
+
+            if r.status_code == 429:
+                seconds = r.headers['Retry-After']
+                await asyncio.sleep(int(seconds))
+            elif r.status_code >= 500 and tries > 1:
+                tries -= 1
+                await asyncio.sleep(delay_seconds)
+                delay_seconds *= 2
+            else:
+                return r
+
 
 default_sender_instance = None
 """
 Default sender instance to use in clients.
 If specified, overrides :attr:`default_sender_type`.
 """
+
+
+def new_default_sender() -> Sender:
+    return default_sender_instance or default_sender_type()
+
+
+class SenderConflictWarning(RuntimeWarning):
+    """Issued when sender arguments to a client are in conflict."""
 
 
 class Client:
@@ -244,9 +387,29 @@ class Client:
     sender
         request sender - If not specified, using :attr:`default_sender_instance`
         is attempted first, then :attr:`default_sender_type` is instantiated.
+    asynchronous
+        synchronicity requirement - If specified, overrides passed
+        sender and defaults if they are in conflict and instantiates
+        a transient sender of the requested type
     """
-    def __init__(self, sender: Sender):
-        self.sender = sender or default_sender_instance or default_sender_type()
+    def __init__(self, sender: Sender, asynchronous: bool = None):
+        new_sender = sender or new_default_sender()
+
+        if new_sender.is_async and asynchronous is False:
+            new_sender = TransientSender()
+        elif not new_sender.is_async and asynchronous is True:
+            new_sender = AsyncTransientSender()
+
+        self.sender = new_sender
+
+        if sender is not None and new_sender.is_async != sender.is_async:
+            msg = f'\n{type(sender)} passed but asynchronous={asynchronous}!'
+            msg += '\nA sender was instantiated according to `asynchronous`.'
+            warn(msg, SenderConflictWarning, stacklevel=3)
 
     def _send(self, request: Request) -> Response:
         return self.sender.send(request)
+
+    @property
+    def is_async(self) -> bool:
+        return self.sender.is_async

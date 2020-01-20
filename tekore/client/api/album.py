@@ -1,9 +1,11 @@
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, model_list
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.serialise import ModelList
 from tekore.model import FullAlbum, SimpleTrackPaging
 
 
 class SpotifyAlbum(SpotifyBase):
+    @send_and_process(single(FullAlbum))
     def album(
             self,
             album_id: str,
@@ -24,9 +26,9 @@ class SpotifyAlbum(SpotifyBase):
         FullAlbum
             full album object
         """
-        json = self._get('albums/' + album_id, market=market)
-        return FullAlbum(**json)
+        return self._get('albums/' + album_id, market=market)
 
+    @send_and_process(single(SimpleTrackPaging))
     def album_tracks(
             self,
             album_id: str,
@@ -53,14 +55,14 @@ class SpotifyAlbum(SpotifyBase):
         SimpleTrackPaging
             paging containing simplified track objects
         """
-        json = self._get(
+        return self._get(
             f'albums/{album_id}/tracks',
             market=market,
             limit=limit,
             offset=offset
         )
-        return SimpleTrackPaging(**json)
 
+    @send_and_process(model_list(FullAlbum, 'albums'))
     def albums(
             self,
             album_ids: list,
@@ -81,5 +83,4 @@ class SpotifyAlbum(SpotifyBase):
         ModelList
             list of full album objects
         """
-        json = self._get('albums/?ids=' + ','.join(album_ids), market=market)
-        return ModelList(FullAlbum(**a) for a in json['albums'])
+        return self._get('albums/?ids=' + ','.join(album_ids), market=market)

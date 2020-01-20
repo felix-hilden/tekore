@@ -1,5 +1,7 @@
 from tekore.auth.expiring import AccessToken, Token, Credentials
-from tekore.sender import Sender
+from tekore.sender import (
+    SyncSender, AsyncSender, new_default_sender, TransientSender
+)
 
 
 class RefreshingToken(AccessToken):
@@ -64,7 +66,7 @@ class RefreshingToken(AccessToken):
 
 class RefreshingCredentials:
     """
-    Client for retrieving automatically refreshing access tokens.
+    Synchronous client for retrieving automatically refreshing access tokens.
 
     Delegates to an underlying
     :class:`Credentials <tekore.auth.expiring.Credentials>`
@@ -79,20 +81,21 @@ class RefreshingCredentials:
     redirect_uri
         whitelisted redirect URI
     sender
-        request sender
+        synchronous request sender
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: Sender = None
+            sender: SyncSender = None
     ):
         self._client = Credentials(
             client_id,
             client_secret,
             redirect_uri,
-            sender
+            sender,
+            asynchronous=False
         )
 
     def request_client_token(self) -> RefreshingToken:
