@@ -82,6 +82,7 @@ Use :attr:`default_sender_instance` instead.
 import time
 
 from abc import ABC, abstractmethod
+from httpx import AsyncClient
 from requests import Request, Response, Session
 
 
@@ -103,19 +104,37 @@ class Sender(ABC):
 
 default_requests_kwargs = {}
 """
-Default keyword arguments to send with.
+Default keyword arguments to send with in synchronous mode.
+Not used when any other keyword arguments are passed in.
+"""
+
+default_httpx_kwargs = {}
+"""
+Default keyword arguments to send with in asynchronous mode.
 Not used when any other keyword arguments are passed in.
 """
 
 
-class TransientSender(Sender):
+class SyncSender(Sender, ABC):
+    """
+    Synchronous request sender base class.
+    """
+
+
+class AsyncSender(Sender, ABC):
+    """
+    Asynchronous request sender base class.
+    """
+
+
+class TransientSender(SyncSender):
     """
     Create a new session for each request.
 
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     def __init__(self, **requests_kwargs):
         self.requests_kwargs = requests_kwargs or default_requests_kwargs
@@ -126,14 +145,38 @@ class TransientSender(Sender):
             return sess.send(prepared, **self.requests_kwargs)
 
 
-class SingletonSender(Sender):
+class AsyncTransientSender(AsyncSender):
+    """
+    Create a new asynchronous client for each request.
+
+    Parameters
+    ----------
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    def __init__(self, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+
+    async def send(self, request: Request) -> Response:
+        async with AsyncClient() as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers,
+                **self.httpx_kwargs,
+            )
+
+
+class SingletonSender(SyncSender):
     """
     Use one session for all instances and requests.
 
     Parameters
     ----------
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     session = Session()
 
@@ -145,24 +188,76 @@ class SingletonSender(Sender):
         return SingletonSender.session.send(prepared, **self.requests_kwargs)
 
 
-class PersistentSender(Sender):
+class AsyncSingletonSender(AsyncSender):
+    """
+    Use one client for all instances and requests.
+
+    Parameters
+    ----------
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    client = AsyncClient()
+
+    def __init__(self, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+
+    async def send(self, request: Request) -> Response:
+        return await AsyncSingletonSender.client.request(
+            request.method,
+            request.url,
+            data=request.data or None,
+            params=request.params or None,
+            headers=request.headers,
+            **self.httpx_kwargs,
+        )
+
+
+class PersistentSender(SyncSender):
     """
     Use a per-instance session to send requests.
 
     Parameters
     ----------
     session
-        :class:`Session` to use when sending requests
+        :class:`requests.Session` to use when sending requests
     requests_kwargs
-        keyword arguments for :meth:`Session.send`
+        keyword arguments for :meth:`requests.Session.send`
     """
     def __init__(self, session: Session = None, **requests_kwargs):
-        self.session = session or Session()
         self.requests_kwargs = requests_kwargs or default_requests_kwargs
+        self.session = session or Session()
 
     def send(self, request: Request) -> Response:
         prepared = self.session.prepare_request(request)
         return self.session.send(prepared, **self.requests_kwargs)
+
+
+class AsyncPersistentSender(AsyncSender):
+    """
+    Use a per-instance client to send requests asynchronously.
+
+    Parameters
+    ----------
+    session
+        :class:`httpx.AsyncClient` to use when sending requests
+    httpx_kwargs
+        keyword arguments for :meth:`httpx.AsyncClient.request`
+    """
+    def __init__(self, client: AsyncClient = None, **httpx_kwargs):
+        self.httpx_kwargs = httpx_kwargs or default_httpx_kwargs
+        self.client = client or AsyncClient()
+
+    async def send(self, request: Request) -> Response:
+        async with self.client as client:
+            return await client.request(
+                request.method,
+                request.url,
+                data=request.data or None,
+                params=request.params or None,
+                headers=request.headers,
+                **self.httpx_kwargs,
+            )
 
 
 default_sender_type = TransientSender
@@ -189,7 +284,8 @@ class RetryingSender(Sender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        request sender, :attr:`default_sender_type` used if not specified
+        synchronous request sender, :attr:`default_sender_type`
+        instantiated if not specified
 
     Examples
     --------
@@ -206,7 +302,7 @@ class RetryingSender(Sender):
 
         RetryingSender(sender=SingletonSender())
     """
-    def __init__(self, retries: int = 0, sender: Sender = None):
+    def __init__(self, retries: int = 0, sender: SyncSender = None):
         self.retries = retries
         self.sender = sender or default_sender_type()
 
@@ -250,3 +346,7 @@ class Client:
 
     def _send(self, request: Request) -> Response:
         return self.sender.send(request)
+
+    @property
+    def is_async(self) -> bool:
+        return isinstance(self.sender, AsyncSender)

@@ -6,7 +6,7 @@ from base64 import b64encode as _b64encode
 from requests import HTTPError, Request
 from urllib.parse import urlencode
 
-from tekore.sender import Sender, Client
+from tekore.sender import SyncSender, Client
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
@@ -106,14 +106,14 @@ class Credentials(Client):
     redirect_uri
         whitelisted redirect URI
     sender
-        request sender
+        synchronous request sender
     """
     def __init__(
             self,
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: Sender = None
+            sender: SyncSender = None
     ):
         super().__init__(sender)
         self.client_id = client_id

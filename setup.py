@@ -63,6 +63,7 @@ setuptools.setup(
     python_requires='>=' + python_requires_str,
     install_requires=[
         'requests>=2.19,<3',
+        'httpx=0.11.*',
         'dataclasses;python_version<"3.7"'
     ],
     extras_require={
