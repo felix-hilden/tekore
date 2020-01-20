@@ -11,8 +11,8 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - coverage run --branch -m unittest discover tests -p "*.py"
   - flake8 . --select=C,E,F,W,B,B9 --ignore=B305,E402,E501,E722,F401
+  - coverage run --branch -m unittest discover tests -p "*.py"
   - cd docs && make html && cd ..
 
 after_script:

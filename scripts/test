@@ -1,0 +1,2 @@
+coverage run --branch -m unittest discover tests -p "*.py"
+coverage report -m --skip-covered

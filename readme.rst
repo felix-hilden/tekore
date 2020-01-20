@@ -92,6 +92,24 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
     $ coverage run --branch -m unittest discover tests -p "*.py"
     $ coverage report -m
 
+Scripts
+-------
+Scripts for testing and linting can be found in the scripts folder.
+They need to be executed from the top level folder.
+
+.. code:: sh
+
+    $ scripts/lint
+    $ scripts/test
+
+Windows users should use a batch wrapper to execute the files.
+
+.. code:: batch
+
+    > scripts\exec lint
+    > scripts\exec test
+
+
 .. |logo| image:: docs/logo_small.png
    :target: `pypi`_
    :alt: logo
