@@ -2,8 +2,10 @@
 |logo|
 ======
 
-Welcome to the online documentation of Tekore,
-a client of the Spotify Web API for Python!
+Welcome to the GitHub repository of Tekore!
+We provide a client for the Spotify Web API for Python,
+complete with all available endpoints,
+authentication and loads of additional features.
 Tekore allows you to interact with the Web API effortlessly.
 
 .. code:: python
@@ -21,8 +23,10 @@ Tekore allows you to interact with the Web API effortlessly.
 
 See our homepage on `PyPI`_ for more information
 about the package and its versions.
-Visit our repository on `GitHub`_ if you'd like to submit an issue
-or ask just about anything related to Tekore.
+If you've found a bug or would like to propose a feature,
+please submit an issue on `GitHub`_.
+Join our `Discord <https://discord.gg/wcRXgJu>`_ community
+to ask for help or discuss just about anything related to Tekore.
 
 If you're new here, have a look at :ref:`getting-started`.
 After your first calls to the API you might want to look at :ref:`advanced-usage`.

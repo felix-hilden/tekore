@@ -3,8 +3,10 @@
 ======
 |travis| |documentation| |coverage|
 
-Welcome to the GitHub repository of Tekore,
-a client of the Spotify Web API for Python!
+Welcome to the GitHub repository of Tekore!
+We provide a client for the Spotify Web API for Python,
+complete with all available endpoints,
+authentication and loads of additional features.
 Tekore allows you to interact with the Web API effortlessly.
 
 .. code:: python
@@ -24,49 +26,44 @@ See our homepage on `PyPI`_ for more information
 about the package and its versions.
 Visit our online documentation on `Read The Docs`_ for tutorials,
 examples, package reference and a detailed description of features.
+Join our `Discord <https://discord.gg/wcRXgJu>`_ community
+to ask for help or discuss just about anything related to Tekore.
 
-Documentation
-=============
-Documentation can also be built locally.
+Contributing
+============
+|issues_open| |issue_resolution|
+
+We welcome new contributors to Tekore!
+If you've found a bug or would like to propose a feature,
+please submit an `issue <https://github.com/felix-hilden/tekore/issues>`_.
+Those that would like to get involved beyond that
+can clone the repository and install it as an editable Python package.
 
 .. code:: sh
 
     $ git clone https://github.com/felix-hilden/tekore.git
     $ cd tekore
     $ pip install -e .[dev]
+
+Please have a look at the following sections for help in development.
+
+Documentation
+-------------
+Documentation can be built locally with Sphinx.
+
+.. code:: sh
+
     $ cd docs && make html
 
 The main page ``index.html`` can be found in ``build/html``.
 
-Issues
-======
-To file a bug report, ask about the package or voice any other concern,
-please `submit <https://github.com/felix-hilden/tekore/issues>`_ an issue.
-We'll do our best to address each one in a timely manner!
-
-Contributing
-============
-If you'd like to get involved beyond creating issues,
-please do submit a pull request for a fix or an enhancement!
-
-Issues tagged ``consideration`` ought to be discussed further before implementation.
-`PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
-is the canonical style guide for Python.
-In addition, ``flake8`` and ``flake8-bugbear`` are great tools for code style.
-See ``.travis.yml`` for the current style check.
-
 Running tests
-=============
+-------------
 The repository contains a suite of test cases
 which can be studied and run to ensure the package works as intended.
-To get up and running, clone the repository,
-install it as an editable package and run the suite.
 
 .. code:: sh
 
-    $ git clone https://github.com/felix-hilden/tekore.git
-    $ cd tekore
-    $ pip install -e .[dev]
     $ python -m unittest discover tests -p "*.py"
 
 Tests against the live Web API use environment variables for credentials.
@@ -110,6 +107,14 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
 .. |coverage| image:: https://api.codeclimate.com/v1/badges/627ab5f90253b59d4c8f/test_coverage
    :target: https://codeclimate.com/github/felix-hilden/tekore/test_coverage
    :alt: test coverage
+
+.. |issue_resolution| image:: http://isitmaintained.com/badge/resolution/felix-hilden/tekore.svg
+   :target: https://isitmaintained.com/project/felix-hilden/tekore
+   :alt: issue resolution time
+
+.. |issues_open| image:: http://isitmaintained.com/badge/open/felix-hilden/tekore.svg
+   :target: https://isitmaintained.com/project/felix-hilden/tekore
+   :alt: open issues
 
 .. _pypi: https://pypi.org/project/tekore
 .. _web api: https://developer.spotify.com/documentation/web-api
