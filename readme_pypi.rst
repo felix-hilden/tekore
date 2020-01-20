@@ -2,7 +2,7 @@
 
 |python|
 
-Welcome to the GitHub repository of Tekore!
+Welcome to the Python Package Index page of Tekore!
 We provide a client for the Spotify Web API for Python,
 complete with all available endpoints,
 authentication and loads of additional features.
