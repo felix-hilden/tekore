@@ -2,6 +2,7 @@ from typing import Generator
 from contextlib import contextmanager
 
 from tekore.model.paging import Paging, OffsetPaging
+from tekore.client.base import send_and_process
 from tekore.serialise import SerialisableDataclass
 
 from tekore.client.api import (
@@ -17,6 +18,15 @@ from tekore.client.api import (
     SpotifyTrack,
     SpotifyUser,
 )
+
+
+def parse_paging_result(result):
+    # If only one top-level key, the paging object is one level deeper
+    if len(result) == 1:
+        key = list(result.keys())[0]
+        result = result[key]
+
+    return result
 
 
 class Spotify(
@@ -53,15 +63,9 @@ class Spotify(
         yield self
         self.token = old_token
 
+    @send_and_process(parse_paging_result)
     def _get_paging_result(self, address: str):
-        result = self._get(address)
-
-        # If only one top-level key, the paging object is one level deeper
-        if len(result) == 1:
-            key = list(result.keys())[0]
-            result = result[key]
-
-        return result
+        return self._get(address)
 
     def next(self, page: Paging) -> Paging:
         """
@@ -77,9 +81,18 @@ class Spotify(
         Paging
             paging object containing the next result set
         """
-        if page.next is not None:
-            next_set = self._get_paging_result(page.next)
-            return type(page)(**next_set)
+        if page.next is None:
+            return
+
+        if self.is_async:
+            return self._async_next(page)
+
+        next_set = self._get_paging_result(page.next)
+        return type(page)(**next_set)
+
+    async def _async_next(self, page: Paging) -> Paging:
+        next_set = await self._get_paging_result(page.next)
+        return type(page)(**next_set)
 
     def previous(self, page: OffsetPaging) -> OffsetPaging:
         """
@@ -95,9 +108,18 @@ class Spotify(
         OffsetPaging
             paging object containing the previous result set
         """
-        if page.previous is not None:
-            previous_set = self._get_paging_result(page.previous)
-            return type(page)(**previous_set)
+        if page.previous is None:
+            return
+
+        if self.is_async:
+            return self._async_previous(page)
+
+        previous_set = self._get_paging_result(page.previous)
+        return type(page)(**previous_set)
+
+    async def _async_previous(self, page: OffsetPaging) -> OffsetPaging:
+        previous_set = await self._get_paging_result(page.previous)
+        return type(page)(**previous_set)
 
     def all_pages(self, page: Paging) -> Generator[Paging, None, None]:
         """
@@ -116,9 +138,21 @@ class Spotify(
         Generator
             all pages within a paging
         """
+        if self.is_async:
+            return self._async_all_pages(page)
+        else:
+            return self._sync_all_pages(page)
+
+    def _sync_all_pages(self, page: Paging):
         yield page
         while page.next is not None:
             page = self.next(page)
+            yield page
+
+    async def _async_all_pages(self, page: Paging):
+        yield page
+        while page.next is not None:
+            page = await self._async_next(page)
             yield page
 
     def all_items(
@@ -141,5 +175,16 @@ class Spotify(
         Generator
             all items within a paging
         """
+        if self.is_async:
+            return self._async_all_items(page)
+        else:
+            return self._sync_all_items(page)
+
+    def _sync_all_items(self, page: Paging):
         for p in self.all_pages(page):
             yield from p.items
+
+    async def _async_all_items(self, page: Paging):
+        async for page in self._async_all_pages(page):
+            for item in page.items:
+                yield item
