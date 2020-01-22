@@ -1,10 +1,12 @@
 from requests import Request
 
-from tekore.client.base import SpotifyBase, build_url, handle_errors
+from tekore.client.process import single, nothing
+from tekore.client.base import SpotifyBase, build_url, send_and_process
 from tekore.model import FullPlaylist
 
 
 class SpotifyPlaylistModify(SpotifyBase):
+    @send_and_process(nothing)
     def playlist_cover_image_upload(self, playlist_id: str, image: str) -> None:
         """
         Upload a custom playlist cover image.
@@ -19,15 +21,14 @@ class SpotifyPlaylistModify(SpotifyBase):
         image
             image data as a base64-encoded string
         """
-        request = Request(
+        return Request(
             method='PUT',
             url=build_url(f'playlists/{playlist_id}/images'),
             headers=self._create_headers(content_type='image/jpeg'),
             data=image
         )
-        response = self._send(request)
-        handle_errors(request, response)
 
+    @send_and_process(single(FullPlaylist))
     def playlist_create(
             self,
             user_id: str,
@@ -62,9 +63,9 @@ class SpotifyPlaylistModify(SpotifyBase):
             'public': public,
             'description': description
         }
-        json = self._post(f'users/{user_id}/playlists', payload=payload)
-        return FullPlaylist(**json)
+        return self._post(f'users/{user_id}/playlists', payload=payload)
 
+    @send_and_process(nothing)
     def playlist_change_details(
             self,
             playlist_id: str,
@@ -99,4 +100,4 @@ class SpotifyPlaylistModify(SpotifyBase):
             'description': description,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        self._put('playlists/' + playlist_id, payload=payload)
+        return self._put('playlists/' + playlist_id, payload=payload)

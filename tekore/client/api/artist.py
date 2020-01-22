@@ -1,11 +1,13 @@
 from typing import List, Union
 
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, model_list
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.serialise import ModelList
 from tekore.model import FullArtist, SimpleAlbumPaging, FullTrack, AlbumGroup
 
 
 class SpotifyArtist(SpotifyBase):
+    @send_and_process(single(FullArtist))
     def artist(self, artist_id: str) -> FullArtist:
         """
         Get information for an artist.
@@ -20,9 +22,9 @@ class SpotifyArtist(SpotifyBase):
         FullArtist
             full artist object
         """
-        json = self._get('artists/' + artist_id)
-        return FullArtist(**json)
+        return self._get('artists/' + artist_id)
 
+    @send_and_process(model_list(FullArtist, 'artists'))
     def artists(self, artist_ids: list) -> ModelList:
         """
         Get information for multiple artists.
@@ -37,9 +39,9 @@ class SpotifyArtist(SpotifyBase):
         ModelList
             list of full artist objects
         """
-        json = self._get('artists/?ids=' + ','.join(artist_ids))
-        return ModelList(FullArtist(**a) for a in json['artists'])
+        return self._get('artists/?ids=' + ','.join(artist_ids))
 
+    @send_and_process(single(SimpleAlbumPaging))
     def artist_albums(
             self,
             artist_id: str,
@@ -71,15 +73,15 @@ class SpotifyArtist(SpotifyBase):
         """
         if include_groups is not None:
             include_groups = ','.join(str(g) for g in include_groups)
-        json = self._get(
+        return self._get(
             f'artists/{artist_id}/albums',
             include_groups=include_groups,
             market=market,
             limit=limit,
             offset=offset
         )
-        return SimpleAlbumPaging(**json)
 
+    @send_and_process(model_list(FullTrack, 'tracks'))
     def artist_top_tracks(
             self,
             artist_id: str,
@@ -100,9 +102,9 @@ class SpotifyArtist(SpotifyBase):
         ModelList
             list of full track objects
         """
-        json = self._get(f'artists/{artist_id}/top-tracks', country=market)
-        return ModelList(FullTrack(**t) for t in json['tracks'])
+        return self._get(f'artists/{artist_id}/top-tracks', country=market)
 
+    @send_and_process(model_list(FullArtist, 'artists'))
     def artist_related_artists(self, artist_id: str) -> ModelList:
         """
         Get artists similar to an identified artist.
@@ -120,5 +122,4 @@ class SpotifyArtist(SpotifyBase):
         ModelList
             list of full artist objects
         """
-        json = self._get(f'artists/{artist_id}/related-artists')
-        return ModelList(FullArtist(**a) for a in json['artists'])
+        return self._get(f'artists/{artist_id}/related-artists')

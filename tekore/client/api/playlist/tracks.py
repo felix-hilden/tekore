@@ -1,10 +1,12 @@
 from typing import List, Tuple
 
-from tekore.client.base import SpotifyBase
+from tekore.client.process import top_item, nothing
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.convert import to_uri
 
 
 class SpotifyPlaylistTracks(SpotifyBase):
+    @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_add(
             self,
             playlist_id: str,
@@ -32,13 +34,13 @@ class SpotifyPlaylistTracks(SpotifyBase):
             snapshot ID for the playlist
         """
         payload = {'uris': [to_uri('track', t) for t in track_ids]}
-        json = self._post(
+        return self._post(
             f'playlists/{playlist_id}/tracks',
             payload=payload,
             position=position
         )
-        return json['snapshot_id']
 
+    @send_and_process(nothing)
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list) -> None:
         """
         Replace all tracks in a playlist.
@@ -54,8 +56,12 @@ class SpotifyPlaylistTracks(SpotifyBase):
             list of track IDs to add to the playlist
         """
         track_uris = [to_uri('track', t) for t in track_ids]
-        self._put(f'playlists/{playlist_id}/tracks', payload={'uris': track_uris})
+        return self._put(
+            f'playlists/{playlist_id}/tracks',
+            payload={'uris': track_uris}
+        )
 
+    @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_reorder(
             self,
             playlist_id: str,
@@ -95,8 +101,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
         }
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        json = self._put(f'playlists/{playlist_id}/tracks', payload=payload)
-        return json['snapshot_id']
+        return self._put(f'playlists/{playlist_id}/tracks', payload=payload)
 
     def _generic_playlist_tracks_remove(
             self,
@@ -106,9 +111,9 @@ class SpotifyPlaylistTracks(SpotifyBase):
     ) -> str:
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
-        json = self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
-        return json['snapshot_id']
+        return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
+    @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_remove(
             self,
             playlist_id: str,
@@ -142,6 +147,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
             snapshot_id
         )
 
+    @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_remove_occurrences(
             self,
             playlist_id: str,
@@ -185,6 +191,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
             snapshot_id
         )
 
+    @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_remove_indices(
             self,
             playlist_id: str,

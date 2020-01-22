@@ -1,8 +1,10 @@
 from tekore.model import PublicUser, PrivateUser
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single
+from tekore.client.base import SpotifyBase, send_and_process
 
 
 class SpotifyUser(SpotifyBase):
+    @send_and_process(single(PublicUser))
     def user(self, user_id: str) -> PublicUser:
         """
         Get a user's profile.
@@ -17,9 +19,9 @@ class SpotifyUser(SpotifyBase):
         PublicUser
             public user information
         """
-        json = self._get('users/' + user_id)
-        return PublicUser(**json)
+        return self._get('users/' + user_id)
 
+    @send_and_process(single(PrivateUser))
     def current_user(self) -> PrivateUser:
         """
         Get current user's profile.
@@ -33,5 +35,4 @@ class SpotifyUser(SpotifyBase):
         PrivateUser
             private user information
         """
-        json = self._get('me/')
-        return PrivateUser(**json)
+        return self._get('me/')

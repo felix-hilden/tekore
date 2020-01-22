@@ -1,6 +1,7 @@
 from typing import Union
 
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, model_list, single_or_dict
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.serialise import ModelList
 from tekore.model import (
     SimplePlaylistPaging,
@@ -11,6 +12,7 @@ from tekore.model import (
 
 
 class SpotifyPlaylistView(SpotifyBase):
+    @send_and_process(single(SimplePlaylistPaging))
     def followed_playlists(
             self,
             limit: int = 20,
@@ -35,9 +37,9 @@ class SpotifyPlaylistView(SpotifyBase):
         SimplePlaylistPaging
             paging object containing simplified playlists
         """
-        json = self._get('me/playlists', limit=limit, offset=offset)
-        return SimplePlaylistPaging(**json)
+        return self._get('me/playlists', limit=limit, offset=offset)
 
+    @send_and_process(single(SimplePlaylistPaging))
     def playlists(
             self,
             user_id: str,
@@ -65,10 +67,10 @@ class SpotifyPlaylistView(SpotifyBase):
         SimplePlaylistPaging
             paging object containing simplified playlists
         """
-        json = self._get(f'users/{user_id}/playlists', limit=limit,
+        return self._get(f'users/{user_id}/playlists', limit=limit,
                          offset=offset)
-        return SimplePlaylistPaging(**json)
 
+    @send_and_process(single(FullPlaylist))
     def playlist(
             self,
             playlist_id: str,
@@ -92,10 +94,10 @@ class SpotifyPlaylistView(SpotifyBase):
         FullPlaylist
             playlist object
         """
-        json = self._get('playlists/' + playlist_id, fields=fields,
+        return self._get('playlists/' + playlist_id, fields=fields,
                          market=market)
-        return FullPlaylist(**json)
 
+    @send_and_process(model_list(Image))
     def playlist_cover_image(self, playlist_id: str) -> ModelList:
         """
         Get cover image of a playlist. Note: returns a list of images.
@@ -110,9 +112,9 @@ class SpotifyPlaylistView(SpotifyBase):
         ModelList
             list of cover images
         """
-        json = self._get(f'playlists/{playlist_id}/images')
-        return ModelList(Image(**i) for i in json)
+        return self._get(f'playlists/{playlist_id}/images')
 
+    @send_and_process(single_or_dict(PlaylistTrackPaging))
     def playlist_tracks(
             self,
             playlist_id: str,
@@ -147,14 +149,10 @@ class SpotifyPlaylistView(SpotifyBase):
             paging object containing playlist tracks,
             or raw object if fields was specified
         """
-        json = self._get(
+        return self._get(
             f'playlists/{playlist_id}/tracks',
             limit=limit,
             offset=offset,
             fields=fields,
             market=market
         )
-        if fields is None:
-            return PlaylistTrackPaging(**json)
-        else:
-            return json
