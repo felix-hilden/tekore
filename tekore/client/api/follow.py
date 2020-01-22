@@ -1,10 +1,12 @@
 from typing import List
 
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, nothing
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.model import FullArtistCursorPaging
 
 
 class SpotifyFollow(SpotifyBase):
+    @send_and_process(nothing)
     def playlist_is_following(self, playlist_id: str, user_ids: list) -> List[bool]:
         """
         Check to see if the given users are following a playlist.
@@ -28,6 +30,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(user_ids)
         )
 
+    @send_and_process(nothing)
     def playlist_follow(
             self,
             playlist_id: str,
@@ -49,8 +52,9 @@ class SpotifyFollow(SpotifyBase):
         payload = {
             'public': public
         }
-        self._put(f'playlists/{playlist_id}/followers', payload=payload)
+        return self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
+    @send_and_process(nothing)
     def playlist_unfollow(self, playlist_id: str) -> None:
         """
         Unfollow a playlist as current user.
@@ -63,8 +67,9 @@ class SpotifyFollow(SpotifyBase):
         playlist_id
             playlist ID
         """
-        self._delete(f'playlists/{playlist_id}/followers')
+        return self._delete(f'playlists/{playlist_id}/followers')
 
+    @send_and_process(single(FullArtistCursorPaging, from_item='artists'))
     def followed_artists(
             self,
             limit: int = 20,
@@ -87,9 +92,9 @@ class SpotifyFollow(SpotifyBase):
         FullArtistCursorPaging
             cursor-based paging object containing a list of full artist objects
         """
-        json = self._get('me/following', type='artist', limit=limit, after=after)
-        return FullArtistCursorPaging(**json['artists'])
+        return self._get('me/following', type='artist', limit=limit, after=after)
 
+    @send_and_process(nothing)
     def artists_is_following(self, artist_ids: list) -> List[bool]:
         """
         Check if current user follows artists.
@@ -112,6 +117,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(artist_ids)
         )
 
+    @send_and_process(nothing)
     def artists_follow(self, artist_ids: list) -> None:
         """
         Follow artists as current user.
@@ -123,8 +129,9 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        self._put('me/following', type='artist', ids=','.join(artist_ids))
+        return self._put('me/following', type='artist', ids=','.join(artist_ids))
 
+    @send_and_process(nothing)
     def artists_unfollow(self, artist_ids: list) -> None:
         """
         Unfollow artists as current user.
@@ -136,8 +143,9 @@ class SpotifyFollow(SpotifyBase):
         artist_ids
             list of artist IDs
         """
-        self._delete('me/following', type='artist', ids=','.join(artist_ids))
+        return self._delete('me/following', type='artist', ids=','.join(artist_ids))
 
+    @send_and_process(nothing)
     def users_is_following(self, user_ids: list) -> List[bool]:
         """
         Check if current user follows users.
@@ -158,6 +166,7 @@ class SpotifyFollow(SpotifyBase):
             'me/following/contains', type='user', ids=','.join(user_ids)
         )
 
+    @send_and_process(nothing)
     def users_follow(self, user_ids: list) -> None:
         """
         Follow users as current user.
@@ -169,8 +178,9 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs
         """
-        self._put('me/following', type='user', ids=','.join(user_ids))
+        return self._put('me/following', type='user', ids=','.join(user_ids))
 
+    @send_and_process(nothing)
     def users_unfollow(self, user_ids: list) -> None:
         """
         Unfollow users as current user.
@@ -182,4 +192,4 @@ class SpotifyFollow(SpotifyBase):
         user_ids
             list of user IDs
         """
-        self._delete('me/following', type='user', ids=','.join(user_ids))
+        return self._delete('me/following', type='user', ids=','.join(user_ids))

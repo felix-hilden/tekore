@@ -1,11 +1,10 @@
-from tekore.client.base import SpotifyBase
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
     SimpleAlbumPaging,
     SimplePlaylistPaging,
 )
-
 
 paging_type = {
     'artist': FullArtistOffsetPaging,
@@ -15,7 +14,15 @@ paging_type = {
 }
 
 
+def search_result(json: dict):
+    """
+    Unpack search result dicts into respective paging type constructors.
+    """
+    return tuple(paging_type[key[:-1]](**json[key]) for key in json.keys())
+
+
 class SpotifySearch(SpotifyBase):
+    @send_and_process(search_result)
     def search(
             self,
             query: str,
@@ -51,7 +58,7 @@ class SpotifySearch(SpotifyBase):
             paging objects containing the types of items searched for
             in the order that they were specified in 'types'
         """
-        json = self._get(
+        return self._get(
             'search',
             q=query,
             type=','.join(types),
@@ -60,4 +67,3 @@ class SpotifySearch(SpotifyBase):
             limit=limit,
             offset=offset
         )
-        return tuple(paging_type[t](**json[t + 's']) for t in types)

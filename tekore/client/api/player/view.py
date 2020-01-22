@@ -1,6 +1,7 @@
 from typing import List
 
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, model_list
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.serialise import ModelList
 from tekore.model import (
     CurrentlyPlayingContext,
@@ -11,6 +12,7 @@ from tekore.model import (
 
 
 class SpotifyPlayerView(SpotifyBase):
+    @send_and_process(single(CurrentlyPlayingContext))
     def playback(
             self,
             market: str = None
@@ -31,10 +33,9 @@ class SpotifyPlayerView(SpotifyBase):
         CurrentlyPlayingContext
             information about current playback
         """
-        json = self._get('me/player', market=market)
-        if json is not None:
-            return CurrentlyPlayingContext(**json)
+        return self._get('me/player', market=market)
 
+    @send_and_process(single(CurrentlyPlaying))
     def playback_currently_playing(
             self,
             market: str = None
@@ -54,10 +55,9 @@ class SpotifyPlayerView(SpotifyBase):
         CurrentlyPlaying
             information about the current track playing
         """
-        json = self._get('me/player/currently-playing', market=market)
-        if json is not None:
-            return CurrentlyPlaying(**json)
+        return self._get('me/player/currently-playing', market=market)
 
+    @send_and_process(single(PlayHistoryPaging))
     def playback_recently_played(
             self,
             limit: int = 20,
@@ -84,14 +84,14 @@ class SpotifyPlayerView(SpotifyBase):
         PlayHistoryPaging
             cursor-based paging containing play history objects
         """
-        json = self._get(
+        return self._get(
             'me/player/recently-played',
             limit=limit,
             after=after,
             before=before
         )
-        return PlayHistoryPaging(**json)
 
+    @send_and_process(model_list(Device, 'devices'))
     def playback_devices(self) -> List[Device]:
         """
         Get a user's available devices.
@@ -103,5 +103,4 @@ class SpotifyPlayerView(SpotifyBase):
         ModelList
             list of device objects
         """
-        json = self._get('me/player/devices')
-        return ModelList(Device(**d) for d in json['devices'])
+        return self._get('me/player/devices')

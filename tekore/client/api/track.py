@@ -1,9 +1,11 @@
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, model_list
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.serialise import ModelList
 from tekore.model import FullTrack, AudioFeatures, AudioAnalysis
 
 
 class SpotifyTrack(SpotifyBase):
+    @send_and_process(single(FullTrack))
     def track(
             self,
             track_id: str,
@@ -24,9 +26,9 @@ class SpotifyTrack(SpotifyBase):
         FullTrack
             track object
         """
-        json = self._get('tracks/' + track_id, market=market)
-        return FullTrack(**json)
+        return self._get('tracks/' + track_id, market=market)
 
+    @send_and_process(model_list(FullTrack, 'tracks'))
     def tracks(
             self,
             track_ids: list,
@@ -47,9 +49,9 @@ class SpotifyTrack(SpotifyBase):
         ModelList
             list of track objects
         """
-        json = self._get('tracks/?ids=' + ','.join(track_ids), market=market)
-        return ModelList(FullTrack(**t) for t in json['tracks'])
+        return self._get('tracks/?ids=' + ','.join(track_ids), market=market)
 
+    @send_and_process(single(AudioAnalysis))
     def track_audio_analysis(self, track_id: str) -> AudioAnalysis:
         """
         Get a detailed audio analysis for a track.
@@ -62,9 +64,9 @@ class SpotifyTrack(SpotifyBase):
         AudioAnalysis
             audio analysis
         """
-        json = self._get('audio-analysis/' + track_id)
-        return AudioAnalysis(**json)
+        return self._get('audio-analysis/' + track_id)
 
+    @send_and_process(single(AudioFeatures))
     def track_audio_features(self, track_id: str) -> AudioFeatures:
         """
         Get audio feature information for a track.
@@ -74,9 +76,9 @@ class SpotifyTrack(SpotifyBase):
         AudioFeatures
             audio features object
         """
-        json = self._get('audio-features/' + track_id)
-        return AudioFeatures(**json)
+        return self._get('audio-features/' + track_id)
 
+    @send_and_process(model_list(AudioFeatures, 'audio_features'))
     def tracks_audio_features(self, track_ids: list) -> ModelList:
         """
         Get audio feature information for multiple tracks.
@@ -88,8 +90,4 @@ class SpotifyTrack(SpotifyBase):
         ModelList
             list of audio features objects
         """
-        json = self._get('audio-features?ids=' + ','.join(track_ids))
-        return ModelList(
-            AudioFeatures(**a) if a is not None else None
-            for a in json['audio_features']
-        )
+        return self._get('audio-features?ids=' + ','.join(track_ids))
