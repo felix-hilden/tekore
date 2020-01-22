@@ -1,8 +1,10 @@
 from tekore.model import FullArtistOffsetPaging, FullTrackPaging
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single
+from tekore.client.base import SpotifyBase, send_and_process
 
 
 class SpotifyPersonalisation(SpotifyBase):
+    @send_and_process(single(FullArtistOffsetPaging))
     def current_user_top_artists(
             self,
             time_range: str = 'medium_term',
@@ -29,14 +31,14 @@ class SpotifyPersonalisation(SpotifyBase):
         FullArtistOffsetPaging
             paging object containing artists
         """
-        json = self._get(
+        return self._get(
             'me/top/artists',
             time_range=time_range,
             limit=limit,
             offset=offset
         )
-        return FullArtistOffsetPaging(**json)
 
+    @send_and_process(single(FullTrackPaging))
     def current_user_top_tracks(
             self,
             time_range: str = 'medium_term',
@@ -63,10 +65,9 @@ class SpotifyPersonalisation(SpotifyBase):
         FullTrackPaging
             paging object containing full tracks
         """
-        json = self._get(
+        return self._get(
             'me/top/tracks',
             time_range=time_range,
             limit=limit,
             offset=offset
         )
-        return FullTrackPaging(**json)

@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Tuple
 
 from tekore.client.api.browse.validate import validate_attributes
-from tekore.client.base import SpotifyBase
+from tekore.client.process import single, top_item, multiple
+from tekore.client.base import SpotifyBase, send_and_process
 from tekore.model import (
     SimplePlaylistPaging,
     SimpleAlbumPaging,
@@ -12,6 +13,10 @@ from tekore.model import (
 
 
 class SpotifyBrowse(SpotifyBase):
+    @send_and_process(multiple(
+        top_item('message'),
+        single(SimplePlaylistPaging, top_item='playlists')
+    ))
     def featured_playlists(
             self,
             country: str = None,
@@ -19,7 +24,7 @@ class SpotifyBrowse(SpotifyBase):
             timestamp: str = None,
             limit: int = 20,
             offset: int = 0
-    ) -> tuple:
+    ) -> Tuple[str, SimplePlaylistPaging]:
         """
         Get a list of Spotify featured playlists.
 
@@ -45,7 +50,7 @@ class SpotifyBrowse(SpotifyBase):
             (str, SimplePlaylistPaging): message for the playlists and a list of
             simplified playlist objects wrapped in a paging object
         """
-        json = self._get(
+        return self._get(
             'browse/featured-playlists',
             locale=locale,
             country=country,
@@ -53,8 +58,8 @@ class SpotifyBrowse(SpotifyBase):
             limit=limit,
             offset=offset
         )
-        return json['message'], SimplePlaylistPaging(**json['playlists'])
 
+    @send_and_process(single(SimpleAlbumPaging, top_item='albums'))
     def new_releases(
             self,
             country: str = None,
@@ -78,14 +83,14 @@ class SpotifyBrowse(SpotifyBase):
         SimpleAlbumPaging
             paging containing simplified album objects
         """
-        json = self._get(
+        return self._get(
             'browse/new-releases',
             country=country,
             limit=limit,
             offset=offset
         )
-        return SimpleAlbumPaging(**json['albums'])
 
+    @send_and_process(single(CategoryPaging, top_item='categories'))
     def categories(
             self,
             country: str = None,
@@ -113,15 +118,15 @@ class SpotifyBrowse(SpotifyBase):
         CategoryPaging
             paging object containing a list of categories
         """
-        json = self._get(
+        return self._get(
             'browse/categories',
             country=country,
             locale=locale,
             limit=limit,
             offset=offset
         )
-        return CategoryPaging(**json['categories'])
 
+    @send_and_process(single(Category))
     def category(
             self,
             category_id: str,
@@ -146,13 +151,13 @@ class SpotifyBrowse(SpotifyBase):
         Category
             category object
         """
-        json = self._get(
+        return self._get(
             'browse/categories/' + category_id,
             country=country,
             locale=locale
         )
-        return Category(**json)
 
+    @send_and_process(single(SimplePlaylistPaging, top_item='playlists'))
     def category_playlists(
             self,
             category_id: str = None,
@@ -179,14 +184,14 @@ class SpotifyBrowse(SpotifyBase):
         SimplePlaylistPaging
             paging object containing a list of simplified playlist objects
         """
-        json = self._get(
+        return self._get(
             f'browse/categories/{category_id}/playlists',
             country=country,
             limit=limit,
             offset=offset
         )
-        return SimplePlaylistPaging(**json['playlists'])
 
+    @send_and_process(single(Recommendations))
     def recommendations(
             self,
             artist_ids: list = None,
@@ -236,9 +241,9 @@ class SpotifyBrowse(SpotifyBase):
         validate_attributes(attributes)
         params.update(attributes)
 
-        json = self._get('recommendations', **params)
-        return Recommendations(**json)
+        return self._get('recommendations', **params)
 
+    @send_and_process(top_item('genres'))
     def recommendation_genre_seeds(self) -> List[str]:
         """
         Get a list of available genre seeds.
@@ -248,4 +253,4 @@ class SpotifyBrowse(SpotifyBase):
         list
             list of genres to use as seeds
         """
-        return self._get('recommendations/available-genre-seeds')['genres']
+        return self._get('recommendations/available-genre-seeds')
