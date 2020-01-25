@@ -98,7 +98,7 @@ class Scope(frozenset):
     Addition is a set-like union, subtraction is a set-like relative complement.
     The addition operation is also supported with reflected operands.
     Reflected subtraction tries to convert the left-side operand to a Scope.
-    If any operation is unsuccessful, :class:`NotImplementError` is raised.
+    If any operation is unsuccessful, :class:`NotImplementedError` is raised.
 
     .. code:: python
 
