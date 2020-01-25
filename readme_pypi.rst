@@ -50,19 +50,25 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
-1.0.1
------
-Bugfixes
-********
+Unreleased
+----------
+Added
+*****
+- Reading configuration with missing values produces a warning
+
+1.0.1 (2020-01-17)
+------------------
+Fixed
+*****
 - Accept missing video thumbnail in PlaylistTrack (#132)
 
-1.0.0
------
+1.0.0 (2020-01-14)
+------------------
 - Packaging improvements
 - Declare versioning scheme
 
-0.1.0
------
+0.1.0 (2020-01-14)
+------------------
 Initial release of Tekore!
 
 

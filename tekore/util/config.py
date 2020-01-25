@@ -32,10 +32,21 @@ Configuration can be written to file.
 .. code:: python
 
     config_to_file(filename, (id_, secret, uri, refresh))
+
+When reading configuration, if values are missing,
+a :class:`MissingConfigurationWarning` is issued.
+It can be disabled via the :mod:`warnings` module.
+
+.. code:: python
+
+    from warnings import simplefilter
+
+    simplefilter('ignore', MissingConfigurationWarning)
 """
 
 from os import environ
 from typing import Union, Iterable
+from warnings import warn
 from configparser import ConfigParser
 
 client_id_var: str = 'SPOTIFY_CLIENT_ID'
@@ -49,6 +60,10 @@ redirect_uri_var: str = 'SPOTIFY_REDIRECT_URI'
 
 user_refresh_var: str = 'SPOTIFY_USER_REFRESH'
 """Configuration variable name for a user refresh token."""
+
+
+class MissingConfigurationWarning(RuntimeWarning):
+    """Warning issued when a missing value is read from configuration."""
 
 
 def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
@@ -73,7 +88,16 @@ def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
     if return_refresh:
         variables += (user_refresh_var,)
 
-    return tuple(conf.get(var, None) for var in variables)
+    conf = tuple(conf.get(var, None) for var in variables)
+
+    if any(c is None for c in conf):
+        warn(
+            'A missing value was encountered in configuration!',
+            MissingConfigurationWarning,
+            stacklevel=3
+        )
+
+    return conf
 
 
 def config_from_environment(return_refresh: bool = False) -> tuple:

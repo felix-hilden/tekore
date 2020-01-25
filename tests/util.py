@@ -207,6 +207,21 @@ WHATEVER = something
         conf = config_from_file(path)
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
+    def test_missing_variables_warned(self):
+        from tekore.util.config import MissingConfigurationWarning
+        import warnings
+
+        warnings.simplefilter('error')
+        self._config_names_set(
+            'CLIENT_ID',
+            'CLIENT_SECRET',
+            'REDIRECT_URI',
+            '_'
+        )
+        with self.assertRaises(MissingConfigurationWarning):
+            config_from_file(self.test_config_path, 'MISSING')
+        warnings.resetwarnings()
+
 
 class TestConfigToFile(unittest.TestCase):
     test_config_path = Path('test_config.ini')
