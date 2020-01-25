@@ -7,20 +7,19 @@ Welcome to the GitHub repository of Tekore!
 We provide a client for the Spotify Web API for Python,
 complete with all available endpoints,
 authentication and loads of additional features.
-Tekore allows you to interact with the Web API effortlessly.
+Tekore allows you to interact with the API effortlessly.
+Here's five lines to get you full access and start playing your top songs.
 
 .. code:: python
 
-    from tekore import Spotify
+    from tekore import Spotify, util, scope
+
+    cred = (client_id, client_secret, redirect_uri)
+    token = util.prompt_for_user_token(*cred, scope=scope.every)
 
     spotify = Spotify(token)
-
     tracks = spotify.current_user_top_tracks(limit=10)
-    for track in tracks.items:
-        print(track.name)
-
-    finlandia = '3hHWhvw2hjwfngWcFjIzqr'
-    spotify.playback_start_tracks([finlandia])
+    spotify.playback_start_tracks([t.id for t in tracks.items])
 
 See our homepage on `PyPI`_ for more information
 about the package and its versions.
