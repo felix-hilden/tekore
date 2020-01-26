@@ -14,9 +14,9 @@ It should be ``None`` before logging in.
 During login you will be redirected to authenticate at Spotify.
 If successful, another redirection via ``/callback`` back to the main page
 will be performed.
-You should now see your Spotify user ID.
-It is saved to your session cookies and preserved during navigation.
-Logging out deletes the cookie and server-stored user information.
+You should now see your Spotify user ID and your currently playing track.
+The ID is saved to your session cookies and preserved during navigation.
+Logging out deletes the cookie and server-stored access token.
 
 .. code:: python
 
@@ -39,10 +39,27 @@ Logging out deletes the cookie and server-stored user information.
 
         @app.route('/', methods=['GET'])
         def main():
+            user = session.get('user', None)
             in_link = '<a href="/login">login</a>'
             out_link = '<a href="/logout">logout</a>'
-            user = session.get('user', None)
-            return f'User ID: {user}<br>You can {in_link} or {out_link}'
+            page = f'User ID: {user}<br>You can {in_link} or {out_link}'
+
+            if user is not None:
+                token = users[user]
+
+                if token.is_expiring:
+                    token = cred.refresh(token)
+                    users[user] = token
+
+                try:
+                    with spotify.token_as(users[user]):
+                        song = spotify.playback_currently_playing()
+
+                    page += f'<br>Now playing: {song.item.name}'
+                except Exception:
+                    page += '<br>Error in retrieving now playing!'
+
+            return page
 
         @app.route('/login', methods=['GET'])
         def login():
@@ -58,7 +75,7 @@ Logging out deletes the cookie and server-stored user information.
                 info = spotify.current_user()
 
             session['user'] = info.id
-            users[info.id] = info
+            users[info.id] = token
 
             return redirect('/', 307)
 
