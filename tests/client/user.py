@@ -1,4 +1,4 @@
-from ._cred import TestCaseWithUserCredentials
+from tests._cred import TestCaseWithUserCredentials
 from ._resources import user_id
 
 from tekore.client.api import SpotifyUser

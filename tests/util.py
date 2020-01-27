@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from tekore.auth.refreshing import RefreshingToken
+from tekore.util.config import MissingConfigurationWarning
 from tekore.util import (
     parse_code_from_url,
     prompt_for_user_token,
@@ -13,7 +14,9 @@ from tekore.util import (
     config_from_file,
     config_to_file,
 )
-from tests.client._cred import TestCaseWithUserCredentials
+
+from tests._util import handle_warnings
+from tests._cred import TestCaseWithUserCredentials
 
 
 class TestParseCodeFromURL(unittest.TestCase):
@@ -180,7 +183,8 @@ WHATEVER = something
             'REDIRECT_URI',
             '_'
         )
-        conf = config_from_file(self.test_config_path, 'MISSING')
+        with handle_warnings('ignore'):
+            conf = config_from_file(self.test_config_path, 'MISSING')
         self.assertTupleEqual(conf, (None, None, None))
 
     def test_file_another_section_is_case_sensitive(self):
@@ -190,7 +194,8 @@ WHATEVER = something
             'redirect_uri',
             '_'
         )
-        conf = config_from_file(self.test_config_path)
+        with handle_warnings('ignore'):
+            conf = config_from_file(self.test_config_path)
         self.assertTupleEqual(conf, (None, None, None))
 
     def test_file_nonexistent_file_raises(self):
@@ -208,19 +213,15 @@ WHATEVER = something
         self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
 
     def test_missing_variables_warned(self):
-        from tekore.util.config import MissingConfigurationWarning
-        import warnings
-
-        warnings.simplefilter('error')
         self._config_names_set(
             'CLIENT_ID',
             'CLIENT_SECRET',
             'REDIRECT_URI',
             '_'
         )
-        with self.assertRaises(MissingConfigurationWarning):
-            config_from_file(self.test_config_path, 'MISSING')
-        warnings.resetwarnings()
+        with handle_warnings('error'):
+            with self.assertRaises(MissingConfigurationWarning):
+                config_from_file(self.test_config_path, 'MISSING')
 
 
 class TestConfigToFile(unittest.TestCase):

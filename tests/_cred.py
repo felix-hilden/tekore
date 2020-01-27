@@ -1,3 +1,7 @@
+"""
+Base classes for tests that require application or user credentials.
+"""
+
 import os
 
 from unittest import TestCase, SkipTest

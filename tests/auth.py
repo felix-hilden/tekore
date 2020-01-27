@@ -5,7 +5,7 @@ from requests import HTTPError
 from tekore.auth.expiring import AccessToken, Token, Credentials, OAuthError
 from tekore.auth.refreshing import RefreshingCredentials, RefreshingToken
 
-from tests.client._cred import TestCaseWithEnvironment, TestCaseWithCredentials
+from tests._cred import TestCaseWithEnvironment, TestCaseWithCredentials
 
 
 class TestAccessToken(unittest.TestCase):

@@ -1,4 +1,4 @@
-from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
+from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import (
     track_id,
     track_ids,

@@ -1,4 +1,4 @@
-from ._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
+from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
 from tekore.client.api import SpotifyAlbum
