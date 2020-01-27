@@ -6,7 +6,7 @@ from tekore.client import Spotify
 from tekore.client.base import SpotifyBase
 from tekore.model.error import PlayerErrorReason
 
-from ._cred import TestCaseWithUserCredentials
+from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_id
 
 

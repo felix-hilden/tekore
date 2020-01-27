@@ -1,5 +1,5 @@
 from unittest import SkipTest
-from ._cred import TestCaseWithUserCredentials
+from tests._cred import TestCaseWithUserCredentials
 from ._resources import playlist_id, artist_ids, user_ids
 
 from tekore.client.api import SpotifyFollow
