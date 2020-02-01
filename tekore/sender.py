@@ -1,35 +1,34 @@
 """
 Manipulate the way clients send requests.
 
-Senders wrap around :class:`requests.Session` providing different levels of
-persistence across requests and enabling retries on failed requests.
-Additionally, keyword arguments accepted by Requests and
-custom :class:`Session` instances can be passed in too.
+Senders provide different levels of connection persistence across requests
+and extend other senders to enable retries on failed requests.
+The sender of a :class:`Client` also determines whether synchronous or
+asynchronous calls are used to send requests and process responses.
 Here's a short summary of the features of each sender.
 
-- :class:`TransientSender`: Create a new session for each request (default)
-- :class:`PersistentSender`: Reuse a session for requests made on the same instance
-- :class:`SingletonSender`: Use a common session for all instances and requests
-- :class:`RetryingSender`: Extend any sender to enable retries on failed requests
+- :class:`(Async) <AsyncTransientSender>` :class:`TransientSender`:
+  Send each request individually (default)
+- :class:`(Async) <AsyncPersistentSender>` :class:`PersistentSender`:
+  Reuse connections for requests made with one instance
+- :class:`(Async) <AsyncSingletonSender>` :class:`SingletonSender`:
+  Reuse connections between all instances
+- :class:`RetryingSender`: Retry on server errors or hitting the rate limit
 
 Sender instances are passed to a client at initialisation.
 
 .. code:: python
 
     from tekore import Spotify, Credentials
-    from tekore.sender import PersistentSender, RetryingSender
+    from tekore.sender import PersistentSender, AsyncTransientSender
 
-    cred = Credentials(
-        client_id,
-        client_secred,
-        redirect_uri,
-        sender = PersistentSender()
-    )
+    Credentials(*conf, sender=PersistentSender())
+    Spotify(sender=AsyncTransientSender())
 
-    sender = RetryingSender(retries=3, sender=PersistentSender())
-    spotify = Spotify(sender=sender)
-
-Keyword arguments accepted by Requests can be passed into senders.
+Synchronous senders wrap around the :mod:`requests` library,
+while asynchronous senders use :mod:`httpx`.
+Senders accept additional keyword arguments to :meth:`requests.Session.send`
+or :meth:`httpx.AsyncClient.request` that are passed on each request.
 
 .. code:: python
 
@@ -41,7 +40,8 @@ Keyword arguments accepted by Requests can be passed into senders.
     }
     TransientSender(proxies=proxies)
 
-A custom :class:`Session` can also be used.
+Custom instances of :class:`requests.Session` or :class:`httpx.AsyncClient`
+can also be used.
 
 .. code:: python
 
@@ -55,12 +55,13 @@ A custom :class:`Session` can also be used.
     PersistentSender(session)
     SingletonSender.session = session
 
-The default senders and keyword arguments can be changed.
+Default senders and keyword arguments can be changed.
 Note that this requires importing the whole sender module.
 :attr:`default_sender_instance` has precedence over :attr:`default_sender_type`.
 Using a :class:`RetryingSender` as the default type will raise an error
 as it tries to instantiate itself recursively.
 Use :attr:`default_sender_instance` instead.
+See also :attr:`default_httpx_kwargs`.
 
 .. code:: python
 

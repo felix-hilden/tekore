@@ -170,3 +170,44 @@ To retrieve the whole content additional methods are available.
 
     pages = spotify.all_pages(tracks)
     items = spotify.all_items(tracks)
+
+Async support
+-------------
+Tekore provides support for asynchronous programming with async-await.
+Async mode may be enabled when instantiating a client.
+
+.. code:: python
+
+    Credentials(*conf, asynchronous=True)
+    Spotify(token, asynchronous=True)
+
+Note that the boolean parameter above overrides any conflicting
+:class:`Sender <tekore.sender.Sender>` that is set as default
+or simultaneously passed in to the client.
+Alternatively, an asynchronous sender may be passed directly into a client.
+
+.. code:: python
+
+    from tekore import Spotify
+    from tekore.sender import AsyncPersistentSender
+
+    spotify = Spotify(token, sender=AsyncPersistentSender())
+
+Now every call to an endpoint returns an awaitable instead of a response.
+:mod:`asyncio` can then be used to execute asynchronous requests.
+See the :mod:`sender <tekore.sender>` module
+and :ref:`examples` for more information.
+
+.. code:: python
+
+    import asyncio
+
+    async def now_playing():
+        return await spotify.playback_currently_playing()
+
+    np = asyncio.run(now_playing())
+
+While asynchronous :class:`Credentials <tekore.auth.expiring.Credentials>`
+is supported, it is worth considering that concurrently refreshing tokens
+may lead to multiple refreshes for one token.
+Synchronous credentials clients are recommended.

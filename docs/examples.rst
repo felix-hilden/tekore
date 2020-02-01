@@ -3,9 +3,7 @@
 ========
 Examples
 ========
-
-Here are some example scripts for various use cases, enjoy!
-Fair warning, some of them perform (harmless and small) actions on your behalf.
+Here are some things you could do with Tekore, enjoy!
 
 .. toctree::
    :maxdepth: 3

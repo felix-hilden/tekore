@@ -5,8 +5,8 @@
 
 Welcome to the GitHub repository of Tekore!
 We provide a client for the Spotify Web API for Python,
-complete with all available endpoints,
-authentication and loads of additional features.
+complete with all available endpoints and authentication methods,
+async support and loads of additional features.
 Tekore allows you to interact with the API effortlessly.
 Here's five lines to get you full access and start playing your top songs.
 
