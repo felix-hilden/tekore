@@ -1,7 +1,5 @@
 from tekore.auth.expiring import AccessToken, Token, Credentials
-from tekore.sender import (
-    SyncSender, AsyncSender, new_default_sender, TransientSender
-)
+from tekore.sender import SyncSender
 
 
 class RefreshingToken(AccessToken):
