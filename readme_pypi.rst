@@ -57,6 +57,10 @@ Added
 - Async support in authentication and API endpoints
 - Reading configuration with missing values produces a warning
 
+Fixed
+*****
+- Correctly parse playlist when fields is specified (#142)
+
 1.0.1 (2020-01-17)
 ------------------
 Fixed

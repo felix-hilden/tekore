@@ -36,6 +36,10 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
     def test_playlist_tracks(self):
         self.client.playlist_tracks(playlist_id)
 
+    def test_playlist_with_fields_returns_object(self):
+        playlist = self.client.playlist(playlist_id, fields='uri')
+        self.assertIsInstance(playlist, dict)
+
     def test_playlist_tracks_with_fields_returns_object(self):
         tracks = self.client.playlist_tracks(playlist_id, fields='total')
         self.assertIsInstance(tracks, dict)

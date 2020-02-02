@@ -67,16 +67,19 @@ class SpotifyPlaylistView(SpotifyBase):
         SimplePlaylistPaging
             paging object containing simplified playlists
         """
-        return self._get(f'users/{user_id}/playlists', limit=limit,
-                         offset=offset)
+        return self._get(
+            f'users/{user_id}/playlists',
+            limit=limit,
+            offset=offset
+        )
 
-    @send_and_process(single(FullPlaylist))
+    @send_and_process(single_or_dict(FullPlaylist))
     def playlist(
             self,
             playlist_id: str,
             fields: str = None,
             market: str = None
-    ) -> FullPlaylist:
+    ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
 
@@ -94,8 +97,11 @@ class SpotifyPlaylistView(SpotifyBase):
         FullPlaylist
             playlist object
         """
-        return self._get('playlists/' + playlist_id, fields=fields,
-                         market=market)
+        return self._get(
+            'playlists/' + playlist_id,
+            fields=fields,
+            market=market
+        )
 
     @send_and_process(model_list(Image))
     def playlist_cover_image(self, playlist_id: str) -> ModelList:
