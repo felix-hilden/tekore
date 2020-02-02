@@ -137,18 +137,22 @@ For example per-instance sessions can be enabled with a
 
    Spotify(sender=PersistentSender())
 
-.. _advanced-caching:
+Keepalive connections, retries and caching make up a performance-boosting
+and convenient sender setup, easily constructed from simple building blocks.
+Less errors, less requests and faster responses, particularly for
+busy applications that request the same static resources many times.
+Note that the cache has no maximum size, but can be cleared manually.
 
-Response caching
-----------------
-The Spotify Web API returns headers for caching responses.
-Tekore does not implement caching, but a :mod:`sender <tekore.sender>`
-can be implemented to provide it.
-For example the
-`CacheControl <https://pypi.org/project/CacheControl/>`_
-library provides caching algorithms that also wrap around :class:`Session`.
-For further information see the Web API
-`overview <https://developer.spotify.com/documentation/web-api/>`_.
+.. code:: python
+
+    from tekore import sender
+
+    sender.default_sender_instance = sender.CachingSender(
+        sender.RetryingSender(
+            retries=2,
+            sender=sender.PersistentSender()
+        )
+    )
 
 Traversing paging objects
 -------------------------

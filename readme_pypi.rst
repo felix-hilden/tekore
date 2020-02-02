@@ -55,6 +55,7 @@ Unreleased
 Added
 *****
 - Async support in authentication and API endpoints
+- Sender that implements response caching
 - Reading configuration with missing values produces a warning
 
 Fixed

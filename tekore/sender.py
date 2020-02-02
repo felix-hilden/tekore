@@ -14,6 +14,7 @@ Here's a short summary of the features of each sender.
 - :class:`(Async) <AsyncSingletonSender>` :class:`SingletonSender`:
   Reuse connections between all instances
 - :class:`RetryingSender`: Retry on server errors or hitting the rate limit
+- :class:`CachingSender`: Cache successful GET requests
 
 Sender instances are passed to a client at initialisation.
 
@@ -79,12 +80,12 @@ See also :attr:`default_httpx_kwargs`.
         )
     )
 """
-
 import time
 import asyncio
 
 from abc import ABC, abstractmethod
 from warnings import warn
+from urllib.parse import urlencode
 
 from httpx import AsyncClient
 from requests import Request, Response, Session
@@ -283,7 +284,19 @@ Sender to instantiate by default.
 """
 
 
-class RetryingSender(Sender):
+class ExtendingSender(Sender, ABC):
+    """
+    Base class for senders that extend other senders.
+    """
+    def __init__(self, sender: Sender):
+        self.sender = sender or default_sender_type()
+
+    @property
+    def is_async(self) -> bool:
+        return self.sender.is_async
+
+
+class RetryingSender(ExtendingSender):
     """
     Retry requests if unsuccessful.
 
@@ -292,9 +305,6 @@ class RetryingSender(Sender):
     to wait before requesting again.
     Note that even when the number of retries is set to zero,
     retries based on rate limiting are still performed.
-
-    Only holds the retry logic.
-    Another sender is used to send requests.
 
     Parameters
     ----------
@@ -319,12 +329,8 @@ class RetryingSender(Sender):
         RetryingSender(sender=SingletonSender())
     """
     def __init__(self, retries: int = 0, sender: Sender = None):
+        super().__init__(sender)
         self.retries = retries
-        self.sender = sender or default_sender_type()
-
-    @property
-    def is_async(self) -> bool:
-        return self.sender.is_async
 
     def send(self, request: Request) -> Response:
         if self.is_async:
@@ -362,6 +368,135 @@ class RetryingSender(Sender):
                 delay_seconds *= 2
             else:
                 return r
+
+
+class CachingSender(ExtendingSender):
+    """
+    Cache successful GET requests.
+
+    The Web API provides response headers for caching.
+    Resources are cached based on Cache-Control, ETag and Vary headers.
+    Thus :class:`CachingSender` can be used with user tokens too.
+    Resources marked as private, errors and ``Vary: *`` are not cached.
+
+    When using asynchronous senders, the cache is protected with
+    :class:`asyncio.Lock` to prevent concurrent access.
+    The lock is instantiated on the first asynchronous call,
+    so using only one :func:`asyncio.run` (per sender) is advised.
+
+    Note that the cache has no maximum size and can grow without limit.
+    Use :meth:`CachingSender.clear` to empty the cache.
+
+    Parameters
+    ----------
+    sender
+        request sender, :attr:`default_sender_type` instantiated if not specified
+    """
+    def __init__(self, sender: Sender = None):
+        super().__init__(sender)
+        self._cache = {}
+        self._lock = None
+
+    def clear(self) -> None:
+        """
+        Clear sender cache.
+        """
+        self._cache = {}
+
+    @staticmethod
+    def _vary_key(request: Request, vary: list = None):
+        if vary is not None:
+            return ' '.join(request.headers[k] for k in vary)
+
+    def _maybe_save(self, request: Request, response: Response) -> None:
+        cc = response.headers.get('Cache-Control', 'private, max-age=0')
+
+        if response.status_code >= 400 or 'private' in cc:
+            return
+
+        age = int(cc.split('max-age=')[1].split(',')[0])
+        vary = response.headers.get('Vary', None)
+        if vary is not None:
+            if '*' in vary:
+                return
+            vary = vary.split(', ')
+
+        cache_item = self._cache.get(response.url, {
+            'vary': vary,
+            'responses': {}
+        })
+        self._cache[response.url] = cache_item
+
+        cached_response = {
+            'response': response,
+            'expires_at': time.time() + age - 1,
+            'etag': response.headers.get('ETag', None),
+        }
+        vary_key = self._vary_key(request, vary)
+        cache_item['responses'].update({vary_key: cached_response})
+
+    def _load(self, request: Request) -> dict:
+        params = ('&' + urlencode(request.params)) if request.params else ''
+        url = request.url + params
+        item = self._cache.get(url, None)
+
+        if item is not None:
+            vary_key = self._vary_key(request, item['vary'])
+            return item['responses'].get(vary_key, None)
+
+    def _handle_cache(self, request: Request) -> tuple:
+        cached = self._load(request)
+
+        if cached is not None:
+            response = cached['response']
+            if cached['expires_at'] > time.time():
+                return response, None
+            elif cached['etag'] is not None:
+                return response, cached['etag']
+
+        return None, None
+
+    def _handle_fresh(self, request, fresh: Response, cached: Response):
+        if fresh.status_code == 304:
+            return cached
+        else:
+            self._maybe_save(request, fresh)
+            return fresh
+
+    def send(self, request: Request) -> Response:
+        if self.is_async:
+            return self._async_send(request)
+
+        if request.method.lower() != 'get':
+            return self.sender.send(request)
+
+        cached, etag = self._handle_cache(request)
+        if cached is not None and etag is None:
+            return cached
+        elif etag is not None:
+            request.headers.update(ETag=etag)
+
+        fresh = self.sender.send(request)
+        return self._handle_fresh(request, fresh, cached)
+
+    async def _async_send(self, request: Request):
+        if request.method.lower() != 'get':
+            return await self.sender.send(request)
+
+        if self._lock is None:
+            self._lock = asyncio.Lock()
+
+        async with self._lock:
+            cached, etag = self._handle_cache(request)
+
+        if cached is not None and etag is None:
+            return cached
+        elif etag is not None:
+            request.headers.update(ETag=etag)
+
+        fresh = await self.sender.send(request)
+        async with self._lock:
+            return self._handle_fresh(request, fresh, cached)
 
 
 default_sender_instance = None

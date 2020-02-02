@@ -56,7 +56,6 @@ Additional features and various convenience modules are provided too.
   - Session persistence
   - Request retries
   - Response caching
-    (:ref:`possible <advanced-caching>` but not directly supported)
 
 - :mod:`tekore.convert` ID, URI and URL conversions
 - :mod:`tekore.scope` Access right scopes for user tokens
