@@ -50,8 +50,8 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
-Unreleased
-----------
+1.1.0 (2020-02-02)
+------------------
 Added
 *****
 - Async support in authentication and API endpoints
