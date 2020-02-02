@@ -57,6 +57,11 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
         cat_next = self.client.next(self.tracks)
         self.assertGreater(cat_next.total, 0)
 
+    def test_paging_next_parses_item_below_top_level(self):
+        cat, = self.client.search('sheeran', limit=1)
+        cat_next = self.client.next(cat)
+        self.assertGreater(cat_next.total, 0)
+
     def test_async_paging_next(self):
         cat_next = run(self.aclient.next(self.tracks))
         self.assertGreater(cat_next.total, 0)

@@ -1,4 +1,5 @@
-import unittest
+from asyncio import run
+from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from requests import HTTPError
@@ -8,7 +9,7 @@ from tekore.auth.refreshing import RefreshingCredentials, RefreshingToken
 from tests._cred import TestCaseWithEnvironment, TestCaseWithCredentials
 
 
-class TestAccessToken(unittest.TestCase):
+class TestAccessToken(TestCase):
     def test_access_token_cannot_be_instantiated(self):
         with self.assertRaises(TypeError):
             AccessToken()
@@ -33,7 +34,7 @@ def make_token_dict():
     }
 
 
-class TestToken(unittest.TestCase):
+class TestToken(TestCase):
     def test_access_token_returned(self):
         time = MagicMock()
         time.time.return_value = 0
@@ -66,6 +67,15 @@ class TestToken(unittest.TestCase):
             token = Token(make_token_dict())
             self.assertEqual(token.is_expiring, True)
 
+    def test_token_attributes(self):
+        d = make_token_dict()
+        t = Token(d)
+
+        with self.subTest('token_type'):
+            self.assertEqual(t.token_type, d['token_type'])
+        with self.subTest('scope'):
+            self.assertEqual(t.scope, d['scope'])
+
 
 def mock_response(code: int = 200, content: dict = None) -> MagicMock:
     response = MagicMock()
@@ -79,9 +89,17 @@ class TestCredentialsOnline(TestCaseWithEnvironment):
         c = Credentials(self.client_id, self.client_secret)
         c.request_client_token()
 
+    def test_async_request_client_token(self):
+        c = Credentials(self.client_id, self.client_secret, asynchronous=True)
+        run(c.request_client_token())
+
     def test_refresh_user_token(self):
         c = Credentials(self.client_id, self.client_secret)
         c.refresh_user_token(self.user_refresh)
+
+    def test_async_refresh_user_token(self):
+        c = Credentials(self.client_id, self.client_secret, asynchronous=True)
+        run(c.refresh_user_token(self.user_refresh))
 
     def test_bad_arguments_raises_oauth_error(self):
         c = Credentials('id', 'secret')
@@ -90,7 +108,7 @@ class TestCredentialsOnline(TestCaseWithEnvironment):
             c.request_client_token()
 
 
-class TestCredentialsOffline(unittest.TestCase):
+class TestCredentialsOffline(TestCase):
     def test_credentials_initialisation(self):
         Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
 
@@ -168,7 +186,7 @@ def make_token_obj(value: str, expiring: bool):
     return token
 
 
-class TestRefreshingToken(unittest.TestCase):
+class TestRefreshingToken(TestCase):
     def test_fresh_token_returned(self):
         low_token = make_token_obj('token', False)
         cred = MagicMock()
