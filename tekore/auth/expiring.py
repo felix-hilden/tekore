@@ -2,6 +2,7 @@ import time
 
 from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
+from typing import Callable
 from functools import wraps
 
 from requests import HTTPError, Request, Response
@@ -111,7 +112,9 @@ def parse_token(response):
     return Token(content)
 
 
-def send_and_process_token(function: callable) -> callable:
+def send_and_process_token(
+        function: Callable[..., Request]
+) -> Callable[..., Token]:
     async def async_send(self, request: Request):
         response = await self._send(request)
         return parse_token(response)
@@ -128,7 +131,7 @@ def send_and_process_token(function: callable) -> callable:
     return wrapper
 
 
-def parse_refreshed_token(response, refresh_token: str):
+def parse_refreshed_token(response, refresh_token: str) -> Token:
     refreshed = parse_token(response)
 
     if refreshed.refresh_token is None:
@@ -137,7 +140,9 @@ def parse_refreshed_token(response, refresh_token: str):
     return refreshed
 
 
-def send_and_process_refreshed_token(function: callable) -> callable:
+def send_and_process_refreshed_token(
+        function: Callable[..., Request]
+) -> Callable[..., Token]:
     async def async_send(self, request: Request, refresh_token: str):
         response = await self._send(request)
         return parse_refreshed_token(response, refresh_token)

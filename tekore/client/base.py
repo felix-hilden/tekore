@@ -1,5 +1,6 @@
 import json
 
+from typing import Optional, Callable
 from functools import wraps
 from requests import Request, Response, HTTPError
 
@@ -18,7 +19,7 @@ def build_url(url: str) -> str:
     return url
 
 
-def parse_url_params(params: dict = None) -> dict:
+def parse_url_params(params: Optional[dict]) -> Optional[dict]:
     params = params or {}
     return {k: v for k, v in params.items() if v is not None} or None
 
@@ -54,7 +55,7 @@ def handle_errors(request: Request, response: Response) -> None:
         raise HTTPError(error_str, request=request, response=response)
 
 
-def send_and_process(post_func: callable) -> callable:
+def send_and_process(post_func: Callable) -> Callable:
     """
     Decorate a function to send a request and process its content.
 
@@ -70,7 +71,7 @@ def send_and_process(post_func: callable) -> callable:
     post_func
         function to call with response JSON content
     """
-    def decorator(function: callable) -> callable:
+    def decorator(function: Callable[..., Request]) -> Callable:
         async def async_send(self, request: Request):
             response = await self._send(request)
             handle_errors(request, response)

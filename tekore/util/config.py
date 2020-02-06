@@ -88,16 +88,16 @@ def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
     if return_refresh:
         variables += (user_refresh_var,)
 
-    conf = tuple(conf.get(var, None) for var in variables)
+    values = tuple(conf.get(var, None) for var in variables)
 
-    if any(c is None for c in conf):
+    if any(c is None for c in values):
         warn(
             'A missing value was encountered in configuration!',
             MissingConfigurationWarning,
             stacklevel=3
         )
 
-    return conf
+    return values
 
 
 def config_from_environment(return_refresh: bool = False) -> tuple:

@@ -134,8 +134,8 @@ def from_url(url: str) -> tuple:
     tuple
         (type, ID) parsed from the URL
     """
-    *prefix, type_, id_ = url.split('/')
-    prefix = '/'.join(prefix)
+    *prefixes, type_, id_ = url.split('/')
+    prefix = '/'.join(prefixes)
 
     if prefix not in ('http://open.spotify.com', 'open.spotify.com'):
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')

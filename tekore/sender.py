@@ -59,7 +59,7 @@ can also be used.
 Default senders and keyword arguments can be changed.
 Note that this requires importing the whole sender module.
 :attr:`default_sender_instance` has precedence over :attr:`default_sender_type`.
-Using a :class:`RetryingSender` as the default type will raise an error
+Using an :class:`ExtendingSender` as the default type will raise an error
 as it tries to instantiate itself recursively.
 Use :attr:`default_sender_instance` instead.
 See also :attr:`default_httpx_kwargs`.
@@ -84,6 +84,7 @@ import time
 import asyncio
 
 from abc import ABC, abstractmethod
+from typing import Union, Optional
 from warnings import warn
 from urllib.parse import urlencode
 
@@ -114,13 +115,13 @@ class Sender(ABC):
         """
 
 
-default_requests_kwargs = {}
+default_requests_kwargs: dict = {}
 """
 Default keyword arguments to send with in synchronous mode.
 Not used when any other keyword arguments are passed in.
 """
 
-default_httpx_kwargs = {}
+default_httpx_kwargs: dict = {}
 """
 Default keyword arguments to send with in asynchronous mode.
 Not used when any other keyword arguments are passed in.
@@ -278,7 +279,7 @@ class AsyncPersistentSender(AsyncSender):
             )
 
 
-default_sender_type = TransientSender
+default_sender_type: Union[SyncSender, AsyncSender] = TransientSender
 """
 Sender to instantiate by default.
 """
@@ -288,7 +289,7 @@ class ExtendingSender(Sender, ABC):
     """
     Base class for senders that extend other senders.
     """
-    def __init__(self, sender: Sender):
+    def __init__(self, sender: Optional[Sender]):
         self.sender = sender or default_sender_type()
 
     @property
@@ -395,7 +396,7 @@ class CachingSender(ExtendingSender):
     def __init__(self, sender: Sender = None):
         super().__init__(sender)
         self._cache = {}
-        self._lock = None
+        self._lock: asyncio.Lock = None
 
     def clear(self) -> None:
         """
@@ -404,7 +405,7 @@ class CachingSender(ExtendingSender):
         self._cache = {}
 
     @staticmethod
-    def _vary_key(request: Request, vary: list = None):
+    def _vary_key(request: Request, vary: Optional[list]):
         if vary is not None:
             return ' '.join(request.headers[k] for k in vary)
 
@@ -499,7 +500,7 @@ class CachingSender(ExtendingSender):
             return self._handle_fresh(request, fresh, cached)
 
 
-default_sender_instance = None
+default_sender_instance: Sender = None
 """
 Default sender instance to use in clients.
 If specified, overrides :attr:`default_sender_type`.
@@ -528,7 +529,7 @@ class Client:
         sender and defaults if they are in conflict and instantiates
         a transient sender of the requested type
     """
-    def __init__(self, sender: Sender, asynchronous: bool = None):
+    def __init__(self, sender: Optional[Sender], asynchronous: bool = None):
         new_sender = sender or new_default_sender()
 
         if new_sender.is_async and asynchronous is False:

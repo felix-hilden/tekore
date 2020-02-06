@@ -1,3 +1,4 @@
+from typing import Callable
 from tekore.serialise import ModelList
 
 
@@ -8,7 +9,7 @@ def nothing(json):
     return json
 
 
-def top_item(item: str):
+def top_item(item: str) -> Callable:
     """
     Return ``item`` from top level of dict.
     """
@@ -17,7 +18,7 @@ def top_item(item: str):
     return post_func
 
 
-def single(type_: type, from_item: str = None):
+def single(type_: type, from_item: str = None) -> Callable:
     """
     Unpack dict or items in ``from_item`` into single constructor.
     If dict or ``from_item`` is None - does nothing and returns None.
@@ -28,7 +29,7 @@ def single(type_: type, from_item: str = None):
     return post_func
 
 
-def single_or_dict(type_: type):
+def single_or_dict(type_: type) -> Callable:
     """
     Try to unpack dict into single constructor returning untouched dict if failed.
     """
@@ -41,7 +42,7 @@ def single_or_dict(type_: type):
     return post_func
 
 
-def model_list(type_: type, from_item: str = None):
+def model_list(type_: type, from_item: str = None) -> Callable:
     """
     Unpack items inside ``from_item`` of dict into constructors.
     """
@@ -51,7 +52,7 @@ def model_list(type_: type, from_item: str = None):
     return post_func
 
 
-def multiple(*args: callable):
+def multiple(*args: Callable):
     """
     Run json dict through multiple processors.
     """
