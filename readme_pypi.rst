@@ -37,6 +37,19 @@ Tekore can be installed from the Package Index via ``pip``.
 
 Versioning
 ==========
+When requiring Tekore in projects or other packages,
+please pin the version down to at least a specific major release
+to avoid compatibility issues.
+For example:
+
+.. code:: python
+
+    setup(
+        install_requires=[
+            'tekore>=1.1,<2'
+        ]
+    )
+
 Tekore provides both stable and beta endpoints of the Web API.
 However, beta endpoints may be changed by Spotify without prior notice,
 so older versions of the library may have unintended issues.
