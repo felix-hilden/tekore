@@ -1,10 +1,8 @@
-from typing import Generator
+from typing import Generator, Optional
 
 from tekore.model.paging import Paging, OffsetPaging
-from tekore.client.base import send_and_process
+from tekore.client.base import send_and_process, SpotifyBase
 from tekore.serialise import SerialisableDataclass
-
-from tekore.client.base import SpotifyBase
 
 
 def parse_paging_result(result):
@@ -21,7 +19,7 @@ class SpotifyPaging(SpotifyBase):
     def _get_paging_result(self, address: str):
         return self._get(address)
 
-    def next(self, page: Paging) -> Paging:
+    def next(self, page: Paging) -> Optional[Paging]:
         """
         Retrieve the next result set of a paging object.
 
@@ -35,20 +33,23 @@ class SpotifyPaging(SpotifyBase):
         Paging
             paging object containing the next result set
         """
-        if page.next is None:
-            return
-
         if self.is_async:
             return self._async_next(page)
+
+        if page.next is None:
+            return
 
         next_set = self._get_paging_result(page.next)
         return type(page)(**next_set)
 
-    async def _async_next(self, page: Paging) -> Paging:
+    async def _async_next(self, page: Paging) -> Optional[Paging]:
+        if page.next is None:
+            return
+
         next_set = await self._get_paging_result(page.next)
         return type(page)(**next_set)
 
-    def previous(self, page: OffsetPaging) -> OffsetPaging:
+    def previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
         """
         Retrieve the previous result set of a paging object.
 
@@ -62,16 +63,19 @@ class SpotifyPaging(SpotifyBase):
         OffsetPaging
             paging object containing the previous result set
         """
-        if page.previous is None:
-            return
-
         if self.is_async:
             return self._async_previous(page)
+
+        if page.previous is None:
+            return
 
         previous_set = self._get_paging_result(page.previous)
         return type(page)(**previous_set)
 
-    async def _async_previous(self, page: OffsetPaging) -> OffsetPaging:
+    async def _async_previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
+        if page.previous is None:
+            return
+
         previous_set = await self._get_paging_result(page.previous)
         return type(page)(**previous_set)
 

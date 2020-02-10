@@ -63,6 +63,12 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
+Unreleased
+----------
+Fixed
+*****
+- Always return an awaitable in paging navigation (#146)
+
 1.1.0 (2020-02-02)
 ------------------
 Added
