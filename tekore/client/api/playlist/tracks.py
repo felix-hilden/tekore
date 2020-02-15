@@ -1,7 +1,8 @@
 from typing import List, Tuple
 
 from tekore.client.process import top_item, nothing
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.decor import send_and_process
+from tekore.client.base import SpotifyBase
 from tekore.convert import to_uri
 
 

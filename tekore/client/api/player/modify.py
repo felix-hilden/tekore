@@ -2,8 +2,9 @@ from typing import Union
 
 from tekore.model import RepeatState
 from tekore.convert import to_uri
+from tekore.client.base import SpotifyBase
+from tekore.client.decor import send_and_process
 from tekore.client.process import nothing
-from tekore.client.base import SpotifyBase, send_and_process
 
 
 def offset_to_dict(offset: Union[int, str]):

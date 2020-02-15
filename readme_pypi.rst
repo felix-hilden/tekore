@@ -71,6 +71,7 @@ Added
 
 Fixed
 *****
+- Retrieving all items and pages of a search respects API limits (#145)
 - Always return an awaitable in paging navigation (#146)
 
 1.1.0 (2020-02-02)

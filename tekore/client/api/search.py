@@ -1,4 +1,5 @@
-from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
+from tekore.client.decor import send_and_process, maximise_limit
+from tekore.client.base import SpotifyBase
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
@@ -37,13 +38,15 @@ class SpotifySearch(SpotifyBase):
         Search for an item.
 
         Requires the user-read-private scope.
+        Returns 404 - Not Found if limit+offset would be above 5000.
 
         Parameters
         ----------
         query
             search query
         types
-            items to return: 'artist', 'album', 'track' and/or 'playlist'
+            resources to search for, tuple of strings containing
+            artist, album, track and/or playlist
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
@@ -58,6 +61,14 @@ class SpotifySearch(SpotifyBase):
         tuple
             paging objects containing the types of items searched for
             in the order that they were specified in 'types'
+
+        Examples
+        --------
+        .. code:: python
+
+            tracks, = spotify.search('monty python')
+            artists, = spotify.search('sheeran', types=('artist',))
+            albums, tracks = spotify.search('piano', types=('album', 'track'))
         """
         return self._get(
             'search',

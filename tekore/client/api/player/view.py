@@ -1,7 +1,8 @@
 from typing import List
 
 from tekore.client.process import single, model_list
-from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
+from tekore.client.decor import send_and_process, maximise_limit
+from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
 from tekore.model import (
     CurrentlyPlayingContext,

@@ -1,16 +1,11 @@
 import json
 
-from typing import Optional, Callable
-from functools import wraps
-from requests import Request, Response, HTTPError
+from typing import Optional
+from requests import Request
 
 from tekore.sender import Sender, Client
-from tekore.model.error import PlayerErrorReason
 
 prefix = 'https://api.spotify.com/v1/'
-error_format = """Error in {url}:
-{code}: {msg}
-"""
 
 
 def build_url(url: str) -> str:
@@ -22,97 +17,6 @@ def build_url(url: str) -> str:
 def parse_url_params(params: Optional[dict]) -> Optional[dict]:
     params = params or {}
     return {k: v for k, v in params.items() if v is not None} or None
-
-
-def parse_json(response):
-    try:
-        return response.json()
-    except ValueError:
-        return None
-
-
-def parse_error_reason(response):
-    content = parse_json(response)
-    reason = getattr(response, 'reason', '')
-
-    if content is None:
-        return reason
-
-    error = content['error']
-    message = error.get('message', reason)
-    if 'reason' in error:
-        message += '\n' + PlayerErrorReason[error['reason']].value
-    return message
-
-
-def handle_errors(request: Request, response: Response) -> None:
-    if response.status_code >= 400:
-        error_str = error_format.format(
-            url=response.url,
-            code=response.status_code,
-            msg=parse_error_reason(response)
-        )
-        raise HTTPError(error_str, request=request, response=response)
-
-
-def send_and_process(post_func: Callable) -> Callable:
-    """
-    Decorate a function to send a request and process its content.
-
-    The first parameter of a decorated function must be the instance (self)
-    of a client with a :meth:`_send` method.
-    The instance must also have :attr:`is_async`, based on which a synchronous
-    or an asynchronous function is used in the process.
-    The decorated function must return a :class:`requests.Request`.
-    The result of ``post_func`` is returned to the caller.
-
-    Parameters
-    ----------
-    post_func
-        function to call with response JSON content
-    """
-    def decorator(function: Callable[..., Request]) -> Callable:
-        async def async_send(self, request: Request):
-            response = await self._send(request)
-            handle_errors(request, response)
-            content = parse_json(response)
-            return post_func(content)
-
-        @wraps(function)
-        def wrapper(self, *args, **kwargs):
-            request = function(self, *args, **kwargs)
-
-            if self.is_async:
-                return async_send(self, request)
-
-            response = self._send(request)
-            handle_errors(request, response)
-            content = parse_json(response)
-            return post_func(content)
-        return wrapper
-    return decorator
-
-
-def maximise_limit(max_limit: int) -> Callable:
-    """
-    Decorate a function to maximise the value of a 'limit' argument.
-
-    Parameters
-    ----------
-    max_limit
-        maximum value of the limit
-    """
-    def decorator(function: Callable) -> Callable:
-        varnames = function.__code__.co_varnames
-        arg_pos = varnames.index('limit') - 1
-
-        @wraps(function)
-        def wrapper(self, *args, **kwargs):
-            if self.max_limits_on and len(args) < arg_pos:
-                kwargs.setdefault('limit', max_limit)
-            return function(self, *args, **kwargs)
-        return wrapper
-    return decorator
 
 
 class SpotifyBase(Client):
