@@ -2,7 +2,8 @@ from typing import List, Tuple
 
 from tekore.client.api.browse.validate import validate_attributes
 from tekore.client.process import single, top_item, multiple
-from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
+from tekore.client.decor import send_and_process, maximise_limit
+from tekore.client.base import SpotifyBase
 from tekore.model import (
     SimplePlaylistPaging,
     SimpleAlbumPaging,

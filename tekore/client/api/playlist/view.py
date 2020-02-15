@@ -1,7 +1,8 @@
 from typing import Union
 
 from tekore.client.process import single, model_list, single_or_dict
-from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
+from tekore.client.decor import send_and_process, maximise_limit
+from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
 from tekore.model import (
     SimplePlaylistPaging,

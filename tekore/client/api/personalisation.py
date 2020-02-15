@@ -1,6 +1,7 @@
-from tekore.model import FullArtistOffsetPaging, FullTrackPaging
 from tekore.client.process import single
-from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
+from tekore.client.decor import send_and_process, maximise_limit
+from tekore.client.base import SpotifyBase
+from tekore.model import FullArtistOffsetPaging, FullTrackPaging
 
 
 class SpotifyPersonalisation(SpotifyBase):

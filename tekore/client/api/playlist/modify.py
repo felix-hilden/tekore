@@ -1,7 +1,8 @@
 from requests import Request
 
 from tekore.client.process import single, nothing
-from tekore.client.base import SpotifyBase, build_url, send_and_process
+from tekore.client.decor import send_and_process
+from tekore.client.base import SpotifyBase, build_url
 from tekore.model import FullPlaylist
 
 

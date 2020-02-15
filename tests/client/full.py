@@ -2,6 +2,7 @@ from asyncio import run
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from requests import HTTPError
 from tekore.client import Spotify
 from tests._util import handle_warnings
 from tests._cred import TestCaseWithUserCredentials
@@ -92,6 +93,22 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
         cat_next = self.client.next(cat)
         self.assertGreater(cat_next.total, 0)
 
+    def test_search_beyond_limit_raises(self):
+        with self.assertRaises(HTTPError):
+            self.client.search('piano', types=('playlist',), limit=1, offset=5000)
+
+    def test_search_next_beyond_limit_returns_none(self):
+        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=4999)
+        self.assertIsNone(self.client.next(pl))
+
+    def test_async_search_next_beyond_limit_returns_none(self):
+        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=4999)
+
+        async def f():
+            return await self.aclient.next(pl)
+
+        self.assertIsNone(run(f()))
+
     def test_async_paging_next(self):
         cat_next = run(self.aclient.next(self.tracks))
         self.assertGreater(cat_next.total, 0)
@@ -100,6 +117,12 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
         cat_next = self.client.next(self.tracks)
         cat_prev = self.client.previous(cat_next)
         self.assertEqual(self.tracks.items[0].id, cat_prev.items[0].id)
+
+    def test_async_paging_previous_of_first_returns_none(self):
+        async def f():
+            return await self.aclient.previous(self.tracks)
+
+        self.assertIsNone(run(f()))
 
     def test_async_paging_previous_of_next_is_identical(self):
         async def f():
