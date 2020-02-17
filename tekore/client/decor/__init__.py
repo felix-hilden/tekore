@@ -58,7 +58,7 @@ def maximise_limit(max_limit: int) -> Callable:
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
-            if self.max_limits_on and len(args) < arg_pos:
+            if self.max_limits_on and len(args) <= arg_pos:
                 kwargs.setdefault('limit', max_limit)
             return function(self, *args, **kwargs)
         return wrapper

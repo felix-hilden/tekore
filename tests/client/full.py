@@ -66,6 +66,14 @@ class TestSpotifyMaxLimits(TestCaseWithUserCredentials):
 
         self.assertEqual(s.limit, 1)
 
+    def test_specifying_pos_args_until_limit(self):
+        client = Spotify(self.user_token, max_limits_on=True)
+        s1, = client.search('piano', ('track',), None, None)
+        with client.max_limits(False):
+            s2, = client.search('piano', ('track',), None, None)
+
+        self.assertGreater(s1.limit, s2.limit)
+
 
 class TestSpotifyPaging(TestCaseWithUserCredentials):
     @classmethod
