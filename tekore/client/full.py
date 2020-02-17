@@ -33,7 +33,7 @@ class Spotify(
     @contextmanager
     def token_as(self, token) -> 'Spotify':
         """
-        Temporarily use a different token with requests.
+        Context manager. Use a different token with requests.
 
         Parameters
         ----------
@@ -44,6 +44,18 @@ class Spotify(
         -------
         Spotify
             self
+
+        Examples
+        --------
+        .. code:: python
+
+            spotify = Spotify()
+            with spotify.token_as(token):
+                album = spotify.album(album_id)
+
+            spotify = Spotify(app_token)
+            with spotify.token_as(user_token):
+                user = spotify.current_user()
         """
         self.token, old = token, self.token
         yield self
@@ -52,7 +64,7 @@ class Spotify(
     @contextmanager
     def max_limits(self, on: bool = True) -> 'Spotify':
         """
-        Temporarily toggle using maximum limits in paging calls.
+        Context manager. Toggle using maximum limits in paging calls.
 
         Parameters
         ----------
@@ -63,6 +75,18 @@ class Spotify(
         -------
         Spotify
             self
+
+        Examples
+        --------
+        .. code:: python
+
+            spotify = Spotify(token)
+            with spotify.max_limits(True):
+                tracks, = spotify.search('piano')
+
+            spotify = Spotify(token, max_limits_on=True)
+            with spotify.max_limits(False):
+                tracks, = spotify.search('piano')
         """
         self.max_limits_on, old = on, self.max_limits_on
         yield self
