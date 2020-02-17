@@ -44,9 +44,26 @@ class Spotify(
         -------
         Spotify
             self
-
-
         """
-        self.token, old_token = token, self.token
+        self.token, old = token, self.token
         yield self
-        self.token = old_token
+        self.token = old
+
+    @contextmanager
+    def max_limits(self, on: bool = True) -> 'Spotify':
+        """
+        Temporarily toggle using maximum limits in paging calls.
+
+        Parameters
+        ----------
+        on
+            enable or disable using maximum limits
+
+        Returns
+        -------
+        Spotify
+            self
+        """
+        self.max_limits_on, old = on, self.max_limits_on
+        yield self
+        self.max_limits_on = old

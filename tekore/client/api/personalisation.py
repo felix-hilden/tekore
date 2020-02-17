@@ -1,10 +1,11 @@
 from tekore.model import FullArtistOffsetPaging, FullTrackPaging
 from tekore.client.process import single
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 
 
 class SpotifyPersonalisation(SpotifyBase):
     @send_and_process(single(FullArtistOffsetPaging))
+    @maximise_limit(50)
     def current_user_top_artists(
             self,
             time_range: str = 'medium_term',
@@ -39,6 +40,7 @@ class SpotifyPersonalisation(SpotifyBase):
         )
 
     @send_and_process(single(FullTrackPaging))
+    @maximise_limit(50)
     def current_user_top_tracks(
             self,
             time_range: str = 'medium_term',

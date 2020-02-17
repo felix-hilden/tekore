@@ -1,7 +1,7 @@
 from typing import Union
 
 from tekore.client.process import single, model_list, single_or_dict
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.serialise import ModelList
 from tekore.model import (
     SimplePlaylistPaging,
@@ -13,6 +13,7 @@ from tekore.model import (
 
 class SpotifyPlaylistView(SpotifyBase):
     @send_and_process(single(SimplePlaylistPaging))
+    @maximise_limit(50)
     def followed_playlists(
             self,
             limit: int = 20,
@@ -40,6 +41,7 @@ class SpotifyPlaylistView(SpotifyBase):
         return self._get('me/playlists', limit=limit, offset=offset)
 
     @send_and_process(single(SimplePlaylistPaging))
+    @maximise_limit(50)
     def playlists(
             self,
             user_id: str,

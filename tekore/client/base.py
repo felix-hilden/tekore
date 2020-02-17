@@ -93,12 +93,35 @@ def send_and_process(post_func: Callable) -> Callable:
     return decorator
 
 
+def maximise_limit(max_limit: int) -> Callable:
+    """
+    Decorate a function to maximise the value of a 'limit' argument.
+
+    Parameters
+    ----------
+    max_limit
+        maximum value of the limit
+    """
+    def decorator(function: Callable) -> Callable:
+        varnames = function.__code__.co_varnames
+        arg_pos = varnames.index('limit') - 1
+
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            if self.max_limits_on and len(args) < arg_pos:
+                kwargs.setdefault('limit', max_limit)
+            return function(self, *args, **kwargs)
+        return wrapper
+    return decorator
+
+
 class SpotifyBase(Client):
     def __init__(
             self,
             token=None,
             sender: Sender = None,
             asynchronous: bool = None,
+            max_limits_on: bool = False,
     ):
         """
         Client to Web API endpoints.
@@ -111,9 +134,12 @@ class SpotifyBase(Client):
             request sender
         asynchronous
             synchronicity requirement
+        max_limits_on
+            use maximum limits in paging calls, overrided by endpoint arguments
         """
         super().__init__(sender, asynchronous)
         self.token = token
+        self.max_limits_on = max_limits_on
 
     def _create_headers(self, content_type: str = 'application/json'):
         return {

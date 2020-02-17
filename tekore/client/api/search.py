@@ -1,4 +1,4 @@
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
@@ -23,6 +23,7 @@ def search_result(json: dict):
 
 class SpotifySearch(SpotifyBase):
     @send_and_process(search_result)
+    @maximise_limit(50)
     def search(
             self,
             query: str,

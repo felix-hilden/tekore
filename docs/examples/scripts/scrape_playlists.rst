@@ -25,7 +25,7 @@ a :class:`RetryingSender <tekore.sender.RetryingSender>` is used.
     token = util.prompt_for_user_token(*conf, scope=scope)
 
     sender = RetryingSender(sender=AsyncPersistentSender())
-    spotify = Spotify(token, sender=sender)
+    spotify = Spotify(token, sender=sender, max_limits_on=True)
 
 
     async def count_artists(playlist_id: str):

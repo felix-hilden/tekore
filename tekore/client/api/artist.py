@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from tekore.client.process import single, model_list
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.serialise import ModelList
 from tekore.model import FullArtist, SimpleAlbumPaging, FullTrack, AlbumGroup
 
@@ -42,6 +42,7 @@ class SpotifyArtist(SpotifyBase):
         return self._get('artists/?ids=' + ','.join(artist_ids))
 
     @send_and_process(single(SimpleAlbumPaging))
+    @maximise_limit(50)
     def artist_albums(
             self,
             artist_id: str,

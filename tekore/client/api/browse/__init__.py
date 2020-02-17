@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 from tekore.client.api.browse.validate import validate_attributes
 from tekore.client.process import single, top_item, multiple
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.model import (
     SimplePlaylistPaging,
     SimpleAlbumPaging,
@@ -17,6 +17,7 @@ class SpotifyBrowse(SpotifyBase):
         top_item('message'),
         single(SimplePlaylistPaging, from_item='playlists')
     ))
+    @maximise_limit(50)
     def featured_playlists(
             self,
             country: str = None,
@@ -60,6 +61,7 @@ class SpotifyBrowse(SpotifyBase):
         )
 
     @send_and_process(single(SimpleAlbumPaging, from_item='albums'))
+    @maximise_limit(50)
     def new_releases(
             self,
             country: str = None,
@@ -91,6 +93,7 @@ class SpotifyBrowse(SpotifyBase):
         )
 
     @send_and_process(single(CategoryPaging, from_item='categories'))
+    @maximise_limit(50)
     def categories(
             self,
             country: str = None,
@@ -158,6 +161,7 @@ class SpotifyBrowse(SpotifyBase):
         )
 
     @send_and_process(single(SimplePlaylistPaging, from_item='playlists'))
+    @maximise_limit(50)
     def category_playlists(
             self,
             category_id: str = None,
@@ -192,6 +196,7 @@ class SpotifyBrowse(SpotifyBase):
         )
 
     @send_and_process(single(Recommendations))
+    @maximise_limit(100)
     def recommendations(
             self,
             artist_ids: list = None,

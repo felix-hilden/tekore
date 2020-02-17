@@ -1,7 +1,7 @@
 from typing import List
 
 from tekore.client.process import single, nothing
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.model import FullArtistCursorPaging
 
 
@@ -70,6 +70,7 @@ class SpotifyFollow(SpotifyBase):
         return self._delete(f'playlists/{playlist_id}/followers')
 
     @send_and_process(single(FullArtistCursorPaging, from_item='artists'))
+    @maximise_limit(50)
     def followed_artists(
             self,
             limit: int = 20,

@@ -36,6 +36,36 @@ class TestSpotifyBaseUnits(TestCase):
         self.assertIsNone(previous)
 
 
+class TestSpotifyMaxLimits(TestCaseWithUserCredentials):
+    def test_turning_on_max_limits_returns_more(self):
+        client = Spotify(self.user_token)
+        s1, = client.search('piano')
+        with client.max_limits(True):
+            s2, = client.search('piano')
+
+        self.assertLess(s1.limit, s2.limit)
+
+    def test_turning_off_max_limits_returns_less(self):
+        client = Spotify(self.user_token, max_limits_on=True)
+        s1, = client.search('piano')
+        with client.max_limits(False):
+            s2, = client.search('piano')
+
+        self.assertGreater(s1.limit, s2.limit)
+
+    def test_specifying_limit_kwarg_overrides_max_limits(self):
+        client = Spotify(self.user_token, max_limits_on=True)
+        s, = client.search('piano', limit=1)
+
+        self.assertEqual(s.limit, 1)
+
+    def test_specifying_limit_pos_arg_overrides_max_limits(self):
+        client = Spotify(self.user_token, max_limits_on=True)
+        s, = client.search('piano', ('track',), None, None, 1)
+
+        self.assertEqual(s.limit, 1)
+
+
 class TestSpotifyPaging(TestCaseWithUserCredentials):
     @classmethod
     def setUpClass(cls):

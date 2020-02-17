@@ -65,6 +65,10 @@ Changelog
 =========
 Unreleased
 ----------
+Added
+*****
+- Optionally use maximum limits in all paging calls
+
 Fixed
 *****
 - Always return an awaitable in paging navigation (#146)

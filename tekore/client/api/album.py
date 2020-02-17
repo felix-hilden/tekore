@@ -1,5 +1,5 @@
 from tekore.client.process import single, model_list
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.serialise import ModelList
 from tekore.model import FullAlbum, SimpleTrackPaging
 
@@ -29,6 +29,7 @@ class SpotifyAlbum(SpotifyBase):
         return self._get('albums/' + album_id, market=market)
 
     @send_and_process(single(SimpleTrackPaging))
+    @maximise_limit(50)
     def album_tracks(
             self,
             album_id: str,

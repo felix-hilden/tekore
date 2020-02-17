@@ -1,12 +1,13 @@
 from typing import List
 
 from tekore.client.process import single, nothing
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.model import SavedAlbumPaging, SavedTrackPaging
 
 
 class SpotifyLibrary(SpotifyBase):
     @send_and_process(single(SavedAlbumPaging))
+    @maximise_limit(50)
     def saved_albums(
             self,
             market: str = None,
@@ -82,6 +83,7 @@ class SpotifyLibrary(SpotifyBase):
         return self._delete('me/albums?ids=' + ','.join(album_ids))
 
     @send_and_process(single(SavedTrackPaging))
+    @maximise_limit(50)
     def saved_tracks(
             self,
             market: str = None,

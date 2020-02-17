@@ -1,7 +1,7 @@
 from typing import List
 
 from tekore.client.process import single, model_list
-from tekore.client.base import SpotifyBase, send_and_process
+from tekore.client.base import SpotifyBase, send_and_process, maximise_limit
 from tekore.serialise import ModelList
 from tekore.model import (
     CurrentlyPlayingContext,
@@ -58,6 +58,7 @@ class SpotifyPlayerView(SpotifyBase):
         return self._get('me/player/currently-playing', market=market)
 
     @send_and_process(single(PlayHistoryPaging))
+    @maximise_limit(50)
     def playback_recently_played(
             self,
             limit: int = 20,
