@@ -63,8 +63,8 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
-Unreleased
-----------
+1.2.0 (2020-02-17)
+------------------
 Added
 *****
 - Optionally use maximum limits in all paging calls
