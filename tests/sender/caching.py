@@ -258,3 +258,61 @@ class TestCachingSender(TestCase):
         self.sender.send(r)
         self.sender.clear()
         self.assertIs(self.sender.send(r), p2)
+
+    def test_exceeding_max_size_drops_first_item(self):
+        r1, p1 = pair(200, 'url1', cc=3600)
+        r2, p2 = pair(200, 'url2', cc=3600)
+        r3, p3 = pair(200, 'url3', cc=3600)
+
+        sender = CachingSender(sender=mock_sender(p1, p2, p3), max_size=2)
+        sender.send(r1)
+        sender.send(r2)
+        sender.send(r3)
+
+        with self.assertRaises(StopIteration):
+            sender.send(r1)
+
+        self.assertIs(sender.send(r2), p2)
+
+    def test_exceeding_max_size_drops_lru_item(self):
+        r1, p1 = pair(200, 'url1', cc=3600)
+        r2, p2 = pair(200, 'url2', cc=3600)
+        r3, p3 = pair(200, 'url3', cc=3600)
+
+        sender = CachingSender(sender=mock_sender(p1, p2, p3), max_size=2)
+        sender.send(r1)
+        sender.send(r2)
+        sender.send(r1)
+        sender.send(r3)
+
+        with self.assertRaises(StopIteration):
+            sender.send(r2)
+
+        self.assertIs(sender.send(r1), p1)
+
+    def test_cache_size_not_affected_by_stale_other_items(self):
+        r1, p1 = pair(200, 'url1', cc=3600)
+        r2, p2 = pair(200, 'url2', cc=-5)
+        r3, p3 = pair(200, 'url3', cc=3600)
+
+        sender = CachingSender(sender=mock_sender(p1, p2, p3), max_size=2)
+        sender.send(r1)
+        sender.send(r2)
+        sender.send(r3)
+
+        self.assertIs(sender.send(r1), p1)
+        with self.assertRaises(StopIteration):
+            sender.send(r2)
+
+    def test_cache_size_not_affected_by_stale_same_items(self):
+        r1, p1 = pair(200, 'url1', cc=3600)
+        r2, p2 = pair(200, 'url2', cc=-5)
+        r3, p3 = pair(200, 'url2', cc=3600)
+
+        sender = CachingSender(sender=mock_sender(p1, p2, p3), max_size=2)
+        sender.send(r1)
+        sender.send(r2)
+        sender.send(r3)
+
+        self.assertIs(sender.send(r1), p1)
+        self.assertIs(sender.send(r2), p3)

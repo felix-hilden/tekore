@@ -141,16 +141,17 @@ Keepalive connections, retries and caching make up a performance-boosting
 and convenient sender setup, easily constructed from simple building blocks.
 Less errors, less requests and faster responses, particularly for
 busy applications that request the same static resources many times.
-Note that the cache has no maximum size, but can be cleared manually.
 
 .. code:: python
 
     from tekore import sender
+    from tekore.sender import CachingSender, RetryingSender, PersistentSender
 
-    sender.default_sender_instance = sender.CachingSender(
-        sender.RetryingSender(
+    sender.default_sender_instance = CachingSender(
+        max_size=256,
+        sender=RetryingSender(
             retries=2,
-            sender=sender.PersistentSender()
+            sender=PersistentSender()
         )
     )
 

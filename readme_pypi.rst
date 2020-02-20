@@ -63,6 +63,12 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 Changelog
 =========
+Unreleased
+----------
+Added
+*****
+- Option to specify a maximum size for ``CachingSender``
+
 1.2.0 (2020-02-17)
 ------------------
 Added

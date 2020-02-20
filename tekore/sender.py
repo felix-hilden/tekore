@@ -84,8 +84,9 @@ import time
 import asyncio
 
 from abc import ABC, abstractmethod
-from typing import Union, Optional
+from typing import Union, Optional, Type
 from warnings import warn
+from collections import deque
 from urllib.parse import urlencode
 
 from httpx import AsyncClient
@@ -279,7 +280,7 @@ class AsyncPersistentSender(AsyncSender):
             )
 
 
-default_sender_type: Union[SyncSender, AsyncSender] = TransientSender
+default_sender_type: Union[Type[SyncSender], Type[AsyncSender]] = TransientSender
 """
 Sender to instantiate by default.
 """
@@ -385,29 +386,60 @@ class CachingSender(ExtendingSender):
     The lock is instantiated on the first asynchronous call,
     so using only one :func:`asyncio.run` (per sender) is advised.
 
-    Note that the cache has no maximum size and can grow without limit.
+    Note that if the cache has no maximum size it can grow without limit.
     Use :meth:`CachingSender.clear` to empty the cache.
 
     Parameters
     ----------
     sender
         request sender, :attr:`default_sender_type` instantiated if not specified
+    max_size
+        maximum cache size (amount of responses), if specified the least
+        recently used response is discarded when the cache would overflow
     """
-    def __init__(self, sender: Sender = None):
+    def __init__(self, sender: Sender = None, max_size: int = None):
         super().__init__(sender)
+        self._max_size = max_size
         self._cache = {}
+        self._deque = deque(maxlen=self.max_size)
         self._lock: asyncio.Lock = None
+
+    @property
+    def max_size(self) -> Optional[int]:
+        """
+        Maximum amount of requests stored in the cache.
+        """
+        return self._max_size
 
     def clear(self) -> None:
         """
         Clear sender cache.
         """
         self._cache = {}
+        self._deque.clear()
 
     @staticmethod
     def _vary_key(request: Request, vary: Optional[list]):
         if vary is not None:
             return ' '.join(request.headers[k] for k in vary)
+
+    @staticmethod
+    def _cc_fresh(item: dict) -> bool:
+        return item['expires_at'] > time.time()
+
+    @staticmethod
+    def _has_etag(item: dict) -> bool:
+        return item['etag'] is not None
+
+    def _is_fresh(self, url, vary_key) -> bool:
+        item = self._cache[url][1][vary_key]
+        return self._cc_fresh(item) or self._has_etag(item)
+
+    def _delete(self, url, vary_key) -> None:
+        item = self._cache[url]
+        del item[1][vary_key]
+        if not item[1]:
+            del item
 
     def _maybe_save(self, request: Request, response: Response) -> None:
         cc = response.headers.get('Cache-Control', 'private, max-age=0')
@@ -422,10 +454,8 @@ class CachingSender(ExtendingSender):
                 return
             vary = vary.split(', ')
 
-        cache_item = self._cache.get(response.url, {
-            'vary': vary,
-            'responses': {}
-        })
+        # Construct cached response
+        cache_item = self._cache.get(response.url, (vary, {}))
         self._cache[response.url] = cache_item
 
         cached_response = {
@@ -434,26 +464,61 @@ class CachingSender(ExtendingSender):
             'etag': response.headers.get('ETag', None),
         }
         vary_key = self._vary_key(request, vary)
-        cache_item['responses'].update({vary_key: cached_response})
+        cache_item[1].update({vary_key: cached_response})
 
-    def _load(self, request: Request) -> dict:
+        # Manage cache size
+        if self.max_size is None:
+            return
+
+        # Remove stale items
+        if len(self._deque) == self._deque.maxlen:
+            deque_items = list(self._deque)
+            self._deque.clear()
+
+            for item in deque_items:
+                fresh = self._is_fresh(*item)
+
+                if fresh:
+                    self._deque.append(item)
+                else:
+                    self._delete(*item)
+
+        # Remove LRU item
+        if len(self._deque) == self._deque.maxlen:
+            d_url, d_vary_key = self._deque.popleft()
+            self._delete(d_url, d_vary_key)
+
+        self._deque.append((response.url, vary_key))
+
+    def _update_usage(self, item) -> None:
+        if self.max_size is None:
+            return
+
+        self._deque.remove(item)
+        self._deque.append(item)
+
+    def _load(self, request: Request) -> tuple:
         params = ('&' + urlencode(request.params)) if request.params else ''
         url = request.url + params
         item = self._cache.get(url, None)
 
-        if item is not None:
-            vary_key = self._vary_key(request, item['vary'])
-            return item['responses'].get(vary_key, None)
+        if item is None:
+            return None, None
 
-    def _handle_cache(self, request: Request) -> tuple:
-        cached = self._load(request)
+        vary_key = self._vary_key(request, item[0])
+        cached = item[1].get(vary_key, None)
 
         if cached is not None:
             response = cached['response']
-            if cached['expires_at'] > time.time():
+            deque_item = (url, vary_key)
+            if self._cc_fresh(cached):
+                self._update_usage(deque_item)
                 return response, None
-            elif cached['etag'] is not None:
+            elif self._has_etag(cached):
+                self._update_usage(deque_item)
                 return response, cached['etag']
+            elif self.max_size is not None:
+                self._deque.remove(deque_item)
 
         return None, None
 
@@ -471,7 +536,7 @@ class CachingSender(ExtendingSender):
         if request.method.lower() != 'get':
             return self.sender.send(request)
 
-        cached, etag = self._handle_cache(request)
+        cached, etag = self._load(request)
         if cached is not None and etag is None:
             return cached
         elif etag is not None:
@@ -488,7 +553,7 @@ class CachingSender(ExtendingSender):
             self._lock = asyncio.Lock()
 
         async with self._lock:
-            cached, etag = self._handle_cache(request)
+            cached, etag = self._load(request)
 
         if cached is not None and etag is None:
             return cached
