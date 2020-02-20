@@ -24,4 +24,3 @@ exclude_patterns = ['build']
 autosummary_generate = True
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['static']
