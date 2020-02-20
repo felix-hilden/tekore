@@ -125,9 +125,10 @@ using different kinds of :mod:`senders <tekore.sender>`.
 They provide the immediate
 `advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
 of using a :class:`requests.Session`.
-They can bring new functionality, use user-defined sessions
-and pass additional keyword arguments to :class:`Session.send`.
-For example per-instance sessions can be enabled with a
+They can be used for connection persistence, retrying and caching.
+User-defined sessions and additional keyword arguments
+to :class:`Session.send` can also be passed in.
+For example, per-instance sessions can be enabled with a
 :class:`PersistentSender <tekore.sender.PersistentSender>`.
 
 .. code:: python
@@ -140,7 +141,7 @@ For example per-instance sessions can be enabled with a
 Keepalive connections, retries and caching make up a performance-boosting
 and convenient sender setup, easily constructed from simple building blocks.
 Less errors, less requests and faster responses, particularly for
-busy applications that request the same static resources many times.
+busy applications that request the same static resources repeatedly.
 
 .. code:: python
 
@@ -154,6 +155,8 @@ busy applications that request the same static resources many times.
             sender=PersistentSender()
         )
     )
+
+For more detailed information, see :ref:`performance`.
 
 Traversing paging objects
 -------------------------

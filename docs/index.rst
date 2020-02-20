@@ -73,6 +73,7 @@ Additional features and various convenience modules are provided too.
    documents/getting_started
    documents/advanced_usage
    examples
+   extras
    reference
 
 .. |logo| image:: logo.png
