@@ -122,16 +122,25 @@ class SerialisableDataclass:
         """
         return asdict(self)
 
-    def pprint(self, **pprint_kwargs) -> None:
+    def pprint(
+            self,
+            depth: int = None,
+            compact: bool = False,
+            **pprint_kwargs
+    ) -> None:
         """
         Pretty print the dictionary representation of the dataclass.
 
         Parameters
         ----------
+        depth
+            number of levels printed
+        compact
+            combine items on the same line if they fit
         pprint_kwargs
             additional keyword arguments for pprint.pprint
         """
-        pprint(self.asdict(), **pprint_kwargs)
+        pprint(self.asdict(), depth=depth, compact=compact, **pprint_kwargs)
 
     def __str__(self):
         return JSONEncoder().encode(self.asdict())

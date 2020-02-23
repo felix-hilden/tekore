@@ -116,15 +116,20 @@ class TestSerialisableDataclass(unittest.TestCase):
 
         with patch('tekore.serialise.pprint', pprint):
             data.pprint()
-            pprint.assert_called_with({'i': 1})
+            pprint.assert_called_with({'i': 1}, depth=None, compact=False)
 
     def test_keyword_arguments_passed_to_pprint(self):
         pprint = MagicMock()
         data = Data(i=1)
+        kwargs = {
+            'compact': False,
+            'depth': None,
+            'kw': 'argument'
+        }
 
         with patch('tekore.serialise.pprint', pprint):
-            data.pprint(kw='argument')
-            pprint.assert_called_with({'i': 1}, kw='argument')
+            data.pprint(**kwargs)
+            pprint.assert_called_with({'i': 1}, **kwargs)
 
     def test_enum_in_dataclass(self):
         e = SerialisableEnum('e', 'a b c')
