@@ -8,7 +8,7 @@ class ContextType(SerialisableEnum):
     playlist = 'playlist'
 
 
-@dataclass
+@dataclass(repr=False)
 class Context(SerialisableDataclass):
     type: ContextType
     href: str

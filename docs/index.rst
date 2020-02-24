@@ -59,10 +59,11 @@ Additional features and various convenience modules are provided too.
 
 - :mod:`tekore.convert` ID, URI and URL conversions
 - :mod:`tekore.scope` Access right scopes for user tokens
-- :mod:`tekore.serialise`
+- :mod:`tekore.serialise` Additional response model features
 
-  - Response model serialisation
-  - Response model pretty-printing
+  - Readable ``repr``
+  - JSON serialisation & dictionary conversion
+  - Pretty-printing
 
 
 .. toctree::

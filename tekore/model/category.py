@@ -6,7 +6,7 @@ from tekore.model.member import Image
 from tekore.model.paging import OffsetPaging
 
 
-@dataclass
+@dataclass(repr=False)
 class Category(Identifiable):
     href: str
     icons: List[Image]
@@ -16,7 +16,7 @@ class Category(Identifiable):
         self.icons = [Image(**i) for i in self.icons]
 
 
-@dataclass
+@dataclass(repr=False)
 class CategoryPaging(OffsetPaging):
     items: List[Category]
 

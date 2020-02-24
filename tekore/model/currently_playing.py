@@ -20,7 +20,7 @@ class RepeatState(SerialisableEnum):
     context = 'context'
 
 
-@dataclass
+@dataclass(repr=False)
 class Disallows(SerialisableDataclass):
     interrupting_playback: bool = False
     pausing: bool = False
@@ -34,7 +34,7 @@ class Disallows(SerialisableDataclass):
     transferring_playback: bool = False
 
 
-@dataclass
+@dataclass(repr=False)
 class Actions(SerialisableDataclass):
     disallows: Disallows
 
@@ -42,7 +42,7 @@ class Actions(SerialisableDataclass):
         self.disallows = Disallows(**self.disallows)
 
 
-@dataclass
+@dataclass(repr=False)
 class CurrentlyPlaying(SerialisableDataclass):
     """
     Context, progress_ms and item may be None e.g. during a private session.
@@ -67,7 +67,7 @@ class CurrentlyPlaying(SerialisableDataclass):
             self.item = FullTrack(**self.item)
 
 
-@dataclass
+@dataclass(repr=False)
 class CurrentlyPlayingContext(CurrentlyPlaying):
     device: Device
     repeat_state: RepeatState

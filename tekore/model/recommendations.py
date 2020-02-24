@@ -23,7 +23,7 @@ class RecommendationAttribute(SerialisableEnum):
     valence = 'valence'
 
 
-@dataclass
+@dataclass(repr=False)
 class RecommendationSeed(Identifiable):
     afterFilteringSize: int
     afterRelinkingSize: int
@@ -32,7 +32,7 @@ class RecommendationSeed(Identifiable):
     type: str
 
 
-@dataclass
+@dataclass(repr=False)
 class Recommendations(SerialisableDataclass):
     seeds: List[RecommendationSeed]
     tracks: List[FullTrack]

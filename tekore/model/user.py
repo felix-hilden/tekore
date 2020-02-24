@@ -6,13 +6,13 @@ from tekore.model.base import Item
 from tekore.model.member import Followers, Image
 
 
-@dataclass
+@dataclass(repr=False)
 class ExplicitContent(SerialisableDataclass):
     filter_enabled: bool
     filter_locked: bool
 
 
-@dataclass
+@dataclass(repr=False)
 class User(Item):
     """
     Display name, followers and images may not be available.
@@ -29,7 +29,7 @@ class User(Item):
             self.images = [Image(**i) for i in self.images]
 
 
-@dataclass
+@dataclass(repr=False)
 class PrivateUser(User):
     """
     Country, explicit content and product require user-read-private scope.
@@ -46,6 +46,6 @@ class PrivateUser(User):
             self.explicit_content = ExplicitContent(**self.explicit_content)
 
 
-@dataclass
+@dataclass(repr=False)
 class PublicUser(User):
     pass

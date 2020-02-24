@@ -21,7 +21,7 @@ class DeviceType(SerialisableEnum):
     Unknown = 'Unknown'
 
 
-@dataclass
+@dataclass(repr=False)
 class Device(Identifiable):
     is_active: bool
     is_private_session: bool

@@ -68,7 +68,7 @@ class TestTimestamp(unittest.TestCase):
         Timestamp.from_string('2019-01-01T12:00:00.00Z')
 
 
-@dataclass
+@dataclass(repr=False)
 class Data(SerialisableDataclass):
     i: int
 
@@ -80,12 +80,40 @@ class TestSerialisableDataclass(unittest.TestCase):
         dict_out = json.loads(str(data))
         self.assertDictEqual(dict_in, dict_out)
 
-    def test_repr_intact(self):
+    def test_repr(self):
         data = Data(i=1)
-        self.assertTrue(repr(data).endswith('Data(i=1)'))
+        self.assertIn('Data', repr(data))
 
-    def test_members_recursed_into(self):
-        @dataclass
+    def test_long_repr(self):
+        @dataclass(repr=False)
+        class LongContainer(SerialisableDataclass):
+            attribute_1: int = 1
+            attribute_2: int = 2
+            attribute_3: int = 3
+            attribute_4: int = 4
+            attribute_5: int = 5
+
+        @dataclass(repr=False)
+        class LongData(SerialisableDataclass):
+            data: LongContainer
+            data_list: List[LongContainer]
+            builtin_list: List[int]
+            raw_dict: dict
+            string: str
+            boolean: bool
+
+        data = LongData(
+            LongContainer(),
+            [LongContainer() for _ in range(20)],
+            list(range(10)),
+            {str(k): k for k in range(20)},
+            'really long string which will most probably be cut off' * 2,
+            True
+        )
+        repr(data)
+
+    def test_asdict_members_recursed_into(self):
+        @dataclass(repr=False)
         class Container(SerialisableDataclass):
             d: List[Data]
 
@@ -134,7 +162,7 @@ class TestSerialisableDataclass(unittest.TestCase):
     def test_enum_in_dataclass(self):
         e = SerialisableEnum('e', 'a b c')
 
-        @dataclass
+        @dataclass(repr=False)
         class C(SerialisableDataclass):
             v: e
 
@@ -145,7 +173,7 @@ class TestSerialisableDataclass(unittest.TestCase):
             self.assertEqual(str(c), '{"v": "a"}')
 
     def test_timestamp_in_dataclass(self):
-        @dataclass
+        @dataclass(repr=False)
         class C(SerialisableDataclass):
             v: Timestamp
 

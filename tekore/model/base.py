@@ -2,12 +2,12 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableDataclass
 
 
-@dataclass
+@dataclass(repr=False)
 class Identifiable(SerialisableDataclass):
     id: str
 
 
-@dataclass
+@dataclass(repr=False)
 class Item(Identifiable):
     href: str
     type: str

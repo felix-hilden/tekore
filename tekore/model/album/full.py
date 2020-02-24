@@ -8,7 +8,7 @@ from tekore.model.track import SimpleTrackPaging
 from tekore.model.paging import OffsetPaging
 
 
-@dataclass
+@dataclass(repr=False)
 class FullAlbum(Album):
     """
     Available markets is available when market is not specified.
@@ -31,7 +31,7 @@ class FullAlbum(Album):
         self.tracks = SimpleTrackPaging(**self.tracks)
 
 
-@dataclass
+@dataclass(repr=False)
 class SavedAlbum(SerialisableDataclass):
     added_at: Timestamp
     album: FullAlbum
@@ -41,7 +41,7 @@ class SavedAlbum(SerialisableDataclass):
         self.album = FullAlbum(**self.album)
 
 
-@dataclass
+@dataclass(repr=False)
 class SavedAlbumPaging(OffsetPaging):
     items: List[SavedAlbum]
 

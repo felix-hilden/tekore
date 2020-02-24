@@ -19,7 +19,7 @@ class ReleaseDatePrecision(SerialisableEnum):
     day = 'day'
 
 
-@dataclass
+@dataclass(repr=False)
 class Album(Item):
     album_type: AlbumType
     artists: List[SimpleArtist]

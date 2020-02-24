@@ -6,18 +6,18 @@ from tekore.model.paging import CursorPaging, OffsetPaging
 from tekore.model.member import Followers, Image
 
 
-@dataclass
+@dataclass(repr=False)
 class Artist(Item):
     external_urls: dict
     name: str
 
 
-@dataclass
+@dataclass(repr=False)
 class SimpleArtist(Artist):
     pass
 
 
-@dataclass
+@dataclass(repr=False)
 class FullArtist(Artist):
     followers: Followers
     genres: List[str]
@@ -29,7 +29,7 @@ class FullArtist(Artist):
         self.images = [Image(**i) for i in self.images]
 
 
-@dataclass
+@dataclass(repr=False)
 class FullArtistCursorPaging(CursorPaging):
     items: List[FullArtist]
     total: int
@@ -39,7 +39,7 @@ class FullArtistCursorPaging(CursorPaging):
         self.items = [FullArtist(**a) for a in self.items]
 
 
-@dataclass
+@dataclass(repr=False)
 class FullArtistOffsetPaging(OffsetPaging):
     items: List[FullArtist]
 

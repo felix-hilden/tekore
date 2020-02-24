@@ -13,7 +13,7 @@ class AlbumGroup(SerialisableEnum):
     single = 'single',
 
 
-@dataclass
+@dataclass(repr=False)
 class SimpleAlbum(Album):
     """
     Album group is available when getting an artist's albums.
@@ -32,7 +32,7 @@ class SimpleAlbum(Album):
             self.album_group = AlbumGroup[self.album_group]
 
 
-@dataclass
+@dataclass(repr=False)
 class SimpleAlbumPaging(OffsetPaging):
     items: List[SimpleAlbum]
 

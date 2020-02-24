@@ -12,7 +12,7 @@ class EmptyDict(dict):
     pass
 
 
-@dataclass
+@dataclass(repr=False)
 class LocalItem(SerialisableDataclass):
     id: None
     href: None
@@ -21,7 +21,7 @@ class LocalItem(SerialisableDataclass):
     uri: None
 
 
-@dataclass
+@dataclass(repr=False)
 class LocalAlbum(LocalItem):
     album_type: None
     artists: EmptyList
@@ -32,12 +32,12 @@ class LocalAlbum(LocalItem):
     release_date_precision: None
 
 
-@dataclass
+@dataclass(repr=False)
 class LocalArtist(LocalItem):
     external_urls: EmptyDict
 
 
-@dataclass
+@dataclass(repr=False)
 class LocalTrack(LocalItem):
     album: LocalAlbum
     artists: List[LocalArtist]

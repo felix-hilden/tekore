@@ -14,7 +14,9 @@ JSON representations of responses.
     user = spotify.current_user()
 
     # Inspect the content
+    print(repr(user))
     user.pprint()
+    user.pprint(compact=True, depth=2)
 
     # Dictionary representation
     user.asdict()
@@ -28,7 +30,7 @@ import json
 from enum import Enum
 from pprint import pprint
 from datetime import datetime
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, fields
 
 
 class SerialisableEnum(Enum):
@@ -91,7 +93,7 @@ class JSONEncoder(json.JSONEncoder):
             return super().default(o)
 
 
-@dataclass
+@dataclass(repr=False)
 class SerialisableDataclass:
     """
     Convenience methods for dataclasses.
@@ -144,6 +146,59 @@ class SerialisableDataclass:
 
     def __str__(self):
         return JSONEncoder().encode(self.asdict())
+
+    @staticmethod
+    def _member_repr(dataclass_type) -> str:
+        v_fields = sorted(fields(dataclass_type), key=lambda f: f.name)
+        joined = ', '.join(f.name for f in v_fields)
+        return dataclass_type.__name__ + '(' + joined + ')'
+
+    @staticmethod
+    def _cut_by_comma(line: str, end: str, max_len: int) -> str:
+        cut = line[:max_len - len(end)]
+        mend = ','.join(cut.split(',')[:-1])
+        return mend + end
+
+    def __repr__(self):
+        max_len = 75
+        name = type(self).__name__
+        lines = [f'{name} with fields:']
+
+        for field in sorted(fields(self), key=lambda f: f.name):
+            value = getattr(self, field.name)
+
+            if isinstance(value, SerialisableDataclass):
+                val_str = self._member_repr(type(value))
+            elif isinstance(value, list):
+                f_type = field.type.__args__[0]
+                if issubclass(f_type, SerialisableDataclass):
+                    f_str = self._member_repr(f_type)
+                else:
+                    f_str = f_type.__name__
+
+                val_str = f'[{len(value)} x {f_str}]'
+            elif isinstance(value, dict):
+                v_fields = sorted(value.keys())
+                f_str = '", "'.join(v_fields)
+                val_str = f'{{"{f_str}"}}'
+            elif isinstance(value, str):
+                val_str = f'"{value}"'
+            else:
+                val_str = repr(value)
+
+            line = f'  {field.name} = {val_str}'
+            if len(line) > max_len:
+                if isinstance(value, SerialisableDataclass):
+                    line = self._cut_by_comma(line, ', ...)', max_len)
+                elif isinstance(value, list) and '(' in line:
+                    line = self._cut_by_comma(line, ', ...)]', max_len)
+                elif isinstance(value, dict):
+                    line = self._cut_by_comma(line, ', ...}', max_len)
+                elif isinstance(value, str):
+                    line = line[:max_len - 4] + '..."'
+
+            lines.append(line)
+        return '\n'.join(lines)
 
 
 class ModelList(list):

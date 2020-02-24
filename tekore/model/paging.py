@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableDataclass
 
 
-@dataclass
+@dataclass(repr=False)
 class Paging(SerialisableDataclass):
     href: str
     items: List[SerialisableDataclass]
@@ -12,19 +12,19 @@ class Paging(SerialisableDataclass):
     next: str
 
 
-@dataclass
+@dataclass(repr=False)
 class OffsetPaging(Paging):
     total: int
     offset: int
     previous: str
 
 
-@dataclass
+@dataclass(repr=False)
 class Cursor(SerialisableDataclass):
     after: str
 
 
-@dataclass
+@dataclass(repr=False)
 class CursorPaging(Paging):
     cursors: Cursor
 

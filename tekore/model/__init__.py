@@ -1,5 +1,5 @@
 """
-Response models from the :mod:`client <tekore.client>`.
+Response model definitions for :mod:`client <tekore.client>`.
 
 Responses are parsed into model classes.
 This allows accessing parts of the response directly as attributes.
@@ -15,6 +15,9 @@ This allows accessing parts of the response directly as attributes.
     # Use the response
     for track in album.tracks.items:
         print(track.track_number, track.name)
+
+Additional features of response models are documented in
+:mod:`serialise <tekore.serialise>`.
 
 Base classes
 ------------

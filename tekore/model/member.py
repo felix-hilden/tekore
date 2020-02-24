@@ -2,13 +2,13 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableDataclass
 
 
-@dataclass
+@dataclass(repr=False)
 class Copyright(SerialisableDataclass):
     text: str
     type: str
 
 
-@dataclass
+@dataclass(repr=False)
 class Followers(SerialisableDataclass):
     """
     Href is always None.
@@ -17,7 +17,7 @@ class Followers(SerialisableDataclass):
     total: int
 
 
-@dataclass
+@dataclass(repr=False)
 class Image(SerialisableDataclass):
     """
     The Web API documentation reports that height and width
@@ -28,6 +28,6 @@ class Image(SerialisableDataclass):
     width: int = None
 
 
-@dataclass
+@dataclass(repr=False)
 class Restrictions(SerialisableDataclass):
     reason: str

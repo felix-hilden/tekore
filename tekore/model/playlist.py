@@ -10,7 +10,7 @@ from tekore.model.member import Followers, Image
 from tekore.serialise import SerialisableDataclass, Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class PlaylistTrack(SerialisableDataclass):
     added_at: Timestamp
     added_by: PublicUser
@@ -33,7 +33,7 @@ class PlaylistTrack(SerialisableDataclass):
                 self.track = FullTrack(**self.track)
 
 
-@dataclass
+@dataclass(repr=False)
 class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
@@ -41,7 +41,7 @@ class PlaylistTrackPaging(OffsetPaging):
         self.items = [PlaylistTrack(**t) for t in self.items]
 
 
-@dataclass
+@dataclass(repr=False)
 class Playlist(Item):
     collaborative: bool
     external_urls: dict
@@ -58,7 +58,7 @@ class Playlist(Item):
         self.owner = PublicUser(**self.owner)
 
 
-@dataclass
+@dataclass(repr=False)
 class SimplePlaylist(Playlist):
     tracks: Tracks
 
@@ -67,7 +67,7 @@ class SimplePlaylist(Playlist):
         self.tracks = Tracks(**self.tracks)
 
 
-@dataclass
+@dataclass(repr=False)
 class FullPlaylist(Playlist):
     followers: Followers
     tracks: PlaylistTrackPaging
@@ -78,7 +78,7 @@ class FullPlaylist(Playlist):
         self.tracks = PlaylistTrackPaging(**self.tracks)
 
 
-@dataclass
+@dataclass(repr=False)
 class SimplePlaylistPaging(OffsetPaging):
     items: List[SimplePlaylist]
 

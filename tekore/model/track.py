@@ -9,12 +9,12 @@ from tekore.model.member import Restrictions
 from tekore.serialise import SerialisableDataclass, Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class TrackLink(Item):
     external_urls: dict
 
 
-@dataclass
+@dataclass(repr=False)
 class Track(Item):
     artists: List[SimpleArtist]
     disc_number: int
@@ -30,7 +30,7 @@ class Track(Item):
         self.artists = [SimpleArtist(**a) for a in self.artists]
 
 
-@dataclass
+@dataclass(repr=False)
 class SimpleTrack(Track):
     """
     Available markets are not available when market is specified.
@@ -51,7 +51,7 @@ class SimpleTrack(Track):
             self.restrictions = Restrictions(**self.restrictions)
 
 
-@dataclass
+@dataclass(repr=False)
 class FullTrack(Track):
     """
     Available markets are not available when market is specified.
@@ -80,7 +80,7 @@ class FullTrack(Track):
             self.restrictions = Restrictions(**self.restrictions)
 
 
-@dataclass
+@dataclass(repr=False)
 class FullTrackPaging(OffsetPaging):
     items: List[FullTrack]
 
@@ -88,7 +88,7 @@ class FullTrackPaging(OffsetPaging):
         self.items = [FullTrack(**t) for t in self.items]
 
 
-@dataclass
+@dataclass(repr=False)
 class SimpleTrackPaging(OffsetPaging):
     items: List[SimpleTrack]
 
@@ -96,13 +96,13 @@ class SimpleTrackPaging(OffsetPaging):
         self.items = [SimpleTrack(**t) for t in self.items]
 
 
-@dataclass
+@dataclass(repr=False)
 class Tracks(SerialisableDataclass):
     href: str
     total: int
 
 
-@dataclass
+@dataclass(repr=False)
 class SavedTrack(SerialisableDataclass):
     added_at: Timestamp
     track: FullTrack
@@ -112,7 +112,7 @@ class SavedTrack(SerialisableDataclass):
         self.track = FullTrack(**self.track)
 
 
-@dataclass
+@dataclass(repr=False)
 class SavedTrackPaging(OffsetPaging):
     items: List[SavedTrack]
 

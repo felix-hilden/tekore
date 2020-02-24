@@ -3,14 +3,14 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableDataclass
 
 
-@dataclass
+@dataclass(repr=False)
 class TimeInterval(SerialisableDataclass):
     start: float
     duration: float
     confidence: float
 
 
-@dataclass
+@dataclass(repr=False)
 class Section(TimeInterval):
     loudness: float
     tempo: float
@@ -23,7 +23,7 @@ class Section(TimeInterval):
     time_signature_confidence: float
 
 
-@dataclass
+@dataclass(repr=False)
 class Segment(TimeInterval):
     """
     Loudness end is sometimes not available.
@@ -36,7 +36,7 @@ class Segment(TimeInterval):
     loudness_end: float = None
 
 
-@dataclass
+@dataclass(repr=False)
 class AudioAnalysis(SerialisableDataclass):
     bars: List[TimeInterval]
     beats: List[TimeInterval]

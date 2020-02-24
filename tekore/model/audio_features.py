@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from tekore.model.base import Identifiable
 
 
-@dataclass
+@dataclass(repr=False)
 class AudioFeatures(Identifiable):
     acousticness: float
     analysis_url: str

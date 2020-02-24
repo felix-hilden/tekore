@@ -7,7 +7,7 @@ from tekore.model.paging import CursorPaging, Cursor
 from tekore.serialise import SerialisableDataclass, Timestamp
 
 
-@dataclass
+@dataclass(repr=False)
 class PlayHistory(SerialisableDataclass):
     """
     Context is supposedly sometimes available.
@@ -24,12 +24,12 @@ class PlayHistory(SerialisableDataclass):
             self.context = Context(**self.context)
 
 
-@dataclass
+@dataclass(repr=False)
 class PlayHistoryCursor(Cursor):
     before: str
 
 
-@dataclass
+@dataclass(repr=False)
 class PlayHistoryPaging(CursorPaging):
     """
     Cursors are not available when paging is exhausted.

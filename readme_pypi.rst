@@ -68,6 +68,7 @@ Unreleased
 Added
 *****
 - Option to specify a maximum size for ``CachingSender``
+- Readable ``repr`` for response models
 
 1.2.0 (2020-02-17)
 ------------------
