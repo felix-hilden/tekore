@@ -2,7 +2,6 @@ from asyncio import run
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from requests import HTTPError
 from tekore.client import Spotify
 from tests._util import handle_warnings
 from tests._cred import TestCaseWithUserCredentials
@@ -101,16 +100,12 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
         cat_next = self.client.next(cat)
         self.assertGreater(cat_next.total, 0)
 
-    def test_search_beyond_limit_raises(self):
-        with self.assertRaises(HTTPError):
-            self.client.search('piano', types=('playlist',), limit=1, offset=5000)
-
     def test_search_next_beyond_limit_returns_none(self):
-        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=4999)
+        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=1999)
         self.assertIsNone(self.client.next(pl))
 
     def test_async_search_next_beyond_limit_returns_none(self):
-        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=4999)
+        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=1999)
 
         async def f():
             return await self.aclient.next(pl)

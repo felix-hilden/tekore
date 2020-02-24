@@ -38,7 +38,7 @@ class SpotifySearch(SpotifyBase):
         Search for an item.
 
         Requires the user-read-private scope.
-        Returns 404 - Not Found if limit+offset would be above 5000.
+        Returns 404 - Not Found if limit+offset would be above 2000.
 
         Parameters
         ----------
