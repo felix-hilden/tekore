@@ -123,6 +123,22 @@ class SpotifyPlayerModify(SpotifyBase):
         return self._put('me/player/play', payload=payload, device_id=device_id)
 
     @send_and_process(nothing)
+    def playback_queue_add(self, uri: str, device_id: str = None) -> None:
+        """
+        Add a track to a user's queue.
+
+        Requires the user-modify-playback-state scope.
+
+        Parameters
+        ----------
+        uri
+            resource to add, currently only tracks are supported
+        device_id
+            devide to add the track on
+        """
+        return self._post('me/player/add-to-queue', uri=uri, device_id=device_id)
+
+    @send_and_process(nothing)
     def playback_pause(self, device_id: str = None) -> None:
         """
         Pause a user's playback.

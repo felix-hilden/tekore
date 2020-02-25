@@ -67,6 +67,7 @@ Unreleased
 ----------
 Added
 *****
+- Endpoint for adding to queue
 - Option to specify a maximum size for ``CachingSender``
 - Readable ``repr`` for response models
 

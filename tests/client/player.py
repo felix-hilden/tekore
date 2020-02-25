@@ -5,6 +5,7 @@ from tests._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id
 from tekore.client.api import SpotifyPlayer
 from tekore.client import Spotify
+from tekore.convert import to_uri
 
 
 class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
@@ -107,7 +108,11 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
             self.client.playback_shuffle(False)
 
         with self.subTest('Playback start context'):
-            self.client.playback_start_context('spotify:album:' + album_id)
+            self.client.playback_start_context(to_uri('album', album_id))
+
+        self.client.playback_queue_add(to_uri('track', track_ids[0]))
+        self.client.playback_next()
+        self.assertPlaying('Queue consumed on next', track_ids[0])
 
     def tearDown(self):
         if self.playback is None:
