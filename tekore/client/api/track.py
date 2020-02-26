@@ -1,4 +1,5 @@
 from tekore.client.process import single, model_list
+from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process
 from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
@@ -29,6 +30,7 @@ class SpotifyTrack(SpotifyBase):
         """
         return self._get('tracks/' + track_id, market=market)
 
+    @chunked('track_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullTrack, 'tracks'))
     def tracks(
             self,
@@ -41,7 +43,7 @@ class SpotifyTrack(SpotifyBase):
         Parameters
         ----------
         track_ids
-            the track IDs
+            the track IDs, max 50 without chunking
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
 
@@ -79,12 +81,18 @@ class SpotifyTrack(SpotifyBase):
         """
         return self._get('audio-features/' + track_id)
 
+    @chunked('track_ids', 1, 100, join_lists)
     @send_and_process(model_list(AudioFeatures, 'audio_features'))
     def tracks_audio_features(self, track_ids: list) -> ModelList:
         """
         Get audio feature information for multiple tracks.
 
         Feature information for a track may be ``None`` if not available.
+
+        Parameters
+        ----------
+        track_ids
+            track IDs, max 100 without chunking
 
         Returns
         -------

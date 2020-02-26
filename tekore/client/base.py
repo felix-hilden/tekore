@@ -26,6 +26,7 @@ class SpotifyBase(Client):
             sender: Sender = None,
             asynchronous: bool = None,
             max_limits_on: bool = False,
+            chunked_on: bool = False,
     ):
         """
         Client to Web API endpoints.
@@ -40,10 +41,13 @@ class SpotifyBase(Client):
             synchronicity requirement
         max_limits_on
             use maximum limits in paging calls, overrided by endpoint arguments
+        chunked_on
+            use chunking when requesting lists of resources
         """
         super().__init__(sender, asynchronous)
         self.token = token
         self.max_limits_on = max_limits_on
+        self.chunked_on = chunked_on
 
     def _create_headers(self, content_type: str = 'application/json'):
         return {

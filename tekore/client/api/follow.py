@@ -1,12 +1,14 @@
 from typing import List
 
 from tekore.client.process import single, nothing
+from tekore.client.chunked import chunked, join_lists, return_none
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
 from tekore.model import FullArtistCursorPaging
 
 
 class SpotifyFollow(SpotifyBase):
+    @chunked('user_ids', 2, 5, join_lists)
     @send_and_process(nothing)
     def playlist_is_following(self, playlist_id: str, user_ids: list) -> List[bool]:
         """
@@ -19,7 +21,7 @@ class SpotifyFollow(SpotifyBase):
         playlist_id
             playlist ID
         user_ids
-            list of user IDs (1..5)
+            list of user IDs, max 5 without chunking
 
         Returns
         -------
@@ -96,6 +98,7 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._get('me/following', type='artist', limit=limit, after=after)
 
+    @chunked('artist_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def artists_is_following(self, artist_ids: list) -> List[bool]:
         """
@@ -106,7 +109,7 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         artist_ids
-            list of artist IDs
+            list of artist IDs, max 50 without chunking
 
         Returns
         -------
@@ -119,6 +122,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(artist_ids)
         )
 
+    @chunked('artist_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def artists_follow(self, artist_ids: list) -> None:
         """
@@ -129,10 +133,11 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         artist_ids
-            list of artist IDs
+            list of artist IDs, max 50 without chunking
         """
         return self._put('me/following', type='artist', ids=','.join(artist_ids))
 
+    @chunked('artist_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def artists_unfollow(self, artist_ids: list) -> None:
         """
@@ -143,10 +148,11 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         artist_ids
-            list of artist IDs
+            list of artist IDs, max 50 without chunking
         """
         return self._delete('me/following', type='artist', ids=','.join(artist_ids))
 
+    @chunked('user_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def users_is_following(self, user_ids: list) -> List[bool]:
         """
@@ -157,7 +163,7 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         user_ids
-            list of user IDs
+            list of user IDs, max 50 without chunking
 
         Returns
         -------
@@ -168,6 +174,7 @@ class SpotifyFollow(SpotifyBase):
             'me/following/contains', type='user', ids=','.join(user_ids)
         )
 
+    @chunked('user_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def users_follow(self, user_ids: list) -> None:
         """
@@ -178,10 +185,11 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         user_ids
-            list of user IDs
+            list of user IDs, max 50 without chunking
         """
         return self._put('me/following', type='user', ids=','.join(user_ids))
 
+    @chunked('user_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def users_unfollow(self, user_ids: list) -> None:
         """
@@ -192,6 +200,6 @@ class SpotifyFollow(SpotifyBase):
         Parameters
         ----------
         user_ids
-            list of user IDs
+            list of user IDs, max 50 without chunking
         """
         return self._delete('me/following', type='user', ids=','.join(user_ids))

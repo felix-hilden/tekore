@@ -1,8 +1,12 @@
+from asyncio import run
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+from tekore.client.decor.error import BadRequest
+from tekore.client.chunked import chunked, return_none, return_last
 from tekore.client import Spotify
-from tests._cred import TestCaseWithCredentials
+from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
+from tests._util import handle_warnings
 
 
 class TestSpotifyBaseUnits(TestCase):
@@ -69,3 +73,99 @@ class TestSpotifyMaxLimits(TestCaseWithCredentials):
             s2, = client.search('piano', ('track',), None, None)
 
         self.assertGreater(s1.limit, s2.limit)
+
+
+class TestSpotifyChunked(TestCaseWithUserCredentials):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        spotify = Spotify(cls.app_token)
+        tracks = spotify.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
+        cls.track_ids = [t.track.id for t in tracks.items]
+
+        cls.handle = handle_warnings()
+        cls.handle.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.handle.__exit__(None, None, None)
+
+    def test_too_many_tracks_raises(self):
+        client = Spotify(self.app_token)
+
+        with self.assertRaises(BadRequest):
+            client.tracks(self.track_ids)
+
+    def test_async_too_many_tracks_raises(self):
+        client = Spotify(self.app_token, asynchronous=True)
+
+        with self.assertRaises(BadRequest):
+            run(client.tracks(self.track_ids))
+
+    def test_too_many_tracks_chunked_succeeds(self):
+        client = Spotify(self.app_token, chunked_on=True)
+        tracks = client.tracks(self.track_ids)
+        self.assertEqual(len(self.track_ids), len(tracks))
+
+    def test_async_too_many_tracks_chunked_succeeds(self):
+        client = Spotify(self.app_token, chunked_on=True, asynchronous=True)
+        tracks = run(client.tracks(self.track_ids))
+        self.assertEqual(len(self.track_ids), len(tracks))
+
+    def test_chunked_context_enables(self):
+        client = Spotify(self.app_token)
+        with client.chunked(True):
+            self.assertTrue(client.chunked_on)
+
+    def test_chunked_context_disables(self):
+        client = Spotify(self.app_token, chunked_on=True)
+        with client.chunked(False):
+            self.assertFalse(client.chunked_on)
+
+
+def mock_spotify():
+    slf = MagicMock()
+    slf.chunked_on = True
+    slf.is_async = False
+    return slf
+
+
+class TestSpotifyChunkedUnit(TestCase):
+    def test_chunked_return_none(self):
+        func = MagicMock()
+
+        dec = chunked('a', 1, 10, return_none)(func)
+        r = dec(mock_spotify(), list(range(20)))
+        self.assertIsNone(r)
+
+    def test_chunked_return_last(self):
+        func = MagicMock(side_effect=[0, 1, 2])
+
+        dec = chunked('a', 1, 10, return_last)(func)
+        r = dec(mock_spotify(), list(range(20)))
+        self.assertEqual(r, 1)
+
+    def test_argument_chain(self):
+        func = MagicMock(side_effect=[0, 1])
+        slf = mock_spotify()
+
+        dec = chunked('a', 1, 10, return_last, chain='ch', chain_pos=2)(func)
+        r = dec(slf, list(range(20)), ch=None)
+        func.assert_called_with(slf, list(range(10, 20)), ch=0)
+        self.assertEqual(r, 1)
+
+    def test_reverse(self):
+        func = MagicMock(side_effect=[0, 1])
+        slf = mock_spotify()
+
+        dec = chunked('a', 1, 10, return_last, reverse=True)(func)
+        r = dec(slf, list(range(20)))
+        func.assert_called_with(slf, list(range(10)))
+        self.assertEqual(r, 1)
+
+    def test_chunked_as_kwarg(self):
+        func = MagicMock(side_effect=[0, 1])
+
+        dec = chunked('a', 2, 10, return_last)(func)
+        r = dec(mock_spotify(), 0, a=list(range(20)))
+        self.assertEqual(r, 1)

@@ -68,8 +68,9 @@ Unreleased
 Added
 *****
 - Endpoint for adding to queue
-- Option to specify a maximum size for ``CachingSender``
 - Readable ``repr`` for response models
+- Option to specify a maximum size for ``CachingSender``
+- Optionally send long lists of resources as chunks
 
 1.2.0 (2020-02-17)
 ------------------

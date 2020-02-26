@@ -1,6 +1,7 @@
 from typing import List
 
 from tekore.client.process import single, nothing
+from tekore.client.chunked import chunked, join_lists, return_none
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
 from tekore.model import SavedAlbumPaging, SavedTrackPaging
@@ -36,6 +37,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/albums', market=market, limit=limit, offset=offset)
 
+    @chunked('album_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def saved_albums_contains(self, album_ids: list) -> List[bool]:
         """
@@ -46,7 +48,7 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         album_ids
-            list of album IDs
+            list of album IDs, max 50 without chunking
 
         Returns
         -------
@@ -55,6 +57,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/albums/contains?ids=' + ','.join(album_ids))
 
+    @chunked('album_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_albums_add(self, album_ids: list) -> None:
         """
@@ -65,10 +68,11 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         album_ids
-            list of album IDs
+            list of album IDs, max 50 without chunking
         """
         return self._put('me/albums?ids=' + ','.join(album_ids))
 
+    @chunked('album_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_albums_delete(self, album_ids: list) -> None:
         """
@@ -79,7 +83,7 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         album_ids
-            list of album IDs
+            list of album IDs, max 50 without chunking
         """
         return self._delete('me/albums?ids=' + ','.join(album_ids))
 
@@ -112,6 +116,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/tracks', market=market, limit=limit, offset=offset)
 
+    @chunked('track_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def saved_tracks_contains(self, track_ids: list) -> List[bool]:
         """
@@ -122,7 +127,7 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         track_ids
-            list of track IDs
+            list of track IDs, max 50 without chunking
 
         Returns
         -------
@@ -131,6 +136,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/tracks/contains?ids=' + ','.join(track_ids))
 
+    @chunked('track_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_tracks_add(self, track_ids: list) -> None:
         """
@@ -141,10 +147,11 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         track_ids
-            list of track IDs
+            list of track IDs, max 50 without chunking
         """
         return self._put('me/tracks/?ids=' + ','.join(track_ids))
 
+    @chunked('track_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_tracks_delete(self, track_ids: list) -> None:
         """
@@ -155,6 +162,6 @@ class SpotifyLibrary(SpotifyBase):
         Parameters
         ----------
         track_ids
-            list of track IDs
+            list of track IDs, max 50 without chunking
         """
         return self._delete('me/tracks/?ids=' + ','.join(track_ids))

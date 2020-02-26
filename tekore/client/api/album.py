@@ -1,4 +1,5 @@
 from tekore.client.process import single, model_list
+from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
@@ -64,6 +65,7 @@ class SpotifyAlbum(SpotifyBase):
             offset=offset
         )
 
+    @chunked('album_ids', 1, 20, join_lists)
     @send_and_process(model_list(FullAlbum, 'albums'))
     def albums(
             self,
@@ -76,7 +78,7 @@ class SpotifyAlbum(SpotifyBase):
         Parameters
         ----------
         album_ids
-            list of album IDs (1..20)
+            list of album IDs, max 20 without chunking
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
 

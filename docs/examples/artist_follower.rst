@@ -16,7 +16,7 @@ from your playlists, and prompt you to do so.
         scopes.playlist_read_private
     )
     user_token = prompt_for_user_token(*conf, scope=scope)
-    s = Spotify(user_token, max_limits_on=True)
+    s = Spotify(user_token, max_limits_on=True, chunked_on=True)
 
 
     def prompt_user(what: str) -> bool:
@@ -26,11 +26,6 @@ from your playlists, and prompt you to do so.
                 return True
             elif resp.lower() == "n":
                 return False
-
-
-    def chunks(lst, n):
-        for i in range(0, len(lst), n):
-            yield lst[i:i + n]
 
 
     artists = set()
@@ -43,17 +38,16 @@ from your playlists, and prompt you to do so.
                 artists.add((artist.id, artist.name))
 
 
-    for chunk in chunks(list(artists), 50):
-        ids = [c[0] for c in chunk]
-        names = [c[1] for c in chunk]
-        following = s.artists_is_following(ids)
-        for id_, name, status in zip(ids, names, following):
-            if status:
-                print(f"Skipping '{name}' as it's already being followed.")
-                continue
+    ids = [a[0] for a in artists]
+    names = [a[1] for a in artists]
+    following = s.artists_is_following(ids)
+    for id_, name, status in zip(ids, names, following):
+        if status:
+            print(f"Skipping '{name}' as it's already being followed.")
+            continue
 
-            if not prompt_user(f"Follow '{name}'?"):
-                continue
+        if not prompt_user(f"Follow '{name}'?"):
+            continue
 
-            s.artists_follow([id_])
-            print(f"Followed '{name}'.")
+        s.artists_follow([id_])
+        print(f"Followed '{name}'.")

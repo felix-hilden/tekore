@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from tekore.client.process import single, model_list
+from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
@@ -25,6 +26,7 @@ class SpotifyArtist(SpotifyBase):
         """
         return self._get('artists/' + artist_id)
 
+    @chunked('artist_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullArtist, 'artists'))
     def artists(self, artist_ids: list) -> ModelList:
         """
@@ -33,7 +35,7 @@ class SpotifyArtist(SpotifyBase):
         Parameters
         ----------
         artist_ids
-            list of artist IDs
+            list of artist IDs, max 50 without chunking
 
         Returns
         -------

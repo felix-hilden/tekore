@@ -1,12 +1,14 @@
 from typing import List, Tuple
 
 from tekore.client.process import top_item, nothing
+from tekore.client.chunked import chunked, return_last
 from tekore.client.decor import send_and_process
 from tekore.client.base import SpotifyBase
 from tekore.convert import to_uri
 
 
 class SpotifyPlaylistTracks(SpotifyBase):
+    @chunked('track_ids', 2, 100, return_last, reverse=True)
     @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_add(
             self,
@@ -25,7 +27,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
         playlist_id
             playlist ID
         track_ids
-            list of track IDs
+            list of track IDs, max 100 without chunking
         position
             position to add the tracks
 
@@ -54,7 +56,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
         playlist_id
             playlist ID
         track_ids
-            list of track IDs to add to the playlist
+            list of track IDs, max 100
         """
         track_uris = [to_uri('track', t) for t in track_ids]
         return self._put(
@@ -114,6 +116,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
             payload['snapshot_id'] = snapshot_id
         return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
+    @chunked('track_ids', 2, 100, return_last, chain='snapshot_id', chain_pos=3)
     @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_remove(
             self,
@@ -127,12 +130,14 @@ class SpotifyPlaylistTracks(SpotifyBase):
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
 
+        Note that when chunked, ``snapshot_id`` is not updated between requests.
+
         Parameters
         ----------
         playlist_id
             playlist ID
         track_ids
-            list of track IDs
+            list of track IDs, max 100 without chunking
         snapshot_id
             snapshot ID for the playlist
 

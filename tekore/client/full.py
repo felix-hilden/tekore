@@ -91,3 +91,34 @@ class Spotify(
         self.max_limits_on, old = on, self.max_limits_on
         yield self
         self.max_limits_on = old
+
+    @contextmanager
+    def chunked(self, on: bool = True) -> 'Spotify':
+        """
+        Context manager. Toggle chunking lists of resources.
+
+        Parameters
+        ----------
+        on
+            enable or disable chunking
+
+        Returns
+        -------
+        Spotify
+            self
+
+        Examples
+        --------
+        .. code:: python
+
+            spotify = Spotify(token)
+            with spotify.chunked(True):
+                tracks = spotify.tracks(many_ids)
+
+            spotify = Spotify(token, chunked_on=True)
+            with spotify.chunked(False):
+                tracks = spotify.search(many_ids[:50])
+        """
+        self.chunked_on, old = on, self.chunked_on
+        yield self
+        self.chunked_on = old
