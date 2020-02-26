@@ -44,6 +44,21 @@ class SpotifyPlaylistTracks(SpotifyBase):
         )
 
     @send_and_process(nothing)
+    def playlist_tracks_clear(self, playlist_id: str) -> None:
+        """
+        Remove all tracks in a playlist.
+
+        Requires the playlist-modify-public scope. To modify private playlists
+        the playlist-modify-private scope is required.
+
+        Parameters
+        ----------
+        playlist_id
+            playlist ID
+        """
+        return self._put(f'playlists/{playlist_id}/tracks', payload={'uris': []})
+
+    @send_and_process(nothing)
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list) -> None:
         """
         Replace all tracks in a playlist.

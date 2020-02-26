@@ -145,6 +145,9 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
             )
             self.assertTracksEqual('Indices removed', playlist.id, track_ids[::-1])
 
+            self.client.playlist_tracks_clear(playlist.id)
+            self.assertTracksEqual('Tracks cleared', playlist.id, [])
+
             # Assert cover was uploaded
             cover = self.client.playlist_cover_image(playlist.id)
             with self.subTest('Cover uploaded'):
