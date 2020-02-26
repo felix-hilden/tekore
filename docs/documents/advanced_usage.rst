@@ -62,6 +62,40 @@ so the new recent token should be used instead.
 The most recent refresh token is always returned when refreshing a token,
 but any saved refresh tokens need to be updated too.
 
+Client options
+--------------
+The :mod:`client <tekore.client>` provides options and toggles
+to customise behavior in a variety of ways.
+
+Maximise limits
+***************
+The Web API limits the number of resources returned in many endpoints.
+By default, these limits are below their maximum values, matching API defaults.
+However, they can be maximised when instantiating a client or as a context.
+
+.. code:: python
+
+    spotify = Spotify(max_limits_on=True)
+    spotify.max_limits_on = False
+
+    with spotify.max_limits():
+        tracks = spotify.all_items(spotify.search('piano')[0])
+
+Chunked requests
+****************
+Endpoints that accept lists of resources often limit
+the amount of items that can be passed in.
+To help with this restriction, those lists can be chunked.
+
+.. code:: python
+
+    spotify = Spotify(chunked_on=True)
+    spotify.chunked_on = False
+
+    with spotify.chunked():
+        # Go nuts with e.g. spotify.artists_follow
+
+
 Application configuration
 -------------------------
 Should you want to use environment variables or configuration files
