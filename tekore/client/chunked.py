@@ -7,6 +7,15 @@ from tekore.serialise import ModelList
 def _chunks(lst: list, n: int, reverse: bool) -> list:
     """
     Chunk list into length 'n' sublists.
+
+    Parameters
+    ----------
+    lst
+        list to chunk
+    n
+        length of chunks
+    reverse
+        reverse the order of chunks
     """
     rng = range(0, len(lst), n)
 
@@ -37,7 +46,8 @@ def chunked(
         arg_pos: int,
         chunk_size: int,
         process: Callable,
-        reverse: bool = False,
+        reverse: str = None,
+        reverse_pos: int = None,
         chain: str = None,
         chain_pos: int = None,
 ) -> Callable:
@@ -58,11 +68,13 @@ def chunked(
     process
         process response list
     reverse
-        reverse order of chunks sent
+        reverse order of chunks sent when argument defined
+    reverse_pos
+        position of the reverse argument
     chain
         variable to chain into the next request
     chain_pos
-        position of the chain variable
+        position of the chain argument
     """
     def decorator(function: Callable) -> Callable:
         nonlocal arg_pos
@@ -102,7 +114,13 @@ def chunked(
             else:
                 chain_val = None
 
-            chunks = _chunks(arg_val, chunk_size, reverse)
+            if reverse is not None:
+                reverse_val = _get_arg(reverse_pos, reverse, args, kwargs)
+                reverse_bool = reverse_val is not None
+            else:
+                reverse_bool = False
+
+            chunks = _chunks(arg_val, chunk_size, reverse_bool)
 
             if self.is_async:
                 return async_wrapper(self, chunks, chain_val, args, kwargs)

@@ -154,13 +154,22 @@ class TestSpotifyChunkedUnit(TestCase):
         func.assert_called_with(slf, list(range(10, 20)), ch=0)
         self.assertEqual(r, 1)
 
-    def test_reverse(self):
+    def test_reverse_when_rev_argument_specified(self):
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, reverse=True)(func)
+        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
+        r = dec(slf, list(range(20)), rev=1)
+        func.assert_called_with(slf, list(range(10)), rev=1)
+        self.assertEqual(r, 1)
+
+    def test_dont_reverse_when_rev_argument_not_specified(self):
+        func = MagicMock(side_effect=[0, 1])
+        slf = mock_spotify()
+
+        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
         r = dec(slf, list(range(20)))
-        func.assert_called_with(slf, list(range(10)))
+        func.assert_called_with(slf, list(range(10, 20)))
         self.assertEqual(r, 1)
 
     def test_chunked_as_kwarg(self):

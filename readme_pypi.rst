@@ -69,6 +69,10 @@ Added
 *****
 - Endpoint for clearing playlist tracks
 
+Fixed
+*****
+- ``playlist_tracks_add`` - fix insertion order when chunking (#156)
+
 1.3.0 (2020-02-26)
 ------------------
 Added

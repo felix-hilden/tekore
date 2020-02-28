@@ -8,7 +8,7 @@ from tekore.convert import to_uri
 
 
 class SpotifyPlaylistTracks(SpotifyBase):
-    @chunked('track_ids', 2, 100, return_last, reverse=True)
+    @chunked('track_ids', 2, 100, return_last, reverse='position', reverse_pos=3)
     @send_and_process(top_item('snapshot_id'))
     def playlist_tracks_add(
             self,
