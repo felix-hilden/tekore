@@ -1,0 +1,13 @@
+======
+|logo|
+======
+Oops! The page you are looking for was not found.
+Maybe you'll find what you're looking for by searching the documentation
+or returning to the `home page <rtd_>`_.
+
+.. |logo| image:: logo.png
+   :alt: logo
+   :width: 432 px
+   :target: `rtd`_
+
+.. _rtd: https://tekore.rtfd.org
