@@ -71,8 +71,8 @@ Additional features and various convenience modules are provided too.
    :hidden:
    :caption: Tekore documentation
 
-   documents/getting_started
-   documents/advanced_usage
+   getting_started
+   advanced_usage
    examples
    extras
    reference

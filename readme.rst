@@ -54,7 +54,7 @@ Documentation can be built locally with Sphinx.
 
     $ cd docs && make html
 
-The main page ``index.html`` can be found in ``build/html``.
+The main page ``index.html`` can be found in ``build/html/src``.
 
 Running tests
 -------------
@@ -109,7 +109,7 @@ Windows users should use a batch wrapper to execute the files.
     > scripts\exec test
 
 
-.. |logo| image:: docs/logo_small.png
+.. |logo| image:: docs/src/logo_small.png
    :target: `pypi`_
    :alt: logo
 

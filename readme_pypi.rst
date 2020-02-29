@@ -121,7 +121,7 @@ Fixed
 Initial release of Tekore!
 
 
-.. |logo| image:: https://raw.githubusercontent.com/felix-hilden/tekore/master/docs/logo_small.png
+.. |logo| image:: https://raw.githubusercontent.com/felix-hilden/tekore/master/docs/src/logo_small.png
    :alt: logo
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/tekore

@@ -2,7 +2,7 @@ import os
 import sys
 from pathlib import Path
 
-_root = Path(os.path.realpath(__file__)).parent.parent
+_root = Path(os.path.realpath(__file__)).parent.parent.parent
 sys.path.insert(0, _root)
 
 
@@ -19,6 +19,7 @@ extensions = [
     'sphinx_rtd_theme',
 ]
 
+master_doc = 'index'
 templates_path = ['templates']
 exclude_patterns = ['build']
 autosummary_generate = True
