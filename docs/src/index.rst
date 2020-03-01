@@ -69,14 +69,20 @@ Additional features and various convenience modules are provided too.
 .. toctree::
    :maxdepth: 1
    :hidden:
-   :caption: Tekore documentation
+   :caption: Package
 
    release_notes
+   reference
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Guide
+
    getting_started
    advanced_usage
    examples
    extras
-   reference
 
 .. |logo| image:: logo.png
    :alt: logo
