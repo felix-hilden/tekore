@@ -14,6 +14,7 @@ release = Path(_root, 'tekore', 'VERSION').read_text().strip()
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
     'sphinx_autodoc_typehints',
     'sphinx_rtd_theme',
@@ -25,3 +26,7 @@ exclude_patterns = ['build']
 autosummary_generate = True
 
 html_theme = 'sphinx_rtd_theme'
+extlinks = {
+    'issue': ('https://github.com/felix-hilden/tekore/issues/%s', '#'),
+    'commit': ('https://github.com/felix-hilden/tekore/commit/%s', '')
+}
