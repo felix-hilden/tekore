@@ -71,6 +71,7 @@ Additional features and various convenience modules are provided too.
    :hidden:
    :caption: Tekore documentation
 
+   release_notes
    getting_started
    advanced_usage
    examples

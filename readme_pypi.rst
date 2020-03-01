@@ -35,6 +35,11 @@ Tekore can be installed from the Package Index via ``pip``.
 
     $ pip install tekore
 
+Changelog
+=========
+A detailed changelog can be found on our RTD documentation's
+`Release notes <https://tekore.readthedocs.io/page/whats_new.html>`_.
+
 Versioning
 ==========
 When requiring Tekore in projects or other packages,
@@ -60,65 +65,6 @@ and new features and endpoints are added in minor versions.
 But endpoints removed by Spotify are removed in minor versions and changes
 to endpoints are implemented as bugfixes.
 See the Web API `documentation <web api_>`_ for further information on beta endpoints.
-
-Changelog
-=========
-Unreleased
-----------
-Added
-*****
-- Endpoint for clearing playlist tracks
-
-Fixed
-*****
-- ``playlist_tracks_add`` - fix insertion order when chunking (#156)
-
-1.3.0 (2020-02-26)
-------------------
-Added
-*****
-- Endpoint for adding to queue
-- Readable ``repr`` for response models
-- Option to specify a maximum size for ``CachingSender``
-- Optionally send long lists of resources as chunks
-
-1.2.0 (2020-02-17)
-------------------
-Added
-*****
-- Optionally use maximum limits in all paging calls
-
-Fixed
-*****
-- Retrieving all items and pages of a search respects API limits (#145)
-- Always return an awaitable in paging navigation (#146)
-
-1.1.0 (2020-02-02)
-------------------
-Added
-*****
-- Async support in authentication and API endpoints
-- Sender that implements response caching
-- Reading configuration with missing values produces a warning
-
-Fixed
-*****
-- Correctly parse playlist when fields is specified (#142)
-
-1.0.1 (2020-01-17)
-------------------
-Fixed
-*****
-- Accept missing video thumbnail in PlaylistTrack (#132)
-
-1.0.0 (2020-01-14)
-------------------
-- Packaging improvements
-- Declare versioning scheme
-
-0.1.0 (2020-01-14)
-------------------
-Initial release of Tekore!
 
 
 .. |logo| image:: https://raw.githubusercontent.com/felix-hilden/tekore/master/docs/src/logo_small.png
