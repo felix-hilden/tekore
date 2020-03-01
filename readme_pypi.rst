@@ -38,7 +38,7 @@ Tekore can be installed from the Package Index via ``pip``.
 Changelog
 =========
 A detailed changelog can be found on our RTD documentation's
-`Release notes <https://tekore.readthedocs.io/page/whats_new.html>`_.
+`Release notes <https://tekore.readthedocs.io/page/release_notes.html>`_.
 
 Versioning
 ==========
