@@ -30,7 +30,9 @@ class IdentifierType(SerialisableEnum):
     """
     artist = 'artist'
     album = 'album'
+    episode = 'episode'
     playlist = 'playlist'
+    show = 'show'
     track = 'track'
 
 

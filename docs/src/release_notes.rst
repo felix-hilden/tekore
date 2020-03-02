@@ -6,6 +6,8 @@ Added
 *****
 - :meth:`playlist_tracks_clear <tekore.client.api.SpotifyPlaylist.playlist_tracks_clear>`
   convenience endpoint for deleting tracks from a playlist (:issue:`155`)
+- :mod:`convert <tekore.convert>`
+  accept shows and episodes as valid types (:issue:`159`)
 
 Fixed
 *****
