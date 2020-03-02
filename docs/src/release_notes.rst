@@ -1,7 +1,7 @@
 Release notes
 =============
-Unreleased
-----------
+1.4.0 (2020-03-02)
+------------------
 Added
 *****
 - :meth:`playlist_tracks_clear <tekore.client.api.SpotifyPlaylist.playlist_tracks_clear>`
