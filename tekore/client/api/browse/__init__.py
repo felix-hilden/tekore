@@ -165,7 +165,7 @@ class SpotifyBrowse(SpotifyBase):
     @maximise_limit(50)
     def category_playlists(
             self,
-            category_id: str = None,
+            category_id: str,
             country: str = None,
             limit: int = 20,
             offset: int = 0

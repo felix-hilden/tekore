@@ -1,5 +1,12 @@
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :meth:`category_playlists <tekore.client.api.SpotifyBrowse.category_playlists>`
+  require category parameter (:issue:`160`)
+
 1.4.0 (2020-03-02)
 ------------------
 Added
