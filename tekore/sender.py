@@ -269,15 +269,14 @@ class AsyncPersistentSender(AsyncSender):
         self.client = client or AsyncClient()
 
     async def send(self, request: Request) -> Response:
-        async with self.client as client:
-            return await client.request(
-                request.method,
-                request.url,
-                data=request.data or None,
-                params=request.params or None,
-                headers=request.headers,
-                **self.httpx_kwargs,
-            )
+        return await self.client.request(
+            request.method,
+            request.url,
+            data=request.data or None,
+            params=request.params or None,
+            headers=request.headers,
+            **self.httpx_kwargs,
+        )
 
 
 default_sender_type: Union[Type[SyncSender], Type[AsyncSender]] = TransientSender

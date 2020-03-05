@@ -6,6 +6,8 @@ Fixed
 *****
 - :meth:`category_playlists <tekore.client.api.SpotifyBrowse.category_playlists>`
   require category parameter (:issue:`160`)
+- :class:`AsyncPersistentSender <tekore.sender.AsyncPersistentSender>`
+  persist connections appropriately (:issue:`161`)
 
 1.4.0 (2020-03-02)
 ------------------
