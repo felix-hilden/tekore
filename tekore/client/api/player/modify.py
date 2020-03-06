@@ -136,7 +136,7 @@ class SpotifyPlayerModify(SpotifyBase):
         device_id
             devide to add the track on
         """
-        return self._post('me/player/add-to-queue', uri=uri, device_id=device_id)
+        return self._post('me/player/queue', uri=uri, device_id=device_id)
 
     @send_and_process(nothing)
     def playback_pause(self, device_id: str = None) -> None:

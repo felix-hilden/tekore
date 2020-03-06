@@ -8,6 +8,8 @@ Fixed
   require category parameter (:issue:`160`)
 - :class:`AsyncPersistentSender <tekore.sender.AsyncPersistentSender>`
   persist connections appropriately (:issue:`161`)
+- :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
+  match endpoint address to changed API (:issue:`162`)
 
 1.4.0 (2020-03-02)
 ------------------
