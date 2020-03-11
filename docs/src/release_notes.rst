@@ -1,7 +1,7 @@
 Release notes
 =============
-Unreleased
-----------
+1.5.0 (2020-03-11)
+------------------
 Added
 *****
 - :class:`RetryingSender <tekore.sender.RetryingSender>`
