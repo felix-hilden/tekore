@@ -344,8 +344,8 @@ class RetryingSender(ExtendingSender):
             r = self.sender.send(request)
 
             if r.status_code == 429:
-                seconds = r.headers['Retry-After']
-                time.sleep(int(seconds))
+                seconds = r.headers.get('Retry-After', 1)
+                time.sleep(int(seconds) + 1)
             elif r.status_code >= 500 and tries > 1:
                 tries -= 1
                 time.sleep(delay_seconds)
@@ -361,8 +361,8 @@ class RetryingSender(ExtendingSender):
             r = await self.sender.send(request)
 
             if r.status_code == 429:
-                seconds = r.headers['Retry-After']
-                await asyncio.sleep(int(seconds))
+                seconds = r.headers.get('Retry-After', 1)
+                await asyncio.sleep(int(seconds) + 1)
             elif r.status_code >= 500 and tries > 1:
                 tries -= 1
                 await asyncio.sleep(delay_seconds)

@@ -46,7 +46,7 @@ class TestRetryingSender(TestCase):
         s = RetryingSender(sender=sender)
         with patch('tekore.sender.time', time):
             s.send(Request())
-            time.sleep.assert_called_once_with(1)
+            time.sleep.assert_called_once_with(1 + 1)
 
     def test_async_rate_limited_request_retried_after_set_seconds(self):
         asyncio = AsyncMock()
@@ -57,7 +57,31 @@ class TestRetryingSender(TestCase):
         s = RetryingSender(sender=sender)
         with patch('tekore.sender.asyncio', asyncio):
             run(s.send(Request()))
-            asyncio.sleep.assert_called_once_with(1)
+            asyncio.sleep.assert_called_once_with(1 + 1)
+
+    def test_default_retry_after_is_one(self):
+        time = MagicMock()
+        fail = rate_limit_response()
+        del fail.headers['Retry-After']
+        success = ok_response()
+        sender = mock_sender(fail, success)
+
+        s = RetryingSender(sender=sender)
+        with patch('tekore.sender.time', time):
+            s.send(Request())
+            time.sleep.assert_called_once_with(1 + 1)
+
+    def test_async_default_retry_after_is_one(self):
+        asyncio = AsyncMock()
+        fail = rate_limit_response()
+        del fail.headers['Retry-After']
+        success = ok_response()
+        sender = mock_sender(fail, success, is_async=True)
+
+        s = RetryingSender(sender=sender)
+        with patch('tekore.sender.asyncio', asyncio):
+            run(s.send(Request()))
+            asyncio.sleep.assert_called_once_with(1 + 1)
 
     def test_failing_request_but_no_retries_returns_failed(self):
         fail = failed_response()

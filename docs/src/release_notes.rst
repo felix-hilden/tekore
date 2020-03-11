@@ -2,6 +2,11 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- :class:`RetryingSender <tekore.sender.RetryingSender>`
+  avoid unnecessary retries and reduce total wait time (:issue:`163`)
+
 Fixed
 *****
 - :meth:`category_playlists <tekore.client.api.SpotifyBrowse.category_playlists>`
