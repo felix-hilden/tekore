@@ -1,6 +1,19 @@
 """
 Conversions between Spotify IDs, URIs and URLs.
 
+.. currentmodule:: tekore.convert
+.. autosummary::
+   :nosignatures:
+
+   ConversionError
+   IdentifierType
+   check_id
+   check_type
+   from_uri
+   from_url
+   to_uri
+   to_url
+
 .. code:: python
 
     from tekore.convert import to_url, from_url

@@ -1,6 +1,23 @@
 """
 Utility module for your convenience <3
 
+.. currentmodule:: tekore.util.config
+.. autosummary::
+   :nosignatures:
+
+   config_from_environment
+   config_from_file
+   config_to_file
+
+.. currentmodule:: tekore.util.credentials
+.. autosummary::
+   :nosignatures:
+
+   request_client_token
+   prompt_for_user_token
+   refresh_user_token
+   parse_code_from_url
+
 The main motivation for this module is to make authorisation effortless.
 That goal is achieved by reading and writing configuration,
 and functions for easily retrieving access tokens.

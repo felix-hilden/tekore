@@ -64,7 +64,7 @@ class RefreshingToken(AccessToken):
 
 class RefreshingCredentials:
     """
-    Synchronous client for retrieving automatically refreshing access tokens.
+    Synchronous client for self-refreshing tokens.
 
     Delegates to an underlying
     :class:`Credentials <tekore.auth.expiring.Credentials>`

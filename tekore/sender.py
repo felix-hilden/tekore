@@ -1,20 +1,23 @@
 """
 Manipulate the way clients send requests.
 
+.. currentmodule:: tekore.sender
+.. autosummary::
+   :nosignatures:
+
+   TransientSender
+   AsyncTransientSender
+   PersistentSender
+   AsyncPersistentSender
+   SingletonSender
+   AsyncSingletonSender
+   RetryingSender
+   CachingSender
+
 Senders provide different levels of connection persistence across requests
 and extend other senders to enable retries on failed requests.
 The sender of a :class:`Client` also determines whether synchronous or
 asynchronous calls are used to send requests and process responses.
-Here's a short summary of the features of each sender.
-
-- :class:`(Async) <AsyncTransientSender>` :class:`TransientSender`:
-  Send each request individually (default)
-- :class:`(Async) <AsyncPersistentSender>` :class:`PersistentSender`:
-  Reuse connections for requests made with one instance
-- :class:`(Async) <AsyncSingletonSender>` :class:`SingletonSender`:
-  Reuse connections between all instances
-- :class:`RetryingSender`: Retry on server errors or hitting the rate limit
-- :class:`CachingSender`: Cache successful GET requests
 
 Sender instances are passed to a client at initialisation.
 

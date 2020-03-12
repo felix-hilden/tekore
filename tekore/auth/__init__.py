@@ -1,6 +1,20 @@
 """
 Web API authorisation.
 
+.. currentmodule:: tekore.auth.expiring
+.. autosummary::
+   :nosignatures:
+
+   Credentials
+   Token
+
+.. currentmodule:: tekore.auth.refreshing
+.. autosummary::
+   :nosignatures:
+
+   RefreshingCredentials
+   RefreshingToken
+
 Access tokens are used in authorisation by the Web API.
 There are two methods of authorisation, called
 client credentials flow and authorisation code flow.
