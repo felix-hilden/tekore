@@ -151,17 +151,14 @@ This is handy if a user's refresh token needs to be stored.
 
     util.config_to_file(filename, (id_, secret, uri, refresh))
 
-Sending requests
-----------------
+Using senders
+-------------
 By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :mod:`senders <tekore.sender>`.
-They provide the immediate
-`advantages <https://2.python-requests.org/en/master/user/advanced/#session-objects>`_
-of using a :class:`requests.Session`.
 They can be used for connection persistence, retrying and caching.
 User-defined sessions and additional keyword arguments
-to :class:`Session.send` can also be passed in.
+to :func:`requests.Session.send` can also be passed in.
 For example, per-instance sessions can be enabled with a
 :class:`PersistentSender <tekore.sender.PersistentSender>`.
 
@@ -253,3 +250,33 @@ While asynchronous :class:`Credentials <tekore.auth.expiring.Credentials>`
 is supported, it is worth considering that concurrently refreshing tokens
 may lead to multiple refreshes for one token.
 Synchronous credentials clients are recommended.
+
+Localisation
+------------
+Many API calls that retrieve track information accept a ``market`` or
+``country`` parameter with which only tracks or albums available in that
+market are returned. This sometimes changes track IDs as well.
+When calling with a user token, this country code can also be
+``from_token``, in which case the results are for the user's locale.
+
+.. code:: python
+
+    spotify.search('sheeran', market='SE')
+    spotify.search('horse', market='from_token')
+
+In addition to returning results relevant to a specific market,
+results can be requested in specific languages.
+This is helpful for example in viewing names with non-latin alphabet.
+
+.. code:: python
+
+    from tekore import Spotify
+    from tekore.sender import PersistentSender
+    from requests import Session
+
+    sess = Session()
+    sess.headers = {'Accept-Language': 'ru'}
+
+    spotify = Spotify(token, sender=PersistentSender(session=sess))
+    artist = spotify.artist('2LbinT29RFLaXOGAN0jfQN')
+    print(artist.name)
