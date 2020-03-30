@@ -8,6 +8,10 @@ Added
 
 Fixed
 *****
+- Errors are now correctly raised when parsing responses in
+  :meth:`playlist <tekore.client.api.SpotifyPlaylist.playlist>` and
+  :meth:`playlist_tracks <tekore.client.api.SpotifyPlaylist.playlist_tracks>`
+  (:issue:`164`)
 - Conversions :func:`to_url <tekore.convert.to_url>` now return URLs with
   prefix ``https`` instead of ``http``, in line with API and application
   behavior. :func:`from_url <tekore.convert.from_url>` now correctly

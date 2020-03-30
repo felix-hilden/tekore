@@ -1,6 +1,8 @@
-from typing import Union
+from typing import Union, Callable
+from functools import wraps
 
-from tekore.client.process import single, model_list, single_or_dict
+from tekore.client.chunked import _get_arg
+from tekore.client.process import single, model_list, nothing
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
 from tekore.serialise import ModelList
@@ -10,6 +12,46 @@ from tekore.model import (
     Image,
     PlaylistTrackPaging
 )
+
+
+def process_if_not_specified(
+        post_func: Callable,
+        arg_name: str,
+        arg_pos: int,
+) -> Callable:
+    """
+    Decorate a function to process only if an argument is not specified.
+
+    Parameters
+    ----------
+    post_func
+        function to call with response JSON content
+    arg_name
+        argument to check
+    arg_pos
+        index of argument in the argument list
+    """
+    def decorator(function: Callable) -> Callable:
+        nonlocal arg_pos
+        arg_pos -= 1
+
+        async def async_wrapper(self, *args, **kwargs):
+            json = await function(self, *args, **kwargs)
+            return post_func(json)
+
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            arg_val = _get_arg(arg_pos, arg_name, args, kwargs)
+            if arg_val is not None:
+                return function(self, *args, **kwargs)
+
+            if self.is_async:
+                return async_wrapper(self, *args, **kwargs)
+
+            json = function(self, *args, **kwargs)
+            return post_func(json)
+        return wrapper
+    return decorator
 
 
 class SpotifyPlaylistView(SpotifyBase):
@@ -76,7 +118,8 @@ class SpotifyPlaylistView(SpotifyBase):
             offset=offset
         )
 
-    @send_and_process(single_or_dict(FullPlaylist))
+    @process_if_not_specified(single(FullPlaylist), 'fields', 2)
+    @send_and_process(nothing)
     def playlist(
             self,
             playlist_id: str,
@@ -85,6 +128,9 @@ class SpotifyPlaylistView(SpotifyBase):
     ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
+
+        Note that if `fields` is specified,
+        a raw dictionary is returned instead of a dataclass model.
 
         Parameters
         ----------
@@ -123,7 +169,8 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         return self._get(f'playlists/{playlist_id}/images')
 
-    @send_and_process(single_or_dict(PlaylistTrackPaging))
+    @process_if_not_specified(single(PlaylistTrackPaging), 'fields', 2)
+    @send_and_process(nothing)
     def playlist_tracks(
             self,
             playlist_id: str,
