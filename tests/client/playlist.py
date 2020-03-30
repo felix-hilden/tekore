@@ -1,3 +1,5 @@
+from asyncio import run
+
 from tests._cred import TestCaseWithUserCredentials
 from ._resources import user_id, playlist_id, playlist_local, track_ids, image
 
@@ -15,7 +17,8 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
         self.client.playlists(user_id)
 
     def test_playlist(self):
-        self.client.playlist(playlist_id)
+        playlist = self.client.playlist(playlist_id)
+        self.assertEqual(playlist.id, playlist_id)
 
     def test_playlist_track_has_episode_and_track(self):
         track = self.client.playlist(playlist_id).tracks.items[0].track
@@ -34,14 +37,31 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
         self.client.playlist_cover_image(playlist_id)
 
     def test_playlist_tracks(self):
-        self.client.playlist_tracks(playlist_id)
+        tracks = self.client.playlist_tracks(playlist_id)
+        self.assertGreater(tracks.total, 0)
 
     def test_playlist_with_fields_returns_object(self):
         playlist = self.client.playlist(playlist_id, fields='uri')
         self.assertIsInstance(playlist, dict)
 
+    def test_async_playlist_with_fields_returns_object(self):
+        async def f():
+            client = SpotifyPlaylist(self.user_token, asynchronous=True)
+            return await client.playlist(playlist_id, fields='uri')
+
+        playlist = run(f())
+        self.assertIsInstance(playlist, dict)
+
     def test_playlist_tracks_with_fields_returns_object(self):
         tracks = self.client.playlist_tracks(playlist_id, fields='total')
+        self.assertIsInstance(tracks, dict)
+
+    def test_async_playlist_tracks_with_fields_returns_object(self):
+        async def f():
+            client = SpotifyPlaylist(self.user_token, asynchronous=True)
+            return await client.playlist_tracks(playlist_id, fields='uri')
+
+        tracks = run(f())
         self.assertIsInstance(tracks, dict)
 
 

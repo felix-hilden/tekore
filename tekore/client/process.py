@@ -29,19 +29,6 @@ def single(type_: type, from_item: str = None) -> Callable:
     return post_func
 
 
-def single_or_dict(type_: type) -> Callable:
-    """
-    Try to unpack dict into single constructor returning untouched dict if failed.
-    """
-    def post_func(json: dict):
-        try:
-            return type_(**json)
-        except TypeError:
-            return json
-
-    return post_func
-
-
 def model_list(type_: type, from_item: str = None) -> Callable:
     """
     Unpack items inside ``from_item`` of dict into constructors.
