@@ -108,7 +108,7 @@ def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
     """
     check_type(type_)
     check_id(id_)
-    return f'http://open.spotify.com/{type_}/{id_}'
+    return f'https://open.spotify.com/{type_}/{id_}'
 
 
 def from_uri(uri: str) -> tuple:
@@ -135,6 +135,13 @@ def from_uri(uri: str) -> tuple:
     return type_, id_
 
 
+_url_prefixes = (
+    'open.spotify.com',
+    'http://open.spotify.com',
+    'https://open.spotify.com'
+)
+
+
 def from_url(url: str) -> tuple:
     """
     Parse type and ID from an URL.
@@ -152,7 +159,7 @@ def from_url(url: str) -> tuple:
     *prefixes, type_, id_ = url.split('/')
     prefix = '/'.join(prefixes)
 
-    if prefix not in ('http://open.spotify.com', 'open.spotify.com'):
+    if prefix not in _url_prefixes:
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')
     check_type(type_)
     check_id(id_)

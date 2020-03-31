@@ -1,5 +1,14 @@
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Conversions :func:`to_url <tekore.convert.to_url>` now return URLs with
+  prefix ``https`` instead of ``http``, in line with API and application
+  behavior. :func:`from_url <tekore.convert.from_url>` now correctly
+  accepts ``https`` addresses for conversion. (:issue:`165`)
+
 1.5.0 (2020-03-11)
 ------------------
 Added

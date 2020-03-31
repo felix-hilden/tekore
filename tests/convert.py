@@ -48,7 +48,7 @@ class TestToURI(unittest.TestCase):
 
 class TestToURL(unittest.TestCase):
     def test_valid(self):
-        url = 'http://open.spotify.com/track/b62'
+        url = 'https://open.spotify.com/track/b62'
         self.assertEqual(to_url('track', 'b62'), url)
 
 
@@ -81,11 +81,15 @@ class TestFromURL(unittest.TestCase):
         return t == type_ and i == id_
 
     def test_valid(self):
-        url = 'http://open.spotify.com/track/b62'
+        url = 'https://open.spotify.com/track/b62'
         self.assertTrue(self._call(url, 'track', 'b62'))
 
     def test_short_prefix(self):
         url = 'open.spotify.com/track/b62'
+        self.assertTrue(self._call(url, 'track', 'b62'))
+
+    def test_not_secure_prefix(self):
+        url = 'http://open.spotify.com/track/b62'
         self.assertTrue(self._call(url, 'track', 'b62'))
 
     def test_invalid_id(self):
