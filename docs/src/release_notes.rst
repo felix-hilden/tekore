@@ -2,6 +2,10 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Dependency to HTTPX upgraded to include version ``0.12.*`` (:issue:`166`)
+
 Fixed
 *****
 - Conversions :func:`to_url <tekore.convert.to_url>` now return URLs with
