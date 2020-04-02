@@ -125,16 +125,16 @@ class SpotifyPlayerModify(SpotifyBase):
     @send_and_process(nothing)
     def playback_queue_add(self, uri: str, device_id: str = None) -> None:
         """
-        Add a track to a user's queue.
+        Add a track or an episode to a user's queue.
 
         Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
         uri
-            resource to add, currently only tracks are supported
+            resource to add, track or episode
         device_id
-            devide to add the track on
+            devide to extend the queue on
         """
         return self._post('me/player/queue', uri=uri, device_id=device_id)
 

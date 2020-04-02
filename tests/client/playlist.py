@@ -1,17 +1,21 @@
 from asyncio import run
 
-from tests._cred import TestCaseWithUserCredentials
-from ._resources import user_id, playlist_id, playlist_local, track_ids, image
+from tests._cred import TestCaseWithUserCredentials, TestCaseWithCredentials
+from ._resources import (
+    user_id,
+    playlist_id,
+    playlist_local,
+    playlist_podcast,
+    track_ids,
+    image,
+)
 
 from tekore.client.api import SpotifyPlaylist, SpotifyFollow
 
 
-class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
+class TestSpotifyPlaylistView(TestCaseWithCredentials):
     def setUp(self):
-        self.client = SpotifyPlaylist(self.user_token)
-
-    def test_followed_playlists(self):
-        self.client.followed_playlists()
+        self.client = SpotifyPlaylist(self.app_token)
 
     def test_playlists(self):
         self.client.playlists(user_id)
@@ -46,7 +50,7 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
 
     def test_async_playlist_with_fields_returns_object(self):
         async def f():
-            client = SpotifyPlaylist(self.user_token, asynchronous=True)
+            client = SpotifyPlaylist(self.app_token, asynchronous=True)
             return await client.playlist(playlist_id, fields='uri')
 
         playlist = run(f())
@@ -58,11 +62,70 @@ class TestSpotifyPlaylistView(TestCaseWithUserCredentials):
 
     def test_async_playlist_tracks_with_fields_returns_object(self):
         async def f():
-            client = SpotifyPlaylist(self.user_token, asynchronous=True)
+            client = SpotifyPlaylist(self.app_token, asynchronous=True)
             return await client.playlist_tracks(playlist_id, fields='uri')
 
         tracks = run(f())
         self.assertIsInstance(tracks, dict)
+
+    def test_playlist_podcast_no_market_returns_none(self):
+        playlist = self.client.playlist(playlist_podcast)
+        self.assertIsNone(playlist.tracks.items[0].track)
+
+    def test_playlist_podcast_with_market_returned(self):
+        playlist = self.client.playlist(playlist_podcast, market='FI')
+        self.assertTrue(playlist.tracks.items[0].track.episode)
+
+    def test_playlist_with_podcast_as_tracks_no_market_returns_object(self):
+        playlist = self.client.playlist(playlist_podcast, episodes_as_tracks=True)
+        self.assertIsNone(playlist['tracks']['items'][0]['track'])
+
+    def test_playlist_with_podcast_as_tracks_with_market_returns_object(self):
+        playlist = self.client.playlist(
+            playlist_podcast,
+            market='FI',
+            episodes_as_tracks=True
+        )
+        self.assertTrue(playlist['tracks']['items'][0]['track']['track'])
+
+    def test_playlist_tracks_podcast_no_market_returns_none(self):
+        tracks = self.client.playlist_tracks(playlist_podcast)
+        self.assertIsNone(tracks.items[0].track)
+
+    def test_playlist_tracks_podcast_with_market_returned(self):
+        tracks = self.client.playlist_tracks(playlist_podcast, market='FI')
+        self.assertTrue(tracks.items[0].track.episode)
+
+    def test_playlist_tracks_with_podcast_as_tracks_no_market_returns_object(self):
+        tracks = self.client.playlist_tracks(
+            playlist_podcast,
+            episodes_as_tracks=True
+        )
+        self.assertIsNone(tracks['items'][0]['track'])
+
+    def test_playlist_tracks_with_podcast_as_tracks_with_market_returns_object(self):
+        tracks = self.client.playlist_tracks(
+            playlist_podcast,
+            market='FI',
+            episodes_as_tracks=True
+        )
+        self.assertTrue(tracks['items'][0]['track']['track'])
+
+
+class TestSpotifyPlaylistViewAsUser(TestCaseWithUserCredentials):
+    def setUp(self):
+        self.client = SpotifyPlaylist(self.user_token)
+
+    def test_followed_playlists(self):
+        self.client.followed_playlists()
+
+    def test_playlist_with_podcast(self):
+        playlist = self.client.playlist(playlist_podcast)
+        self.assertEqual(playlist.id, playlist_podcast)
+
+    def test_playlist_tracks_with_podcast(self):
+        playlist = self.client.playlist(playlist_podcast)
+        self.assertEqual(playlist.id, playlist_podcast)
 
 
 class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):

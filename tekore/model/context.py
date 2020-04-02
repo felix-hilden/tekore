@@ -6,6 +6,7 @@ class ContextType(SerialisableEnum):
     album = 'album'
     artist = 'artist'
     playlist = 'playlist'
+    show = 'show'
 
 
 @dataclass(repr=False)

@@ -51,7 +51,11 @@ Browse API
 ----------
 .. autoclass:: SpotifyBrowse
    :members:
-   :inherited-members:
+
+Episode API
+-----------
+.. autoclass:: SpotifyEpisode
+   :members:
 
 Follow API
 ----------
@@ -84,6 +88,12 @@ Search API
 ----------
 .. autoclass:: SpotifySearch
    :members:
+
+Show API
+--------
+.. autoclass:: SpotifyShow
+   :members:
+
 
 Track API
 ---------

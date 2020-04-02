@@ -16,10 +16,46 @@ class SpotifyPlayerView(SpotifyBase):
     @send_and_process(single(CurrentlyPlayingContext))
     def playback(
             self,
-            market: str = None
+            market: str = None,
+            tracks_only: bool = False
     ) -> CurrentlyPlayingContext:
         """
         Get information about user's current playback.
+
+        Requires the user-read-playback-state scope.
+
+        Parameters
+        ----------
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        tracks_only
+            return only tracks in the currently playing item,
+            if True, episodes have None as the currently playing item
+
+        Returns
+        -------
+        CurrentlyPlayingContext
+            information about current playback
+        """
+        if tracks_only is True:
+            additional_types = None
+        else:
+            additional_types = 'episode'
+
+        return self._get(
+            'me/player',
+            market=market,
+            additional_types=additional_types
+        )
+
+    @send_and_process(single(CurrentlyPlaying))
+    def playback_currently_playing(
+            self,
+            market: str = None,
+            tracks_only: bool = False
+    ) -> CurrentlyPlaying:
+        """
+        Get user's currently playing track.
 
         Requires the user-read-playback-state or
         the user-read-currently-playing scope.
@@ -28,35 +64,25 @@ class SpotifyPlayerView(SpotifyBase):
         ----------
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
-
-        Returns
-        -------
-        CurrentlyPlayingContext
-            information about current playback
-        """
-        return self._get('me/player', market=market)
-
-    @send_and_process(single(CurrentlyPlaying))
-    def playback_currently_playing(
-            self,
-            market: str = None
-    ) -> CurrentlyPlaying:
-        """
-        Get user's currently playing track.
-
-        Requires the user-read-playback-state scope.
-
-        Parameters
-        ----------
-        market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
+        tracks_only
+            return only tracks in the currently playing item,
+            if True, episodes have None as the currently playing item
 
         Returns
         -------
         CurrentlyPlaying
             information about the current track playing
         """
-        return self._get('me/player/currently-playing', market=market)
+        if tracks_only is True:
+            additional_types = None
+        else:
+            additional_types = 'episode'
+
+        return self._get(
+            'me/player/currently-playing',
+            market=market,
+            additional_types=additional_types
+        )
 
     @send_and_process(single(PlayHistoryPaging))
     @maximise_limit(50)

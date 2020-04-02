@@ -61,6 +61,7 @@ class AuthorisationScopes(Enum):
 
     user_read_currently_playing = 'user-read-currently-playing'
     user_read_playback_state = 'user-read-playback-state'
+    user_read_playback_position = 'user-read-playback-position'
     user_modify_playback_state = 'user-modify-playback-state'
 
     playlist_modify_public = 'playlist-modify-public'
@@ -160,6 +161,7 @@ read = Scope(
     AuthorisationScopes.user_library_read,
     AuthorisationScopes.user_read_currently_playing,
     AuthorisationScopes.user_read_playback_state,
+    AuthorisationScopes.user_read_playback_position,
     AuthorisationScopes.playlist_read_collaborative,
     AuthorisationScopes.playlist_read_private
 )
