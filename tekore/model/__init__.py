@@ -53,6 +53,13 @@ Artist-related
    :undoc-members:
    :show-inheritance:
 
+Episode-related
+---------------
+.. automodule:: tekore.model.episode
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Errors
 ------
 .. automodule:: tekore.model.error
@@ -69,7 +76,6 @@ Paging
 
 Playback-related
 ----------------
-
 Currently playing
 *****************
 .. automodule:: tekore.model.currently_playing
@@ -102,6 +108,23 @@ Some playlists contain locally stored tracks.
 They contain mostly `None` values along with empty lists and dictionaries.
 
 .. automodule:: tekore.model.local
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Show-related
+------------
+.. automodule:: tekore.model.show.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: tekore.model.show
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: tekore.model.show.full
    :members:
    :undoc-members:
    :show-inheritance:
@@ -175,6 +198,7 @@ from tekore.model.currently_playing import (
     RepeatState,
 )
 from tekore.model.device import Device
+from tekore.model.episode import SimpleEpisodePaging, FullEpisode
 from tekore.model.error import PlayerErrorReason
 from tekore.model.member import Image
 from tekore.model.play_history import PlayHistoryPaging
@@ -184,6 +208,8 @@ from tekore.model.playlist import (
     SimplePlaylistPaging,
 )
 from tekore.model.recommendations import Recommendations, RecommendationAttribute
+from tekore.model.show import SavedShowPaging, SimpleShowPaging
+from tekore.model.show.full import FullShow
 from tekore.model.track import (
     FullTrack,
     SimpleTrackPaging,

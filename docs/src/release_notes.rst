@@ -4,6 +4,24 @@ Unreleased
 ----------
 Added
 *****
+- Support for podcasts: new APIs for
+  :class:`episodes <tekore.client.api.SpotifyEpisode>`
+  and :class:`shows <tekore.client.api.SpotifyShow>`.
+  New :class:`scope <tekore.scope.AuthorisationScopes>`
+  ``user-read-playback-position`` for returning episode resume points.
+  New endpoints for saving shows in
+  :class:`library <tekore.client.api.SpotifyLibrary>`.
+  :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
+  now accepts episode URIs.
+  :meth:`playback <tekore.client.api.SpotifyPlayer.playback>` and
+  :meth:`playback_currently_playing <tekore.client.api.SpotifyPlayer.playback_currently_playing>`
+  can return currently playing episodes and shows.
+  :meth:`playlist <tekore.client.api.SpotifyPlaylist.playlist>` and
+  :meth:`playlist_tracks <tekore.client.api.SpotifyPlaylist.playlist_tracks>`
+  can return episodes on playlists.
+  :meth:`search <tekore.client.api.SpotifySearch.search>` allows for searching
+  episodes and shows.
+  (:issue:`164`)
 - Dependency to HTTPX upgraded to include version ``0.12.*`` (:issue:`166`)
 
 Fixed

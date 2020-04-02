@@ -12,6 +12,9 @@ genres = ['pop', 'rock']
 playlist_id = '37i9dQZEVXbMDoHDwVN2tF'
 playlist_local = '1L09qNetvjqCFsPtkhgyuI'
 
+# Exactly one podcast and one track in that order
+playlist_podcast = '10zlxJ3uV3dm7gJZEMf4ks'
+
 track_id = '6v3KW9xbzN5yKLt9YKDYA2'
 track_ids = [track_id, '5ZULALImTm80tzUbYQYM9d']
 track_relinked = '6kLCHFM39wkFjOuyPGLGeQ'       # Relinked in market 'US'
@@ -20,6 +23,11 @@ track_no_audio_features = ''  # No known track
 
 user_id = 'spinninrecordsofficial'
 user_ids = [user_id, 'samsmithworld']
+
+show_id = '0Lsi13D8nWRkwbEkfNeItS'
+show_ids = [show_id, '7Arl2fVUFHCGyNZwM39bJO']
+episode_id = '4SgOTqHfk56yqrTjXjWCNM'
+episode_ids = [episode_id, '5WCB6tVX4aJX0432KCBTK8']
 
 image = (
     '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHB'

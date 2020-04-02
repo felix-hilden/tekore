@@ -4,19 +4,13 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableEnum
 from tekore.model.base import Item
 from tekore.model.artist import SimpleArtist
-from tekore.model.member import Image
+from tekore.model.member import Image, ReleaseDatePrecision
 
 
 class AlbumType(SerialisableEnum):
     album = 'album'
     compilation = 'compilation'
     single = 'single'
-
-
-class ReleaseDatePrecision(SerialisableEnum):
-    year = 'year'
-    month = 'month'
-    day = 'day'
 
 
 @dataclass(repr=False)

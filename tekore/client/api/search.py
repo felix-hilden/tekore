@@ -5,13 +5,17 @@ from tekore.model import (
     FullTrackPaging,
     SimpleAlbumPaging,
     SimplePlaylistPaging,
+    SimpleEpisodePaging,
+    SimpleShowPaging,
 )
 
 paging_type = {
-    'artist': FullArtistOffsetPaging,
-    'album': SimpleAlbumPaging,
-    'playlist': SimplePlaylistPaging,
-    'track': FullTrackPaging,
+    'artists': FullArtistOffsetPaging,
+    'albums': SimpleAlbumPaging,
+    'episodes': SimpleEpisodePaging,
+    'playlists': SimplePlaylistPaging,
+    'shows': SimpleShowPaging,
+    'tracks': FullTrackPaging,
 }
 
 
@@ -19,7 +23,7 @@ def search_result(json: dict):
     """
     Unpack search result dicts into respective paging type constructors.
     """
-    return tuple(paging_type[key[:-1]](**json[key]) for key in json.keys())
+    return tuple(paging_type[key](**json[key]) for key in json.keys())
 
 
 class SpotifySearch(SpotifyBase):
@@ -46,7 +50,7 @@ class SpotifySearch(SpotifyBase):
             search query
         types
             resources to search for, tuple of strings containing
-            artist, album, track and/or playlist
+            artist, album, track, playlist, show and/or episode
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
         limit

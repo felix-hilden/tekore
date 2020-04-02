@@ -5,9 +5,15 @@ from tekore.model.base import Item
 from tekore.model.user import PublicUser
 from tekore.model.local import LocalTrack
 from tekore.model.track import FullTrack, Tracks
+from tekore.model.episode import FullEpisode
 from tekore.model.paging import OffsetPaging
 from tekore.model.member import Followers, Image
 from tekore.serialise import SerialisableDataclass, Timestamp
+
+track_type = {
+    'track': FullTrack,
+    'episode': FullEpisode,
+}
 
 
 @dataclass(repr=False)
@@ -17,7 +23,7 @@ class PlaylistTrack(SerialisableDataclass):
     is_local: bool
     primary_color: str
     video_thumbnail: Optional[Image]
-    track: Union[FullTrack, LocalTrack, None]
+    track: Union[FullTrack, LocalTrack, FullEpisode, None]
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
@@ -30,7 +36,7 @@ class PlaylistTrack(SerialisableDataclass):
             if self.is_local:
                 self.track = LocalTrack(**self.track)
             else:
-                self.track = FullTrack(**self.track)
+                self.track = track_type[self.track['type']](**self.track)
 
 
 @dataclass(repr=False)

@@ -14,35 +14,29 @@ from tekore.model import (
 )
 
 
-def process_if_not_specified(
-        post_func: Callable,
-        arg_name: str,
-        arg_pos: int,
-) -> Callable:
+def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
     """
-    Decorate a function to process only if an argument is not specified.
+    Decorate a function to process only if any of arguments is not specified.
 
     Parameters
     ----------
     post_func
         function to call with response JSON content
-    arg_name
-        argument to check
-    arg_pos
-        index of argument in the argument list
+    arguments
+        arguments to check, tuples of (name, position in argument list)
     """
     def decorator(function: Callable) -> Callable:
-        nonlocal arg_pos
-        arg_pos -= 1
-
         async def async_wrapper(self, *args, **kwargs):
             json = await function(self, *args, **kwargs)
             return post_func(json)
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
-            arg_val = _get_arg(arg_pos, arg_name, args, kwargs)
-            if arg_val is not None:
+            not_none = [
+                _get_arg(arg_pos - 1, arg_name, args, kwargs) is not None
+                for arg_name, arg_pos in arguments
+            ]
+            if any(not_none):
                 return function(self, *args, **kwargs)
 
             if self.is_async:
@@ -118,38 +112,54 @@ class SpotifyPlaylistView(SpotifyBase):
             offset=offset
         )
 
-    @process_if_not_specified(single(FullPlaylist), 'fields', 2)
+    @process_if_not_specified(
+        single(FullPlaylist),
+        ('fields', 2),
+        ('episodes_as_tracks', 4)
+    )
     @send_and_process(nothing)
     def playlist(
             self,
             playlist_id: str,
             fields: str = None,
-            market: str = None
+            market: str = None,
+            episodes_as_tracks: bool = None,
     ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
-
-        Note that if `fields` is specified,
-        a raw dictionary is returned instead of a dataclass model.
 
         Parameters
         ----------
         playlist_id
             playlist ID
         fields
-            which fields to return
+            which fields to return, see the Web API documentation for details
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
+            when using a user token to authenticate.
+            For episodes in the playlist, if a user token is used,
+            the country associated with it overrides this parameter.
+            If an application token is used and no market is specified,
+            episodes are considered unavailable and returned as None.
+        episodes_as_tracks
+            if True, return episodes as objects with track-like fields
 
         Returns
         -------
-        FullPlaylist
-            playlist object
+        Union[FullPlaylist, dict]
+            playlist object, or raw dictionary
+            if ``fields`` or ``episodes_as_tracks`` was specified
         """
+        if episodes_as_tracks is True:
+            additional_types = None
+        else:
+            additional_types = 'track,episode'
+
         return self._get(
             'playlists/' + playlist_id,
             fields=fields,
-            market=market
+            market=market,
+            additional_types=additional_types,
         )
 
     @send_and_process(model_list(Image))
@@ -169,46 +179,60 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         return self._get(f'playlists/{playlist_id}/images')
 
-    @process_if_not_specified(single(PlaylistTrackPaging), 'fields', 2)
+    @process_if_not_specified(
+        single(PlaylistTrackPaging),
+        ('fields', 2),
+        ('episodes_as_tracks', 4)
+    )
     @send_and_process(nothing)
     def playlist_tracks(
             self,
             playlist_id: str,
             fields: str = None,
             market: str = None,
+            episodes_as_tracks: bool = False,
             limit: int = 100,
             offset: int = 0
     ) -> Union[PlaylistTrackPaging, dict]:
         """
         Get full details of the tracks of a playlist owned by a user.
 
-        Note that if `fields` is specified,
-        a raw dictionary is returned instead of a dataclass model.
-
         Parameters
         ----------
         playlist_id
             playlist ID
         fields
-            filters for the query as a comma-separated list,
-            see Web API documentation for more details
+            which fields to return, see the Web API documentation for details
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+            when using a user token to authenticate.
+            For episodes in the playlist, if a user token is used,
+            the country associated with it overrides this parameter.
+            If an application token is used and no market is specified,
+            episodes are considered unavailable and returned as None.
+        episodes_as_tracks
+            if True, return episodes as objects with track-like fields
         limit
             the number of items to return (1..100)
         offset
             the index of the first item to return
-        market
-            an ISO 3166-1 alpha-2 country code or 'from_token'
 
         Returns
         -------
-        Union[PlaylistTrackPaging, object]
-            paging object containing playlist tracks,
-            or raw object if fields was specified
+        Union[PlaylistTrackPaging, dict]
+            paging object containing playlist tracks, or raw dictionary
+            if ``fields`` or ``episodes_as_tracks`` was specified
         """
+        if episodes_as_tracks is True:
+            additional_types = None
+        else:
+            additional_types = 'track,episode'
+
         return self._get(
             f'playlists/{playlist_id}/tracks',
             limit=limit,
             offset=offset,
             fields=fields,
-            market=market
+            market=market,
+            additional_types=additional_types,
         )

@@ -4,7 +4,7 @@ from tekore.client.process import single, nothing
 from tekore.client.chunked import chunked, join_lists, return_none
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
-from tekore.model import SavedAlbumPaging, SavedTrackPaging
+from tekore.model import SavedAlbumPaging, SavedTrackPaging, SavedShowPaging
 
 
 class SpotifyLibrary(SpotifyBase):
@@ -165,3 +165,85 @@ class SpotifyLibrary(SpotifyBase):
             list of track IDs, max 50 without chunking
         """
         return self._delete('me/tracks/?ids=' + ','.join(track_ids))
+
+    @send_and_process(single(SavedShowPaging))
+    @maximise_limit(50)
+    def saved_shows(
+            self,
+            market: str = None,
+            limit: int = 20,
+            offset: int = 0
+    ) -> SavedShowPaging:
+        """
+        Get a list of the shows saved in the current user's Your Music library.
+
+        Requires the user-library-read scope.
+
+        Parameters
+        ----------
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
+
+        Returns
+        -------
+        SavedShowPaging
+            paging object containing saved shows
+        """
+        return self._get('me/shows', market=market, limit=limit, offset=offset)
+
+    @chunked('show_ids', 1, 50, join_lists)
+    @send_and_process(nothing)
+    def saved_shows_contains(self, show_ids: list) -> List[bool]:
+        """
+        Check if user has saved shows.
+
+        Requires the user-library-read scope.
+
+        Parameters
+        ----------
+        show_ids
+            list of show IDs, max 50 without chunking
+
+        Returns
+        -------
+        list
+            list of booleans in the same order the show IDs were given
+        """
+        return self._get('me/shows/contains?ids=' + ','.join(show_ids))
+
+    @chunked('show_ids', 1, 50, return_none)
+    @send_and_process(nothing)
+    def saved_shows_add(self, show_ids: list) -> None:
+        """
+        Save shows for current user.
+
+        Requires the user-library-modify scope.
+
+        Parameters
+        ----------
+        show_ids
+            list of show IDs, max 50 without chunking
+        """
+        return self._put('me/shows/?ids=' + ','.join(show_ids))
+
+    @chunked('show_ids', 1, 50, return_none)
+    @send_and_process(nothing)
+    def saved_shows_delete(self, show_ids: list, market: str = None) -> None:
+        """
+        Remove shows for current user.
+
+        Requires the user-library-modify scope.
+
+        Parameters
+        ----------
+        show_ids
+            list of show IDs, max 50 without chunking
+        market
+            an ISO 3166-1 alpha-2 country code, only remove shows that are
+            available in the specified market, overrided by token's country
+        """
+        return self._delete('me/shows/?ids=' + ','.join(show_ids), market=market)

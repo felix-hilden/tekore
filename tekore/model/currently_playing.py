@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Optional, Union
 from dataclasses import dataclass
 
 from tekore.serialise import SerialisableDataclass, SerialisableEnum
 from tekore.model.context import Context
 from tekore.model.device import Device
 from tekore.model.track import FullTrack
+from tekore.model.episode import FullEpisode
 
 
 class CurrentlyPlayingType(SerialisableEnum):
@@ -42,6 +43,12 @@ class Actions(SerialisableDataclass):
         self.disallows = Disallows(**self.disallows)
 
 
+item_type = {
+    'track': FullTrack,
+    'episode': FullEpisode,
+}
+
+
 @dataclass(repr=False)
 class CurrentlyPlaying(SerialisableDataclass):
     """
@@ -53,7 +60,7 @@ class CurrentlyPlaying(SerialisableDataclass):
     timestamp: int
     context: Optional[Context]
     progress_ms: Optional[int]
-    item: Optional[FullTrack]
+    item: Union[FullTrack, FullEpisode, None]
 
     def __post_init__(self):
         self.actions = Actions(**self.actions)
@@ -64,7 +71,7 @@ class CurrentlyPlaying(SerialisableDataclass):
         if self.context is not None:
             self.context = Context(**self.context)
         if self.item is not None:
-            self.item = FullTrack(**self.item)
+            self.item = item_type[self.item['type']](**self.item)
 
 
 @dataclass(repr=False)

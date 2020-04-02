@@ -1,5 +1,11 @@
 from dataclasses import dataclass
-from tekore.serialise import SerialisableDataclass
+from tekore.serialise import SerialisableDataclass, SerialisableEnum
+
+
+class ReleaseDatePrecision(SerialisableEnum):
+    year = 'year'
+    month = 'month'
+    day = 'day'
 
 
 @dataclass(repr=False)

@@ -2,7 +2,7 @@ from time import sleep
 from requests import HTTPError
 
 from tests._cred import TestCaseWithUserCredentials, skip_or_fail
-from ._resources import track_ids, album_id
+from ._resources import track_ids, album_id, episode_id
 from tekore.client.api import SpotifyPlayer
 from tekore.client import Spotify
 from tekore.convert import to_uri
@@ -113,6 +113,26 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
         self.client.playback_queue_add(to_uri('track', track_ids[0]))
         self.client.playback_next()
         self.assertPlaying('Queue consumed on next', track_ids[0])
+
+        with self.subTest('Add episode to queue'):
+            self.client.playback_queue_add(to_uri('episode', episode_id))
+
+        self.client.playback_next()
+        playing = self.currently_playing()
+        with self.subTest('Currently playing episode returned by default'):
+            self.assertEqual(playing.item.id, episode_id)
+
+        playing = self.client.playback_currently_playing(tracks_only=True)
+        with self.subTest('Currently playing episode is none if only tracks'):
+            self.assertIsNone(playing.item)
+
+        playing = self.client.playback()
+        with self.subTest('Playback episode returned by default'):
+            self.assertEqual(playing.item.id, episode_id)
+
+        playing = self.client.playback(tracks_only=True)
+        with self.subTest('Playback episode is none if only tracks'):
+            self.assertIsNone(playing.item)
 
     def tearDown(self):
         if self.playback is None:

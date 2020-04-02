@@ -17,3 +17,9 @@ class TestSpotifySearch(TestCaseWithUserCredentials):
     def test_search_beyond_limit_raises(self):
         with self.assertRaises(HTTPError):
             self.client.search('piano', types=('playlist',), limit=1, offset=2000)
+
+    def test_search_shows(self):
+        self.client.search('sleep', types=('show',), limit=1)
+
+    def test_search_episodes(self):
+        self.client.search('piano', types=('episode',), limit=1)
