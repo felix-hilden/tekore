@@ -5,4 +5,4 @@ source = tekore
 exclude_lines =
     if __name__
     raise NotImplementedError
-fail_under = 0.9
+fail_under = 0.99
