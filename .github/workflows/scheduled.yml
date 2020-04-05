@@ -1,0 +1,30 @@
+# Scheduled tests without user authentication to verify
+# that nothing has changed in the Web API.
+
+name: scheduled
+on:
+  schedule:
+    - cron: '0 5 * * *'
+
+jobs:
+  auth-test:
+    name: Run tests with app authentication
+    runs-on: ubuntu-latest
+    env:
+      SPOTIFY_CLIENT_ID: ${{secrets.SPOTIFY_CLIENT_ID}}
+      SPOTIFY_CLIENT_SECRET: ${{secrets.SPOTIFY_CLIENT_SECRET}}
+      SPOTIFY_REDIRECT_URI: ${{secrets.SPOTIFY_REDIRECT_URI}}
+      SPOTIFY_USER_REFRESH: ${{secrets.SPOTIFY_USER_REFRESH}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[dev]
+      - name: Run test suite
+        run: python -m unittest discover tests -p "*.py"
