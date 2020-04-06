@@ -1,6 +1,7 @@
 Follow with a search
 ====================
-The following script searches for an artist and follows the first match.
+The following script searches for an artist
+and prompts the user to follow the first match.
 
 It assumes that your credentials are saved in the environment.
 
@@ -12,10 +13,15 @@ It assumes that your credentials are saved in the environment.
     conf = util.config_from_environment()
     scope = scopes.user_follow_modify
     token = util.prompt_for_user_token(*conf, scope=scope)
-
     spotify = Spotify(token)
-    artists, = spotify.search('sheeran', types=('artist',), limit=1)
 
+    search = input('Search for an artist: ')
+    artists, = spotify.search(search, types=('artist',), limit=1)
     artist = artists.items[0]
-    print(f'Following {artist.name}...')
-    spotify.artists_follow([artist.id])
+    follow = input(f'Follow {artist.name}? (y/n) ')
+
+    if follow.lower() == 'y':
+        spotify.artists_follow([artist.id])
+        print(f'{artist.name} followed.')
+    else:
+        print('Follow cancelled.')

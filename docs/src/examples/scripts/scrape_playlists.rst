@@ -5,6 +5,7 @@ and aggregates the most common artists by total track count.
 
 It assumes that your credentials are saved in the environment and
 you have followed or created at least one playlist.
+For this example, the artist of podcast episodes is the name of the show.
 
 Asynchronous functions should be used to achieve a faster runtime
 when making lots of parallelisable calls to the API.
@@ -28,10 +29,17 @@ a :class:`RetryingSender <tekore.sender.RetryingSender>` is used.
     spotify = Spotify(token, sender=sender, max_limits_on=True)
 
 
+    def get_artist(track) -> str:
+        if getattr(track, 'episode', False):
+            return track.show.name
+        else:
+            return track.artists[0].name
+
+
     async def count_artists(playlist_id: str):
         tracks = await spotify.playlist_tracks(playlist_id)
         tracks = spotify.all_items(tracks)
-        return Counter([t.track.artists[0].name async for t in tracks])
+        return Counter([get_artist(t.track) async for t in tracks])
 
 
     async def main() -> Counter:

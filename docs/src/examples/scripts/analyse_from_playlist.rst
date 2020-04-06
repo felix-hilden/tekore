@@ -5,6 +5,8 @@ and analyses its features.
 
 It assumes that your credentials are saved in the environment and
 you have followed or created at least one playlist and it has a track on it.
+Podcast episodes or a locally saved tracks are ignored,
+because they cannot be analysed.
 
 .. code:: python
 
@@ -16,7 +18,13 @@ you have followed or created at least one playlist and it has a track on it.
     spotify = Spotify(token)
     playlist = spotify.followed_playlists(limit=1).items[0]
     track = spotify.playlist_tracks(playlist.id, limit=1).items[0].track
+    name = f'"{track.name}" from {playlist.name}'
 
-    print(f'Analysing {track.name}...\n')
-    analysis = spotify.track_audio_features(track.id)
-    analysis.pprint()
+    if getattr(track, 'episode', False):
+        print(f'Cannot analyse episodes!\nGot {name}.')
+    elif getattr(track, 'is_local', False):
+        print(f'Cannot analyse local tracks!\nGot {name}.')
+    else:
+        print(f'Analysing {name}...\n')
+        analysis = spotify.track_audio_features(track.id)
+        print(repr(analysis))
