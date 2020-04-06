@@ -35,36 +35,39 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
         self.assertFalse(any(self.call[type_](ids)))
 
     def test_saved_albums(self):
-        self.client.saved_albums()
         self.client.saved_albums_delete(album_ids)
 
         self.client.saved_albums_add(album_ids)
         with self.subTest('Albums added'):
             self.assert_contains('albums', album_ids)
 
+        self.client.saved_albums()
+
         self.client.saved_albums_delete(album_ids)
         with self.subTest('Albums deleted'):
             self.assert_not_contains('albums', album_ids)
 
     def test_saved_tracks(self):
-        self.client.saved_tracks()
         self.client.saved_tracks_delete(track_ids)
 
         self.client.saved_tracks_add(track_ids)
         with self.subTest('Tracks added'):
             self.assert_contains('tracks', track_ids)
 
+        self.client.saved_tracks()
+
         self.client.saved_tracks_delete(track_ids)
         with self.subTest('Tracks deleted'):
             self.assert_not_contains('tracks', track_ids)
 
     def test_saved_shows(self):
-        self.client.saved_shows()
         self.client.saved_shows_delete(show_ids)
 
         self.client.saved_shows_add(show_ids)
         with self.subTest('Shows added'):
             self.assert_contains('shows', show_ids)
+
+        self.client.saved_shows()
 
         self.client.saved_shows_delete(show_ids)
         with self.subTest('Shows deleted'):
