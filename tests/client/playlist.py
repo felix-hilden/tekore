@@ -44,6 +44,14 @@ class TestSpotifyPlaylistView(TestCaseWithCredentials):
         tracks = self.client.playlist_tracks(playlist_id)
         self.assertGreater(tracks.total, 0)
 
+    def test_async_playlist_tracks(self):
+        async def f():
+            client = SpotifyPlaylist(self.app_token, asynchronous=True)
+            return await client.playlist_tracks(playlist_id)
+
+        tracks = run(f())
+        self.assertGreater(tracks.total, 0)
+
     def test_playlist_with_fields_returns_object(self):
         playlist = self.client.playlist(playlist_id, fields='uri')
         self.assertIsInstance(playlist, dict)
