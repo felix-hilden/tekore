@@ -179,8 +179,8 @@ class SerialisableDataclass:
                 val_str = f'[{len(value)} x {f_str}]'
             elif isinstance(value, dict):
                 v_fields = sorted(value.keys())
-                f_str = '", "'.join(v_fields)
-                val_str = f'{{"{f_str}"}}'
+                f_str = ', '.join([f'"{f}"' for f in v_fields])
+                val_str = f'{{{f_str}}}'
             elif isinstance(value, str):
                 val_str = f'"{value}"'
             else:

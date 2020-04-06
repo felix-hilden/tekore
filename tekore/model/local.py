@@ -4,14 +4,6 @@ from dataclasses import dataclass
 from tekore.serialise import SerialisableDataclass
 
 
-class EmptyList(list):
-    pass
-
-
-class EmptyDict(dict):
-    pass
-
-
 @dataclass(repr=False)
 class LocalItem(SerialisableDataclass):
     id: None
@@ -23,34 +15,44 @@ class LocalItem(SerialisableDataclass):
 
 @dataclass(repr=False)
 class LocalAlbum(LocalItem):
+    """
+    Album of a locally saved track.
+    """
     album_type: None
-    artists: EmptyList
-    available_markets: EmptyList
-    external_urls: EmptyDict
-    images: EmptyList
+    artists: List[None]
+    available_markets: List[None]
+    external_urls: dict
+    images: List[None]
     release_date: None
     release_date_precision: None
 
 
 @dataclass(repr=False)
 class LocalArtist(LocalItem):
-    external_urls: EmptyDict
+    """
+    Artist of a locally saved track.
+    """
+    external_urls: dict
 
 
 @dataclass(repr=False)
 class LocalTrack(LocalItem):
+    """
+    Locally saved track where most attributes are
+    always None, empty, zero or False.
+    """
     album: LocalAlbum
     artists: List[LocalArtist]
-    available_markets: EmptyList
-    disc_number: 0
+    available_markets: List[None]
+    disc_number: int
     duration_ms: int
-    explicit: False
-    external_ids: EmptyDict
-    external_urls: EmptyDict
-    is_local: True
-    popularity: 0
+    explicit: bool
+    external_ids: dict
+    external_urls: dict
+    is_local: bool
+    popularity: int
     preview_url: None
-    track_number: 0
+    track_number: int
     uri: str
 
     def __post_init__(self):
