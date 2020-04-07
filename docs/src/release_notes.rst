@@ -1,7 +1,7 @@
 Release notes
 =============
-Unreleased
-----------
+1.6.0 (2020-04-07)
+------------------
 Added
 *****
 - Support for podcasts: new APIs for
@@ -34,6 +34,7 @@ Fixed
   prefix ``https`` instead of ``http``, in line with API and application
   behavior. :func:`from_url <tekore.convert.from_url>` now correctly
   accepts ``https`` addresses for conversion. (:issue:`165`)
+- The ``repr`` of local items can now be produced without errors (:issue:`171`)
 
 1.5.0 (2020-03-11)
 ------------------
