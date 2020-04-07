@@ -16,7 +16,7 @@ from tekore.model import (
 
 def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
     """
-    Decorate a function to process only if any of arguments is not specified.
+    Decorate a function to process only if any of arguments is falsy.
 
     Parameters
     ----------
@@ -32,11 +32,11 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
-            not_none = [
-                _get_arg(arg_pos - 1, arg_name, args, kwargs) is not None
+            falsies = [
+                bool(_get_arg(arg_pos - 1, arg_name, args, kwargs))
                 for arg_name, arg_pos in arguments
             ]
-            if any(not_none):
+            if any(falsies):
                 return function(self, *args, **kwargs)
 
             if self.is_async:
@@ -123,7 +123,7 @@ class SpotifyPlaylistView(SpotifyBase):
             playlist_id: str,
             fields: str = None,
             market: str = None,
-            episodes_as_tracks: bool = None,
+            episodes_as_tracks: bool = False,
     ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
@@ -142,7 +142,7 @@ class SpotifyPlaylistView(SpotifyBase):
             If an application token is used and no market is specified,
             episodes are considered unavailable and returned as None.
         episodes_as_tracks
-            if True, return episodes as objects with track-like fields
+            if True, return episodes with track-like fields
 
         Returns
         -------
@@ -211,7 +211,7 @@ class SpotifyPlaylistView(SpotifyBase):
             If an application token is used and no market is specified,
             episodes are considered unavailable and returned as None.
         episodes_as_tracks
-            if True, return episodes as objects with track-like fields
+            if True, return episodes with track-like fields
         limit
             the number of items to return (1..100)
         offset
