@@ -2,6 +2,14 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Most imports can be done directly at the top level (:issue:`174`)
+
+Deprecated
+**********
+- Importing from submodules, removed in Tekore 2.0 (:issue:`81`)
+
 Fixed
 *****
 - :meth:`recommendations <tekore.client.api.SpotifyBrowse.recommendations>`
