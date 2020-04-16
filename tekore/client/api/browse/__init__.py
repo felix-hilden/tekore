@@ -215,11 +215,11 @@ class SpotifyBrowse(SpotifyBase):
         Parameters
         ----------
         artist_ids
-            list of artist IDs, URIs or URLs
+            list of seed artist IDs
         genres
-            list of genre names
+            list of seed genre names
         track_ids
-            list of artist IDs, URIs or URLs
+            list of seed artist IDs
         limit
             the number of items to return (1..100)
         market

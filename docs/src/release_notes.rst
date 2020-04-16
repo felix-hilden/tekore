@@ -1,5 +1,13 @@
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :meth:`recommendations <tekore.client.api.SpotifyBrowse.recommendations>`
+  documentation changed to reflect that only IDs are accepted as seeds,
+  not URIs or URLs (:issue:`173`)
+
 1.6.0 (2020-04-07)
 ------------------
 Added
