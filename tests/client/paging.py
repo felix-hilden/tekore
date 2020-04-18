@@ -10,7 +10,6 @@ class TestSpotifyPaging(TestCaseWithUserCredentials):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.client = Spotify(cls.user_token)
         cls.aclient = Spotify(cls.user_token, asynchronous=True)
 
         cls.tracks = cls.client.album_tracks(album_id, limit=1)

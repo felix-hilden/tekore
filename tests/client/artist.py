@@ -1,14 +1,10 @@
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import artist_id, artist_ids
 
-from tekore.client.api import SpotifyArtist
 from tekore.model import AlbumGroup
 
 
 class TestSpotifyArtist(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyArtist(self.app_token)
-
     def test_artist(self):
         artist = self.client.artist(artist_id)
         self.assertEqual(artist.id, artist_id)
@@ -51,9 +47,6 @@ class TestSpotifyArtist(TestCaseWithCredentials):
 
 
 class TestSpotifyArtistAsUser(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = SpotifyArtist(self.user_token)
-
     def test_artist_albums_from_token(self):
         albums = self.client.artist_albums(artist_id, market='from_token')
         self.assertGreater(albums.total, 0)

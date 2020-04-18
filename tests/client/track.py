@@ -6,13 +6,8 @@ from ._resources import (
     track_restricted,
 )
 
-from tekore.client.api import SpotifyTrack
-
 
 class TestSpotifyTrack(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyTrack(self.app_token)
-
     def test_track_with_market(self):
         track = self.client.track(track_id, market='US')
         self.assertEqual(track.id, track_id)
@@ -81,9 +76,6 @@ class TestSpotifyTrack(TestCaseWithCredentials):
 
 
 class TestSpotifyTrackAsUser(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = SpotifyTrack(self.user_token)
-
     def test_track_from_token(self):
         track = self.client.track(track_id, market='from_token')
         self.assertEqual(track.id, track_id)

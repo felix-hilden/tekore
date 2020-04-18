@@ -1,13 +1,8 @@
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
-from tekore.client.api import SpotifyAlbum
-
 
 class TestSpotifyAlbum(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyAlbum(token=self.app_token)
-
     def test_album_with_market(self):
         album = self.client.album(album_id, market='US')
         self.assertEqual(album.id, album_id)
@@ -47,9 +42,6 @@ class TestSpotifyAlbum(TestCaseWithCredentials):
 
 
 class TestSpotifyAlbumAsUser(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = SpotifyAlbum(self.user_token)
-
     def test_album_from_token(self):
         album = self.client.album(album_id, market='from_token')
         self.assertEqual(album.id, album_id)

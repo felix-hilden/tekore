@@ -1,13 +1,8 @@
 from tests._cred import TestCaseWithCredentials
 from ._resources import artist_ids, category_id, genres, track_id
 
-from tekore.client.api import SpotifyBrowse
-
 
 class TestSpotifyArtist(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyBrowse(self.app_token)
-
     def test_featured_playlists_with_country(self):
         msg, playlists = self.client.featured_playlists(country='US')
         self.assertGreater(playlists.total, 0)

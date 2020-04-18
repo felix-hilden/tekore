@@ -3,8 +3,6 @@ from requests import HTTPError
 
 from tests._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id, episode_id
-from tekore.client.api import SpotifyPlayer
-from tekore.client import Spotify
 from tekore.convert import to_uri
 
 
@@ -21,8 +19,6 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
     Shuffle and repeat states might be affected too.
     """
     def setUp(self):
-        self.client = SpotifyPlayer(self.user_token)
-
         try:
             devices = self.client.playback_devices()
         except HTTPError as e:
@@ -170,9 +166,6 @@ class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
 
 
 class TestSpotifyPlayer(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = Spotify(self.user_token)
-
     def test_recently_played(self):
         self.client.playback_recently_played()
 

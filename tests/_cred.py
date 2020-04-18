@@ -10,6 +10,7 @@ from requests.exceptions import HTTPError
 from tekore.auth import Credentials
 from tekore.util import config_from_environment
 from tekore.client import Spotify
+from tekore.sender import PersistentSender, RetryingSender
 
 skip_is_fail = os.getenv('TEKORE_TEST_SKIP_IS_FAIL', None)
 
@@ -82,6 +83,9 @@ class TestCaseWithCredentials(TestCaseWithAppEnvironment):
         except HTTPError as e:
             skip_or_fail(HTTPError, 'Error in retrieving application token!', e)
 
+        sender = RetryingSender(sender=PersistentSender())
+        cls.client = Spotify(cls.app_token, sender=sender)
+
 
 class TestCaseWithUserCredentials(
     TestCaseWithCredentials,
@@ -99,10 +103,10 @@ class TestCaseWithUserCredentials(
         except HTTPError as e:
             skip_or_fail(HTTPError, 'Error in retrieving user token!', e)
 
-        client = Spotify(cls.user_token)
+        cls.client.token = cls.user_token
 
         try:
-            cls.current_user_id = client.current_user().id
+            cls.current_user_id = cls.client.current_user().id
         except HTTPError as e:
             skip_or_fail(
                 HTTPError,

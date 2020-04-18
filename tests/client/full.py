@@ -79,8 +79,7 @@ class TestSpotifyChunked(TestCaseWithUserCredentials):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        spotify = Spotify(cls.app_token)
-        tracks = spotify.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
+        tracks = cls.client.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
         cls.track_ids = [t.track.id for t in tracks.items]
 
         cls.handle = handle_warnings()

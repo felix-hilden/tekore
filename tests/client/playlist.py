@@ -10,13 +10,10 @@ from ._resources import (
     image,
 )
 
-from tekore.client.api import SpotifyPlaylist, SpotifyFollow
+from tekore.client.api import SpotifyPlaylist
 
 
 class TestSpotifyPlaylistView(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyPlaylist(self.app_token)
-
     def test_playlists(self):
         self.client.playlists(user_id)
 
@@ -121,9 +118,6 @@ class TestSpotifyPlaylistView(TestCaseWithCredentials):
 
 
 class TestSpotifyPlaylistViewAsUser(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = SpotifyPlaylist(self.user_token)
-
     def test_followed_playlists(self):
         self.client.followed_playlists()
 
@@ -140,9 +134,6 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
     """
     Ordered test set to test playlist creation and modification.
     """
-    def setUp(self):
-        self.client = SpotifyPlaylist(self.user_token)
-
     def assertTracksEqual(self, sub_test_msg: str, playlist: str, tracks: list):
         observed = self.client.playlist_tracks(playlist)
         with self.subTest(sub_test_msg):
@@ -247,5 +238,4 @@ class TestSpotifyPlaylistModify(TestCaseWithUserCredentials):
             raise
         finally:
             # Unfollow (delete) playlist to tear down
-            follow = SpotifyFollow(self.user_token)
-            follow.playlist_unfollow(playlist.id)
+            self.client.playlist_unfollow(playlist.id)

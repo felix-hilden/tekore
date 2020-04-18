@@ -2,8 +2,6 @@ from unittest import SkipTest
 from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_ids, track_ids, show_ids
 
-from tekore.client.api import SpotifyLibrary
-
 
 class TestSpotifyFollow(TestCaseWithUserCredentials):
     """
@@ -13,7 +11,6 @@ class TestSpotifyFollow(TestCaseWithUserCredentials):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.client = SpotifyLibrary(cls.user_token)
 
         try:
             cls.current_albums = cls.client.saved_albums_contains(album_ids)

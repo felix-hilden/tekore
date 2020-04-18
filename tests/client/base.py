@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock
 
 from requests import HTTPError
-from tekore.client import Spotify
 from tekore.client.base import SpotifyBase
 from tekore.model.error import PlayerErrorReason
 
@@ -49,9 +48,6 @@ class TestSpotifyBaseUnits(unittest.TestCase):
 
 
 class TestSpotifyBase(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = Spotify(self.user_token)
-
     def test_album_nonexistent_market_error_message_parsed(self):
         try:
             self.client.album(album_id, market='__')

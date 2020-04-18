@@ -1,14 +1,10 @@
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import show_id, show_ids
 
-from tekore.client.api import SpotifyShow
 from requests import HTTPError
 
 
 class TestSpotifyShowAsApp(TestCaseWithCredentials):
-    def setUp(self):
-        self.client = SpotifyShow(self.app_token)
-
     def test_show_not_found_without_market(self):
         with self.assertRaises(HTTPError):
             self.client.show(show_id)
@@ -27,9 +23,6 @@ class TestSpotifyShowAsApp(TestCaseWithCredentials):
 
 
 class TestSpotifyShowAsUser(TestCaseWithUserCredentials):
-    def setUp(self):
-        self.client = SpotifyShow(self.user_token)
-
     def test_show_found_without_market(self):
         show = self.client.show(show_id)
         self.assertEqual(show_id, show.id)
