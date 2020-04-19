@@ -6,10 +6,10 @@ This allows accessing parts of the response directly as attributes.
 
 .. code:: python
 
-    from tekore import Spotify
+    import tekore as tk
 
     # Call the API
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
 
     # Use the response

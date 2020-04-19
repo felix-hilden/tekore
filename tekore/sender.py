@@ -23,11 +23,10 @@ Sender instances are passed to a client at initialisation.
 
 .. code:: python
 
-    from tekore import Spotify, Credentials
-    from tekore.sender import PersistentSender, AsyncTransientSender
+    import tekore as tk
 
-    Credentials(*conf, sender=PersistentSender())
-    Spotify(sender=AsyncTransientSender())
+    tk.Credentials(*conf, sender=tk.PersistentSender())
+    tk.Spotify(sender=tk.AsyncTransientSender())
 
 Synchronous senders wrap around the :mod:`requests` library,
 while asynchronous senders use :mod:`httpx`.
@@ -36,13 +35,11 @@ or :meth:`httpx.AsyncClient.request` that are passed on each request.
 
 .. code:: python
 
-    from tekore.sender import TransientSender
-
     proxies = {
         'http': 'http://10.10.10.10:8000',
         'https': 'http://10.10.10.10:8000',
     }
-    TransientSender(proxies=proxies)
+    tk.TransientSender(proxies=proxies)
 
 Custom instances of :class:`requests.Session` or :class:`httpx.AsyncClient`
 can also be used.
@@ -50,17 +47,15 @@ can also be used.
 .. code:: python
 
     from requests import Session
-    from tekore.sender import PresistentSender, SingletonSender
 
     session = Session()
     session.proxies = proxies
 
     # Attach the session to a sender
-    PersistentSender(session)
-    SingletonSender.session = session
+    tk.PersistentSender(session)
+    tk.SingletonSender.session = session
 
 Default senders and keyword arguments can be changed.
-Note that this requires importing the whole sender module.
 :attr:`default_sender_instance` has precedence over :attr:`default_sender_type`.
 Using an :class:`ExtendingSender` as the default type will raise an error
 as it tries to instantiate itself recursively.
@@ -69,17 +64,15 @@ See also :attr:`default_httpx_kwargs`.
 
 .. code:: python
 
-    from tekore import sender, Spotify
-
-    sender.default_sender_type = sender.PersistentSender
-    sender.default_sender_instance = sender.RetryingSender()
-    sender.default_requests_kwargs = {'proxies': proxies}
+    tk.sender.default_sender_type = tk.PersistentSender
+    tk.sender.default_sender_instance = tk.RetryingSender()
+    tk.sender.default_requests_kwargs = {'proxies': proxies}
 
     # Now the following are equal
     Spotify()
     Spotify(
-        sender=sender.RetryingSender(
-            sender=sender.PersistentSender(proxies=proxies)
+        sender=tk.RetryingSender(
+            sender=tk.PersistentSender(proxies=proxies)
         )
     )
 """

@@ -75,7 +75,7 @@ However, they can be maximised when instantiating a client or as a context.
 
 .. code:: python
 
-    spotify = Spotify(max_limits_on=True)
+    spotify = tk.Spotify(max_limits_on=True)
     spotify.max_limits_on = False
 
     with spotify.max_limits():
@@ -89,7 +89,7 @@ To help with this restriction, those lists can be chunked.
 
 .. code:: python
 
-    spotify = Spotify(chunked_on=True)
+    spotify = tk.Spotify(chunked_on=True)
     spotify.chunked_on = False
 
     with spotify.chunked():
@@ -121,9 +121,8 @@ Functions that read configuration return a 3-tuple of configuration variables.
 
 .. code:: python
 
-   from tekore.util import config_from_environment, config_from_file
-   client_id, client_secret, redirect_uri = config_from_environment()
-   client_id, client_secret, redirect_uri = config_from_file(filename)
+   client_id, client_secret, redirect_uri = tk.config_from_environment()
+   client_id, client_secret, redirect_uri = tk.config_from_file(filename)
 
 They can then be used to retrieve access tokens.
 Note that if all configuration values are defined,
@@ -131,10 +130,8 @@ it is possible to use unpacking to provide the configuration.
 
 .. code:: python
 
-   from tekore import util
-
-   conf = util.config_from_environment()
-   token = util.prompt_for_user_token(*conf)
+   conf = tk.config_from_environment()
+   token = tk.prompt_for_user_token(*conf)
 
 Configuring a user refresh token is also possible.
 Define ``SPOTIFY_USER_REFRESH`` and pass in a boolean flag
@@ -142,14 +139,14 @@ to read it as a fourth configuration value.
 
 .. code:: python
 
-    util.config_from_environment(return_refresh=True)
+    tk.config_from_environment(return_refresh=True)
 
 Configuration files can be written using another utility function.
 This is handy if a user's refresh token needs to be stored.
 
 .. code:: python
 
-    util.config_to_file(filename, (id_, secret, uri, refresh))
+    tk.config_to_file(filename, (id_, secret, uri, refresh))
 
 Using senders
 -------------
@@ -164,10 +161,7 @@ For example, per-instance sessions can be enabled with a
 
 .. code:: python
 
-   from tekore import Spotify
-   from tekore.sender import PersistentSender
-
-   Spotify(sender=PersistentSender())
+   tk.Spotify(sender=tk.PersistentSender())
 
 Keepalive connections, retries and caching make up a performance-boosting
 and convenient sender setup, easily constructed from simple building blocks.
@@ -176,14 +170,11 @@ busy applications that request the same static resources repeatedly.
 
 .. code:: python
 
-    from tekore import sender
-    from tekore.sender import CachingSender, RetryingSender, PersistentSender
-
-    sender.default_sender_instance = CachingSender(
+    tk.sender.default_sender_instance = tk.CachingSender(
         max_size=256,
-        sender=RetryingSender(
+        sender=tk.RetryingSender(
             retries=2,
-            sender=PersistentSender()
+            sender=tk.PersistentSender()
         )
     )
 
@@ -217,8 +208,8 @@ Async mode may be enabled when instantiating a client.
 
 .. code:: python
 
-    Credentials(*conf, asynchronous=True)
-    Spotify(token, asynchronous=True)
+    tk.Credentials(*conf, asynchronous=True)
+    tk.Spotify(token, asynchronous=True)
 
 Note that the boolean parameter above overrides any conflicting
 :class:`Sender <tekore.sender.Sender>` that is set as default
@@ -227,10 +218,7 @@ Alternatively, an asynchronous sender may be passed directly into a client.
 
 .. code:: python
 
-    from tekore import Spotify
-    from tekore.sender import AsyncPersistentSender
-
-    spotify = Spotify(token, sender=AsyncPersistentSender())
+    spotify = tk.Spotify(token, sender=tk.AsyncPersistentSender())
 
 Now every call to an endpoint returns an awaitable instead of a response.
 :mod:`asyncio` can then be used to execute asynchronous requests.
@@ -270,13 +258,11 @@ This is helpful for example in viewing names with non-latin alphabet.
 
 .. code:: python
 
-    from tekore import Spotify
-    from tekore.sender import PersistentSender
     from requests import Session
 
     sess = Session()
     sess.headers = {'Accept-Language': 'ru'}
 
-    spotify = Spotify(token, sender=PersistentSender(session=sess))
+    spotify = tk.Spotify(token, sender=tk.PersistentSender(session=sess))
     artist = spotify.artist('2LbinT29RFLaXOGAN0jfQN')
     print(artist.name)

@@ -15,18 +15,17 @@ a :class:`RetryingSender <tekore.sender.RetryingSender>` is used.
 .. code:: python
 
     import asyncio
+    import tekore as tk
+
+    from tekore.scope import scopes
     from collections import Counter
 
-    from tekore import util, Spotify
-    from tekore.scope import scopes
-    from tekore.sender import AsyncPersistentSender, RetryingSender
-
-    conf = util.config_from_environment()
+    conf = tk.config_from_environment()
     scope = scopes.playlist_read_private
-    token = util.prompt_for_user_token(*conf, scope=scope)
+    token = tk.prompt_for_user_token(*conf, scope=scope)
 
-    sender = RetryingSender(sender=AsyncPersistentSender())
-    spotify = Spotify(token, sender=sender, max_limits_on=True)
+    sender = tk.RetryingSender(sender=tk.AsyncPersistentSender())
+    spotify = tk.Spotify(token, sender=sender, max_limits_on=True)
 
 
     def get_artist(track) -> str:

@@ -16,14 +16,14 @@ Conversions between Spotify IDs, URIs and URLs.
 
 .. code:: python
 
-    from tekore.convert import to_url, from_url
+    import tekore as tk
 
     # Create ULR for opening an album in the browser
     mountain = '3RBULTZJ97bvVzZLpxcB0j'
-    m_url = to_url('album', mountain)
+    m_url = tk.to_url('album', mountain)
 
     # Parse input
-    type_, id_ = from_url(m_url)
+    type_, id_ = tk.from_url(m_url)
     print(f'Got type `{type_}` with ID `{id_}`')
 """
 

@@ -7,14 +7,14 @@ and you have used Spotify enough to have top artists.
 
 .. code:: python
 
-    from tekore import util, Spotify
+    import tekore as tk
     from tekore.scope import scopes
 
-    conf = util.config_from_environment()
+    conf = tk.config_from_environment()
     scope = scopes.user_top_read
-    token = util.prompt_for_user_token(*conf, scope=scope)
+    token = tk.prompt_for_user_token(*conf, scope=scope)
 
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     artist = spotify.current_user_top_artists(limit=1).items[0]
     albums = spotify.artist_albums(artist.id)
 

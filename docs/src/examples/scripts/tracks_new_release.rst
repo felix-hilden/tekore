@@ -7,12 +7,12 @@ there is at least new release in the Spotify catalogue.
 
 .. code:: python
 
-    from tekore import util, Spotify
+    import tekore as tk
 
-    conf = util.config_from_environment()
-    token = util.request_client_token(*conf[:2])
+    conf = tk.config_from_environment()
+    token = tk.request_client_token(*conf[:2])
 
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     simple_album = spotify.new_releases(limit=1).items[0]
     album = spotify.album(simple_album.id)
 

@@ -7,12 +7,12 @@ They can be used with :class:`Scope` for flexible set-like functionality.
 
 .. code:: python
 
+    import tekore as tk
     from tekore.scope import scopes
-    from tekore.util import prompt_for_user_token
 
     cred = (client_id, client_secret, redirect_uri)
     scope = scopes.user_read_email + scopes.user_read_private
-    token = prompt_for_user_token(*cred, scope)
+    token = tk.prompt_for_user_token(*cred, scope)
 
 Some ready-made scopes are also made available.
 

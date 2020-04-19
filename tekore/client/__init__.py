@@ -7,10 +7,10 @@ Further documentation on endpoints can be viewed in the Web API
 
 .. code:: python
 
-    from tekore import Spotify
+    import tekore as tk
 
     # Initialise the client
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
 
     # Call the API
     album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')

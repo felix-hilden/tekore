@@ -17,13 +17,12 @@ requests take about ten seconds, no matter how many are sent at once.
 
 .. code:: python
 
-    from tekore import util, Spotify
-    from tekore.sender import AsyncPersistentSender
+    import tekore as tk
     from aiohttp import web
 
-    conf = util.config_from_environment()
-    token = util.request_client_token(*conf[:2])
-    spotify = Spotify(token, sender=AsyncPersistentSender())
+    conf = tk.config_from_environment()
+    token = tk.request_client_token(*conf[:2])
+    spotify = tk.Spotify(token, sender=tk.AsyncPersistentSender())
 
     routes = web.RouteTableDef()
 

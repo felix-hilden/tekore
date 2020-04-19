@@ -12,12 +12,12 @@ Here's five lines to get you full access and start playing your top songs.
 
 .. code:: python
 
-    from tekore import Spotify, util, scope
+    import tekore as tk
 
-    cred = (client_id, client_secret, redirect_uri)
-    token = util.prompt_for_user_token(*cred, scope=scope.every)
+    conf = (client_id, client_secret, redirect_uri)
+    token = tk.prompt_for_user_token(*conf, scope=tk.scope.every)
 
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     tracks = spotify.current_user_top_tracks(limit=10)
     spotify.playback_start_tracks([t.id for t in tracks.items])
 

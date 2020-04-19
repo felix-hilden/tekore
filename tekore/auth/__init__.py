@@ -24,9 +24,9 @@ the latter is required for endpoints that involve a specific user.
 
 .. code:: python
 
-    from tekore.auth import Credentials
+    import tekore as tk
 
-    cred = Credentials(client_id, client_secret, redirect_uri)
+    cred = tk.Credentials(client_id, client_secret, redirect_uri)
 
     # Client credentials flow
     app_token = cred.request_client_token()

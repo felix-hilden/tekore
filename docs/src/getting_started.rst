@@ -17,12 +17,12 @@ and can be used to make basic calls to the API.
 
 .. code:: python
 
-    from tekore.util import request_client_token
+    import tekore as tk
 
     client_id = 'your_id_here'
     client_secret = 'your_secret_here'
 
-    app_token = request_client_token(client_id, client_secret)
+    app_token = tk.request_client_token(client_id, client_secret)
 
 Calling the API
 ---------------
@@ -32,9 +32,7 @@ on an album given the album ID.
 
 .. code:: python
 
-    from tekore import Spotify
-
-    spotify = Spotify(app_token)
+    spotify = tk.Spotify(app_token)
 
     album = spotify.album('3RBULTZJ97bvVzZLpxcB0j')
     for track in album.tracks.items:
@@ -54,16 +52,13 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
 
 .. code:: python
 
-    from tekore.scope import every
-    from tekore.util import prompt_for_user_token
-
     redirect_uri = 'your_uri_here'
 
-    user_token = prompt_for_user_token(
+    user_token = tk.prompt_for_user_token(
         client_id,
         client_secret,
         redirect_uri,
-        scope=every
+        scope=tk.scope.every
     )
 
 Calling the API as a user

@@ -7,10 +7,10 @@ JSON representations of responses.
 
 .. code:: python
 
-    from tekore import Spotify
+    import tekore as tk
 
     # Call the Web API
-    spotify = Spotify(user_token)
+    spotify = tk.Spotify(user_token)
     user = spotify.current_user()
 
     # Inspect the content

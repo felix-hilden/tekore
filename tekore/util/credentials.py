@@ -3,16 +3,16 @@ Credentials provides functions for easily retrieving access tokens.
 
 .. code:: python
 
-    from tekore import util
+    import tekore as tk
 
-    conf = util.config_from_environment()
+    conf = tk.config_from_environment()
 
     # Request tokens
-    app_token = util.request_client_token(*conf[:2])
-    user_token = util.prompt_for_user_token(*conf)
+    app_token = tk.request_client_token(*conf[:2])
+    user_token = tk.prompt_for_user_token(*conf)
 
     # Reload user token
-    user_token = util.refresh_user_token(*conf[:2], refresh_token)
+    user_token = tk.refresh_user_token(*conf[:2], refresh_token)
 """
 
 import webbrowser
