@@ -7,6 +7,8 @@ Fixed
 - :meth:`recommendations <tekore.client.api.SpotifyBrowse.recommendations>`
   documentation changed to reflect that only IDs are accepted as seeds,
   not URIs or URLs (:issue:`173`)
+- :meth:`track_audio_analysis <tekore.client.api.SpotifyTrack.track_audio_analysis>`
+  allow for missing attributes in analysis (:issue:`175`)
 
 1.6.0 (2020-04-07)
 ------------------

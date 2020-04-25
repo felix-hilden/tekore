@@ -5,35 +5,47 @@ from tekore.serialise import SerialisableDataclass
 
 @dataclass(repr=False)
 class TimeInterval(SerialisableDataclass):
-    start: float
+    """
+    Attributes are sometimes not available.
+    """
     duration: float
-    confidence: float
+    start: float = None
+    confidence: float = None
 
 
 @dataclass(repr=False)
-class Section(TimeInterval):
+class Section(SerialisableDataclass):
+    """
+    Attributes are sometimes not available.
+    """
+    duration: float
     loudness: float
     tempo: float
     tempo_confidence: float
-    key: int
     key_confidence: float
-    mode: int
     mode_confidence: float
     time_signature: int
     time_signature_confidence: float
+    confidence: float = None
+    mode: int = None
+    key: int = None
+    start: float = None
 
 
 @dataclass(repr=False)
-class Segment(TimeInterval):
+class Segment(SerialisableDataclass):
     """
-    Loudness end is sometimes not available.
+    Attributes are sometimes not available.
     """
+    duration: float
     loudness_start: float
     loudness_max: float
-    loudness_max_time: float
     pitches: List[float]
     timbre: List[float]
+    confidence: float = None
     loudness_end: float = None
+    loudness_max_time: float = None
+    start: float = None
 
 
 @dataclass(repr=False)
