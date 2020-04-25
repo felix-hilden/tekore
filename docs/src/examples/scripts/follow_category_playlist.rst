@@ -7,14 +7,14 @@ It assumes that your credentials are saved in the environment.
 
 .. code:: python
 
-    from tekore import util, Spotify
+    import tekore as tk
     from tekore.scope import scopes
 
-    conf = util.config_from_environment()
+    conf = tk.config_from_environment()
     scope = scopes.playlist_modify_private
-    token = util.prompt_for_user_token(*conf, scope=scope)
+    token = tk.prompt_for_user_token(*conf, scope=scope)
 
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     category = spotify.categories(limit=1).items[0]
     playlist = spotify.category_playlists(category.id, limit=1).items[0]
 

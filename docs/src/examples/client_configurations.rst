@@ -12,15 +12,13 @@ authentication can be completed with some manual work.
 
 .. code:: python
 
-    from tekore import Spotify, util
-    from tekore.scope import every
-    from tekore.sender import PersistentSender
+    import tekore as tk
 
-    conf = util.config_from_environment()
-    token = util.prompt_for_user_token(*conf, scope=every)
-    s = Spotify(token=token, sender=PersistentSender())
+    conf = tk.config_from_environment()
+    token = tk.prompt_for_user_token(*conf, scope=tk.scope.every)
+    spotify = tk.Spotify(token, sender=tk.PersistentSender())
 
-    user = s.current_user()
+    user = spotify.current_user()
 
 Save the refresh token to avoid authenticating again when restarting.
 
@@ -28,7 +26,7 @@ Save the refresh token to avoid authenticating again when restarting.
 
     # Load refresh token
     refresh_token = ...
-    token = util.refresh_user_token(*conf[:2], refresh_token)
+    token = tk.refresh_user_token(*conf[:2], refresh_token)
 
 
 Server application or multiple users
@@ -39,21 +37,19 @@ using the application token and swapping in user tokens.
 
 .. code:: python
 
-    from tekore import Spotify, Credentials
-    from tekore.util import config_from_environment
-    from tekore.sender import PersistentSender
+    import tekore as tk
 
-    conf = config_from_environment()
-    cred = Credentials(*conf)
+    conf = tk.config_from_environment()
+    cred = tk.Credentials(*conf)
     app_token = cred.request_client_token()
 
-    s = Spotify(token=app_token, sender=PersistentSender())
+    spotify = tk.Spotify(app_token, sender=tk.PersistentSender())
 
     # Retrieve user token
     user_token = ...
 
-    with s.token_as(user_token):
-        user = s.current_user()
+    with spotify.token_as(user_token):
+        user = spotify.current_user()
 
 If multiple clients are instantiated,
 consider using a :class:`SingletonSender <tekore.sender.SingletonSender>` instead.

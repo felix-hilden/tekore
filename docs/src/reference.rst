@@ -19,6 +19,8 @@ Here's a short summary of each module.
    serialise
    util
 
-Two classes, :class:`Credentials <tekore.auth.expiring.Credentials>` and
-:class:`Spotify <tekore.client.Spotify>`
+Most of the functions and classes defined in each module
 are made available in the top level :mod:`tekore` namespace.
+Importing from the top level is strongly recommended,
+because the module structure will be flattened in version 2.0.
+For more information see GitHub issue :issue:`81`.

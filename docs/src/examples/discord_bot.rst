@@ -18,19 +18,18 @@ Queries can be for example:
 
 .. code:: python
 
+    import tekore as tk
+
     from discord import Game, Embed
     from discord.ext import commands
 
-    from tekore import Spotify
-    from tekore.util import request_client_token, config_from_environment
-
     token_discord = "your_discord_token"
-    conf = config_from_environment()
-    token_spotify = request_client_token(*conf[:2])
+    conf = tk.config_from_environment()
+    token_spotify = tk.request_client_token(*conf[:2])
 
     description = "Spotify track search bot using Tekore"
     bot = commands.Bot(command_prefix='>tk ', description=description)
-    spotify = Spotify(token_spotify, asynchronous=True)
+    spotify = tk.Spotify(token_spotify, asynchronous=True)
 
 
     @bot.command(help="Multiword query in quotes")

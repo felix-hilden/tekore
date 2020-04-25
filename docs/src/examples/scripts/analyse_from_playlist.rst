@@ -10,12 +10,12 @@ because they cannot be analysed.
 
 .. code:: python
 
-    from tekore import util, Spotify
+    import tekore as tk
 
-    conf = util.config_from_environment()
-    token = util.prompt_for_user_token(*conf)
+    conf = tk.config_from_environment()
+    token = tk.prompt_for_user_token(*conf)
 
-    spotify = Spotify(token)
+    spotify = tk.Spotify(token)
     playlist = spotify.followed_playlists(limit=1).items[0]
     track = spotify.playlist_tracks(playlist.id, limit=1).items[0].track
     name = f'"{track.name}" from {playlist.name}'

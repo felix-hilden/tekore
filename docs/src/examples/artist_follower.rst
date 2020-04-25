@@ -5,18 +5,17 @@ from your playlists, and prompt you to do so.
 
 .. code:: python
 
-    from tekore import Spotify
-    from tekore.util import prompt_for_user_token, config_from_environment
+    import tekore as tk
     from tekore.scope import scopes, Scope
 
-    conf = config_from_environment()
+    conf = tk.config_from_environment()
     scope = Scope(
         scopes.user_follow_read,
         scopes.user_follow_modify,
         scopes.playlist_read_private
     )
-    user_token = prompt_for_user_token(*conf, scope=scope)
-    s = Spotify(user_token, max_limits_on=True, chunked_on=True)
+    user_token = tk.prompt_for_user_token(*conf, scope=scope)
+    s = tk.Spotify(user_token, max_limits_on=True, chunked_on=True)
 
 
     def prompt_user(what: str) -> bool:

@@ -7,13 +7,13 @@ It assumes that your credentials are saved in the environment.
 
 .. code:: python
 
-    from tekore import util, Spotify
+    import tekore as tk
     from tekore.scope import scopes
 
-    conf = util.config_from_environment()
+    conf = tk.config_from_environment()
     scope = scopes.user_follow_modify
-    token = util.prompt_for_user_token(*conf, scope=scope)
-    spotify = Spotify(token)
+    token = tk.prompt_for_user_token(*conf, scope=scope)
+    spotify = tk.Spotify(token)
 
     search = input('Search for an artist: ')
     artists, = spotify.search(search, types=('artist',), limit=1)

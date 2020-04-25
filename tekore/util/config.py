@@ -3,17 +3,17 @@ Config provides convenient ways of importing application credentials.
 
 .. code:: python
 
-    from tekore.util import config_from_environment, config_from_file
+    import tekore as tk
 
-    client_id, client_secret, redirect_uri = config_from_environment()
-    client_id, client_secret, redirect_uri = config_from_file(filename)
+    client_id, client_secret, redirect_uri = tk.config_from_environment()
+    client_id, client_secret, redirect_uri = tk.config_from_file(filename)
 
 By default, only client ID, client secret and redirect URI are returned.
 To return a user's refresh token as well, set a boolean flag.
 
 .. code:: python
 
-    id_, secret, uri, refresh = config_from_environment(return_refresh=True)
+    id_, secret, uri, refresh = tk.config_from_environment(return_refresh=True)
 
 Values are read from preset names, which can be changed.
 Note that changing values requires importing the whole config module.
@@ -31,7 +31,7 @@ Configuration can be written to file.
 
 .. code:: python
 
-    config_to_file(filename, (id_, secret, uri, refresh))
+    tk.config_to_file(filename, (id_, secret, uri, refresh))
 
 When reading configuration, if values are missing,
 a :class:`MissingConfigurationWarning` is issued.
@@ -41,7 +41,7 @@ It can be disabled via the :mod:`warnings` module.
 
     from warnings import simplefilter
 
-    simplefilter('ignore', MissingConfigurationWarning)
+    simplefilter('ignore', tk.MissingConfigurationWarning)
 """
 
 from os import environ

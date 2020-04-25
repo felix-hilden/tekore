@@ -43,20 +43,20 @@ Sleeping was used to avoid hitting rate limits, which would affect timing.
 
     import numpy as np
     import pandas as pd
+    import tekore as tk
 
     from time import sleep
     from timeit import timeit
     from random import choice
-    from tekore import Spotify, util, sender
     from matplotlib import pyplot as plt
 
-    conf = util.config_from_environment(return_refresh=True)
-    token = util.refresh_user_token(conf[0], conf[1], conf[3])
+    conf = tk.config_from_environment(return_refresh=True)
+    token = tk.refresh_user_token(conf[0], conf[1], conf[3])
 
     def mk_sender(size: int = None):
-        return sender.CachingSender(
+        return tk.CachingSender(
             max_size=size,
-            sender=sender.PersistentSender()
+            sender=tk.PersistentSender()
         )
 
 Comparing Transient and Persistent senders:
@@ -71,10 +71,10 @@ Comparing Transient and Persistent senders:
             spotify.album("1qD29n5sWzkZPnMOFSkCIC")
             sleep(pause)
 
-    spotify = Spotify(token, sender=sender.TransientSender())
+    spotify = tk.Spotify(token, sender=tk.TransientSender())
     t1 = timeit(f'simulate_requests({repeat})', number=1, globals=globals())
 
-    spotify = Spotify(token, sender=sender.PersistentSender())
+    spotify = tk.Spotify(token, sender=tk.PersistentSender())
     t2 = timeit(f'simulate_requests({repeat})', number=1, globals=globals())
 
     print(t1 - pause * repeat, t2 - pause * repeat)
@@ -90,7 +90,7 @@ Requesting a single cacheable resource:
     stmt = 'spotify.album("1qD29n5sWzkZPnMOFSkCIC")'
     for n, number in enumerate(x):
         for i in range(repeat):
-            spotify = Spotify(token, sender=mk_sender(None))
+            spotify = tk.Spotify(token, sender=mk_sender(None))
             t[n, i] = timeit(stmt, number=number, globals=globals())
         sleep(1)
 
@@ -113,7 +113,7 @@ Effect of cache size:
     sizes = [1, 100, 25, 75, 50]
     t = np.zeros(len(sizes))
 
-    spotify = Spotify(token, sender=sender.PersistentSender())
+    spotify = tk.Spotify(token, sender=tk.PersistentSender())
     tracks = spotify.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
     tracks = spotify.all_items(tracks)
     track_ids = [t.track.id for t in tracks]
@@ -125,7 +125,7 @@ Effect of cache size:
             sleep(pause)
 
     for i, s in enumerate(sizes):
-        spotify = Spotify(token, sender=mk_sender(s))
+        spotify = tk.Spotify(token, sender=mk_sender(s))
         simulate_requests(s * 2)
         t[i] = timeit(f'simulate_requests({repeat})', number=1, globals=globals())
 

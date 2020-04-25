@@ -20,15 +20,14 @@ Logging out deletes the cookie and server-stored access token.
 
 .. code:: python
 
+    import tekore as tk
+
+    from tekore.scope import every
     from flask import Flask, request, redirect, session
 
-    from tekore import Spotify, Credentials
-    from tekore.util import config_from_environment
-    from tekore.scope import every
-
-    conf = config_from_environment()
-    cred = Credentials(*conf)
-    spotify = Spotify()
+    conf = tk.config_from_environment()
+    cred = tk.Credentials(*conf)
+    spotify = tk.Spotify()
 
     users = {}
 
