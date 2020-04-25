@@ -5,7 +5,18 @@ _check_python_version()
 
 from tekore import scope
 from tekore.auth import Credentials, RefreshingCredentials
+from tekore.auth.expiring import OAuthError
 from tekore.client import Spotify
+from tekore.client.decor.error import (
+    BadRequest,
+    Unauthorised,
+    Forbidden,
+    NotFound,
+    TooManyRequests,
+    InternalServerError,
+    BadGateway,
+    ServiceUnavailable,
+)
 from tekore.convert import (
     ConversionError,
     IdentifierType,
