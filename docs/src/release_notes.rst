@@ -1,7 +1,7 @@
 Release notes
 =============
-Unreleased
-----------
+1.7.0 (2020-04-18)
+------------------
 Added
 *****
 - Most imports can be done directly at the top level (:issue:`174`)
