@@ -1,11 +1,11 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableDataclass
+from tekore.model.serialise import Model, ModelList
 
 
 @dataclass(repr=False)
-class LocalItem(SerialisableDataclass):
+class LocalItem(Model):
     id: None
     href: None
     name: str
@@ -57,4 +57,4 @@ class LocalTrack(LocalItem):
 
     def __post_init__(self):
         self.album = LocalAlbum(**self.album)
-        self.artists = [LocalArtist(**a) for a in self.artists]
+        self.artists = ModelList(LocalArtist(**a) for a in self.artists)

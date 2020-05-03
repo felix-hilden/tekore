@@ -2,8 +2,7 @@ from tekore.client.process import single, model_list
 from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process
 from tekore.client.base import SpotifyBase
-from tekore.serialise import ModelList
-from tekore.model import FullTrack, AudioFeatures, AudioAnalysis
+from tekore.model import FullTrack, AudioFeatures, AudioAnalysis, ModelList
 
 
 class SpotifyTrack(SpotifyBase):

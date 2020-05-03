@@ -3,10 +3,10 @@ from dataclasses import dataclass
 
 from tekore.model.base import Identifiable
 from tekore.model.track import FullTrack
-from tekore.serialise import SerialisableDataclass, SerialisableEnum
+from tekore.model.serialise import Model, ModelList, StrEnum
 
 
-class RecommendationAttribute(SerialisableEnum):
+class RecommendationAttribute(StrEnum):
     acousticness = 'acousticness'
     danceability = 'danceability'
     duration_ms = 'duration_ms'
@@ -33,10 +33,10 @@ class RecommendationSeed(Identifiable):
 
 
 @dataclass(repr=False)
-class Recommendations(SerialisableDataclass):
+class Recommendations(Model):
     seeds: List[RecommendationSeed]
     tracks: List[FullTrack]
 
     def __post_init__(self):
-        self.seeds = [RecommendationSeed(**s) for s in self.seeds]
-        self.tracks = [FullTrack(**t) for t in self.tracks]
+        self.seeds = ModelList(RecommendationSeed(**s) for s in self.seeds)
+        self.tracks = ModelList(FullTrack(**t) for t in self.tracks)

@@ -6,7 +6,7 @@ from tekore.model.album import SimpleAlbum
 from tekore.model.artist import SimpleArtist
 from tekore.model.paging import OffsetPaging
 from tekore.model.member import Restrictions
-from tekore.serialise import SerialisableDataclass, Timestamp
+from tekore.model.serialise import Model, ModelList, Timestamp
 
 
 @dataclass(repr=False)
@@ -27,7 +27,7 @@ class Track(Item):
     is_local: bool
 
     def __post_init__(self):
-        self.artists = [SimpleArtist(**a) for a in self.artists]
+        self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
 
 
 @dataclass(repr=False)
@@ -45,6 +45,8 @@ class SimpleTrack(Track):
 
     def __post_init__(self):
         super().__post_init__()
+        if self.available_markets is not None:
+            self.available_markets = ModelList(self.available_markets)
         if self.linked_from is not None:
             self.linked_from = TrackLink(**self.linked_from)
         if self.restrictions is not None:
@@ -73,6 +75,8 @@ class FullTrack(Track):
 
     def __post_init__(self):
         super().__post_init__()
+        if self.available_markets is not None:
+            self.available_markets = ModelList(self.available_markets)
         self.album = SimpleAlbum(**self.album)
         if self.linked_from is not None:
             self.linked_from = TrackLink(**self.linked_from)
@@ -85,7 +89,7 @@ class FullTrackPaging(OffsetPaging):
     items: List[FullTrack]
 
     def __post_init__(self):
-        self.items = [FullTrack(**t) for t in self.items]
+        self.items = ModelList(FullTrack(**t) for t in self.items)
 
 
 @dataclass(repr=False)
@@ -93,17 +97,17 @@ class SimpleTrackPaging(OffsetPaging):
     items: List[SimpleTrack]
 
     def __post_init__(self):
-        self.items = [SimpleTrack(**t) for t in self.items]
+        self.items = ModelList(SimpleTrack(**t) for t in self.items)
 
 
 @dataclass(repr=False)
-class Tracks(SerialisableDataclass):
+class Tracks(Model):
     href: str
     total: int
 
 
 @dataclass(repr=False)
-class SavedTrack(SerialisableDataclass):
+class SavedTrack(Model):
     added_at: Timestamp
     track: FullTrack
 
@@ -117,4 +121,4 @@ class SavedTrackPaging(OffsetPaging):
     items: List[SavedTrack]
 
     def __post_init__(self):
-        self.items = [SavedTrack(**t) for t in self.items]
+        self.items = ModelList(SavedTrack(**t) for t in self.items)

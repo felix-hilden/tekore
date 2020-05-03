@@ -5,10 +5,10 @@ from tekore.model.base import Item
 from tekore.model.user import PublicUser
 from tekore.model.local import LocalTrack
 from tekore.model.track import FullTrack, Tracks
-from tekore.model.episode import FullEpisode
 from tekore.model.paging import OffsetPaging
 from tekore.model.member import Followers, Image
-from tekore.serialise import SerialisableDataclass, Timestamp
+from tekore.model.episode import FullEpisode
+from tekore.model.serialise import Model, ModelList, Timestamp
 
 track_type = {
     'track': FullTrack,
@@ -17,7 +17,7 @@ track_type = {
 
 
 @dataclass(repr=False)
-class PlaylistTrack(SerialisableDataclass):
+class PlaylistTrack(Model):
     added_at: Timestamp
     added_by: PublicUser
     is_local: bool
@@ -44,7 +44,7 @@ class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
     def __post_init__(self):
-        self.items = [PlaylistTrack(**t) for t in self.items]
+        self.items = ModelList(PlaylistTrack(**t) for t in self.items)
 
 
 @dataclass(repr=False)
@@ -60,7 +60,7 @@ class Playlist(Item):
     description: str
 
     def __post_init__(self):
-        self.images = [Image(**i) for i in self.images]
+        self.images = ModelList(Image(**i) for i in self.images)
         self.owner = PublicUser(**self.owner)
 
 
@@ -89,4 +89,4 @@ class SimplePlaylistPaging(OffsetPaging):
     items: List[SimplePlaylist]
 
     def __post_init__(self):
-        self.items = [SimplePlaylist(**p) for p in self.items]
+        self.items = ModelList(SimplePlaylist(**p) for p in self.items)

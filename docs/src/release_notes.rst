@@ -1,5 +1,28 @@
 Release notes
 =============
+2.0.0 (Unreleased)
+------------------
+Changed
+*******
+Response models
+~~~~~~~~~~~~~~~
+These changes aim to make :mod:`models <tekore.model>` consistent and
+serialisation clear. (:issue:`149`)
+
+- :mod:`serialise <tekore.serialise>` module moved under models as a submodule
+  and the JSON encoder used internally was made private
+- Hierarchies and names of model base classes and member types changed
+- Instead of using ``str``, models are now converted to JSON using their
+  :meth:`json <tekore.model.serialise.Serialisable.json>` method
+- As a result of the change above, the ``repr`` of models can be viewed simply
+  with ``print``. The ``repr`` of model lists was significantly improved.
+  Viewing attributes of models produces consistent results.
+- The :meth:`asbuiltin <tekore.model.serialise.Serialisable.asbuiltin>` method
+  replaces :meth:`asdict` for models and was also added for lists of models.
+  Enumerations and timestamps are no longer preserved in the conversion.
+- :meth:`pprint <tekore.model.serialise.Serialisable.pprint>` output is now
+  compact by default
+
 1.7.0 (2020-04-28)
 ------------------
 Added
@@ -90,7 +113,7 @@ Added
 *****
 - :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
   add tracks to queue (:issue:`152`)
-- :mod:`serialise <tekore.serialise>`
+- :mod:`model <tekore.model>`
   readable ``repr`` for response models (:commit:`32911c3a`)
 - :class:`CachingSender <tekore.sender.CachingSender>`
   option to specify maximum cache size (:issue:`143`)

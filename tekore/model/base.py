@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from tekore.serialise import SerialisableDataclass
+from tekore.model.serialise import Model
 
 
 @dataclass(repr=False)
-class Identifiable(SerialisableDataclass):
+class Identifiable(Model):
     id: str
 
 

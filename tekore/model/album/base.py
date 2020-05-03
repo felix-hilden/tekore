@@ -1,13 +1,13 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableEnum
 from tekore.model.base import Item
 from tekore.model.artist import SimpleArtist
 from tekore.model.member import Image, ReleaseDatePrecision
+from tekore.model.serialise import StrEnum, ModelList
 
 
-class AlbumType(SerialisableEnum):
+class AlbumType(StrEnum):
     album = 'album'
     compilation = 'compilation'
     single = 'single'
@@ -26,8 +26,8 @@ class Album(Item):
 
     def __post_init__(self):
         self.album_type = AlbumType[self.album_type.lower()]
-        self.artists = [SimpleArtist(**a) for a in self.artists]
-        self.images = [Image(**i) for i in self.images]
+        self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
+        self.images = ModelList(Image(**i) for i in self.images)
         self.release_date_precision = ReleaseDatePrecision[
             self.release_date_precision
         ]

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from tekore.model.base import Item
 from tekore.model.member import Copyright, Image
+from tekore.model.serialise import ModelList
 
 
 @dataclass(repr=False)
@@ -20,5 +21,7 @@ class Show(Item):
     publisher: str
 
     def __post_init__(self):
-        self.copyrights = [Copyright(**c) for c in self.copyrights]
-        self.images = [Image(**i) for i in self.images]
+        self.available_markets = ModelList(self.available_markets)
+        self.copyrights = ModelList(Copyright(**c) for c in self.copyrights)
+        self.images = ModelList(Image(**i) for i in self.images)
+        self.languages = ModelList(self.languages)

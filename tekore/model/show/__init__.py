@@ -1,9 +1,9 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.model.show.base import Show
 from tekore.model.paging import OffsetPaging
-from tekore.serialise import SerialisableDataclass, Timestamp
+from tekore.model.show.base import Show
+from tekore.model.serialise import Model, ModelList, Timestamp
 
 
 @dataclass(repr=False)
@@ -16,11 +16,11 @@ class SimpleShowPaging(OffsetPaging):
     items: List[SimpleShow]
 
     def __post_init__(self):
-        self.items = [SimpleShow(**i) for i in self.items]
+        self.items = ModelList(SimpleShow(**i) for i in self.items)
 
 
 @dataclass(repr=False)
-class SavedShow(SerialisableDataclass):
+class SavedShow(Model):
     added_at: Timestamp
     show: SimpleShow
 
@@ -34,4 +34,4 @@ class SavedShowPaging(OffsetPaging):
     items: List[SavedShow]
 
     def __post_init__(self):
-        self.items = [SavedShow(**i) for i in self.items]
+        self.items = ModelList(SavedShow(**i) for i in self.items)

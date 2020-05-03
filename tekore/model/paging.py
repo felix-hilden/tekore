@@ -1,13 +1,13 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableDataclass
+from tekore.model.serialise import Model
 
 
 @dataclass(repr=False)
-class Paging(SerialisableDataclass):
+class Paging(Model):
     href: str
-    items: List[SerialisableDataclass]
+    items: List[Model]
     limit: int
     next: str
 
@@ -20,7 +20,7 @@ class OffsetPaging(Paging):
 
 
 @dataclass(repr=False)
-class Cursor(SerialisableDataclass):
+class Cursor(Model):
     after: str
 
 

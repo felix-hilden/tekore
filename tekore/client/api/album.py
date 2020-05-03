@@ -2,8 +2,7 @@ from tekore.client.process import single, model_list
 from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
-from tekore.serialise import ModelList
-from tekore.model import FullAlbum, SimpleTrackPaging
+from tekore.model import FullAlbum, SimpleTrackPaging, ModelList
 
 
 class SpotifyAlbum(SpotifyBase):

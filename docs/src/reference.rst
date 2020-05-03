@@ -16,7 +16,6 @@ Here's a short summary of each module.
    model
    scope
    sender
-   serialise
    util
 
 Most of the functions and classes defined in each module

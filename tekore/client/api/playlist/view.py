@@ -5,8 +5,8 @@ from tekore.client.chunked import _get_arg
 from tekore.client.process import single, model_list, nothing
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
-from tekore.serialise import ModelList
 from tekore.model import (
+    ModelList,
     SimplePlaylistPaging,
     FullPlaylist,
     Image,

@@ -1,12 +1,12 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableEnum
+from tekore.model.serialise import StrEnum, ModelList
 from tekore.model.paging import OffsetPaging
 from tekore.model.album.base import Album
 
 
-class AlbumGroup(SerialisableEnum):
+class AlbumGroup(StrEnum):
     album = 'album',
     appears_on = 'appears_on',
     compilation = 'compilation',
@@ -30,6 +30,8 @@ class SimpleAlbum(Album):
         super().__post_init__()
         if self.album_group is not None:
             self.album_group = AlbumGroup[self.album_group]
+        if self.available_markets is not None:
+            self.available_markets = ModelList(self.available_markets)
 
 
 @dataclass(repr=False)
@@ -37,4 +39,4 @@ class SimpleAlbumPaging(OffsetPaging):
     items: List[SimpleAlbum]
 
     def __post_init__(self):
-        self.items = [SimpleAlbum(**a) for a in self.items]
+        self.items = ModelList(SimpleAlbum(**a) for a in self.items)

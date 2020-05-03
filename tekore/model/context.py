@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from tekore.serialise import SerialisableDataclass, SerialisableEnum
+from tekore.model.serialise import Model, StrEnum
 
 
-class ContextType(SerialisableEnum):
+class ContextType(StrEnum):
     album = 'album'
     artist = 'artist'
     playlist = 'playlist'
@@ -10,7 +10,7 @@ class ContextType(SerialisableEnum):
 
 
 @dataclass(repr=False)
-class Context(SerialisableDataclass):
+class Context(Model):
     type: ContextType
     href: str
     external_urls: dict
