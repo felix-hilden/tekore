@@ -30,14 +30,14 @@ Conversions between Spotify IDs, URIs and URLs.
 import re
 
 from typing import Union
-from tekore.serialise import SerialisableEnum
+from tekore.model import StrEnum
 
 
 class ConversionError(Exception):
     pass
 
 
-class IdentifierType(SerialisableEnum):
+class IdentifierType(StrEnum):
     """
     Valid types of Spotify IDs.
     """

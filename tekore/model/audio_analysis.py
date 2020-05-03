@@ -1,10 +1,10 @@
 from typing import List
 from dataclasses import dataclass
-from tekore.serialise import SerialisableDataclass
+from tekore.model.serialise import Model, ModelList
 
 
 @dataclass(repr=False)
-class TimeInterval(SerialisableDataclass):
+class TimeInterval(Model):
     """
     Attributes are sometimes not available.
     """
@@ -14,7 +14,7 @@ class TimeInterval(SerialisableDataclass):
 
 
 @dataclass(repr=False)
-class Section(SerialisableDataclass):
+class Section(Model):
     """
     Attributes are sometimes not available.
     """
@@ -33,7 +33,7 @@ class Section(SerialisableDataclass):
 
 
 @dataclass(repr=False)
-class Segment(SerialisableDataclass):
+class Segment(Model):
     """
     Attributes are sometimes not available.
     """
@@ -47,9 +47,13 @@ class Segment(SerialisableDataclass):
     loudness_max_time: float = None
     start: float = None
 
+    def __post_init__(self):
+        self.pitches = ModelList(self.pitches)
+        self.timbre = ModelList(self.timbre)
+
 
 @dataclass(repr=False)
-class AudioAnalysis(SerialisableDataclass):
+class AudioAnalysis(Model):
     bars: List[TimeInterval]
     beats: List[TimeInterval]
     sections: List[Section]
@@ -59,8 +63,8 @@ class AudioAnalysis(SerialisableDataclass):
     track: dict
 
     def __post_init__(self):
-        self.bars = [TimeInterval(**i) for i in self.bars]
-        self.beats = [TimeInterval(**i) for i in self.beats]
-        self.sections = [Section(**s) for s in self.sections]
-        self.segments = [Segment(**s) for s in self.segments]
-        self.tatums = [TimeInterval(**i) for i in self.tatums]
+        self.bars = ModelList(TimeInterval(**i) for i in self.bars)
+        self.beats = ModelList(TimeInterval(**i) for i in self.beats)
+        self.sections = ModelList(Section(**s) for s in self.sections)
+        self.segments = ModelList(Segment(**s) for s in self.segments)
+        self.tatums = ModelList(TimeInterval(**i) for i in self.tatums)

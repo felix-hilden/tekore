@@ -1,7 +1,7 @@
 from typing import Callable
 from functools import wraps
 
-from tekore.serialise import ModelList
+from tekore.model import ModelList
 
 
 def _chunks(lst: list, n: int, reverse: bool) -> list:

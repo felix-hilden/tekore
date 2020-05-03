@@ -2,13 +2,13 @@ from typing import List, Optional
 from dataclasses import dataclass
 
 from tekore.model.track import FullTrack
-from tekore.model.context import Context
 from tekore.model.paging import CursorPaging, Cursor
-from tekore.serialise import SerialisableDataclass, Timestamp
+from tekore.model.context import Context
+from tekore.model.serialise import Model, ModelList, Timestamp
 
 
 @dataclass(repr=False)
-class PlayHistory(SerialisableDataclass):
+class PlayHistory(Model):
     """
     Context is supposedly sometimes available.
     """
@@ -40,4 +40,4 @@ class PlayHistoryPaging(CursorPaging):
     def __post_init__(self):
         if self.cursors is not None:
             self.cursors = PlayHistoryCursor(**self.cursors)
-        self.items = [PlayHistory(**h) for h in self.items]
+        self.items = ModelList(PlayHistory(**h) for h in self.items)

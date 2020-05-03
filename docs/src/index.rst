@@ -59,7 +59,7 @@ Additional features and various convenience modules are provided too.
 
 - :mod:`tekore.convert` ID, URI and URL conversions
 - :mod:`tekore.scope` Access right scopes for user tokens
-- :mod:`tekore.serialise` Additional response model features
+- :mod:`tekore.model` Additional response model features
 
   - Readable ``repr``
   - JSON serialisation & dictionary conversion

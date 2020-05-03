@@ -1,6 +1,6 @@
 from typing import Generator, Optional
 
-from tekore.serialise import SerialisableDataclass
+from tekore.model import Model
 from tekore.client.base import SpotifyBase
 from tekore.model.paging import Paging, OffsetPaging
 from tekore.client.decor import send_and_process
@@ -122,7 +122,7 @@ class SpotifyPaging(SpotifyBase):
     def all_items(
             self,
             page: Paging
-    ) -> Generator[SerialisableDataclass, None, None]:
+    ) -> Generator[Model, None, None]:
         """
         Retrieve all items from all pages of a paging.
 

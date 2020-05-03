@@ -1,5 +1,5 @@
 from typing import Callable
-from tekore.serialise import ModelList
+from tekore.model import ModelList
 
 
 def nothing(json):
@@ -44,5 +44,5 @@ def multiple(*args: Callable):
     Run json dict through multiple processors.
     """
     def post_func(json: dict):
-        return (processor(json) for processor in args)
+        return tuple(processor(json) for processor in args)
     return post_func

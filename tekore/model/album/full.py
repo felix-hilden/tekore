@@ -1,11 +1,11 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableDataclass, Timestamp
 from tekore.model.album.base import Album
 from tekore.model.member import Copyright
 from tekore.model.track import SimpleTrackPaging
 from tekore.model.paging import OffsetPaging
+from tekore.model.serialise import Model, ModelList, Timestamp
 
 
 @dataclass(repr=False)
@@ -27,12 +27,15 @@ class FullAlbum(Album):
 
     def __post_init__(self):
         super().__post_init__()
-        self.copyrights = [Copyright(**c) for c in self.copyrights]
+        if self.available_markets is not None:
+            self.available_markets = ModelList(self.available_markets)
+        self.copyrights = ModelList(Copyright(**c) for c in self.copyrights)
+        self.genres = ModelList(self.genres)
         self.tracks = SimpleTrackPaging(**self.tracks)
 
 
 @dataclass(repr=False)
-class SavedAlbum(SerialisableDataclass):
+class SavedAlbum(Model):
     added_at: Timestamp
     album: FullAlbum
 
@@ -46,4 +49,4 @@ class SavedAlbumPaging(OffsetPaging):
     items: List[SavedAlbum]
 
     def __post_init__(self):
-        self.items = [SavedAlbum(**a) for a in self.items]
+        self.items = ModelList(SavedAlbum(**a) for a in self.items)

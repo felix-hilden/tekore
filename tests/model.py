@@ -6,10 +6,10 @@ from typing import List
 from dataclasses import dataclass
 from unittest.mock import MagicMock, patch
 
-from tekore.serialise import (
+from tekore.model.serialise import (
     JSONEncoder,
-    SerialisableDataclass,
-    SerialisableEnum,
+    Model,
+    StrEnum,
     ModelList,
     Timestamp,
 )
@@ -17,7 +17,7 @@ from tekore.serialise import (
 
 class TestSerialisableEnum(unittest.TestCase):
     def test_enum_str_is_name(self):
-        e = SerialisableEnum('e', 'a b c')
+        e = StrEnum('e', 'a b c')
         self.assertEqual(str(e.a), 'a')
 
 
@@ -69,15 +69,15 @@ class TestTimestamp(unittest.TestCase):
 
 
 @dataclass(repr=False)
-class Data(SerialisableDataclass):
+class Data(Model):
     i: int
 
 
 class TestSerialisableDataclass(unittest.TestCase):
-    def test_dataclass_serialised(self):
+    def test_json_dataclass_serialised(self):
         dict_in = {'i': 1}
         data = Data(**dict_in)
-        dict_out = json.loads(str(data))
+        dict_out = json.loads(data.json())
         self.assertDictEqual(dict_in, dict_out)
 
     def test_repr(self):
@@ -86,7 +86,7 @@ class TestSerialisableDataclass(unittest.TestCase):
 
     def test_long_repr(self):
         @dataclass(repr=False)
-        class LongContainer(SerialisableDataclass):
+        class LongContainer(Model):
             attribute_1: int = 1
             attribute_2: int = 2
             attribute_3: int = 3
@@ -94,7 +94,7 @@ class TestSerialisableDataclass(unittest.TestCase):
             attribute_5: int = 5
 
         @dataclass(repr=False)
-        class LongData(SerialisableDataclass):
+        class LongData(Model):
             data: LongContainer
             data_list: List[LongContainer]
             builtin_list: List[int]
@@ -112,9 +112,9 @@ class TestSerialisableDataclass(unittest.TestCase):
         )
         repr(data)
 
-    def test_asdict_members_recursed_into(self):
+    def test_asbuiltin_members_recursed_into(self):
         @dataclass(repr=False)
-        class Container(SerialisableDataclass):
+        class Container(Model):
             d: List[Data]
 
             def __post_init__(self):
@@ -122,29 +122,21 @@ class TestSerialisableDataclass(unittest.TestCase):
 
         dict_in = {'d': [{'i': 1}, {'i': 2}]}
         data = Container(**dict_in)
-        dict_out = json.loads(str(data))
+        dict_out = data.asbuiltin()
         self.assertDictEqual(dict_in, dict_out)
 
-    def test_asdict_called_with_self(self):
-        asdict = MagicMock(return_value='dict')
+    def test_asbuiltin_returns_dict_representation(self):
         data = Data(i=1)
-
-        with patch('tekore.serialise.asdict', asdict):
-            data.asdict()
-            asdict.assert_called_with(data)
-
-    def test_asdict_returns_dict_representation(self):
-        data = Data(i=1)
-        d = data.asdict()
+        d = data.asbuiltin()
         self.assertDictEqual(d, {'i': 1})
 
     def test_pprint_called_with_dict(self):
         pprint = MagicMock()
         data = Data(i=1)
 
-        with patch('tekore.serialise.pprint', pprint):
+        with patch('tekore.model.serialise.pprint', pprint):
             data.pprint()
-            pprint.assert_called_with({'i': 1}, depth=None, compact=False)
+            pprint.assert_called_with({'i': 1}, depth=None, compact=True)
 
     def test_keyword_arguments_passed_to_pprint(self):
         pprint = MagicMock()
@@ -155,49 +147,47 @@ class TestSerialisableDataclass(unittest.TestCase):
             'kw': 'argument'
         }
 
-        with patch('tekore.serialise.pprint', pprint):
+        with patch('tekore.model.serialise.pprint', pprint):
             data.pprint(**kwargs)
             pprint.assert_called_with({'i': 1}, **kwargs)
 
     def test_enum_in_dataclass(self):
-        e = SerialisableEnum('e', 'a b c')
+        e = StrEnum('e', 'a b c')
 
         @dataclass(repr=False)
-        class C(SerialisableDataclass):
+        class C(Model):
             v: e
 
         c = C(e.a)
-        with self.subTest('No conversion in asdict'):
-            self.assertIsInstance(c.asdict()['v'], SerialisableEnum)
-        with self.subTest('Conversion in str'):
-            self.assertEqual(str(c), '{"v": "a"}')
+        with self.subTest('Conversion in asdict'):
+            self.assertIsInstance(c.asbuiltin()['v'], str)
+        with self.subTest('Conversion in json'):
+            self.assertEqual(c.json(), '{"v": "a"}')
 
     def test_timestamp_in_dataclass(self):
         @dataclass(repr=False)
-        class C(SerialisableDataclass):
+        class C(Model):
             v: Timestamp
 
         c = C(Timestamp.from_string('2019-01-01T12:00:00Z'))
-        with self.subTest('No conversion in asdict'):
-            self.assertIsInstance(c.asdict()['v'], Timestamp)
-        with self.subTest('Conversion in str'):
-            self.assertEqual(str(c), '{"v": "2019-01-01T12:00:00Z"}')
+        with self.subTest('Conversion in asbuiltin'):
+            self.assertIsInstance(c.asbuiltin()['v'], str)
+        with self.subTest('Conversion in json'):
+            self.assertEqual(c.json(), '{"v": "2019-01-01T12:00:00Z"}')
 
 
 class TestModelList(unittest.TestCase):
     def test_list_of_dataclasses_serialised(self):
         list_in = [{'i': 1}, {'i': 2}]
         data = ModelList(Data(**i) for i in list_in)
-        list_out = json.loads(str(data))
+        list_out = json.loads(data.json())
         self.assertListEqual(list_in, list_out)
 
-    def test_repr_of_members_intact(self):
+    def test_repr(self):
         list_in = [{'i': 1}, {'i': 2}]
+        data = ModelList(Data(**i) for i in list_in)
 
-        builtin = [Data(**i) for i in list_in]
-        serialisable = ModelList(Data(**i) for i in list_in)
-
-        self.assertEqual(repr(builtin), repr(serialisable))
+        self.assertIn('Data', repr(data))
 
 
 if __name__ == '__main__':

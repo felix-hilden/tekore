@@ -2,14 +2,14 @@ from typing import List
 from dataclasses import dataclass
 
 from tekore.model.base import Item
+from tekore.model.show import SimpleShow
 from tekore.model.paging import OffsetPaging
 from tekore.model.member import Image, ReleaseDatePrecision
-from tekore.model.show import SimpleShow
-from tekore.serialise import SerialisableDataclass
+from tekore.model.serialise import Model, ModelList
 
 
 @dataclass(repr=False)
-class ResumePoint(SerialisableDataclass):
+class ResumePoint(Model):
     fully_played: bool
     resume_position_ms: int
 
@@ -31,7 +31,8 @@ class Episode(Item):
     release_date_precision: ReleaseDatePrecision
 
     def __post_init__(self):
-        self.images = [Image(**i) for i in self.images]
+        self.images = ModelList(Image(**i) for i in self.images)
+        self.languages = ModelList(self.languages)
         self.release_date_precision = ReleaseDatePrecision[
             self.release_date_precision
         ]
@@ -69,7 +70,7 @@ class SimpleEpisodePaging(OffsetPaging):
     items = List[SimpleEpisode]
 
     def __post_init__(self):
-        self.items = [
+        self.items = ModelList(
             SimpleEpisode(**i) if i is not None else None
             for i in self.items
-        ]
+        )

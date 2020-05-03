@@ -16,8 +16,20 @@ This allows accessing parts of the response directly as attributes.
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
-Additional features of response models are documented in
-:mod:`serialise <tekore.serialise>`.
+Response models and lists of models are made easy to work with.
+They provide a readable ``repr`` for quickly inspecting the contents of a model
+and a ``pprint`` method to view the model in more detail.
+It is also possible to convert models to builtin and JSON representations.
+See :class:`Serialisable` for more details.
+
+.. code:: python
+
+    print(album)
+    album.pprint()
+    album.pprint(depth=2)
+
+    album.asbuiltin()
+    album.json()
 
 Base classes
 ------------
@@ -180,6 +192,28 @@ Miscellaneous
    :undoc-members:
    :show-inheritance:
 
+Supporting types
+----------------
+.. currentmodule:: tekore.model.serialise
+.. autoclass:: Serialisable
+   :members:
+   :show-inheritance:
+
+.. autoclass:: Model
+   :members:
+   :show-inheritance:
+
+.. autoclass:: ModelList
+   :members:
+   :show-inheritance:
+
+.. autoclass:: StrEnum
+   :members:
+   :show-inheritance:
+
+.. autoclass:: Timestamp
+   :members:
+   :show-inheritance:
 """
 
 from tekore.model.album import SimpleAlbumPaging, AlbumGroup
@@ -217,3 +251,10 @@ from tekore.model.track import (
     FullTrackPaging,
 )
 from tekore.model.user import PrivateUser, PublicUser
+from tekore.model.serialise import (
+    Model,
+    ModelList,
+    Serialisable,
+    StrEnum,
+    Timestamp,
+)

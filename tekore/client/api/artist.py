@@ -4,8 +4,13 @@ from tekore.client.process import single, model_list
 from tekore.client.chunked import chunked, join_lists
 from tekore.client.decor import send_and_process, maximise_limit
 from tekore.client.base import SpotifyBase
-from tekore.serialise import ModelList
-from tekore.model import FullArtist, SimpleAlbumPaging, FullTrack, AlbumGroup
+from tekore.model import (
+    FullArtist,
+    SimpleAlbumPaging,
+    FullTrack,
+    AlbumGroup,
+    ModelList,
+)
 
 
 class SpotifyArtist(SpotifyBase):

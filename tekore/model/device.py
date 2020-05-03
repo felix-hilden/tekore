@@ -1,11 +1,11 @@
 from typing import Optional
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableEnum
 from tekore.model.base import Identifiable
+from tekore.model.serialise import StrEnum
 
 
-class DeviceType(SerialisableEnum):
+class DeviceType(StrEnum):
     Computer = 'Computer'
     Tablet = 'Tablet'
     Smartphone = 'Smartphone'

@@ -1,28 +1,28 @@
 from typing import Optional, Union
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableDataclass, SerialisableEnum
 from tekore.model.context import Context
 from tekore.model.device import Device
 from tekore.model.track import FullTrack
 from tekore.model.episode import FullEpisode
+from tekore.model.serialise import Model, StrEnum
 
 
-class CurrentlyPlayingType(SerialisableEnum):
+class CurrentlyPlayingType(StrEnum):
     ad = 'ad'
     episode = 'episode'
     track = 'track'
     unknown = 'unknown'
 
 
-class RepeatState(SerialisableEnum):
+class RepeatState(StrEnum):
     off = 'off'
     track = 'track'
     context = 'context'
 
 
 @dataclass(repr=False)
-class Disallows(SerialisableDataclass):
+class Disallows(Model):
     interrupting_playback: bool = False
     pausing: bool = False
     resuming: bool = False
@@ -36,7 +36,7 @@ class Disallows(SerialisableDataclass):
 
 
 @dataclass(repr=False)
-class Actions(SerialisableDataclass):
+class Actions(Model):
     disallows: Disallows
 
     def __post_init__(self):
@@ -50,7 +50,7 @@ item_type = {
 
 
 @dataclass(repr=False)
-class CurrentlyPlaying(SerialisableDataclass):
+class CurrentlyPlaying(Model):
     """
     Context, progress_ms and item may be None e.g. during a private session.
     """

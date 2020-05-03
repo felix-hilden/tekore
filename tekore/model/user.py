@@ -1,13 +1,13 @@
 from typing import List
 from dataclasses import dataclass
 
-from tekore.serialise import SerialisableDataclass
 from tekore.model.base import Item
 from tekore.model.member import Followers, Image
+from tekore.model.serialise import Model, ModelList
 
 
 @dataclass(repr=False)
-class ExplicitContent(SerialisableDataclass):
+class ExplicitContent(Model):
     filter_enabled: bool
     filter_locked: bool
 
@@ -26,7 +26,7 @@ class User(Item):
         if self.followers is not None:
             self.followers = Followers(**self.followers)
         if self.images is not None:
-            self.images = [Image(**i) for i in self.images]
+            self.images = ModelList(Image(**i) for i in self.images)
 
 
 @dataclass(repr=False)
