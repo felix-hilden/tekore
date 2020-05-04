@@ -2,8 +2,8 @@ from asyncio import run
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from requests import HTTPError
-from tekore.auth.expiring import AccessToken, Token, Credentials, OAuthError
+from tekore import HTTPError
+from tekore.auth.expiring import AccessToken, Token, Credentials
 from tekore.auth.refreshing import RefreshingCredentials, RefreshingToken
 
 from tests._cred import TestCaseWithEnvironment, TestCaseWithCredentials
@@ -101,10 +101,10 @@ class TestCredentialsOnline(TestCaseWithEnvironment):
         c = Credentials(self.client_id, self.client_secret, asynchronous=True)
         run(c.refresh_user_token(self.user_refresh))
 
-    def test_bad_arguments_raises_oauth_error(self):
+    def test_bad_arguments_raises_error(self):
         c = Credentials('id', 'secret')
 
-        with self.assertRaises(OAuthError):
+        with self.assertRaises(HTTPError):
             c.request_client_token()
 
 

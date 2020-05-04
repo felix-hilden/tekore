@@ -1,4 +1,4 @@
-from requests import HTTPError
+from tekore import HTTPError
 from tests._cred import TestCaseWithUserCredentials
 
 

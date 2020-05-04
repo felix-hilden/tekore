@@ -8,14 +8,11 @@ from functools import wraps
 from requests import HTTPError, Request, Response
 from urllib.parse import urlencode
 
+from tekore.error import errors
 from tekore.sender import Sender, Client
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
-
-
-class OAuthError(HTTPError):
-    pass
 
 
 def b64encode(msg: str) -> str:
@@ -94,16 +91,21 @@ class Token(AccessToken):
 
 
 def handle_errors(response: Response) -> None:
-    if 400 <= response.status_code < 500:
+    if response.status_code < 400:
+        return
+
+    if response.status_code < 500:
         content = response.json()
         error_str = '{} {}: {}'.format(
             response.status_code,
             content['error'],
             content['error_description']
         )
-        raise OAuthError(error_str)
-    elif response.status_code >= 500:
-        raise HTTPError('Unexpected error!', response=response)
+    else:
+        error_str = 'Unexpected error!'
+
+    error_cls = errors.get(response.status_code, HTTPError)
+    raise error_cls(error_str, response=response)
 
 
 def parse_token(response):

@@ -1,7 +1,7 @@
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import episode_id, episode_ids
 
-from requests import HTTPError
+from tekore import HTTPError
 
 
 class TestSpotifyEpisodeAsApp(TestCaseWithCredentials):

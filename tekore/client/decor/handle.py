@@ -1,7 +1,7 @@
 from requests import Request, Response, HTTPError
 
+from tekore.error import errors
 from tekore.model.error import PlayerErrorReason
-from tekore.client.decor.error import errors
 
 error_format = """Error in {url}:
 {code}: {msg}

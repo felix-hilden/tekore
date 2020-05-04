@@ -1,7 +1,7 @@
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import show_id, show_ids
 
-from requests import HTTPError
+from tekore import HTTPError
 
 
 class TestSpotifyShowAsApp(TestCaseWithCredentials):

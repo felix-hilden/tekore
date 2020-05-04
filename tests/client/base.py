@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from requests import HTTPError
+from tekore import HTTPError
 from tekore.client.base import SpotifyBase
 from tekore.model.error import PlayerErrorReason
 

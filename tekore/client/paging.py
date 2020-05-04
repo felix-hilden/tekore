@@ -1,10 +1,10 @@
 from typing import Generator, Optional
 
 from tekore.model import Model
+from tekore.error import NotFound
 from tekore.client.base import SpotifyBase
 from tekore.model.paging import Paging, OffsetPaging
 from tekore.client.decor import send_and_process
-from tekore.client.decor.error import NotFound
 
 
 def parse_paging_result(result):

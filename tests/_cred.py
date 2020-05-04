@@ -3,14 +3,9 @@ Base classes for tests that require application or user credentials.
 """
 
 import os
+import tekore as tk
 
 from unittest import TestCase, SkipTest
-from requests.exceptions import HTTPError
-
-from tekore.auth import Credentials
-from tekore.util import config_from_environment
-from tekore.client import Spotify
-from tekore.sender import PersistentSender, RetryingSender
 
 skip_is_fail = os.getenv('TEKORE_TEST_SKIP_IS_FAIL', None)
 
@@ -34,7 +29,7 @@ class TestCaseWithAppEnvironment(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cred = config_from_environment()
+        cred = tk.config_from_environment()
         if any(i is None for i in cred):
             skip_or_fail(KeyError, 'No application credentials!')
 
@@ -72,7 +67,7 @@ class TestCaseWithCredentials(TestCaseWithAppEnvironment):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.cred = Credentials(
+        cls.cred = tk.Credentials(
             cls.client_id,
             cls.client_secret,
             cls.redirect_uri
@@ -80,11 +75,15 @@ class TestCaseWithCredentials(TestCaseWithAppEnvironment):
 
         try:
             cls.app_token = cls.cred.request_client_token()
-        except HTTPError as e:
-            skip_or_fail(HTTPError, 'Error in retrieving application token!', e)
+        except tk.HTTPError as error:
+            skip_or_fail(
+                tk.HTTPError,
+                'Error in retrieving application token!',
+                error
+            )
 
-        sender = RetryingSender(sender=PersistentSender())
-        cls.client = Spotify(cls.app_token, sender=sender)
+        sender = tk.RetryingSender(sender=tk.PersistentSender())
+        cls.client = tk.Spotify(cls.app_token, sender=sender)
 
 
 class TestCaseWithUserCredentials(
@@ -100,16 +99,20 @@ class TestCaseWithUserCredentials(
 
         try:
             cls.user_token = cls.cred.refresh_user_token(cls.user_refresh)
-        except HTTPError as e:
-            skip_or_fail(HTTPError, 'Error in retrieving user token!', e)
+        except tk.HTTPError as error:
+            skip_or_fail(
+                tk.HTTPError,
+                'Error in retrieving user token!',
+                error
+            )
 
         cls.client.token = cls.user_token
 
         try:
             cls.current_user_id = cls.client.current_user().id
-        except HTTPError as e:
+        except tk.HTTPError as error:
             skip_or_fail(
-                HTTPError,
+                tk.HTTPError,
                 'ID of current user could not be retrieved!',
-                e
+                error
             )
