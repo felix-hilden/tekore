@@ -23,6 +23,13 @@ serialisation clear. (:issue:`149`)
 - :meth:`pprint <tekore.model.serialise.Serialisable.pprint>` output is now
   compact by default
 
+Web exceptions
+~~~~~~~~~~~~~~
+Exceptions thrown by :mod:`auth <tekore.auth>` now match :mod:`client <tekore.client>`.
+Because of that, :class:`OAuthError` was removed.
+Web exceptions were moved to :mod:`error <tekore.error>`
+and inherit from a common base class. (:issue:`154`)
+
 1.7.0 (2020-04-28)
 ------------------
 Added
