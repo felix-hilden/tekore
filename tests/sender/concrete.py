@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from httpx import AsyncClient
 from requests import Request
-from tekore.sender import (
+from tekore._sender import (
     TransientSender,
     AsyncTransientSender,
     PersistentSender,
@@ -31,6 +31,9 @@ class MockSessionFactory:
         return mock
 
 
+module = 'tekore._sender'
+
+
 class TestSingletonSender(TestCase):
     def test_instances_share_session(self):
         s1 = SingletonSender()
@@ -44,7 +47,7 @@ class TestSingletonSender(TestCase):
 
     def test_request_prepared(self):
         mock = MockSessionFactory()
-        with patch('tekore.sender.SingletonSender.session', mock()):
+        with patch(module + '.SingletonSender.session', mock()):
             s = SingletonSender()
             r = Request()
             s.send(r)
@@ -53,7 +56,7 @@ class TestSingletonSender(TestCase):
     def test_keywords_passed_to_session(self):
         mock = MockSessionFactory()
         kwargs = dict(k1='k1', k2='k2')
-        with patch('tekore.sender.SingletonSender.session', mock()):
+        with patch(module + '.SingletonSender.session', mock()):
             s = SingletonSender(**kwargs)
             r = Request()
             s.send(r)
@@ -71,7 +74,7 @@ class TestSingletonSender(TestCase):
 
 def test_request_prepared(sender_type):
     mock = MockSessionFactory()
-    with patch('tekore.sender.Session', mock):
+    with patch(module + '.Session', mock):
         s = sender_type()
         r = Request()
         s.send(r)
@@ -81,14 +84,14 @@ def test_request_prepared(sender_type):
 def test_keywords_passed_to_session(sender_type):
     mock = MockSessionFactory()
     kwargs = dict(k1='k1', k2='k2')
-    with patch('tekore.sender.Session', mock):
+    with patch(module + '.Session', mock):
         s = sender_type(**kwargs)
         s.send(Request())
         mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
 class TestPersistentSender(TestCase):
-    @patch('tekore.sender.Session', MagicMock)
+    @patch(module + '.Session', MagicMock)
     def test_session_is_reused(self):
         s = PersistentSender()
         sess1 = s.session
@@ -100,7 +103,7 @@ class TestPersistentSender(TestCase):
     def test_async_client_is_reused(self):
         mock = AsyncMock()
 
-        with patch('tekore.sender.AsyncClient.request', mock):
+        with patch(module + '.AsyncClient.request', mock):
             s = AsyncPersistentSender()
             c1 = s.client
             run(s.send(Request()))
@@ -134,7 +137,7 @@ class TestPersistentSender(TestCase):
 class TestTransientSender(TestCase):
     def test_session_is_not_reused(self):
         mock = MockSessionFactory()
-        with patch('tekore.sender.Session', mock):
+        with patch(module + '.Session', mock):
             s = TransientSender()
             s.send(Request())
             s.send(Request())
@@ -144,7 +147,7 @@ class TestTransientSender(TestCase):
         client = AsyncClient()
         client.request = AsyncMock()
         mock = MagicMock(return_value=client)
-        with patch('tekore.sender.AsyncClient', mock):
+        with patch(module + '.AsyncClient', mock):
             s = AsyncTransientSender()
             run(s.send(Request()))
             run(s.send(Request()))

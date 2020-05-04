@@ -82,3 +82,10 @@ If no active device is found, an error is thrown.
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     spotify.playback_start_tracks([finlandia])
+
+What's next?
+------------
+Have a look at some :ref:`example scripts <examples>` to start familiarising
+yourself with the Web API.
+:ref:`advanced-usage` provides an overview of what Tekore has to offer
+and things to keep in mind when building an actual application.

@@ -6,14 +6,13 @@ from your playlists, and prompt you to do so.
 .. code:: python
 
     import tekore as tk
-    from tekore.scope import scopes, Scope
 
     conf = tk.config_from_environment()
-    scope = Scope(
-        scopes.user_follow_read,
-        scopes.user_follow_modify,
-        scopes.playlist_read_private
-    )
+    scope = [
+        tk.scope.user_follow_read,
+        tk.scope.user_follow_modify,
+        tk.scope.playlist_read_private
+    ]
     user_token = tk.prompt_for_user_token(*conf, scope=scope)
     s = tk.Spotify(user_token, max_limits_on=True, chunked_on=True)
 

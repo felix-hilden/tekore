@@ -35,35 +35,24 @@ Detailed information can be found in our concise :ref:`reference`.
 Features
 ========
 The `Web API`_ provides access to a plethora of data on music and users.
-Tekore implements these most integral features completely.
+Tekore implements these integral features completely.
 
-- :mod:`tekore.auth`: authentication for application and user tokens,
-  self-refreshing tokens
-- :mod:`tekore.client`: endpoints for access to every resource in the API.
-  Responses are parsed into :mod:`models <tekore.model>` with explicit
-  attributes to ease examining the contents of a response.
+- :ref:`auth` for applications and users.
+- :ref:`Endpoints <client>` for access to every resource in the API.
 
-Additional features and various convenience modules are provided too.
+Additional features are provided for your pleasure and convenience.
 
-- :mod:`tekore.util`
+- Support for :ref:`asynchronous programming <async>` using ``async/await``.
+- A :ref:`self-refreshing <auth>` access token.
+- Responses are parsed into :ref:`models <models>` with explicit attributes.
+  They have a readable ``repr`` and can be serialised back to JSON.
 
-  - Command line prompt for user autentication
-  - Read and write configuration from files and environment variables
-
-- :mod:`tekore.sender`
-
-  - Async support
-  - Session persistence
-  - Request retries
-  - Response caching
-
-- :mod:`tekore.convert` ID, URI and URL conversions
-- :mod:`tekore.scope` Access right scopes for user tokens
-- :mod:`tekore.model` Additional response model features
-
-  - Readable ``repr``
-  - JSON serialisation & dictionary conversion
-  - Pretty-printing
+- :ref:`senders`, a hook between Tekore and the Web API. Enables retries
+  on failed requests, response caching and session persistence.
+- :ref:`Access rights <auth-scopes>` for user tokens.
+- :ref:`conversions` between Spotify IDs, URIs and URLs.
+- Read and write :ref:`configuration <config>` from files and
+  environment variables.
 
 
 .. toctree::

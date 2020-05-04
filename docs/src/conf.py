@@ -21,9 +21,12 @@ extensions = [
 ]
 
 master_doc = 'index'
-templates_path = ['templates']
 exclude_patterns = ['build']
 autosummary_generate = True
+autodoc_default_options = {
+    'members': True,
+    'show-inheritance': True,
+}
 
 html_theme = 'sphinx_rtd_theme'
 extlinks = {

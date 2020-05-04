@@ -9,8 +9,7 @@ from ._resources import (
     track_ids,
     image,
 )
-
-from tekore.client.api import SpotifyPlaylist
+from tekore import Spotify
 
 
 class TestSpotifyPlaylistView(TestCaseWithCredentials):
@@ -43,7 +42,7 @@ class TestSpotifyPlaylistView(TestCaseWithCredentials):
 
     def test_async_playlist_tracks(self):
         async def f():
-            client = SpotifyPlaylist(self.app_token, asynchronous=True)
+            client = Spotify(self.app_token, asynchronous=True)
             return await client.playlist_tracks(playlist_id)
 
         tracks = run(f())
@@ -55,7 +54,7 @@ class TestSpotifyPlaylistView(TestCaseWithCredentials):
 
     def test_async_playlist_with_fields_returns_object(self):
         async def f():
-            client = SpotifyPlaylist(self.app_token, asynchronous=True)
+            client = Spotify(self.app_token, asynchronous=True)
             return await client.playlist(playlist_id, fields='uri')
 
         playlist = run(f())
@@ -67,7 +66,7 @@ class TestSpotifyPlaylistView(TestCaseWithCredentials):
 
     def test_async_playlist_tracks_with_fields_returns_object(self):
         async def f():
-            client = SpotifyPlaylist(self.app_token, asynchronous=True)
+            client = Spotify(self.app_token, asynchronous=True)
             return await client.playlist_tracks(playlist_id, fields='uri')
 
         tracks = run(f())

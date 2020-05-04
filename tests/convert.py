@@ -1,8 +1,14 @@
 import unittest
 
-from tekore.convert import (
-    check_id, check_type, ConversionError,
-    to_url, to_uri, from_url, from_uri, IdentifierType
+from tekore import (
+    check_id,
+    check_type,
+    ConversionError,
+    to_url,
+    to_uri,
+    from_url,
+    from_uri,
+    IdentifierType,
 )
 
 
@@ -106,7 +112,3 @@ class TestFromURL(unittest.TestCase):
         url = 'a.suspicious.site/track/b62'
         with self.assertRaises(ConversionError):
             self._call(url, 'track', 'b62')
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -9,10 +9,9 @@ and you have used Spotify enough to have top tracks.
 .. code:: python
 
     import tekore as tk
-    from tekore.scope import scopes
 
     conf = tk.config_from_environment()
-    scope = scopes.user_top_read + scopes.playlist_modify_private
+    scope = tk.scope.user_top_read + tk.scope.playlist_modify_private
     token = tk.prompt_for_user_token(*conf, scope=scope)
 
     spotify = tk.Spotify(token)

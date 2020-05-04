@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from requests import Request
-from tekore.sender import RetryingSender
+from tekore._sender import RetryingSender
 from tests._util import AsyncMock
 
 
@@ -36,6 +36,9 @@ def mock_sender(*responses, is_async: bool = False):
     return sender
 
 
+module = 'tekore._sender'
+
+
 class TestRetryingSender(TestCase):
     def test_rate_limited_request_retried_after_set_seconds(self):
         time = MagicMock()
@@ -44,7 +47,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, success)
 
         s = RetryingSender(sender=sender)
-        with patch('tekore.sender.time', time):
+        with patch(module + '.time', time):
             s.send(Request())
             time.sleep.assert_called_once_with(1 + 1)
 
@@ -55,7 +58,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, success, is_async=True)
 
         s = RetryingSender(sender=sender)
-        with patch('tekore.sender.asyncio', asyncio):
+        with patch(module + '.asyncio', asyncio):
             run(s.send(Request()))
             asyncio.sleep.assert_called_once_with(1 + 1)
 
@@ -67,7 +70,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, success)
 
         s = RetryingSender(sender=sender)
-        with patch('tekore.sender.time', time):
+        with patch(module + '.time', time):
             s.send(Request())
             time.sleep.assert_called_once_with(1 + 1)
 
@@ -79,7 +82,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, success, is_async=True)
 
         s = RetryingSender(sender=sender)
-        with patch('tekore.sender.asyncio', asyncio):
+        with patch(module + '.asyncio', asyncio):
             run(s.send(Request()))
             asyncio.sleep.assert_called_once_with(1 + 1)
 
@@ -105,7 +108,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, fail, fail, success)
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('tekore.sender.time', MagicMock()):
+        with patch(module + '.time', MagicMock()):
             s.send(Request())
         self.assertEqual(sender.send.call_count, 3)
 
@@ -115,7 +118,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, fail, fail, success, is_async=True)
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('tekore.sender.asyncio', AsyncMock()):
+        with patch(module + '.asyncio', AsyncMock()):
             run(s.send(Request()))
         self.assertEqual(sender.send.call_count, 3)
 
@@ -125,7 +128,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, fail, success, fail, success)
 
         s = RetryingSender(retries=5, sender=sender)
-        with patch('tekore.sender.time', MagicMock()):
+        with patch(module + '.time', MagicMock()):
             s.send(Request())
         self.assertEqual(sender.send.call_count, 3)
 
@@ -135,7 +138,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, fail, success, fail, is_async=True)
 
         s = RetryingSender(retries=5, sender=sender)
-        with patch('tekore.sender.asyncio', AsyncMock()):
+        with patch(module + '.asyncio', AsyncMock()):
             run(s.send(Request()))
         self.assertEqual(sender.send.call_count, 3)
 
@@ -146,7 +149,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, rate, fail, success)
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('tekore.sender.time', MagicMock()):
+        with patch(module + '.time', MagicMock()):
             s.send(Request())
 
         self.assertEqual(sender.send.call_count, 4)
@@ -158,7 +161,7 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, rate, fail, success, is_async=True)
 
         s = RetryingSender(retries=2, sender=sender)
-        with patch('tekore.sender.asyncio', AsyncMock()):
+        with patch(module + '.asyncio', AsyncMock()):
             run(s.send(Request()))
 
         self.assertEqual(sender.send.call_count, 4)

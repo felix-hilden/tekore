@@ -2,9 +2,8 @@ from asyncio import run
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from tekore import BadRequest
-from tekore.client.chunked import chunked, return_none, return_last
-from tekore.client import Spotify
+from tekore import BadRequest, Spotify
+from tekore._client.chunked import chunked, return_none, return_last
 from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from tests._util import handle_warnings
 

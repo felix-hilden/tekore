@@ -2,7 +2,7 @@
 
 Sender performance
 ==================
-Percieved performance can be greatly improved with :mod:`senders <tekore.sender>`.
+Percieved performance can be greatly improved with :ref:`senders`.
 This document explains those gains in detail.
 
 Firstly, keeping connections alive approximately doubles the speed at which

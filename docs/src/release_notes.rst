@@ -1,34 +1,64 @@
+.. _release-notes:
+.. currentmodule:: tekore
+
 Release notes
 =============
 2.0.0 (Unreleased)
 ------------------
+Tekore 2.0 significantly improves the overall structure of the library
+and provides quality of life enhancements to various tasks.
+
+Most importantly, the submodule structure was removed
+with the exception of :ref:`models`.
+Everything is now imported from the top level.
+Options for :ref:`senders` and :ref:`config` are set at the top level too.
+See :ref:`reference` for details.
+
+Removed
+*******
+- Importing from submodules (:issue:`81`)
+- :class:`OAuthError` in :ref:`auth` - see below for details (:issue:`154`)
+
+Added
+*****
+- :ref:`auth` - a list of :class:`scopes <scope>` and strings is accepted
+  in `scope` arguments (:issue:`81`)
+
 Changed
 *******
+Import structure
+~~~~~~~~~~~~~~~~
+In addition to simply relocating objects, some changes were made as well.
+(:issue:`81`)
+
+- Options for :ref:`senders` and :ref:`config` are now set at the top level
+- :class:`AuthorisationScopes` was renamed to :class:`scope`, and its alias
+  `scopes` is no longer available
+- Ready-made :ref:`scopes <auth-scopes>` `read`, `write` and `every` are now
+  accessed via the :class:`scope` enumeration
+
 Response models
 ~~~~~~~~~~~~~~~
-These changes aim to make :mod:`models <tekore.model>` consistent and
-serialisation clear. (:issue:`149`)
+These changes aim to make :ref:`models` consistent
+and serialisation clear. (:issue:`149`)
 
-- :mod:`serialise <tekore.serialise>` module moved under models as a submodule
-  and the JSON encoder used internally was made private
+- The JSON encoder used internally was made private
 - Hierarchies and names of model base classes and member types changed
 - Instead of using ``str``, models are now converted to JSON using their
-  :meth:`json <tekore.model.serialise.Serialisable.json>` method
+  :meth:`json <model.Serialisable.json>` method
 - As a result of the change above, the ``repr`` of models can be viewed simply
   with ``print``. The ``repr`` of model lists was significantly improved.
   Viewing attributes of models produces consistent results.
-- The :meth:`asbuiltin <tekore.model.serialise.Serialisable.asbuiltin>` method
+- The :meth:`asbuiltin <model.Serialisable.asbuiltin>` method
   replaces :meth:`asdict` for models and was also added for lists of models.
   Enumerations and timestamps are no longer preserved in the conversion.
-- :meth:`pprint <tekore.model.serialise.Serialisable.pprint>` output is now
-  compact by default
+- :meth:`pprint <model.Serialisable.pprint>` output is now compact by default
 
 Web exceptions
 ~~~~~~~~~~~~~~
-Exceptions thrown by :mod:`auth <tekore.auth>` now match :mod:`client <tekore.client>`.
+Exceptions thrown in :ref:`auth` now match :ref:`client`.
 Because of that, :class:`OAuthError` was removed.
-Web exceptions were moved to :mod:`error <tekore.error>`
-and inherit from a common base class. (:issue:`154`)
+:ref:`errors` now inherit from a common base class. (:issue:`154`)
 
 1.7.0 (2020-04-28)
 ------------------
@@ -42,126 +72,112 @@ Deprecated
 
 Fixed
 *****
-- :meth:`recommendations <tekore.client.api.SpotifyBrowse.recommendations>`
-  documentation changed to reflect that only IDs are accepted as seeds,
-  not URIs or URLs (:issue:`173`)
-- :meth:`track_audio_analysis <tekore.client.api.SpotifyTrack.track_audio_analysis>`
+- :meth:`recommendations <Spotify.recommendations>` documentation changed to
+  reflect that only IDs are accepted as seeds, not URIs or URLs (:issue:`173`)
+- :meth:`track_audio_analysis <Spotify.track_audio_analysis>`
   allow for missing attributes in analysis (:issue:`175`)
 
 1.6.0 (2020-04-07)
 ------------------
 Added
 *****
-- Support for podcasts: new APIs for
-  :class:`episodes <tekore.client.api.SpotifyEpisode>`
-  and :class:`shows <tekore.client.api.SpotifyShow>`.
-  New :class:`scope <tekore.scope.AuthorisationScopes>`
-  ``user-read-playback-position`` for returning episode resume points.
-  New endpoints for saving shows in
-  :class:`library <tekore.client.api.SpotifyLibrary>`.
-  :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
-  now accepts episode URIs.
-  :meth:`playback <tekore.client.api.SpotifyPlayer.playback>` and
-  :meth:`playback_currently_playing <tekore.client.api.SpotifyPlayer.playback_currently_playing>`
+- :ref:`client` - Support for podcasts. New APIs for
+  :ref:`episodes <client-episode>` and :ref:`shows <client-show>`.
+  New :class:`scope` ``user-read-playback-position``
+  for returning episode resume points.
+  New endpoints for saving shows in a user's :ref:`library <client-library>`.
+  :meth:`playback_queue_add <Spotify.playback_queue_add>` now accepts episodes.
+  :meth:`playback <Spotify.playback>` and
+  :meth:`playback_currently_playing <Spotify.playback_currently_playing>`
   can return currently playing episodes and shows.
-  :meth:`playlist <tekore.client.api.SpotifyPlaylist.playlist>` and
-  :meth:`playlist_tracks <tekore.client.api.SpotifyPlaylist.playlist_tracks>`
+  :meth:`playlist <Spotify.playlist>` and
+  :meth:`playlist_tracks <Spotify.playlist_tracks>`
   can return episodes on playlists.
-  :meth:`search <tekore.client.api.SpotifySearch.search>` allows for searching
-  episodes and shows.
+  :meth:`search <Spotify.search>` allows for searching episodes and shows.
   (:issue:`164`)
 - Dependency to HTTPX upgraded to include version ``0.12.*`` (:issue:`166`)
 
 Fixed
 *****
 - Errors are now correctly raised when parsing responses in
-  :meth:`playlist <tekore.client.api.SpotifyPlaylist.playlist>` and
-  :meth:`playlist_tracks <tekore.client.api.SpotifyPlaylist.playlist_tracks>`
-  (:issue:`164`)
-- Conversions :func:`to_url <tekore.convert.to_url>` now return URLs with
-  prefix ``https`` instead of ``http``, in line with API and application
-  behavior. :func:`from_url <tekore.convert.from_url>` now correctly
-  accepts ``https`` addresses for conversion. (:issue:`165`)
-- The ``repr`` of local items can now be produced without errors (:issue:`171`)
+  :meth:`playlist <Spotify.playlist>` and
+  :meth:`playlist_tracks <Spotify.playlist_tracks>` (:issue:`164`)
+- Conversions :func:`to_url` now return URLs with prefix ``https`` instead of
+  ``http``, in line with API and application behavior. :func:`from_url` now
+  correctly accepts ``https`` addresses for conversion. (:issue:`165`)
+- :ref:`models` - The ``repr`` of local items can now be produced without
+  errors (:issue:`171`)
 
 1.5.0 (2020-03-11)
 ------------------
 Added
 *****
-- :class:`RetryingSender <tekore.sender.RetryingSender>`
+- :class:`RetryingSender` -
   avoid unnecessary retries and reduce total wait time (:issue:`163`)
 
 Fixed
 *****
-- :meth:`category_playlists <tekore.client.api.SpotifyBrowse.category_playlists>`
+- :meth:`category_playlists <Spotify.category_playlists>`
   require category parameter (:issue:`160`)
-- :class:`AsyncPersistentSender <tekore.sender.AsyncPersistentSender>`
+- :class:`AsyncPersistentSender` -
   persist connections appropriately (:issue:`161`)
-- :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
+- :meth:`playback_queue_add <Spotify.playback_queue_add>`
   match endpoint address to changed API (:issue:`162`)
 
 1.4.0 (2020-03-02)
 ------------------
 Added
 *****
-- :meth:`playlist_tracks_clear <tekore.client.api.SpotifyPlaylist.playlist_tracks_clear>`
+- :meth:`playlist_tracks_clear <Spotify.playlist_tracks_clear>` -
   convenience endpoint for deleting tracks from a playlist (:issue:`155`)
-- :mod:`convert <tekore.convert>`
-  accept shows and episodes as valid types (:issue:`159`)
+- :ref:`conversions` - accept shows and episodes as valid types (:issue:`159`)
 
 Fixed
 *****
-- :meth:`playlist_tracks_add <tekore.client.api.SpotifyPlaylist.playlist_tracks_add>`
+- :meth:`playlist_tracks_add <Spotify.playlist_tracks_add>` -
   insert tracks in correct order when chunking (:issue:`156`)
 
 1.3.0 (2020-02-26)
 ------------------
 Added
 *****
-- :meth:`playback_queue_add <tekore.client.api.SpotifyPlayer.playback_queue_add>`
+- :meth:`playback_queue_add <Spotify.playback_queue_add>` -
   add tracks to queue (:issue:`152`)
-- :mod:`model <tekore.model>`
-  readable ``repr`` for response models (:commit:`32911c3a`)
-- :class:`CachingSender <tekore.sender.CachingSender>`
-  option to specify maximum cache size (:issue:`143`)
-- :mod:`client <tekore.client>`
-  optionally send long lists of resources as chunks (:issue:`153`)
+- :ref:`models` - readable ``repr`` for models (:commit:`32911c3a`)
+- :class:`CachingSender` - option to specify maximum cache size (:issue:`143`)
+- :ref:`client` - optionally send long lists of resources as chunks
+  circumventing API limits (:issue:`153`)
 
 1.2.0 (2020-02-17)
 ------------------
 Added
 *****
-- :mod:`client <tekore.client>`
-  optionally use maximum limits by default in all paging calls (:issue:`66`)
+- :ref:`client` - optionally use maximum limits in all paging calls (:issue:`66`)
 
 Fixed
 *****
-- :mod:`paging <tekore.client.paging.SpotifyPaging>` all items or
-  pages of a :meth:`search <tekore.client.api.SpotifySearch.search>`
-  respects API limits (:issue:`145`)
-- :mod:`paging <tekore.client.paging.SpotifyPaging>`
-  always return an awaitable when asynchronous (:issue:`146`)
+- :ref:`client-paging` - respect API limits when retrieving all items or pages
+  of a :meth:`search <Spotify.search>` (:issue:`145`)
+- :ref:`client-paging` - always return an awaitable when asynchronous (:issue:`146`)
 
 1.1.0 (2020-02-02)
 ------------------
 Added
 *****
 - Async support in authentication and API endpoints (:issue:`131`)
-- :class:`CachingSender <tekore.sender.CachingSender>`
-  a sender for response caching (:issue:`4`)
-- :mod:`config <tekore.util.config>`
-  reading missing values produces a warning (:commit:`0fa61801`)
+- :class:`CachingSender` - a sender for response caching (:issue:`4`)
+- :ref:`config` - reading missing values produces a warning (:commit:`0fa61801`)
 
 Fixed
 *****
-- :meth:`playlist <tekore.client.api.SpotifyPlaylist.playlist>`
+- :meth:`playlist <Spotify.playlist>` -
   parse correctly when fields is specified (:issue:`142`)
 
 1.0.1 (2020-01-17)
 ------------------
 Fixed
 *****
-- :class:`PlaylistTrack <tekore.model.playlist.PlaylistTrack>`
+- :class:`PlaylistTrack <model.PlaylistTrack>` -
   accept missing video thumbnail (:issue:`132`)
 
 1.0.0 (2020-01-14)
