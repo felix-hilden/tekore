@@ -22,7 +22,6 @@ Logging out deletes the cookie and server-stored access token.
 
     import tekore as tk
 
-    from tekore.scope import every
     from flask import Flask, request, redirect, session
 
     conf = tk.config_from_environment()
@@ -62,7 +61,7 @@ Logging out deletes the cookie and server-stored access token.
 
         @app.route('/login', methods=['GET'])
         def login():
-            auth_url = cred.user_authorisation_url(scope=every)
+            auth_url = cred.user_authorisation_url(scope=tk.scope.every)
             return redirect(auth_url, 307)
 
         @app.route('/callback', methods=['GET'])

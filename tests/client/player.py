@@ -3,8 +3,7 @@ from time import sleep
 from tests._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id, episode_id
 
-from tekore.convert import to_uri
-from tekore import HTTPError
+from tekore import HTTPError, to_uri
 
 
 class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):

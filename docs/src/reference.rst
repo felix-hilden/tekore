@@ -3,23 +3,25 @@
 =========
 Reference
 =========
-All public modules and objects are documented here.
-Here's a short summary of each module.
+All public objects are documented in these sections.
 
-.. currentmodule:: tekore
-.. autosummary::
-   :toctree: reference
+================== =============================
+:ref:`auth`        Web API authorisation
+:ref:`client`      Web API endpoints
+:ref:`config`      Import and export credentials
+:ref:`conversions` Convert IDs, URIs and URLs
+:ref:`errors`      Web errors for clients
+:ref:`models`      Response models
+:ref:`senders`     Request senders
+================== =============================
 
-   auth
-   client
-   convert
-   model
-   scope
-   sender
-   util
+.. toctree::
+   :maxdepth: 3
+   :caption: Index
+   :hidden:
+   :glob:
 
-Most of the functions and classes defined in each module
-are made available in the top level :mod:`tekore` namespace.
-Importing from the top level is strongly recommended,
-because the module structure will be flattened in version 2.0.
-For more information see GitHub issue :issue:`81`.
+   reference/*
+
+The module structure was flattened in version 2.0.
+For more information see :ref:`release-notes` and GitHub issue :issue:`81`.

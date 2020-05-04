@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock
 
 from tekore import HTTPError
-from tekore.client.base import SpotifyBase
-from tekore.model.error import PlayerErrorReason
+from tekore.model import PlayerErrorReason
+from tekore._client.base import SpotifyBase
 
 from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_id

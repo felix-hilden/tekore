@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 
-from tekore.sender import CachingSender
+from tekore._sender import CachingSender
 from tests._util import AsyncMock
 
 
@@ -53,6 +53,9 @@ def pair(code, url, params=None, cc=None, etag=None, vary_h=None) -> MagicMock:
 
 def multiple(func: callable, n: int, *args, **kwargs):
     return [func(*args, **kwargs) for _ in range(n)]
+
+
+module = 'tekore._sender'
 
 
 class TestCachingSender(TestCase):
@@ -169,7 +172,7 @@ class TestCachingSender(TestCase):
 
         self.sender.sender = mock_sender(p1, p2)
         time = MagicMock(side_effect=[0, 15, 15])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.send(r)
             self.assertIs(self.sender.send(r), p2)
 
@@ -179,7 +182,7 @@ class TestCachingSender(TestCase):
 
         self.sender.sender = mock_sender(p1, p2)
         time = MagicMock(side_effect=[0, 15, 15, 20])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.send(r)
             self.sender.send(r)
             self.assertIs(self.sender.send(r), p2)
@@ -190,7 +193,7 @@ class TestCachingSender(TestCase):
         p2 = response(304, 'url', {})
 
         time = MagicMock(side_effect=[0, 15, 15])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.sender = mock_sender(p1, p2)
             self.sender.send(r)
             with self.subTest('Returns cached'):
@@ -204,7 +207,7 @@ class TestCachingSender(TestCase):
         p2 = response(200, 'url', {}, cc=0, etag='b')
 
         time = MagicMock(side_effect=[0, 15, 15])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.sender = mock_sender(p1, p2)
             self.sender.send(r)
             with self.subTest('Returns cached'):
@@ -218,7 +221,7 @@ class TestCachingSender(TestCase):
         p2 = response(200, 'url', {}, cc=0, etag='b')
 
         time = MagicMock(side_effect=[0, 15, 15])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.sender = mock_sender(p1, p2, is_async=True)
             run(self.sender.send(r))
             with self.subTest('Returns cached'):
@@ -233,7 +236,7 @@ class TestCachingSender(TestCase):
         p3 = response(304, 'url', {}, cc=0, etag='b')
 
         time = MagicMock(side_effect=[0, 15, 15, 30, 30])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.sender = mock_sender(p1, p2, p3)
             self.sender.send(r)
             self.sender.send(r)
@@ -245,7 +248,7 @@ class TestCachingSender(TestCase):
         p2 = response(304, 'url', {})
 
         time = MagicMock(side_effect=[0, 15])
-        with patch('tekore.sender.time.time', time):
+        with patch(module + '.time.time', time):
             self.sender.sender = mock_sender(p1, p2)
             self.sender.send(r)
             self.assertIs(self.sender.send(r), p1)

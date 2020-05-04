@@ -8,10 +8,9 @@ It assumes that your credentials are saved in the environment.
 .. code:: python
 
     import tekore as tk
-    from tekore.scope import scopes
 
     conf = tk.config_from_environment()
-    scope = scopes.user_follow_modify
+    scope = tk.scope.user_follow_modify
     token = tk.prompt_for_user_token(*conf, scope=scope)
     spotify = tk.Spotify(token)
 

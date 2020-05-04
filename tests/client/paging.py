@@ -1,6 +1,6 @@
 from asyncio import run
 
-from tekore.client import Spotify
+from tekore import Spotify
 from tests._util import handle_warnings
 from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_id

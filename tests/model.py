@@ -6,13 +6,15 @@ from typing import List
 from dataclasses import dataclass
 from unittest.mock import MagicMock, patch
 
-from tekore.model.serialise import (
+from tekore._model.serialise import (
     JSONEncoder,
     Model,
     StrEnum,
     ModelList,
     Timestamp,
 )
+
+module = 'tekore._model.serialise'
 
 
 class TestSerialisableEnum(unittest.TestCase):
@@ -134,7 +136,7 @@ class TestSerialisableDataclass(unittest.TestCase):
         pprint = MagicMock()
         data = Data(i=1)
 
-        with patch('tekore.model.serialise.pprint', pprint):
+        with patch(module + '.pprint', pprint):
             data.pprint()
             pprint.assert_called_with({'i': 1}, depth=None, compact=True)
 
@@ -147,7 +149,7 @@ class TestSerialisableDataclass(unittest.TestCase):
             'kw': 'argument'
         }
 
-        with patch('tekore.model.serialise.pprint', pprint):
+        with patch(module + '.pprint', pprint):
             data.pprint(**kwargs)
             pprint.assert_called_with({'i': 1}, **kwargs)
 
@@ -188,7 +190,3 @@ class TestModelList(unittest.TestCase):
         data = ModelList(Data(**i) for i in list_in)
 
         self.assertIn('Data', repr(data))
-
-
-if __name__ == '__main__':
-    unittest.main()
