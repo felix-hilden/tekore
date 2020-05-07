@@ -2,7 +2,7 @@ from typing import Optional
 from warnings import warn
 from requests import Request, Response
 
-from .concrete import Sender, TransientSender, AsyncTransientSender
+from .concrete import Sender, PersistentSender, AsyncPersistentSender
 
 
 def new_default_sender() -> Sender:
@@ -28,15 +28,15 @@ class Client:
     asynchronous
         synchronicity requirement - If specified, overrides passed
         sender and defaults if they are in conflict and instantiates
-        a transient sender of the requested type
+        a persistent sender of the requested type
     """
     def __init__(self, sender: Optional[Sender], asynchronous: bool = None):
         new_sender = sender or new_default_sender()
 
         if new_sender.is_async and asynchronous is False:
-            new_sender = TransientSender()
+            new_sender = PersistentSender()
         elif not new_sender.is_async and asynchronous is True:
-            new_sender = AsyncTransientSender()
+            new_sender = AsyncPersistentSender()
 
         self.sender = new_sender
 

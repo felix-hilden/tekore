@@ -131,7 +131,7 @@ Default keyword arguments to send with in asynchronous mode.
 Not used when any other keyword arguments are passed in.
 """
 
-default_sender_type: _Union[_Type[SyncSender], _Type[AsyncSender]] = TransientSender
+default_sender_type: _Union[_Type[SyncSender], _Type[AsyncSender]] = PersistentSender
 """
 Sender to instantiate by default.
 """

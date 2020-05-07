@@ -22,7 +22,7 @@ requests take about ten seconds, no matter how many are sent at once.
 
     conf = tk.config_from_environment()
     token = tk.request_client_token(*conf[:2])
-    spotify = tk.Spotify(token, sender=tk.AsyncPersistentSender())
+    spotify = tk.Spotify(token, asynchronous=True)
 
     routes = web.RouteTableDef()
 

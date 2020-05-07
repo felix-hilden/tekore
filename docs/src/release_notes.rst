@@ -63,6 +63,9 @@ Miscellaneous
   :ref:`errors` now inherit from a common base class. (:issue:`154`)
 - :attr:`Token.scope` and :class:`RefreshingToken.scope` now return
   a :class:`Scope` instead of a string. (:issue:`177`)
+- Default :ref:`sender <senders>` changed from :class:`TransientSender` to
+  :class:`PersistentSender`, also affects :class:`Client` behavior
+  (:issue:`141`)
 
 1.7.0 (2020-04-28)
 ------------------
