@@ -31,7 +31,7 @@ class MockSessionFactory:
         return mock
 
 
-module = 'tekore._sender'
+module = 'tekore._sender.concrete'
 
 
 class TestSingletonSender(TestCase):

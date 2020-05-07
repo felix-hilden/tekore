@@ -36,7 +36,7 @@ def mock_sender(*responses, is_async: bool = False):
     return sender
 
 
-module = 'tekore._sender'
+module = 'tekore._sender.extending'
 
 
 class TestRetryingSender(TestCase):
