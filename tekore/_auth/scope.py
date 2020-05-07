@@ -20,17 +20,8 @@ class scope(Enum):
         tk.scope.write: Scope = ...           # All write scopes
         tk.scope.every: Scope = read + write  # All available scopes
 
-    Addition and subtraction of two members is supported.
-    Both operations return a :class:`Scope`.
-    Subtraction is implemented for consistency with :class:`Scope` objects.
-    Subtracting any other scope simply returns the first operand,
-    and subtracting the same scope returns an empty scope.
-
-    .. code:: python
-
-        janet = scopes.user_read_private + scopes.user_top_read
-        mikey = scopes.user_follow_read - scopes.user_library_read
-        blank = scopes.user_read_email - scopes.user_read_email
+    Addition and subtraction from both sides is supported
+    but delegated to :class:`Scope` and always returns a :class:`Scope`.
     """
     user_read_email = 'user-read-email'
     user_read_private = 'user-read-private'
@@ -57,40 +48,39 @@ class scope(Enum):
     def __str__(self):
         return self.value
 
-    def __add__(self, other: 'scope') -> 'Scope':
-        if not isinstance(other, scope):
-            return NotImplemented
+    def __add__(self, other) -> 'Scope':
+        return Scope(self) + other
 
-        return Scope(self, other)
+    def __radd__(self, other) -> 'Scope':
+        return other + Scope(self)
 
-    def __sub__(self, other: 'scope') -> 'Scope':
-        if not isinstance(other, scope):
-            return NotImplemented
-
+    def __sub__(self, other) -> 'Scope':
         return Scope(self) - other
+
+    def __rsub__(self, other) -> 'Scope':
+        return other - Scope(self)
 
 
 class Scope(frozenset):
     """
     Set of :class:`scopes <scope>` for a token.
 
-    Immutable, supports unpacking and flexible addition and subtraction
-    with :class:`Scope`, :class:`str` and :class:`scope`.
+    Instantiated with an unpacked list of strings or :class:`scopes <scope>`.
+
+    .. code:: python
+
+        bruce = tk.Scope(*tk.scope)
+        sally = tk.Scope(tk.scope.user_read_email, 'ugc-image-upload')
+        elise = tk.Scope(*sally, *timmy, tk.scope.user_follow_modify)
+
+    Also supports flexible addition and subtraction from both sides
+    with strings, :class:`scopes <scope>` and other :class:`Scope` objects.
     Addition is a set-like union, subtraction is a set-like relative complement.
-    The addition operation is also supported with reflected operands.
-    Reflected subtraction tries to convert the left-side operand to a Scope.
     If any operation is unsuccessful, :class:`NotImplementedError` is raised.
 
     .. code:: python
 
-       bruce = tk.Scope(*tk.scope)
-       sally = tk.Scope(tk.scope.user_read_email, tk.scope.user_read_private)
-       timmy = tk.Scope('ugc-image-upload', 'user-top-read')
-       elise = tk.Scope(*sally, *timmy, tk.scope.user_follow_modify)
-       waldo = sally + timmy - 'user-read-email' + tk.scopes.user_follow_read
-
-       r_add = 'playlist-read-private' + timmy
-       r_sub = 'user-top-read' - timmy
+        waldo = tk.scopes.user_follow_read + sally + elise - 'user-read-email'
 
     The string representation of a :class:`Scope` is a sorted,
     space-separated concatenation of its members.
