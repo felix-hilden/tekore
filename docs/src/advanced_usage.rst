@@ -147,15 +147,11 @@ Using senders
 By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <senders>`.
-They can be used for connection persistence, retrying and caching.
+They can be used for e.g. retrying and caching.
 User-defined sessions and additional keyword arguments
 to :func:`requests.Session.send` can also be passed in.
-For example, per-instance sessions can be enabled with
-a :class:`PersistentSender`.
-
-.. code:: python
-
-   tk.Spotify(sender=tk.PersistentSender())
+For example, connection persistence and per-instance sessions are enabled
+by default thanks to :class:`PersistentSender`.
 
 Keepalive connections, retries and caching make up a performance-boosting
 and convenient sender setup, easily constructed from simple building blocks.
@@ -164,13 +160,12 @@ busy applications that request the same static resources repeatedly.
 
 .. code:: python
 
-    tk.default_sender_instance = tk.CachingSender(
+    sender = tk.CachingSender(
         max_size=256,
-        sender=tk.RetryingSender(
-            retries=2,
-            sender=tk.PersistentSender()
-        )
+        sender=tk.RetryingSender(retries=2)
     )
+
+    tk.Spotify(sender=sender)
 
 For more detailed information, see :ref:`performance`.
 
