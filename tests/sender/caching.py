@@ -55,7 +55,7 @@ def multiple(func: callable, n: int, *args, **kwargs):
     return [func(*args, **kwargs) for _ in range(n)]
 
 
-module = 'tekore._sender'
+module = 'tekore._sender.extending'
 
 
 class TestCachingSender(TestCase):
