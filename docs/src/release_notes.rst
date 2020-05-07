@@ -23,6 +23,8 @@ Added
 *****
 - :ref:`auth` - a list of :class:`scopes <scope>` and strings is accepted
   in `scope` arguments (:issue:`81`)
+- :class:`Scope` operations were expanded to properly handle all combinations
+  of :class:`str`, :class:`scope` and :class:`Scope` (:issue:`177`)
 
 Changed
 *******
@@ -54,11 +56,13 @@ and serialisation clear. (:issue:`149`)
   Enumerations and timestamps are no longer preserved in the conversion.
 - :meth:`pprint <model.Serialisable.pprint>` output is now compact by default
 
-Web exceptions
-~~~~~~~~~~~~~~
-Exceptions thrown in :ref:`auth` now match :ref:`client`.
-Because of that, :class:`OAuthError` was removed.
-:ref:`errors` now inherit from a common base class. (:issue:`154`)
+Miscellaneous
+~~~~~~~~~~~~~
+- Exceptions thrown in :ref:`auth` now match :ref:`client`.
+  Because of that, :class:`OAuthError` was removed.
+  :ref:`errors` now inherit from a common base class. (:issue:`154`)
+- :attr:`Token.scope` and :class:`RefreshingToken.scope` now return
+  a :class:`Scope` instead of a string. (:issue:`177`)
 
 1.7.0 (2020-04-28)
 ------------------

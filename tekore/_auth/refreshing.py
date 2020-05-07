@@ -1,5 +1,6 @@
 from typing import Union
 
+from .scope import Scope
 from .expiring import AccessToken, Token, Credentials
 from tekore._sender import SyncSender
 
@@ -54,9 +55,12 @@ class RefreshingToken(AccessToken):
         return self._token.token_type
 
     @property
-    def scope(self) -> str:
+    def scope(self) -> Scope:
         """
         Privileges granted to the token.
+
+        Empty :class:`Scope` if the token is an application token
+        or a user token without any scopes.
         """
         return self._token.scope
 

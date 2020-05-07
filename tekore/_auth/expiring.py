@@ -51,7 +51,10 @@ class Token(AccessToken):
     def __init__(self, token_info: dict):
         self._access_token = token_info['access_token']
         self._token_type = token_info['token_type']
-        self._scope = token_info['scope']
+
+        self._scope = Scope(*token_info['scope'].split(' '))
+        if str(self._scope) == '':
+            self._scope = Scope()
 
         self._refresh_token = token_info.get('refresh_token', None)
         self._expires_at = int(time.time()) + token_info['expires_in']
@@ -77,9 +80,12 @@ class Token(AccessToken):
         return self._token_type
 
     @property
-    def scope(self) -> str:
+    def scope(self) -> Scope:
         """
         Privileges granted to the token.
+
+        Empty :class:`Scope` if the token is an application token
+        or a user token without any scopes.
         """
         return self._scope
 

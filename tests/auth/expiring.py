@@ -72,10 +72,24 @@ class TestToken(TestCase):
         t = Token(d)
         self.assertEqual(t.token_type, d['token_type'])
 
-    def test_scope(self):
+    def test_scope_parsed(self):
         d = make_token_dict()
+        scope = 'a b c'
+        d['scope'] = scope
         t = Token(d)
-        self.assertEqual(t.scope, d['scope'])
+
+        with self.subTest('Is scope object'):
+            self.assertIsInstance(t.scope, Scope)
+        with self.subTest('Equal to scope'):
+            self.assertEqual(str(t.scope), scope)
+
+    def test_no_scope_is_empty(self):
+        d = make_token_dict()
+        scope = ''
+        d['scope'] = scope
+        t = Token(d)
+
+        self.assertTrue(len(t.scope) == 0)
 
 
 def mock_response(code: int = 200, content: dict = None) -> MagicMock:

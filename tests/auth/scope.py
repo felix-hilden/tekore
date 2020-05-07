@@ -1,44 +1,18 @@
-import unittest
+from unittest import TestCase
 from tekore import scope, Scope
 
 
-class TestAuthorisationScopes(unittest.TestCase):
+class TestScopesEnum(TestCase):
     def test_str_is_enum_value(self):
         s = scope.user_read_private
         self.assertEqual(str(s), 'user-read-private')
-
-    def test_addition(self):
-        s = scope.user_library_read + scope.user_read_private
-
-        with self.subTest('Returns scope'):
-            self.assertIsInstance(s, Scope)
-
-        with self.subTest('Returns correct members'):
-            self.assertEqual(str(s), 'user-library-read user-read-private')
-
-    def test_subtraction(self):
-        s = scope.user_read_private - scope.user_library_read
-
-        with self.subTest('Returns scope'):
-            self.assertIsInstance(s, Scope)
-
-        with self.subTest('Returns first operand'):
-            self.assertEqual(str(s), 'user-read-private')
 
     def test_subtracting_same_scope_returns_empty(self):
         s = scope.user_library_read - scope.user_library_read
         self.assertSetEqual(s, set())
 
-    def test_adding_other_than_scopes_returns_not_implemented(self):
-        r = scope.user_library_read.__add__(1)
-        self.assertIs(r, NotImplemented)
 
-    def test_subtracting_other_than_scopes_returns_not_implemented(self):
-        r = scope.user_library_read.__sub__(1)
-        self.assertIs(r, NotImplemented)
-
-
-class TestScope(unittest.TestCase):
+class TestScope(TestCase):
     def test_repr_like_instantiation(self):
         s = Scope('a', 'b')
         self.assertEqual(repr(s), "Scope('a', 'b')")
@@ -68,7 +42,7 @@ class TestScope(unittest.TestCase):
         s2 = Scope(*s1)
         self.assertSetEqual(s1, s2)
 
-    def test_adding_scopes(self):
+    def test_adding_scopes_preserves_originals(self):
         s1 = Scope('b', 'a')
         s2 = Scope('c', 'b')
 
@@ -84,32 +58,7 @@ class TestScope(unittest.TestCase):
         with self.subTest('RHS retained'):
             self.assertEqual(str(s2), 'b c')
 
-    def test_adding_str_successful(self):
-        s1 = Scope('b', 'a')
-        s2 = 'c'
-        self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
-
-    def test_adding_authorisation_scope_successful(self):
-        s1 = Scope('a')
-        s2 = scope.user_read_private
-        self.assertSetEqual(s1 + s2, {'user-read-private', 'a'})
-
-    def test_r_adding_str_successful(self):
-        s1 = 'c'
-        s2 = Scope('b', 'a')
-        self.assertSetEqual(s1 + s2, {'a', 'b', 'c'})
-
-    def test_r_adding_authorisation_scope_successful(self):
-        s1 = scope.user_read_private
-        s2 = Scope('a')
-        self.assertSetEqual(s1 + s2, {'user-read-private', 'a'})
-
-    def test_adding_unsupported_raises_not_implemented(self):
-        s = Scope('user-read-private', 'a')
-        with self.assertRaises(NotImplementedError):
-            s + 1
-
-    def test_subtracting_scopes(self):
+    def test_subtracting_scopes_preservers_originals(self):
         s1 = Scope('b', 'a')
         s2 = Scope('c', 'b')
 
@@ -125,32 +74,132 @@ class TestScope(unittest.TestCase):
         with self.subTest('RHS retained'):
             self.assertEqual(str(s2), 'b c')
 
-    def test_subtracting_str_successful(self):
-        s1 = Scope('b', 'a')
-        s2 = 'b'
-        self.assertSetEqual(s1 - s2, {'a'})
 
-    def test_subtracting_authorisation_scope_successful(self):
-        s1 = Scope('user-read-private', 'a')
-        s2 = scope.user_read_private
-        self.assertSetEqual(s1 - s2, {'a'})
-
-    def test_r_subtracting_str_successful(self):
-        s1 = 'b'
-        s2 = Scope('b', 'a')
-        self.assertSetEqual(s1 - s2, set())
-
-    def test_r_subtracting_authorisation_scope_successful(self):
-        s1 = scope.user_read_private
-        s2 = Scope('user-read-private', 'a')
-        self.assertSetEqual(s1 - s2, set())
-
-    def test_subtracting_unsupported_raises_not_implemented(self):
-        s = Scope('user-read-private', 'a')
+class TestScopeOperations(TestCase):
+    def test_add_invalid_scope(self):
         with self.assertRaises(NotImplementedError):
-            s - 1
+            1 + scope.user_top_read
 
-    def test_r_subtracting_unsupported_raises_not_implemented(self):
-        s = Scope('user-read-private', 'a')
+    def test_add_invalid_Scope(self):
         with self.assertRaises(NotImplementedError):
-            1 - s
+            1 + Scope('a')
+
+    def test_add_str_scope(self):
+        s = 'a' + scope.user_top_read
+        self.assertEqual(str(s), 'a user-top-read')
+
+    def test_add_str_Scope(self):
+        s = 'a' + Scope('b')
+        self.assertEqual(str(s), 'a b')
+
+    def test_add_scope_str(self):
+        s = scope.user_top_read + 'a'
+        self.assertEqual(str(s), 'a user-top-read')
+
+    def test_add_scope_scope(self):
+        s = scope.user_follow_read + scope.user_top_read
+        self.assertEqual(str(s), 'user-follow-read user-top-read')
+
+    def test_add_scope_Scope(self):
+        s = scope.user_top_read + Scope('a')
+        self.assertEqual(str(s), 'a user-top-read')
+
+    def test_add_scope_invalid_raises(self):
+        with self.assertRaises(NotImplementedError):
+            scope.user_top_read + 1
+
+    def test_add_Scope_str(self):
+        s = Scope('a') + 'b'
+        self.assertEqual(str(s), 'a b')
+
+    def test_add_Scope_scope(self):
+        s = Scope('a') + scope.user_top_read
+        self.assertEqual(str(s), 'a user-top-read')
+
+    def test_add_Scope_Scope(self):
+        s = Scope('a') + Scope('b')
+        self.assertEqual(str(s), 'a b')
+
+    def test_add_Scope_invalid_raises(self):
+        with self.assertRaises(NotImplementedError):
+            Scope('a') + 1
+
+    def test_sub_invalid_scope(self):
+        with self.assertRaises(NotImplementedError):
+            1 - scope.user_top_read
+
+    def test_sub_invalid_Scope(self):
+        with self.assertRaises(NotImplementedError):
+            1 - Scope('a')
+
+    def test_sub_str_scope_different(self):
+        s = 'a' - scope.user_top_read
+        self.assertEqual(str(s), 'a')
+
+    def test_sub_str_scope_same(self):
+        s = 'user-top-read' - scope.user_top_read
+        self.assertEqual(str(s), '')
+
+    def test_sub_str_Scope_different(self):
+        s = 'a' - Scope('b')
+        self.assertEqual(str(s), 'a')
+
+    def test_sub_str_Scope_same(self):
+        s = 'a' - Scope('a')
+        self.assertEqual(str(s), '')
+
+    def test_sub_scope_str_different(self):
+        s = scope.user_top_read - 'a'
+        self.assertEqual(str(s), 'user-top-read')
+
+    def test_sub_scope_str_same(self):
+        s = scope.user_top_read - 'user-top-read'
+        self.assertEqual(str(s), '')
+
+    def test_sub_scope_scope_different(self):
+        s = scope.user_top_read - scope.user_follow_read
+        self.assertEqual(str(s), 'user-top-read')
+
+    def test_sub_scope_scope_same(self):
+        s = scope.user_top_read - scope.user_top_read
+        self.assertEqual(str(s), '')
+
+    def test_sub_scope_Scope_different(self):
+        s = scope.user_top_read - Scope('a')
+        self.assertEqual(str(s), 'user-top-read')
+
+    def test_sub_scope_Scope_same(self):
+        s = scope.user_top_read - Scope('user-top-read')
+        self.assertEqual(str(s), '')
+
+    def test_sub_scope_invalid_raises(self):
+        with self.assertRaises(NotImplementedError):
+            scope.user_top_read - 1
+
+    def test_sub_Scope_str_different(self):
+        s = Scope('a') - 'b'
+        self.assertEqual(str(s), 'a')
+
+    def test_sub_Scope_str_same(self):
+        s = Scope('a') - 'a'
+        self.assertEqual(str(s), '')
+
+    def test_sub_Scope_scope_different(self):
+        s = Scope('a') - scope.user_top_read
+        self.assertEqual(str(s), 'a')
+
+    def test_sub_Scope_scope_same(self):
+        s = Scope('user-top-read') - scope.user_top_read
+        self.assertEqual(str(s), '')
+
+    def test_sub_Scope_Scope_different(self):
+        s = Scope('a') - Scope('b')
+        self.assertEqual(str(s), 'a')
+
+    def test_sub_Scope_Scope_same(self):
+        s = Scope('a') - Scope('a')
+        self.assertEqual(str(s), '')
+
+    def test_sub_Scope_invalid_raises(self):
+        with self.assertRaises(NotImplementedError):
+            Scope('a') - 1
