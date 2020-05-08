@@ -1,14 +1,14 @@
-from asyncio import run
+import pytest
+
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from tekore import HTTPError, AccessToken, Token, Credentials, Scope
-from tests._cred import TestCaseWithEnvironment
 
 
-class TestAccessToken(TestCase):
+class TestAccessToken:
     def test_access_token_cannot_be_instantiated(self):
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             AccessToken()
 
     def test_str_of_access_token_is_value_of_property(self):
@@ -18,7 +18,7 @@ class TestAccessToken(TestCase):
                 return 'token'
 
         t = T()
-        self.assertEqual(t.access_token, str(t))
+        assert t.access_token == str(t)
 
 
 def make_token_dict():
@@ -34,14 +34,14 @@ def make_token_dict():
 module = 'tekore._auth.expiring'
 
 
-class TestToken(TestCase):
+class TestToken:
     def test_access_token_returned(self):
         time = MagicMock()
         time.time.return_value = 0
 
         with patch(module + '.time', time):
             token = Token(make_token_dict())
-            self.assertEqual(token.access_token, 'accesstoken')
+            assert token.access_token == 'accesstoken'
 
     def test_expires_in_set_time(self):
         time = MagicMock()
@@ -49,7 +49,7 @@ class TestToken(TestCase):
 
         with patch(module + '.time', time):
             token = Token(make_token_dict())
-            self.assertEqual(token.expires_in, 3600)
+            assert token.expires_in == 3600
 
     def test_expires_in_is_refreshed(self):
         time = MagicMock()
@@ -57,7 +57,7 @@ class TestToken(TestCase):
 
         with patch(module + '.time', time):
             token = Token(make_token_dict())
-            self.assertEqual(token.expires_in, 3599)
+            assert token.expires_in == 3599
 
     def test_old_token_is_expiring(self):
         time = MagicMock()
@@ -65,12 +65,12 @@ class TestToken(TestCase):
 
         with patch(module + '.time', time):
             token = Token(make_token_dict())
-            self.assertEqual(token.is_expiring, True)
+            assert token.is_expiring is True
 
     def test_token_type(self):
         d = make_token_dict()
         t = Token(d)
-        self.assertEqual(t.token_type, d['token_type'])
+        assert t.token_type == d['token_type']
 
     def test_scope_parsed(self):
         d = make_token_dict()
@@ -78,10 +78,8 @@ class TestToken(TestCase):
         d['scope'] = scope
         t = Token(d)
 
-        with self.subTest('Is scope object'):
-            self.assertIsInstance(t.scope, Scope)
-        with self.subTest('Equal to scope'):
-            self.assertEqual(str(t.scope), scope)
+        assert isinstance(t.scope, Scope)
+        assert str(t.scope) == scope
 
     def test_no_scope_is_empty(self):
         d = make_token_dict()
@@ -89,7 +87,7 @@ class TestToken(TestCase):
         d['scope'] = scope
         t = Token(d)
 
-        self.assertTrue(len(t.scope) == 0)
+        assert len(t.scope) == 0
 
 
 def mock_response(code: int = 200, content: dict = None) -> MagicMock:
@@ -99,31 +97,37 @@ def mock_response(code: int = 200, content: dict = None) -> MagicMock:
     return response
 
 
-class TestCredentialsOnline(TestCaseWithEnvironment):
-    def test_request_client_token(self):
-        c = Credentials(self.client_id, self.client_secret)
-        c.request_client_token()
+class TestCredentialsOnline:
+    def test_request_client_token(self, app_env):
+        c = Credentials(app_env[0], app_env[1])
+        token = c.request_client_token()
+        assert token.refresh_token is None
 
-    def test_async_request_client_token(self):
-        c = Credentials(self.client_id, self.client_secret, asynchronous=True)
-        run(c.request_client_token())
+    @pytest.mark.asyncio
+    async def test_async_request_client_token(self, app_env):
+        c = Credentials(app_env[0], app_env[1], asynchronous=True)
+        token = await c.request_client_token()
+        assert token.refresh_token is None
 
-    def test_refresh_user_token(self):
-        c = Credentials(self.client_id, self.client_secret)
-        c.refresh_user_token(self.user_refresh)
+    def test_refresh_user_token(self, app_env, user_refresh):
+        c = Credentials(app_env[0], app_env[1])
+        token = c.refresh_user_token(user_refresh)
+        assert token.refresh_token is not None
 
-    def test_async_refresh_user_token(self):
-        c = Credentials(self.client_id, self.client_secret, asynchronous=True)
-        run(c.refresh_user_token(self.user_refresh))
+    @pytest.mark.asyncio
+    async def test_async_refresh_user_token(self, app_env, user_refresh):
+        c = Credentials(app_env[0], app_env[1], asynchronous=True)
+        token = await c.refresh_user_token(user_refresh)
+        assert token.refresh_token is not None
 
     def test_bad_arguments_raises_error(self):
         c = Credentials('id', 'secret')
 
-        with self.assertRaises(HTTPError):
+        with pytest.raises(HTTPError):
             c.request_client_token()
 
 
-class TestCredentialsOffline(TestCase):
+class TestCredentialsOffline:
     def test_credentials_initialisation(self):
         Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
 
@@ -135,22 +139,20 @@ class TestCredentialsOffline(TestCase):
 
         send = MagicMock(return_value=mock_response(500))
         with patch(module + '.Credentials._send', send):
-            with self.assertRaises(HTTPError):
+            with pytest.raises(HTTPError):
                 c.request_client_token()
 
     def test_user_authorisation_url(self):
         c = Credentials('id', 'secret', 'uri')
         url = c.user_authorisation_url('scope', 'state', True)
-        self.assertIn('scope=scope', url)
-        self.assertIn('state=state', url)
-        self.assertIn('show_dialog=true', url)
+        assert 'scope=scope' in url
+        assert 'state=state' in url
+        assert 'show_dialog=true' in url
 
     def test_user_authorisation_url_accepts_scope_list(self):
         c = Credentials('id', 'secret', 'uri')
-        url = c.user_authorisation_url(['scope'], 'state', True)
-        self.assertIn('scope=scope', url)
-        self.assertIn('state=state', url)
-        self.assertIn('show_dialog=true', url)
+        url = c.user_authorisation_url(['a', 'b'], 'state', True)
+        assert 'scope=a+b' in url
 
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
@@ -168,7 +170,7 @@ class TestCredentialsOffline(TestCase):
         send = MagicMock(return_value=response)
         with patch(module + '.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
-            self.assertEqual(refreshed.refresh_token, 'refresh')
+            assert refreshed.refresh_token == 'refresh'
 
     def test_refresh_user_token_refresh_replaced_if_returned(self):
         c = Credentials('id', 'secret', 'uri')
@@ -178,7 +180,7 @@ class TestCredentialsOffline(TestCase):
         send = MagicMock(return_value=response)
         with patch(module + '.Credentials._send', send):
             refreshed = c.refresh_user_token('refresh')
-            self.assertEqual(refreshed.refresh_token, token['refresh_token'])
+            assert refreshed.refresh_token == token['refresh_token']
 
     def test_refresh_none_refresh_interpreted_as_client_token(self):
         c = Credentials('id', 'secret', 'uri')

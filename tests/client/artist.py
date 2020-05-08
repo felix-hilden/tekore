@@ -1,56 +1,52 @@
-from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
 from ._resources import artist_id, artist_ids
-
 from tekore.model import AlbumGroup
 
 
-class TestSpotifyArtist(TestCaseWithCredentials):
-    def test_artist(self):
-        artist = self.client.artist(artist_id)
-        self.assertEqual(artist.id, artist_id)
+class TestSpotifyArtist:
+    def test_artist(self, app_client):
+        artist = app_client.artist(artist_id)
+        assert artist.id == artist_id
 
-    def test_artists(self):
-        artists = self.client.artists(artist_ids)
-        self.assertEqual(len(artists), len(artist_ids))
+    def test_artists(self, app_client):
+        artists = app_client.artists(artist_ids)
+        assert len(artists) == len(artist_ids)
 
-    def test_artist_albums_with_market(self):
-        albums = self.client.artist_albums(artist_id, market='US')
-        self.assertGreater(albums.total, 0)
+    def test_artist_albums_with_market(self, app_client):
+        albums = app_client.artist_albums(artist_id, market='US')
+        assert albums.total > 0
 
-    def test_artist_albums_no_market(self):
-        albums = self.client.artist_albums(artist_id, market=None)
-        self.assertGreater(albums.total, 0)
+    def test_artist_albums_no_market(self, app_client):
+        albums = app_client.artist_albums(artist_id, market=None)
+        assert albums.total > 0
 
-    def test_artist_albums_groups(self):
-        albums = self.client.artist_albums(
+    def test_artist_albums_groups(self, app_client):
+        albums = app_client.artist_albums(
             artist_id,
             include_groups=[AlbumGroup.album, AlbumGroup.compilation],
             market=None
         )
-        self.assertGreater(albums.total, 0)
+        assert albums.total > 0
 
-    def test_artist_albums_no_groups_returns_empty(self):
-        albums = self.client.artist_albums(
+    def test_artist_albums_no_groups_returns_empty(self, app_client):
+        albums = app_client.artist_albums(
             artist_id,
             include_groups=[],
             market=None
         )
-        self.assertEqual(albums.total, 0)
+        assert albums.total == 0
 
-    def test_artist_top_tracks_with_country(self):
-        tracks = self.client.artist_top_tracks(artist_id, market='US')
-        self.assertGreater(len(tracks), 0)
+    def test_artist_top_tracks_with_country(self, app_client):
+        tracks = app_client.artist_top_tracks(artist_id, market='US')
+        assert len(tracks) > 0
 
-    def test_artist_related_artists(self):
-        artists = self.client.artist_related_artists(artist_id)
-        self.assertGreater(len(artists), 0)
+    def test_artist_related_artists(self, app_client):
+        artists = app_client.artist_related_artists(artist_id)
+        assert len(artists) > 0
 
+    def test_artist_albums_from_token(self, user_client):
+        albums = user_client.artist_albums(artist_id, market='from_token')
+        assert albums.total > 0
 
-class TestSpotifyArtistAsUser(TestCaseWithUserCredentials):
-    def test_artist_albums_from_token(self):
-        albums = self.client.artist_albums(artist_id, market='from_token')
-        self.assertGreater(albums.total, 0)
-
-    def test_artist_top_tracks_from_token(self):
-        tracks = self.client.artist_top_tracks(artist_id, market='from_token')
-        self.assertGreater(len(tracks), 0)
+    def test_artist_top_tracks_from_token(self, user_client):
+        tracks = user_client.artist_top_tracks(artist_id, market='from_token')
+        assert len(tracks) > 0

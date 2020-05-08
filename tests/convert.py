@@ -1,5 +1,4 @@
-import unittest
-
+import pytest
 from tekore import (
     check_id,
     check_type,
@@ -12,75 +11,74 @@ from tekore import (
 )
 
 
-class TestCheckID(unittest.TestCase):
+class TestCheckID:
     def test_valid(self):
         check_id('Base62string')
 
     def test_empty(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             check_id('')
 
     def test_punctuation(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             check_id('.')
 
     def test_almost_b62(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             check_id('almost-base62')
 
     def test_umlaut(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             check_id('withföreignlëtters')
 
 
-class TestCheckType(unittest.TestCase):
+class TestCheckType:
     def test_valid(self):
         for t in ('artist', 'album', 'playlist', 'track'):
-            with self.subTest(f'Type: {t}'):
-                check_type(t)
+            check_type(t)
 
     def test_invalid(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             check_type('invalid')
 
     def test_identifier_type_instance(self):
         check_type(IdentifierType.album)
 
 
-class TestToURI(unittest.TestCase):
+class TestToURI:
     def test_valid(self):
-        self.assertEqual(to_uri('track', 'b62'), 'spotify:track:b62')
+        assert to_uri('track', 'b62') == 'spotify:track:b62'
 
 
-class TestToURL(unittest.TestCase):
+class TestToURL:
     def test_valid(self):
         url = 'https://open.spotify.com/track/b62'
-        self.assertEqual(to_url('track', 'b62'), url)
+        assert to_url('track', 'b62') == url
 
 
-class TestFromURI(unittest.TestCase):
+class TestFromURI:
     @staticmethod
     def _call(uri, type_, id_) -> bool:
         t, i = from_uri(uri)
         return t == type_ and i == id_
 
     def test_valid(self):
-        self.assertTrue(self._call('spotify:track:b62', 'track', 'b62'))
+        assert self._call('spotify:track:b62', 'track', 'b62') is True
 
     def test_invalid_id(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call('spotify:track:n_b62', 'track', 'n_b62')
 
     def test_invalid_type(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call('spotify:invalid:b62', 'invalid', 'b62')
 
     def test_invalid_prefix(self):
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call('youtube:track:b62', 'track', 'b62')
 
 
-class TestFromURL(unittest.TestCase):
+class TestFromURL:
     @staticmethod
     def _call(url, type_, id_) -> bool:
         t, i = from_url(url)
@@ -88,27 +86,27 @@ class TestFromURL(unittest.TestCase):
 
     def test_valid(self):
         url = 'https://open.spotify.com/track/b62'
-        self.assertTrue(self._call(url, 'track', 'b62'))
+        assert self._call(url, 'track', 'b62') is True
 
     def test_short_prefix(self):
         url = 'open.spotify.com/track/b62'
-        self.assertTrue(self._call(url, 'track', 'b62'))
+        assert self._call(url, 'track', 'b62') is True
 
     def test_not_secure_prefix(self):
         url = 'http://open.spotify.com/track/b62'
-        self.assertTrue(self._call(url, 'track', 'b62'))
+        assert self._call(url, 'track', 'b62') is True
 
     def test_invalid_id(self):
         url = 'http://open.spotify.com/track/n_b62'
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call(url, 'track', 'n_b62')
 
     def test_invalid_type(self):
         url = 'http://open.spotify.com/invalid/b62'
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call(url, 'invalid', 'b62')
 
     def test_invalid_prefix(self):
         url = 'a.suspicious.site/track/b62'
-        with self.assertRaises(ConversionError):
+        with pytest.raises(ConversionError):
             self._call(url, 'track', 'b62')

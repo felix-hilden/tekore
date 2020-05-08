@@ -72,6 +72,8 @@ setuptools.setup(
             'flake8',
             'flake8-bugbear',
             'coverage',
+            'pytest>=5.4',
+            'pytest-asyncio',
             'sphinx',
             'sphinx-rtd-theme',
             'sphinx-autodoc-typehints'

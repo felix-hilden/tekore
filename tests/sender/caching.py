@@ -1,5 +1,4 @@
-from asyncio import run
-from unittest import TestCase
+import pytest
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 
@@ -58,11 +57,19 @@ def multiple(func: callable, n: int, *args, **kwargs):
 module = 'tekore._sender.extending'
 
 
-class TestCachingSender(TestCase):
-    def setUp(self):
-        self.sender = CachingSender()
+@pytest.fixture()
+def sender():
+    return CachingSender()
 
-    def test_other_methods_than_GET_not_cached(self):
+
+def assert_two_sent(sender, r, p1, p2):
+    sender.sender = mock_sender(p1, p2)
+    sender.send(r)
+    assert sender.send(r) is p2
+
+
+class TestCachingSender:
+    def test_other_methods_than_GET_not_cached(self, sender):
         methods = ('PUT', 'POST', 'DELETE')
 
         for meth in methods:
@@ -71,12 +78,12 @@ class TestCachingSender(TestCase):
             requests[1].method = meth
 
             responses = [response(200, '', {}) for _ in requests]
-            self.sender.sender = mock_sender(*responses)
-            sent = [self.sender.send(r) for r in requests]
-            with self.subTest(f'Method {meth} not cached'):
-                self.assertIsNot(sent[0], sent[1])
+            sender.sender = mock_sender(*responses)
+            sent = [sender.send(r) for r in requests]
+            assert sent[0] is not sent[1]
 
-    def test_async_other_methods_not_cached(self):
+    @pytest.mark.asyncio
+    async def test_async_other_methods_not_cached(self, sender):
         methods = ('PUT', 'POST', 'DELETE')
 
         for meth in methods:
@@ -85,151 +92,137 @@ class TestCachingSender(TestCase):
             requests[1].method = meth
 
             responses = [response(200, '', {}) for _ in requests]
-            self.sender.sender = mock_sender(*responses, is_async=True)
-            sent = [run(self.sender.send(r)) for r in requests]
-            with self.subTest(f'Method {meth} not cached'):
-                self.assertIsNot(sent[0], sent[1])
+            sender.sender = mock_sender(*responses, is_async=True)
+            sent = [await sender.send(r) for r in requests]
+            assert sent[0] is not sent[1]
 
-    def test_params_affect_cache_url(self):
+    def test_params_affect_cache_url(self, sender):
         r1, p1 = pair(200, 'url', cc=10)
         r2, p2 = pair(200, 'url', {'p': 1}, cc=10)
 
-        self.sender.sender = mock_sender(p1, p2)
-        self.sender.send(r1)
-        self.sender.send(r2)
-        with self.subTest(f'Without params'):
-            self.assertIs(self.sender.send(r1), p1)
-        with self.subTest(f'With params'):
-            self.assertIs(self.sender.send(r2), p2)
+        sender.sender = mock_sender(p1, p2)
+        sender.send(r1)
+        sender.send(r2)
+        assert sender.send(r1) is p1
+        assert sender.send(r2) is p2
 
-    def test_vary_affects_caching(self):
+    def test_vary_affects_caching(self, sender):
         r1, p1 = pair(200, 'url', cc=10, vary_h={'h': 'a'})
         r2, p2 = pair(200, 'url', cc=10, vary_h={'h': 'b'})
 
-        self.sender.sender = mock_sender(p1, p2)
-        self.sender.send(r1)
-        self.sender.send(r2)
-        with self.subTest(f'First vary'):
-            self.assertIs(self.sender.send(r1), p1)
-        with self.subTest(f'Second vary'):
-            self.assertIs(self.sender.send(r2), p2)
+        sender.sender = mock_sender(p1, p2)
+        sender.send(r1)
+        sender.send(r2)
+        assert sender.send(r1) is p1
+        assert sender.send(r2) is p2
 
-    def assert_two_sent(self, r, p1, p2):
-        self.sender.sender = mock_sender(p1, p2)
-        self.sender.send(r)
-        self.assertIs(self.sender.send(r), p2)
-
-    def test_error_not_cached(self):
+    def test_error_not_cached(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 400, 'url', {}, cc=10)
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_vary_star_not_cached(self):
+    def test_vary_star_not_cached(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc=10, vary='*')
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_cc_private_not_cached(self):
+    def test_cc_private_not_cached(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc='private, max-age=0')
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_no_cc_and_no_etag_not_cached(self):
+    def test_no_cc_and_no_etag_not_cached(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {})
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_no_cc_and_has_etag_not_cached(self):
+    def test_no_cc_and_has_etag_not_cached(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, etag='a')
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_private_cc_and_has_etag_not_cached(self):
+    def test_private_cc_and_has_etag_not_cached(self, sender):
         r = request('url', {}, {})
         cc = 'private, max-age=0'
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc=cc, etag='a')
-        self.assert_two_sent(r, p1, p2)
+        assert_two_sent(sender, r, p1, p2)
 
-    def test_has_cc_and_no_etag_is_cached(self):
+    def test_has_cc_and_no_etag_is_cached(self, sender):
         r = request('url', {}, {})
         p = response(200, 'url', {}, cc=10)
 
-        self.sender.sender = mock_sender(p)
-        self.sender.send(r)
-        self.assertIs(self.sender.send(r), p)
+        sender.sender = mock_sender(p)
+        sender.send(r)
+        assert sender.send(r) is p
 
-    def test_async_has_cc_and_no_etag_is_cached(self):
+    @pytest.mark.asyncio
+    async def test_async_has_cc_and_no_etag_is_cached(self, sender):
         r = request('url', {}, {})
         p = response(200, 'url', {}, cc=10)
 
-        self.sender.sender = mock_sender(p, is_async=True)
-        run(self.sender.send(r))
-        self.assertIs(run(self.sender.send(r)), p)
+        sender.sender = mock_sender(p, is_async=True)
+        await sender.send(r)
+        assert await sender.send(r) is p
 
-    def test_cc_only_new_returned_when_stale(self):
+    def test_cc_only_new_returned_when_stale(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc=10)
 
-        self.sender.sender = mock_sender(p1, p2)
+        sender.sender = mock_sender(p1, p2)
         time = MagicMock(side_effect=[0, 15, 15])
         with patch(module + '.time.time', time):
-            self.sender.send(r)
-            self.assertIs(self.sender.send(r), p2)
+            sender.send(r)
+            assert sender.send(r) is p2
 
-    def test_cc_only_stale_replaced_with_new(self):
+    def test_cc_only_stale_replaced_with_new(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc=10)
 
-        self.sender.sender = mock_sender(p1, p2)
+        sender.sender = mock_sender(p1, p2)
         time = MagicMock(side_effect=[0, 15, 15, 20])
         with patch(module + '.time.time', time):
-            self.sender.send(r)
-            self.sender.send(r)
-            self.assertIs(self.sender.send(r), p2)
+            sender.send(r)
+            sender.send(r)
+            assert sender.send(r) is p2
 
-    def test_etag_only_cached_returned_on_304(self):
+    def test_etag_only_cached_returned_on_304(self, sender):
         r = request('url', {}, {})
         p1 = response(200, 'url', {}, cc=0, etag='a')
         p2 = response(304, 'url', {})
 
         time = MagicMock(side_effect=[0, 15, 15])
         with patch(module + '.time.time', time):
-            self.sender.sender = mock_sender(p1, p2)
-            self.sender.send(r)
-            with self.subTest('Returns cached'):
-                self.assertIs(self.sender.send(r), p1)
-            with self.subTest('ETag used'):
-                self.assertIn('ETag', r.headers)
+            sender.sender = mock_sender(p1, p2)
+            sender.send(r)
+            assert sender.send(r) is p1
+            assert 'ETag' in r.headers
 
-    def test_etag_only_fresh_returned_on_success(self):
+    def test_etag_only_fresh_returned_on_success(self, sender):
         r = request('url', {}, {})
         p1 = response(200, 'url', {}, cc=0, etag='a')
         p2 = response(200, 'url', {}, cc=0, etag='b')
 
         time = MagicMock(side_effect=[0, 15, 15])
         with patch(module + '.time.time', time):
-            self.sender.sender = mock_sender(p1, p2)
-            self.sender.send(r)
-            with self.subTest('Returns cached'):
-                self.assertIs(self.sender.send(r), p2)
-            with self.subTest('ETag used'):
-                self.assertIn('ETag', r.headers)
+            sender.sender = mock_sender(p1, p2)
+            sender.send(r)
+            assert sender.send(r) is p2
+            assert 'ETag' in r.headers
 
-    def test_async_etag_only_fresh_returned_on_success(self):
+    @pytest.mark.asyncio
+    async def test_async_etag_only_fresh_returned_on_success(self, sender):
         r = request('url', {}, {})
         p1 = response(200, 'url', {}, cc=0, etag='a')
         p2 = response(200, 'url', {}, cc=0, etag='b')
 
         time = MagicMock(side_effect=[0, 15, 15])
         with patch(module + '.time.time', time):
-            self.sender.sender = mock_sender(p1, p2, is_async=True)
-            run(self.sender.send(r))
-            with self.subTest('Returns cached'):
-                self.assertIs(run(self.sender.send(r)), p2)
-            with self.subTest('ETag used'):
-                self.assertIn('ETag', r.headers)
+            sender.sender = mock_sender(p1, p2, is_async=True)
+            await sender.send(r)
+            assert await sender.send(r) is p2
+            assert 'ETag' in r.headers
 
-    def test_etag_only_stale_replaced_with_new(self):
+    def test_etag_only_stale_replaced_with_new(self, sender):
         r = request('url', {}, {})
         p1 = response(200, 'url', {}, cc=0, etag='a')
         p2 = response(200, 'url', {}, cc=0, etag='b')
@@ -237,30 +230,30 @@ class TestCachingSender(TestCase):
 
         time = MagicMock(side_effect=[0, 15, 15, 30, 30])
         with patch(module + '.time.time', time):
-            self.sender.sender = mock_sender(p1, p2, p3)
-            self.sender.send(r)
-            self.sender.send(r)
-            self.assertIs(self.sender.send(r), p2)
+            sender.sender = mock_sender(p1, p2, p3)
+            sender.send(r)
+            sender.send(r)
+            assert sender.send(r) is p2
 
-    def test_fresh_cc_precedes_etag(self):
+    def test_fresh_cc_precedes_etag(self, sender):
         r = request('url', {}, {})
         p1 = response(200, 'url', {}, cc=10, etag='a')
         p2 = response(304, 'url', {})
 
         time = MagicMock(side_effect=[0, 15])
         with patch(module + '.time.time', time):
-            self.sender.sender = mock_sender(p1, p2)
-            self.sender.send(r)
-            self.assertIs(self.sender.send(r), p1)
+            sender.sender = mock_sender(p1, p2)
+            sender.send(r)
+            assert sender.send(r) is p1
 
-    def test_clear(self):
+    def test_clear(self, sender):
         r = request('url', {}, {})
         p1, p2 = multiple(response, 2, 200, 'url', {}, cc=10)
 
-        self.sender.sender = mock_sender(p1, p2)
-        self.sender.send(r)
-        self.sender.clear()
-        self.assertIs(self.sender.send(r), p2)
+        sender.sender = mock_sender(p1, p2)
+        sender.send(r)
+        sender.clear()
+        assert sender.send(r) is p2
 
     def test_exceeding_max_size_drops_first_item(self):
         r1, p1 = pair(200, 'url1', cc=3600)
@@ -272,10 +265,10 @@ class TestCachingSender(TestCase):
         sender.send(r2)
         sender.send(r3)
 
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             sender.send(r1)
 
-        self.assertIs(sender.send(r2), p2)
+        assert sender.send(r2) is p2
 
     def test_exceeding_max_size_drops_lru_item(self):
         r1, p1 = pair(200, 'url1', cc=3600)
@@ -288,10 +281,10 @@ class TestCachingSender(TestCase):
         sender.send(r1)
         sender.send(r3)
 
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             sender.send(r2)
 
-        self.assertIs(sender.send(r1), p1)
+        assert sender.send(r1) is p1
 
     def test_cache_size_not_affected_by_stale_other_items(self):
         r1, p1 = pair(200, 'url1', cc=3600)
@@ -303,8 +296,8 @@ class TestCachingSender(TestCase):
         sender.send(r2)
         sender.send(r3)
 
-        self.assertIs(sender.send(r1), p1)
-        with self.assertRaises(StopIteration):
+        assert sender.send(r1) is p1
+        with pytest.raises(StopIteration):
             sender.send(r2)
 
     def test_cache_size_not_affected_by_stale_same_items(self):
@@ -317,5 +310,5 @@ class TestCachingSender(TestCase):
         sender.send(r2)
         sender.send(r3)
 
-        self.assertIs(sender.send(r1), p1)
-        self.assertIs(sender.send(r2), p3)
+        assert sender.send(r1) is p1
+        assert sender.send(r2) is p3
