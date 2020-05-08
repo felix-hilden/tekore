@@ -1,2 +1,2 @@
-coverage run --branch -m unittest discover tests -p "*.py"
+coverage run --branch -m pytest tests -o python_files=*.py
 coverage report -m --skip-covered

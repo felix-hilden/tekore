@@ -1,8 +1,8 @@
-from unittest import TestCase
+import pytest
 from tekore import Sender
 
 
-class TestSender(TestCase):
+class TestSender:
     def test_sender_cannot_be_instantiated(self):
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             Sender()

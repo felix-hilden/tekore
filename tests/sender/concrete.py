@@ -1,5 +1,4 @@
-from asyncio import run
-from unittest import TestCase
+import pytest
 from unittest.mock import MagicMock, patch
 
 from httpx import AsyncClient
@@ -34,16 +33,16 @@ class MockSessionFactory:
 module = 'tekore._sender.concrete'
 
 
-class TestSingletonSender(TestCase):
+class TestSingletonSender:
     def test_instances_share_session(self):
         s1 = SingletonSender()
         s2 = SingletonSender()
-        self.assertTrue(s1.session is s2.session)
+        assert s1.session is s2.session
 
     def test_async_instances_share_client(self):
         s1 = AsyncSingletonSender()
         s2 = AsyncSingletonSender()
-        self.assertTrue(s1.client is s2.client)
+        assert s1.client is s2.client
 
     def test_request_prepared(self):
         mock = MockSessionFactory()
@@ -65,14 +64,15 @@ class TestSingletonSender(TestCase):
                 **kwargs
             )
 
-    def test_async_keywords_passed_to_client(self):
+    @pytest.mark.asyncio
+    async def test_async_keywords_passed_to_client(self):
         # Test via raising from incorrect arguments
         s = AsyncSingletonSender(not_an_argument='raises')
-        with self.assertRaises(TypeError):
-            run(s.send(Request()))
+        with pytest.raises(TypeError):
+            await s.send(Request())
 
 
-def test_request_prepared(sender_type):
+def _test_request_prepared(sender_type):
     mock = MockSessionFactory()
     with patch(module + '.Session', mock):
         s = sender_type()
@@ -81,7 +81,7 @@ def test_request_prepared(sender_type):
         mock.instances[0].prepare_request.assert_called_with(r)
 
 
-def test_keywords_passed_to_session(sender_type):
+def _test_keywords_passed_to_session(sender_type):
     mock = MockSessionFactory()
     kwargs = dict(k1='k1', k2='k2')
     with patch(module + '.Session', mock):
@@ -90,7 +90,7 @@ def test_keywords_passed_to_session(sender_type):
         mock.instances[0].send.assert_called_with(mock.prepare_return, **kwargs)
 
 
-class TestPersistentSender(TestCase):
+class TestPersistentSender:
     @patch(module + '.Session', MagicMock)
     def test_session_is_reused(self):
         s = PersistentSender()
@@ -98,68 +98,72 @@ class TestPersistentSender(TestCase):
         s.send(Request())
         s.send(Request())
         sess2 = s.session
-        self.assertTrue(sess1 is sess2)
+        assert sess1 is sess2
 
-    def test_async_client_is_reused(self):
+    @pytest.mark.asyncio
+    async def test_async_client_is_reused(self):
         mock = AsyncMock()
 
         with patch(module + '.AsyncClient.request', mock):
             s = AsyncPersistentSender()
             c1 = s.client
-            run(s.send(Request()))
-            run(s.send(Request()))
+            await s.send(Request())
+            await s.send(Request())
             c2 = s.client
-            self.assertTrue(c1 is c2)
+            assert c1 is c2
 
     def test_instances_dont_share_session(self):
         s1 = PersistentSender()
         s2 = PersistentSender()
-        self.assertTrue(s1.session is not s2.session)
+        assert s1.session is not s2.session
 
     def test_async_instances_dont_share_client(self):
         s1 = AsyncPersistentSender()
         s2 = AsyncPersistentSender()
-        self.assertTrue(s1.client is not s2.client)
+        assert s1.client is not s2.client
 
     def test_request_prepared(self):
-        test_request_prepared(PersistentSender)
+        _test_request_prepared(PersistentSender)
 
     def test_keywords_passed_to_session(self):
-        test_keywords_passed_to_session(PersistentSender)
+        _test_keywords_passed_to_session(PersistentSender)
 
-    def test_async_keywords_passed_to_client(self):
+    @pytest.mark.asyncio
+    async def test_async_keywords_passed_to_client(self):
         # Test via raising from incorrect arguments
         s = AsyncPersistentSender(not_an_argument='raises')
-        with self.assertRaises(TypeError):
-            run(s.send(Request()))
+        with pytest.raises(TypeError):
+            await s.send(Request())
 
 
-class TestTransientSender(TestCase):
+class TestTransientSender:
     def test_session_is_not_reused(self):
         mock = MockSessionFactory()
         with patch(module + '.Session', mock):
             s = TransientSender()
             s.send(Request())
             s.send(Request())
-            self.assertEqual(len(mock.instances), 2)
+            assert len(mock.instances) == 2
 
-    def test_async_client_is_not_reused(self):
+    @pytest.mark.asyncio
+    async def test_async_client_is_not_reused(self):
         client = AsyncClient()
         client.request = AsyncMock()
         mock = MagicMock(return_value=client)
         with patch(module + '.AsyncClient', mock):
             s = AsyncTransientSender()
-            run(s.send(Request()))
-            run(s.send(Request()))
-            self.assertEqual(mock.call_count, 2)
+            await s.send(Request())
+            await s.send(Request())
+            assert mock.call_count == 2
 
     def test_request_prepared(self):
-        test_request_prepared(TransientSender)
+        _test_request_prepared(TransientSender)
 
     def test_keywords_passed_to_session(self):
-        test_keywords_passed_to_session(TransientSender)
+        _test_keywords_passed_to_session(TransientSender)
 
-    def test_async_keywords_passed_to_client(self):
+    @pytest.mark.asyncio
+    async def test_async_keywords_passed_to_client(self):
         s = AsyncTransientSender(not_an_argument='raises')
-        with self.assertRaises(TypeError):
-            run(s.send(Request()))
+        with pytest.raises(TypeError):
+            await s.send(Request())

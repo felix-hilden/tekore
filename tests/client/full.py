@@ -1,124 +1,115 @@
-from asyncio import run
-from unittest import TestCase
+import pytest
 from unittest.mock import MagicMock
 
 from tekore import BadRequest, Spotify
 from tekore._client.chunked import chunked, return_none, return_last
-from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
-from tests._util import handle_warnings
 
 
-class TestSpotifyBaseUnits(TestCase):
-    def setUp(self):
-        self.client = Spotify('token')
+@pytest.fixture()
+def client():
+    return Spotify('token')
 
-    def test_new_token_used_in_context(self):
-        with self.client.token_as('new'):
-            self.assertEqual(self.client.token, 'new')
 
-    def test_old_token_restored_after_context(self):
-        with self.client.token_as('new'):
+class TestSpotifyBaseUnits:
+    def test_new_token_used_in_context(self, client):
+        with client.token_as('new'):
+            assert client.token == 'new'
+
+    def test_old_token_restored_after_context(self, client):
+        with client.token_as('new'):
             pass
-        self.assertEqual(self.client.token, 'token')
+        assert client.token == 'token'
 
-    def test_next_with_no_next_set_returns_none(self):
+    def test_next_with_no_next_set_returns_none(self, client):
         paging = MagicMock()
         paging.next = None
 
-        next_ = self.client.next(paging)
-        self.assertIsNone(next_)
+        next_ = client.next(paging)
+        assert next_ is None
 
-    def test_previous_with_no_previous_set_returns_none(self):
+    def test_previous_with_no_previous_set_returns_none(self, client):
         paging = MagicMock()
         paging.previous = None
 
-        previous = self.client.previous(paging)
-        self.assertIsNone(previous)
+        previous = client.previous(paging)
+        assert previous is None
 
 
-class TestSpotifyMaxLimits(TestCaseWithCredentials):
-    def test_turning_on_max_limits_returns_more(self):
-        client = Spotify(self.app_token)
+class TestSpotifyMaxLimits:
+    def test_turning_on_max_limits_returns_more(self, app_token):
+        client = Spotify(app_token)
         s1, = client.search('piano')
         with client.max_limits(True):
             s2, = client.search('piano')
 
-        self.assertLess(s1.limit, s2.limit)
+        assert s1.limit < s2.limit
 
-    def test_turning_off_max_limits_returns_less(self):
-        client = Spotify(self.app_token, max_limits_on=True)
+    def test_turning_off_max_limits_returns_less(self, app_token):
+        client = Spotify(app_token, max_limits_on=True)
         s1, = client.search('piano')
         with client.max_limits(False):
             s2, = client.search('piano')
 
-        self.assertGreater(s1.limit, s2.limit)
+        assert s1.limit > s2.limit
 
-    def test_specifying_limit_kwarg_overrides_max_limits(self):
-        client = Spotify(self.app_token, max_limits_on=True)
+    def test_specifying_limit_kwarg_overrides_max_limits(self, app_token):
+        client = Spotify(app_token, max_limits_on=True)
         s, = client.search('piano', limit=1)
 
-        self.assertEqual(s.limit, 1)
+        assert s.limit == 1
 
-    def test_specifying_limit_pos_arg_overrides_max_limits(self):
-        client = Spotify(self.app_token, max_limits_on=True)
+    def test_specifying_limit_pos_arg_overrides_max_limits(self, app_token):
+        client = Spotify(app_token, max_limits_on=True)
         s, = client.search('piano', ('track',), None, None, 1)
 
-        self.assertEqual(s.limit, 1)
+        assert s.limit == 1
 
-    def test_specifying_pos_args_until_limit(self):
-        client = Spotify(self.app_token, max_limits_on=True)
+    def test_specifying_pos_args_until_limit(self, app_token):
+        client = Spotify(app_token, max_limits_on=True)
         s1, = client.search('piano', ('track',), None, None)
         with client.max_limits(False):
             s2, = client.search('piano', ('track',), None, None)
 
-        self.assertGreater(s1.limit, s2.limit)
+        assert s1.limit > s2.limit
 
 
-class TestSpotifyChunked(TestCaseWithUserCredentials):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        tracks = cls.client.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
-        cls.track_ids = [t.track.id for t in tracks.items]
+@pytest.fixture(scope='class')
+def track_ids(data_client):
+    tracks = data_client.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
+    return [t.track.id for t in tracks.items]
 
-        cls.handle = handle_warnings()
-        cls.handle.__enter__()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.handle.__exit__(None, None, None)
+@pytest.mark.usefixtures('suppress_warnings')
+class TestSpotifyChunked:
+    def test_too_many_tracks_raises(self, app_client, track_ids):
+        with pytest.raises(BadRequest):
+            app_client.tracks(track_ids)
 
-    def test_too_many_tracks_raises(self):
-        client = Spotify(self.app_token)
+    @pytest.mark.asyncio
+    async def test_async_too_many_tracks_raises(self, app_aclient, track_ids):
+        with pytest.raises(BadRequest):
+            await app_aclient.tracks(track_ids)
 
-        with self.assertRaises(BadRequest):
-            client.tracks(self.track_ids)
+    def test_too_many_chunked_succeeds(self, app_token, track_ids):
+        client = Spotify(app_token, chunked_on=True)
+        tracks = client.tracks(track_ids)
+        assert len(track_ids) == len(tracks)
 
-    def test_async_too_many_tracks_raises(self):
-        client = Spotify(self.app_token, asynchronous=True)
-
-        with self.assertRaises(BadRequest):
-            run(client.tracks(self.track_ids))
-
-    def test_too_many_tracks_chunked_succeeds(self):
-        client = Spotify(self.app_token, chunked_on=True)
-        tracks = client.tracks(self.track_ids)
-        self.assertEqual(len(self.track_ids), len(tracks))
-
-    def test_async_too_many_tracks_chunked_succeeds(self):
-        client = Spotify(self.app_token, chunked_on=True, asynchronous=True)
-        tracks = run(client.tracks(self.track_ids))
-        self.assertEqual(len(self.track_ids), len(tracks))
+    @pytest.mark.asyncio
+    async def test_async_too_many_chunked_succeeds(self, app_token, track_ids):
+        client = Spotify(app_token, chunked_on=True, asynchronous=True)
+        tracks = await client.tracks(track_ids)
+        assert len(track_ids) == len(tracks)
 
     def test_chunked_context_enables(self):
-        client = Spotify(self.app_token)
+        client = Spotify()
         with client.chunked(True):
-            self.assertTrue(client.chunked_on)
+            assert client.chunked_on is True
 
     def test_chunked_context_disables(self):
-        client = Spotify(self.app_token, chunked_on=True)
+        client = Spotify(chunked_on=True)
         with client.chunked(False):
-            self.assertFalse(client.chunked_on)
+            assert client.chunked_on is False
 
 
 def mock_spotify():
@@ -128,20 +119,20 @@ def mock_spotify():
     return slf
 
 
-class TestSpotifyChunkedUnit(TestCase):
+class TestSpotifyChunkedUnit:
     def test_chunked_return_none(self):
         func = MagicMock()
 
         dec = chunked('a', 1, 10, return_none)(func)
         r = dec(mock_spotify(), list(range(20)))
-        self.assertIsNone(r)
+        assert r is None
 
     def test_chunked_return_last(self):
         func = MagicMock(side_effect=[0, 1, 2])
 
         dec = chunked('a', 1, 10, return_last)(func)
         r = dec(mock_spotify(), list(range(20)))
-        self.assertEqual(r, 1)
+        assert r == 1
 
     def test_argument_chain(self):
         func = MagicMock(side_effect=[0, 1])
@@ -150,7 +141,7 @@ class TestSpotifyChunkedUnit(TestCase):
         dec = chunked('a', 1, 10, return_last, chain='ch', chain_pos=2)(func)
         r = dec(slf, list(range(20)), ch=None)
         func.assert_called_with(slf, list(range(10, 20)), ch=0)
-        self.assertEqual(r, 1)
+        assert r == 1
 
     def test_reverse_when_rev_argument_specified(self):
         func = MagicMock(side_effect=[0, 1])
@@ -159,7 +150,7 @@ class TestSpotifyChunkedUnit(TestCase):
         dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
         r = dec(slf, list(range(20)), rev=1)
         func.assert_called_with(slf, list(range(10)), rev=1)
-        self.assertEqual(r, 1)
+        assert r == 1
 
     def test_dont_reverse_when_rev_argument_not_specified(self):
         func = MagicMock(side_effect=[0, 1])
@@ -168,11 +159,11 @@ class TestSpotifyChunkedUnit(TestCase):
         dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
         r = dec(slf, list(range(20)))
         func.assert_called_with(slf, list(range(10, 20)))
-        self.assertEqual(r, 1)
+        assert r == 1
 
     def test_chunked_as_kwarg(self):
         func = MagicMock(side_effect=[0, 1])
 
         dec = chunked('a', 2, 10, return_last)(func)
         r = dec(mock_spotify(), 0, a=list(range(20)))
-        self.assertEqual(r, 1)
+        assert r == 1

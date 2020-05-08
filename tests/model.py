@@ -1,5 +1,5 @@
 import json
-import unittest
+import pytest
 
 from enum import Enum
 from typing import List
@@ -17,51 +17,51 @@ from tekore._model.serialise import (
 module = 'tekore._model.serialise'
 
 
-class TestSerialisableEnum(unittest.TestCase):
+class TestSerialisableEnum:
     def test_enum_str_is_name(self):
         e = StrEnum('e', 'a b c')
-        self.assertEqual(str(e.a), 'a')
+        assert str(e.a) == 'a'
 
 
-class TestJSONEncoder(unittest.TestCase):
+class TestJSONEncoder:
     def test_enum_encoded_is_quoted_str(self):
         enum = Enum('enum', 'a b c')
         encoded = JSONEncoder().encode(enum.a)
-        self.assertEqual(encoded, f'"{str(enum.a)}"')
+        assert encoded == f'"{str(enum.a)}"'
 
     def test_default_types_preserved(self):
         d = {'items': 'in', 'this': 1}
         encoded = JSONEncoder().encode(d)
         default = json.dumps(d)
-        self.assertEqual(encoded, default)
+        assert encoded == default
 
     def test_timestamp_encoded_is_quoted_str(self):
         t = Timestamp.from_string('2019-01-01T12:00:00Z')
         encoded = JSONEncoder().encode(t)
 
-        self.assertEqual(encoded, f'"{str(t)}"')
+        assert encoded == f'"{str(t)}"'
 
     def test_non_serialisable_item_raises(self):
         class C:
             pass
 
         c = C()
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             JSONEncoder().encode(c)
 
 
-class TestTimestamp(unittest.TestCase):
+class TestTimestamp:
     def test_timestamp_initialisable_from_string(self):
         Timestamp.from_string('2019-01-01T12:00:00Z')
 
     def test_incorrect_format_raises(self):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Timestamp.from_string('2019-01-01')
 
     def test_timestamp_formatted_back_to_string(self):
         time_str = '2019-01-01T12:00:00Z'
         t = Timestamp.from_string(time_str)
-        self.assertEqual(str(t), time_str)
+        assert str(t) == time_str
 
     def test_initialisable_with_microsecond_precision(self):
         Timestamp.from_string('2019-01-01T12:00:00.000000Z')
@@ -75,16 +75,16 @@ class Data(Model):
     i: int
 
 
-class TestSerialisableDataclass(unittest.TestCase):
+class TestSerialisableDataclass:
     def test_json_dataclass_serialised(self):
         dict_in = {'i': 1}
         data = Data(**dict_in)
         dict_out = json.loads(data.json())
-        self.assertDictEqual(dict_in, dict_out)
+        assert dict_in == dict_out
 
     def test_repr(self):
         data = Data(i=1)
-        self.assertIn('Data', repr(data))
+        assert 'Data' in repr(data)
 
     def test_long_repr(self):
         @dataclass(repr=False)
@@ -125,12 +125,12 @@ class TestSerialisableDataclass(unittest.TestCase):
         dict_in = {'d': [{'i': 1}, {'i': 2}]}
         data = Container(**dict_in)
         dict_out = data.asbuiltin()
-        self.assertDictEqual(dict_in, dict_out)
+        assert dict_in == dict_out
 
     def test_asbuiltin_returns_dict_representation(self):
         data = Data(i=1)
         d = data.asbuiltin()
-        self.assertDictEqual(d, {'i': 1})
+        assert d == {'i': 1}
 
     def test_pprint_called_with_dict(self):
         pprint = MagicMock()
@@ -161,10 +161,8 @@ class TestSerialisableDataclass(unittest.TestCase):
             v: e
 
         c = C(e.a)
-        with self.subTest('Conversion in asdict'):
-            self.assertIsInstance(c.asbuiltin()['v'], str)
-        with self.subTest('Conversion in json'):
-            self.assertEqual(c.json(), '{"v": "a"}')
+        assert isinstance(c.asbuiltin()['v'], str)
+        assert c.json() == '{"v": "a"}'
 
     def test_timestamp_in_dataclass(self):
         @dataclass(repr=False)
@@ -172,21 +170,19 @@ class TestSerialisableDataclass(unittest.TestCase):
             v: Timestamp
 
         c = C(Timestamp.from_string('2019-01-01T12:00:00Z'))
-        with self.subTest('Conversion in asbuiltin'):
-            self.assertIsInstance(c.asbuiltin()['v'], str)
-        with self.subTest('Conversion in json'):
-            self.assertEqual(c.json(), '{"v": "2019-01-01T12:00:00Z"}')
+        assert isinstance(c.asbuiltin()['v'], str)
+        assert c.json() == '{"v": "2019-01-01T12:00:00Z"}'
 
 
-class TestModelList(unittest.TestCase):
+class TestModelList:
     def test_list_of_dataclasses_serialised(self):
         list_in = [{'i': 1}, {'i': 2}]
         data = ModelList(Data(**i) for i in list_in)
         list_out = json.loads(data.json())
-        self.assertListEqual(list_in, list_out)
+        assert list_in == list_out
 
     def test_repr(self):
         list_in = [{'i': 1}, {'i': 2}]
         data = ModelList(Data(**i) for i in list_in)
 
-        self.assertIn('Data', repr(data))
+        assert 'Data' in repr(data)

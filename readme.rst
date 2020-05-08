@@ -63,7 +63,7 @@ which can be studied and run to ensure the package works as intended.
 
 .. code:: sh
 
-    $ python -m unittest discover tests -p "*.py"
+    $ pytest tests -o python_files=*.py
 
 Tests against the live Web API use environment variables for credentials.
 These tests manipulate your data and player,
@@ -77,9 +77,7 @@ In order to run all tests successfully, one must specify:
 * ``SPOTIFY_USER_REFRESH`` - user refresh token with all scopes
 
 In addition, playback tests require an active Spotify device
-that does not have a private session enabled.
-An empty song queue is also required, as the Web API does not implement
-queue functionality, but skipping to the next song still consumes the queue.
+that does not have a private session enabled and an empty song queue.
 
 Optionally ``TEKORE_TEST_SKIP_IS_FAIL`` can be set to raise an error if some
 of the tests would be skipped because of the environment has not been configured.
@@ -88,7 +86,7 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
 
 .. code:: sh
 
-    $ coverage run --branch -m unittest discover tests -p "*.py"
+    $ coverage run --branch -m pytest tests -o python_files=*.py
     $ coverage report -m
 
 Scripts

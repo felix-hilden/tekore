@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from unittest.mock import MagicMock, patch
 
 from tekore import (
@@ -9,28 +9,26 @@ from tekore import (
     request_client_token,
 )
 
-from tests._cred import TestCaseWithUserCredentials
 
-
-class TestParseCodeFromURL(unittest.TestCase):
+class TestParseCodeFromURL:
     def test_empty_url_raises(self):
-        with self.assertRaises(KeyError):
+        with pytest.raises(KeyError):
             parse_code_from_url('')
 
     def test_no_code_raises(self):
-        with self.assertRaises(KeyError):
+        with pytest.raises(KeyError):
             parse_code_from_url('http://example.com')
 
     def test_multiple_codes_raises(self):
-        with self.assertRaises(KeyError):
+        with pytest.raises(KeyError):
             parse_code_from_url('http://example.com?code=1&code=2')
 
     def test_single_code_returned(self):
         r = parse_code_from_url('http://example.com?code=1')
-        self.assertEqual(r, '1')
+        assert r == '1'
 
 
-class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
+class TestTokenUtilityFunctions:
     def test_prompt_for_user_token(self):
         cred = MagicMock()
         cred.authorisation_url.return_value = 'http://example.com'
@@ -42,42 +40,35 @@ class TestTokenUtilityFunctions(TestCaseWithUserCredentials):
                 patch('tekore._auth.util.print', MagicMock()):
             token = prompt_for_user_token('', '', '')
 
-        with self.subTest('Input prompted'):
-            input_.assert_called_once()
+        input_.assert_called_once()
+        assert isinstance(token, RefreshingToken)
 
-        with self.subTest('Refreshing token returned'):
-            self.assertIsInstance(token, RefreshingToken)
-
-    def test_request_refreshed_token_returns_refreshing_token(self):
+    def test_request_refreshed_token_returns_refreshing_token(
+            self, app_env, user_refresh
+    ):
         token = refresh_user_token(
-            self.client_id,
-            self.client_secret,
-            self.user_token.refresh_token
+            app_env[0],
+            app_env[1],
+            user_refresh
         )
-        self.assertIsInstance(token, RefreshingToken)
+        assert isinstance(token, RefreshingToken)
 
-    def test_expiring_user_token_refreshed(self):
+    def test_expiring_user_token_refreshed(self, app_env, user_refresh):
         token = refresh_user_token(
-            self.client_id,
-            self.client_secret,
-            self.user_token.refresh_token
+            app_env[0],
+            app_env[1],
+            user_refresh
         )
         old_token = str(token)
         token._token._expires_at -= token._token.expires_in - 30
-        self.assertNotEqual(old_token, str(token))
+        assert old_token != str(token)
 
-    def test_request_client_token_returns_refreshing_token(self):
-        token = request_client_token(
-            self.client_id,
-            self.client_secret
-        )
-        self.assertIsInstance(token, RefreshingToken)
+    def test_request_client_token_returns_refreshing_token(self, app_env):
+        token = request_client_token(app_env[0], app_env[1])
+        assert isinstance(token, RefreshingToken)
 
-    def test_expiring_client_token_refreshed(self):
-        token = request_client_token(
-            self.client_id,
-            self.client_secret
-        )
+    def test_expiring_client_token_refreshed(self, app_env):
+        token = request_client_token(app_env[0], app_env[1])
         old_token = str(token)
         token._token._expires_at -= token._token.expires_in - 30
-        self.assertNotEqual(old_token, str(token))
+        assert old_token != str(token)

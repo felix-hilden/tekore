@@ -1,28 +1,29 @@
-import unittest
+import pytest
 from unittest.mock import MagicMock
 
 from tekore import HTTPError
 from tekore.model import PlayerErrorReason
-from tekore._client.base import SpotifyBase
+from tekore import Spotify
 
-from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_id
 
 
-class TestSpotifyBaseUnits(unittest.TestCase):
-    def setUp(self):
-        self.client = SpotifyBase('token')
+@pytest.fixture
+def client():
+    return Spotify('token')
 
+
+class TestSpotifyBaseUnits:
     def test_token_is_given_token(self):
         token = MagicMock()
-        client = SpotifyBase(token)
-        self.assertIs(token, client.token)
+        client = Spotify(token)
+        assert token is client.token
 
-    def test_token_assignable(self):
-        self.client.token = 'new'
-        self.assertEqual(self.client.token, 'new')
+    def test_token_assignable(self, client):
+        client.token = 'new'
+        assert client.token == 'new'
 
-    def test_bad_request_is_parsed_for_error_reason(self):
+    def test_bad_request_is_parsed_for_error_reason(self, client):
         error = list(PlayerErrorReason)[0]
 
         class BadResponse:
@@ -39,18 +40,20 @@ class TestSpotifyBaseUnits(unittest.TestCase):
 
         sender = MagicMock()
         sender.send.return_value = BadResponse()
-        self.client.sender = sender
+        sender.is_async = False
+        client.sender = sender
 
         try:
-            self.client._get('example.com')
+            client.album('not-an-id')
+            raise AssertionError()
         except HTTPError as e:
-            self.assertIn(error.value, str(e))
+            assert error.value in str(e)
 
 
-class TestSpotifyBase(TestCaseWithUserCredentials):
-    def test_album_nonexistent_market_error_message_parsed(self):
+class TestSpotifyBase:
+    def test_album_nonexistent_market_error_message_parsed(self, app_client):
         try:
-            self.client.album(album_id, market='__')
-            self.assertTrue(False)
+            app_client.album(album_id, market='__')
+            raise AssertionError()
         except HTTPError as e:
-            self.assertIn('Invalid market code', str(e))
+            assert 'Invalid market code' in str(e)

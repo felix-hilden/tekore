@@ -1,5 +1,4 @@
-from asyncio import run
-from unittest import TestCase
+import pytest
 from unittest.mock import MagicMock, patch
 
 from requests import Request
@@ -39,7 +38,7 @@ def mock_sender(*responses, is_async: bool = False):
 module = 'tekore._sender.extending'
 
 
-class TestRetryingSender(TestCase):
+class TestRetryingSender:
     def test_rate_limited_request_retried_after_set_seconds(self):
         time = MagicMock()
         fail = rate_limit_response()
@@ -51,7 +50,8 @@ class TestRetryingSender(TestCase):
             s.send(Request())
             time.sleep.assert_called_once_with(1 + 1)
 
-    def test_async_rate_limited_request_retried_after_set_seconds(self):
+    @pytest.mark.asyncio
+    async def test_async_rate_limited_request_retried_after_set_seconds(self):
         asyncio = AsyncMock()
         fail = rate_limit_response()
         success = ok_response()
@@ -59,7 +59,7 @@ class TestRetryingSender(TestCase):
 
         s = RetryingSender(sender=sender)
         with patch(module + '.asyncio', asyncio):
-            run(s.send(Request()))
+            await s.send(Request())
             asyncio.sleep.assert_called_once_with(1 + 1)
 
     def test_default_retry_after_is_one(self):
@@ -74,7 +74,8 @@ class TestRetryingSender(TestCase):
             s.send(Request())
             time.sleep.assert_called_once_with(1 + 1)
 
-    def test_async_default_retry_after_is_one(self):
+    @pytest.mark.asyncio
+    async def test_async_default_retry_after_is_one(self):
         asyncio = AsyncMock()
         fail = rate_limit_response()
         del fail.headers['Retry-After']
@@ -83,7 +84,7 @@ class TestRetryingSender(TestCase):
 
         s = RetryingSender(sender=sender)
         with patch(module + '.asyncio', asyncio):
-            run(s.send(Request()))
+            await s.send(Request())
             asyncio.sleep.assert_called_once_with(1 + 1)
 
     def test_failing_request_but_no_retries_returns_failed(self):
@@ -92,15 +93,16 @@ class TestRetryingSender(TestCase):
         sender = mock_sender(fail, success)
         s = RetryingSender(sender=sender)
         r = s.send(Request())
-        self.assertTrue(r is fail)
+        assert r is fail
 
-    def test_async_failing_request_but_no_retries_returns_failed(self):
+    @pytest.mark.asyncio
+    async def test_async_failing_request_but_no_retries_returns_failed(self):
         fail = failed_response()
         success = ok_response()
         sender = mock_sender(fail, success, is_async=True)
         s = RetryingSender(sender=sender)
-        r = run(s.send(Request()))
-        self.assertTrue(r is fail)
+        r = await s.send(Request())
+        assert r is fail
 
     def test_failing_request_retried_max_times(self):
         fail = failed_response()
@@ -110,17 +112,18 @@ class TestRetryingSender(TestCase):
         s = RetryingSender(retries=2, sender=sender)
         with patch(module + '.time', MagicMock()):
             s.send(Request())
-        self.assertEqual(sender.send.call_count, 3)
+        assert sender.send.call_count == 3
 
-    def test_async_failing_request_retried_max_times(self):
+    @pytest.mark.asyncio
+    async def test_async_failing_request_retried_max_times(self):
         fail = failed_response()
         success = ok_response()
         sender = mock_sender(fail, fail, fail, success, is_async=True)
 
         s = RetryingSender(retries=2, sender=sender)
         with patch(module + '.asyncio', AsyncMock()):
-            run(s.send(Request()))
-        self.assertEqual(sender.send.call_count, 3)
+            await s.send(Request())
+        assert sender.send.call_count == 3
 
     def test_retry_returns_on_first_success(self):
         fail = failed_response()
@@ -130,17 +133,18 @@ class TestRetryingSender(TestCase):
         s = RetryingSender(retries=5, sender=sender)
         with patch(module + '.time', MagicMock()):
             s.send(Request())
-        self.assertEqual(sender.send.call_count, 3)
+        assert sender.send.call_count == 3
 
-    def test_async_retry_returns_on_first_success(self):
+    @pytest.mark.asyncio
+    async def test_async_retry_returns_on_first_success(self):
         fail = failed_response()
         success = ok_response()
         sender = mock_sender(fail, fail, success, fail, is_async=True)
 
         s = RetryingSender(retries=5, sender=sender)
         with patch(module + '.asyncio', AsyncMock()):
-            run(s.send(Request()))
-        self.assertEqual(sender.send.call_count, 3)
+            await s.send(Request())
+        assert sender.send.call_count == 3
 
     def test_rate_limited_retry_doesnt_decrease_retry_count(self):
         fail = failed_response()
@@ -152,9 +156,10 @@ class TestRetryingSender(TestCase):
         with patch(module + '.time', MagicMock()):
             s.send(Request())
 
-        self.assertEqual(sender.send.call_count, 4)
+        assert sender.send.call_count == 4
 
-    def test_async_rate_limited_retry_doesnt_decrease_retry_count(self):
+    @pytest.mark.asyncio
+    async def test_async_rate_limited_retry_doesnt_decrease_retry_count(self):
         fail = failed_response()
         rate = rate_limit_response()
         success = ok_response()
@@ -162,6 +167,6 @@ class TestRetryingSender(TestCase):
 
         s = RetryingSender(retries=2, sender=sender)
         with patch(module + '.asyncio', AsyncMock()):
-            run(s.send(Request()))
+            await s.send(Request())
 
-        self.assertEqual(sender.send.call_count, 4)
+        assert sender.send.call_count == 4

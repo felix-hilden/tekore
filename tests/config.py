@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from pathlib import Path
 
 from tekore import (
@@ -11,8 +11,37 @@ from tekore import (
 from tests._util import handle_warnings
 
 
-class TestReadConfig(unittest.TestCase):
-    test_config_path = 'test_config.ini'
+def config_names_set(id_, secret, uri, refresh):
+    import tekore as tk
+    tk.client_id_var = id_
+    tk.client_secret_var = secret
+    tk.redirect_uri_var = uri
+    tk.user_refresh_var = refresh
+
+
+@pytest.fixture()
+def conf_vars():
+    import tekore as tk
+    client_id_var = tk.client_id_var
+    client_secret_var = tk.client_secret_var
+    redirect_uri_var = tk.redirect_uri_var
+    user_refresh_var = tk.user_refresh_var
+    yield
+    config_names_set(
+        client_id_var,
+        client_secret_var,
+        redirect_uri_var,
+        user_refresh_var
+    )
+
+
+@pytest.fixture(scope='class')
+def conf_path():
+    return 'test_config.ini'
+
+
+@pytest.fixture(scope='function')
+def write_conf(conf_path):
     test_config = """
 [DEFAULT]
 SPOTIFY_CLIENT_ID = df_id
@@ -28,39 +57,17 @@ REDIRECT_URI = an_uri
 [MISSING]
 WHATEVER = something
 """
+    with open(conf_path, 'w') as f:
+        f.write(test_config)
 
-    @classmethod
-    def setUpClass(cls):
-        with open(cls.test_config_path, 'w') as f:
-            f.write(cls.test_config)
+    yield
 
-        import tekore as tk
-        cls.client_id_var = tk.client_id_var
-        cls.client_secret_var = tk.client_secret_var
-        cls.redirect_uri_var = tk.redirect_uri_var
-        cls.user_refresh_var = tk.user_refresh_var
+    import os
+    os.remove(conf_path)
 
-    @staticmethod
-    def _config_names_set(id_, secret, uri, refresh):
-        import tekore as tk
-        tk.client_id_var = id_
-        tk.client_secret_var = secret
-        tk.redirect_uri_var = uri
-        tk.user_refresh_var = refresh
 
-    def tearDown(self):
-        self._config_names_set(
-            self.client_id_var,
-            self.client_secret_var,
-            self.redirect_uri_var,
-            self.user_refresh_var
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        import os
-        os.remove(cls.test_config_path)
-
+@pytest.mark.usefixtures('conf_vars', 'write_conf')
+class TestReadConfig:
     def test_environment_user_refresh_returned(self):
         _, _, _, _ = config_from_environment(return_refresh=True)
 
@@ -76,78 +83,127 @@ WHATEVER = something
         os.environ[tk.redirect_uri_var] = 'uri'
 
         conf = config_from_environment()
-        self.assertTupleEqual(conf, ('id', 'secret', 'uri'))
+        assert conf == ('id', 'secret', 'uri')
 
-    def test_file_default_section(self):
-        conf = config_from_file(self.test_config_path)
-        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
+    def test_file_default_section(self, conf_path):
+        conf = config_from_file(conf_path)
+        assert conf == ('df_id', 'df_secret', 'df_uri')
 
-    def test_file_refresh_returned(self):
-        conf = config_from_file(self.test_config_path, return_refresh=True)
-        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri', 'df_refresh'))
+    def test_file_refresh_returned(self, conf_path):
+        conf = config_from_file(conf_path, return_refresh=True)
+        assert conf == ('df_id', 'df_secret', 'df_uri', 'df_refresh')
 
-    def test_file_another_section(self):
-        self._config_names_set(
+    def test_file_another_section(self, conf_path):
+        config_names_set(
             'CLIENT_ID',
             'CLIENT_SECRET',
             'REDIRECT_URI',
             '_'
         )
 
-        conf = config_from_file(self.test_config_path, 'ANOTHER')
-        self.assertTupleEqual(conf, ('an_id', 'an_secret', 'an_uri'))
+        conf = config_from_file(conf_path, 'ANOTHER')
+        assert conf == ('an_id', 'an_secret', 'an_uri')
 
-    def test_file_missing_variables_returns_none(self):
-        self._config_names_set(
+    def test_file_missing_variables_returns_none(self, conf_path):
+        config_names_set(
             'CLIENT_ID',
             'CLIENT_SECRET',
             'REDIRECT_URI',
             '_'
         )
         with handle_warnings('ignore'):
-            conf = config_from_file(self.test_config_path, 'MISSING')
-        self.assertTupleEqual(conf, (None, None, None))
+            conf = config_from_file(conf_path, 'MISSING')
+        assert conf == (None, None, None)
 
-    def test_file_another_section_is_case_sensitive(self):
-        self._config_names_set(
+    def test_file_another_section_is_case_sensitive(self, conf_path):
+        config_names_set(
             'client_id',
             'client_secret',
             'redirect_uri',
             '_'
         )
         with handle_warnings('ignore'):
-            conf = config_from_file(self.test_config_path)
-        self.assertTupleEqual(conf, (None, None, None))
+            conf = config_from_file(conf_path)
+        assert conf == (None, None, None)
 
     def test_file_nonexistent_file_raises(self):
-        with self.assertRaises(FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
             config_from_file('not_file.ini')
 
-    def test_file_nonexistent_section_raises(self):
-        with self.assertRaises(KeyError):
-            config_from_file(self.test_config_path, 'NOTSECTION')
+    def test_file_nonexistent_section_raises(self, conf_path):
+        with pytest.raises(KeyError):
+            config_from_file(conf_path, 'NOTSECTION')
 
-    def test_file_pathlib_path_accepted(self):
+    def test_file_pathlib_path_accepted(self, conf_path):
         from pathlib import Path
-        path = Path(self.test_config_path)
+        path = Path(conf_path)
         conf = config_from_file(path)
-        self.assertTupleEqual(conf, ('df_id', 'df_secret', 'df_uri'))
+        assert conf == ('df_id', 'df_secret', 'df_uri')
 
-    def test_missing_variables_warned(self):
-        self._config_names_set(
+    def test_missing_variables_warned(self, conf_path):
+        config_names_set(
             'CLIENT_ID',
             'CLIENT_SECRET',
             'REDIRECT_URI',
             '_'
         )
         with handle_warnings('error'):
-            with self.assertRaises(MissingConfigurationWarning):
-                config_from_file(self.test_config_path, 'MISSING')
+            with pytest.raises(MissingConfigurationWarning):
+                config_from_file(conf_path, 'MISSING')
 
 
-class TestConfigToFile(unittest.TestCase):
-    test_config_path = Path('test_config.ini')
-    test_config = """
+@pytest.fixture(scope='function')
+def remove_conf(conf_path):
+    yield
+    path = Path(conf_path)
+    if path.exists():
+        path.unlink()
+
+
+@pytest.mark.usefixtures('remove_conf')
+class TestConfigToFile:
+    def test_pathlib_path_accepted(self, conf_path):
+        path = Path(conf_path)
+        config_to_file(path, ('a', 'b', 'c'))
+
+    def test_config_written_with_tuple(self, conf_path):
+        written = ('id', 'secret', 'uri')
+        config_to_file(conf_path, written)
+        loaded = config_from_file(conf_path)
+        assert written == loaded
+
+    def test_config_written_with_dict(self, conf_path):
+        import tekore as tk
+        written = {tk.client_secret_var: 'secret'}
+
+        config_to_file(conf_path, written)
+        loaded = config_from_file(conf_path)
+        assert (None, 'secret', None) == loaded
+
+    def test_config_write_to_section(self, conf_path):
+        written = ('id', 'secret', 'uri')
+        config_to_file(conf_path, written, section='SEC')
+        loaded = config_from_file(conf_path, section='SEC')
+        assert written == loaded
+
+    def test_config_written_with_tuple_refresh_token(self, conf_path):
+        written = ('id', 'secret', 'uri', 'refresh')
+        config_to_file(conf_path, written)
+        loaded = config_from_file(conf_path, return_refresh=True)
+        assert written == loaded
+
+    def test_config_tuple_nones_not_written(self, conf_path):
+        original = ('id', 'secret', 'uri')
+        config_to_file(conf_path, original)
+
+        written = (None, 'another', None)
+        config_to_file(conf_path, written)
+
+        loaded = config_from_file(conf_path)
+        assert ('id', 'another', 'uri') == loaded
+
+    def test_existing_configuration_preserved(self, conf_path):
+        test_config = """
 [DEFAULT]
 SOMETHING = whatever
 SPOTIFY_CLIENT_ID = df_id
@@ -158,58 +214,9 @@ SPOTIFY_USER_REFRESH = df_refresh
 [SECTION]
 WHATEVER = something
 """
-
-    def tearDown(self):
-        if self.test_config_path.exists():
-            self.test_config_path.unlink()
-
-    def _write_default(self):
-        self.test_config_path.write_text(self.test_config)
-
-    def test_pathlib_path_accepted(self):
-        config_to_file(self.test_config_path, ('a', 'b', 'c'))
-
-    def test_config_written_with_tuple(self):
-        written = ('id', 'secret', 'uri')
-        config_to_file(self.test_config_path, written)
-        loaded = config_from_file(self.test_config_path)
-        self.assertTupleEqual(written, loaded)
-
-    def test_config_written_with_dict(self):
-        import tekore as tk
-        written = {tk.client_secret_var: 'secret'}
-
-        config_to_file(self.test_config_path, written)
-        loaded = config_from_file(self.test_config_path)
-        self.assertTupleEqual((None, 'secret', None), loaded)
-
-    def test_config_write_to_section(self):
-        written = ('id', 'secret', 'uri')
-        config_to_file(self.test_config_path, written, section='SEC')
-        loaded = config_from_file(self.test_config_path, section='SEC')
-        self.assertTupleEqual(written, loaded)
-
-    def test_config_written_with_tuple_refresh_token(self):
-        written = ('id', 'secret', 'uri', 'refresh')
-        config_to_file(self.test_config_path, written)
-        loaded = config_from_file(self.test_config_path, return_refresh=True)
-        self.assertTupleEqual(written, loaded)
-
-    def test_config_tuple_nones_not_written(self):
-        original = ('id', 'secret', 'uri')
-        config_to_file(self.test_config_path, original)
-
-        written = (None, 'another', None)
-        config_to_file(self.test_config_path, written)
-
-        loaded = config_from_file(self.test_config_path)
-        self.assertTupleEqual(('id', 'another', 'uri'), loaded)
-
-    def test_existing_configuration_preserved(self):
-        self._write_default()
-        config_to_file(self.test_config_path, ('a', 'b', 'c'))
-        text = self.test_config_path.read_text()
-        self.assertTupleEqual(
-            (True, True, True),
-            tuple(i in text for i in ('SOMETHING', 'WHATEVER', 'SECTION'))
-        )
+        path = Path(conf_path)
+        path.write_text(test_config)
+        config_to_file(path, ('a', 'b', 'c'))
+        text = path.read_text()
+        conf = tuple(i in text for i in ('SOMETHING', 'WHATEVER', 'SECTION'))
+        assert (True, True, True) == conf

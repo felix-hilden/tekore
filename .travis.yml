@@ -12,7 +12,7 @@ before_script:
 
 script:
   - flake8 . --select=C,E,F,W,B,B9 --ignore=B305,E402,E501,E722,F401
-  - coverage run --branch -m unittest discover tests -p "*.py"
+  - coverage run --branch -m pytest tests -o python_files=*.py
   - cd docs && make html && cd ..
 
 after_script:

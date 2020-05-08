@@ -1,180 +1,190 @@
+import pytest
+
 from time import sleep
-
-from tests._cred import TestCaseWithUserCredentials, skip_or_fail
 from ._resources import track_ids, album_id, episode_id
-
+from tests.conftest import skip_or_fail
 from tekore import HTTPError, to_uri
 
 
-class TestSpotifyPlayerSequence(TestCaseWithUserCredentials):
+@pytest.fixture()
+def setup(user_client):
+    try:
+        devices = user_client.playback_devices()
+    except HTTPError as e:
+        skip_or_fail(HTTPError, 'Playback devices could not be retrieved!', e)
+
+    for device in devices:
+        if not device.is_restricted and not device.is_private_session:
+            break
+    else:
+        skip_or_fail(
+            AssertionError,
+            'No unrestricted devices with public sessions found!'
+        )
+
+    try:
+        playback = user_client.playback()
+    except HTTPError as e:
+        skip_or_fail(
+            HTTPError,
+            'Current playback information could not be retrieved!',
+            e
+        )
+
+    yield device.id
+
+    if playback is None:
+        user_client.playback_pause()
+        user_client.playback_volume(
+            device.volume_percent,
+            device.id
+        )
+        return
+
+    if playback.device is not None:
+        user_client.playback_transfer(
+            playback.device.id,
+            playback.is_playing
+        )
+
+    if playback.context is None:
+        user_client.playback_start_tracks(
+            [playback.item.id],
+            position_ms=playback.progress_ms
+        )
+    else:
+        user_client.playback_start_context(
+            playback.context.uri,
+            offset=playback.item.id,
+            position_ms=playback.progress_ms
+        )
+    if not playback.is_playing:
+        user_client.playback_pause()
+
+    user_client.playback_shuffle(playback.shuffle_state)
+    user_client.playback_repeat(playback.repeat_state)
+
+    user_client.playback_volume(device.volume_percent, device.id)
+
+
+def currently_playing(client):
+    sleep(5)
+    return client.playback_currently_playing()
+
+
+def assert_playing(client, track_id: str):
+    playing = currently_playing(client)
+    assert playing.item.id == track_id
+
+
+@pytest.mark.usefixtures('setup')
+class TestSpotifyPlayerSequence:
     """
     Ordered test set to test player.
-    As the Web API does not implement Queue functionality,
-    this test set requires the user's queue to be empty.
+
+    This test set requires an active device and an empty song queue.
+    Restoring playback is not possible when listening to artists.
 
     Attempts are made to restore playback state after tests.
-    Nevertheless, song queues are not preserved.
     Playing saved tracks is not provided as a context,
     so the current song is resumed, but saved tracks won't continue playing.
     Shuffle and repeat states might be affected too.
     """
-    def setUp(self):
-        try:
-            devices = self.client.playback_devices()
-        except HTTPError as e:
-            skip_or_fail(HTTPError, 'Playback devices could not be retrieved!', e)
+    def test_player(self, user_client, setup):
+        device_id = setup
 
-        for device in devices:
-            if not device.is_restricted and not device.is_private_session:
-                self.device = device
-                break
-        else:
-            skip_or_fail(
-                AssertionError,
-                'No unrestricted devices with public sessions found!'
-            )
+        # Set volume
+        user_client.playback_volume(0, device_id=device_id)
 
-        try:
-            self.playback = self.client.playback()
-        except HTTPError as e:
-            skip_or_fail(
-                HTTPError,
-                'Current playback information could not be retrieved!',
-                e
-            )
+        # Transfer playback
+        user_client.playback_transfer(device_id, force_play=True)
 
-    def currently_playing(self):
-        sleep(5)
-        return self.client.playback_currently_playing()
+        # Playback start with offset index
+        user_client.playback_start_tracks(track_ids, offset=1)
+        assert_playing(user_client, track_ids[1])
 
-    def assertPlaying(self, msg: str, track_id: str):
-        playing = self.currently_playing()
-        with self.subTest(msg):
-            self.assertEqual(playing.item.id, track_id)
+        # Currently playing has an item
+        playing = user_client.playback_currently_playing()
+        assert playing.item is not None
 
-    def test_player(self):
-        with self.subTest('Set volume'):
-            self.client.playback_volume(0, device_id=self.device.id)
+        # Playback start with offset uri
+        user_client.playback_start_tracks(track_ids, offset=track_ids[1])
+        assert_playing(user_client, track_ids[1])
 
-        with self.subTest('Transfer playback'):
-            self.client.playback_transfer(self.device.id, force_play=True)
+        # Playback start
+        user_client.playback_start_tracks(track_ids)
+        assert_playing(user_client, track_ids[0])
 
-        self.client.playback_start_tracks(track_ids, offset=1)
-        self.assertPlaying('Playback start with offset index', track_ids[1])
+        # Playback pause
+        user_client.playback_pause()
+        playing = currently_playing(user_client)
+        assert playing.is_playing is False
 
-        playing = self.client.playback_currently_playing()
-        with self.subTest('Currently playing has item'):
-            self.assertIsNotNone(playing.item)
+        # Already paused
+        with pytest.raises(HTTPError):
+            user_client.playback_pause()
 
-        self.client.playback_start_tracks(track_ids, offset=track_ids[1])
-        self.assertPlaying('Playback start with offset uri', track_ids[1])
+        # Playback resume
+        user_client.playback_resume()
+        playing = currently_playing(user_client)
+        assert playing.is_playing is True
 
-        self.client.playback_start_tracks(track_ids)
-        self.assertPlaying('Playback start', track_ids[0])
+        # Playback next
+        user_client.playback_next()
+        assert_playing(user_client, track_ids[1])
 
-        self.client.playback_pause()
-        playing = self.currently_playing()
-        with self.subTest('Playback pause'):
-            self.assertFalse(playing.is_playing)
+        # Playback previous
+        user_client.playback_previous()
+        assert_playing(user_client, track_ids[0])
 
-        with self.subTest('Player error: already paused'):
-            with self.assertRaises(HTTPError):
-                self.client.playback_pause()
+        # Playback seek
+        user_client.playback_seek(30 * 1000)
+        playing = currently_playing(user_client)
+        assert playing.progress_ms > 30 * 1000
 
-        self.client.playback_resume()
-        playing = self.currently_playing()
-        with self.subTest('Playback resume'):
-            self.assertTrue(playing.is_playing)
+        # Playback repeat / shuffle
+        user_client.playback_repeat('off')
+        user_client.playback_shuffle(False)
 
-        self.client.playback_next()
-        self.assertPlaying('Playback next', track_ids[1])
+        # Playback start context
+        user_client.playback_start_context(to_uri('album', album_id))
 
-        self.client.playback_previous()
-        self.assertPlaying('Playback previous', track_ids[0])
+        # Queue consumed on next
+        user_client.playback_queue_add(to_uri('track', track_ids[0]))
+        user_client.playback_next()
+        assert_playing(user_client, track_ids[0])
 
-        self.client.playback_seek(30 * 1000)
-        playing = self.currently_playing()
-        with self.subTest('Playback seek'):
-            self.assertGreater(playing.progress_ms, 30 * 1000)
+        # Add episode to queue
+        user_client.playback_queue_add(to_uri('episode', episode_id))
 
-        with self.subTest('Playback repeat'):
-            self.client.playback_repeat('off')
+        # Currently playing episode returned by default
+        user_client.playback_next()
+        playing = currently_playing(user_client)
+        assert playing.item.id == episode_id
 
-        with self.subTest('Playback shuffle'):
-            self.client.playback_shuffle(False)
+        # Currently playing item is none if only tracks
+        playing = user_client.playback_currently_playing(tracks_only=True)
+        assert playing.item is None
 
-        with self.subTest('Playback start context'):
-            self.client.playback_start_context(to_uri('album', album_id))
+        # Playback episode returned by default
+        playing = user_client.playback()
+        assert playing.item.id == episode_id
 
-        self.client.playback_queue_add(to_uri('track', track_ids[0]))
-        self.client.playback_next()
-        self.assertPlaying('Queue consumed on next', track_ids[0])
-
-        with self.subTest('Add episode to queue'):
-            self.client.playback_queue_add(to_uri('episode', episode_id))
-
-        self.client.playback_next()
-        playing = self.currently_playing()
-        with self.subTest('Currently playing episode returned by default'):
-            self.assertEqual(playing.item.id, episode_id)
-
-        playing = self.client.playback_currently_playing(tracks_only=True)
-        with self.subTest('Currently playing episode is none if only tracks'):
-            self.assertIsNone(playing.item)
-
-        playing = self.client.playback()
-        with self.subTest('Playback episode returned by default'):
-            self.assertEqual(playing.item.id, episode_id)
-
-        playing = self.client.playback(tracks_only=True)
-        with self.subTest('Playback episode is none if only tracks'):
-            self.assertIsNone(playing.item)
-
-    def tearDown(self):
-        if self.playback is None:
-            self.client.playback_pause()
-            self.client.playback_volume(
-                self.device.volume_percent,
-                self.device.id
-            )
-            return
-
-        if self.playback.device is not None:
-            self.client.playback_transfer(
-                self.playback.device.id,
-                self.playback.is_playing
-            )
-
-        if self.playback.context is None:
-            self.client.playback_start_tracks(
-                [self.playback.item.id],
-                position_ms=self.playback.progress_ms
-            )
-        else:
-            self.client.playback_start_context(
-                self.playback.context.uri,
-                offset=self.playback.item.id,
-                position_ms=self.playback.progress_ms
-            )
-        if not self.playback.is_playing:
-            self.client.playback_pause()
-
-        self.client.playback_shuffle(self.playback.shuffle_state)
-        self.client.playback_repeat(self.playback.repeat_state)
-
-        self.client.playback_volume(self.device.volume_percent, self.device.id)
+        # Playback item is none if only tracks
+        playing = user_client.playback(tracks_only=True)
+        assert playing.item is None
 
 
-class TestSpotifyPlayer(TestCaseWithUserCredentials):
-    def test_recently_played(self):
-        self.client.playback_recently_played()
+class TestSpotifyPlayer:
+    def test_recently_played(self, user_client):
+        user_client.playback_recently_played()
 
-    def test_recently_played_before_timestamp_next_is_before_current(self):
-        p1 = self.client.playback_recently_played(limit=1)
-        p2 = self.client.next(p1)
-        self.assertLess(p2.cursors.after, p1.cursors.after)
+    def test_recently_played_before_next_is_before_current(self, user_client):
+        p1 = user_client.playback_recently_played(limit=1)
+        p2 = user_client.next(p1)
+        assert p2.cursors.after < p1.cursors.after
 
-    def test_recently_played_after_timestamp_next_is_after_current(self):
-        p1 = self.client.playback_recently_played(limit=1, after=1569888000)
-        p2 = self.client.next(p1)
-        self.assertGreater(p2.cursors.after, p1.cursors.after)
+    def test_recently_played_after_next_is_after_current(self, user_client):
+        p1 = user_client.playback_recently_played(limit=1, after=1569888000)
+        p2 = user_client.next(p1)
+        assert p2.cursors.after > p1.cursors.after

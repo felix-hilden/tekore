@@ -1,32 +1,30 @@
-from tests._cred import TestCaseWithCredentials, TestCaseWithUserCredentials
-from ._resources import episode_id, episode_ids
+import pytest
 
+from ._resources import episode_id, episode_ids
 from tekore import HTTPError
 
 
-class TestSpotifyEpisodeAsApp(TestCaseWithCredentials):
-    def test_episode_not_found_without_market(self):
-        with self.assertRaises(HTTPError):
-            self.client.episode(episode_id)
+class TestSpotifyEpisode:
+    def test_episode_not_found_without_market(self, app_client):
+        with pytest.raises(HTTPError):
+            app_client.episode(episode_id)
 
-    def test_episode_found_with_market(self):
-        episode = self.client.episode(episode_id, market='FI')
-        self.assertEqual(episode.id, episode_id)
+    def test_episode_found_with_market(self, app_client):
+        episode = app_client.episode(episode_id, market='FI')
+        assert episode.id == episode_id
 
-    def test_resume_point_is_none(self):
-        episode = self.client.episode(episode_id, market='FI')
-        self.assertIsNone(episode.resume_point)
+    def test_resume_point_is_none(self, app_client):
+        episode = app_client.episode(episode_id, market='FI')
+        assert episode.resume_point is None
 
-    def test_episodes(self):
-        episodes = self.client.episodes(episode_ids, market='FI')
-        self.assertListEqual(episode_ids, [e.id for e in episodes])
+    def test_episodes(self, app_client):
+        episodes = app_client.episodes(episode_ids, market='FI')
+        assert episode_ids == [e.id for e in episodes]
 
+    def test_found_without_market(self, user_client):
+        episode = user_client.episode(episode_id)
+        assert episode.id == episode_id
 
-class TestSpotifyEpisodeAsUser(TestCaseWithUserCredentials):
-    def test_found_without_market(self):
-        episode = self.client.episode(episode_id)
-        self.assertEqual(episode.id, episode_id)
-
-    def test_resume_point_exists(self):
-        episode = self.client.episode(episode_id)
-        self.assertIsNotNone(episode.resume_point)
+    def test_resume_point_exists(self, user_client):
+        episode = user_client.episode(episode_id)
+        assert episode.resume_point is not None

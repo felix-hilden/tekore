@@ -27,4 +27,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[dev]
       - name: Run test suite
-        run: python -m unittest discover tests -p "*.py"
+        run: python -m pytest tests -o python_files=*.py

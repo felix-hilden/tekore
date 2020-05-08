@@ -1,112 +1,95 @@
-from asyncio import run
+import pytest
 
-from tekore import Spotify
-from tests._util import handle_warnings
-from tests._cred import TestCaseWithUserCredentials
 from ._resources import album_id
 
 
-class TestSpotifyPaging(TestCaseWithUserCredentials):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.aclient = Spotify(cls.user_token, asynchronous=True)
+@pytest.fixture(scope='class')
+def tracks(data_client):
+    return data_client.album_tracks(album_id, limit=1)
 
-        cls.tracks = cls.client.album_tracks(album_id, limit=1)
-        cls.played = cls.client.playback_recently_played()
 
-        cls.handle = handle_warnings()
-        cls.handle.__enter__()
+@pytest.fixture(scope='class')
+def played(data_client):
+    return data_client.playback_recently_played()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.handle.__exit__(None, None, None)
 
-    def test_paging_next(self):
-        cat_next = self.client.next(self.tracks)
-        self.assertGreater(cat_next.total, 0)
+@pytest.mark.usefixtures('suppress_warnings')
+class TestSpotifyPaging:
+    def test_next(self, app_client, tracks):
+        cat_next = app_client.next(tracks)
+        assert cat_next.total > 0
 
-    def test_paging_next_parses_item_below_top_level(self):
-        cat, = self.client.search('sheeran', limit=1)
-        cat_next = self.client.next(cat)
-        self.assertGreater(cat_next.total, 0)
+    @pytest.mark.asyncio
+    async def test_async_next(self, app_aclient, tracks):
+        cat_next = await app_aclient.next(tracks)
+        assert cat_next.total > 0
 
-    def test_search_next_beyond_limit_returns_none(self):
-        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=1999)
-        self.assertIsNone(self.client.next(pl))
+    def test_next_parses_item_below_top_level(self, app_client):
+        cat, = app_client.search('sheeran', limit=1)
+        cat_next = app_client.next(cat)
+        assert cat_next.total > 0
 
-    def test_async_search_next_beyond_limit_returns_none(self):
-        pl, = self.client.search('piano', types=('playlist',), limit=1, offset=1999)
+    def test_next_beyond_limit(self, app_client):
+        tracks, = app_client.search('piano', limit=1, offset=1999)
+        assert app_client.next(tracks) is None
 
-        async def f():
-            return await self.aclient.next(pl)
+    @pytest.mark.asyncio
+    async def test_async_next_beyond_limit(self, app_aclient):
+        tracks, = await app_aclient.search('piano', limit=1, offset=1999)
+        assert await app_aclient.next(tracks) is None
 
-        self.assertIsNone(run(f()))
+    def test_previous_of_next(self, app_client, tracks):
+        next_ = app_client.next(tracks)
+        prev = app_client.previous(next_)
+        assert tracks.items[0].id == prev.items[0].id
 
-    def test_async_paging_next(self):
-        cat_next = run(self.aclient.next(self.tracks))
-        self.assertGreater(cat_next.total, 0)
+    @pytest.mark.asyncio
+    async def test_async_previous_of_next(self, app_aclient, tracks):
+        next_ = await app_aclient.next(tracks)
+        prev = await app_aclient.previous(next_)
+        assert tracks.items[0].id == prev.items[0].id
 
-    def test_paging_previous_of_next_is_identical(self):
-        cat_next = self.client.next(self.tracks)
-        cat_prev = self.client.previous(cat_next)
-        self.assertEqual(self.tracks.items[0].id, cat_prev.items[0].id)
+    @pytest.mark.asyncio
+    async def test_async_previous_of_first(self, app_aclient, tracks):
+        prev = await app_aclient.previous(tracks)
+        assert prev is None
 
-    def test_async_paging_previous_of_first_returns_none(self):
-        async def f():
-            return await self.aclient.previous(self.tracks)
+    def test_all_pages_exhausts_offset_paging(self, app_client, tracks):
+        pages = list(app_client.all_pages(tracks))
+        assert pages[-1].next is None
 
-        self.assertIsNone(run(f()))
+    def test_all_pages_exhausts_cursor_paging(self, user_client, played):
+        pages = list(user_client.all_pages(played))
+        assert pages[-1].next is None
+        assert pages[-1].cursors is None
 
-    def test_async_paging_previous_of_next_is_identical(self):
-        async def f():
-            cat_next = await self.aclient.next(self.tracks)
-            return await self.aclient.previous(cat_next)
+    @pytest.mark.asyncio
+    async def test_async_all_pages_exhausts_offset_paging(self, app_aclient, tracks):
+        pages = [i async for i in app_aclient.all_pages(tracks)]
+        assert pages[-1].next is None
 
-        cat_prev = run(f())
-        self.assertEqual(self.tracks.items[0].id, cat_prev.items[0].id)
+    def test_all_pages_from_cursor_paging_share_type(self, user_client, played):
+        pages = user_client.all_pages(played)
+        assert all(isinstance(p, type(played)) for p in pages)
 
-    def test_all_pages_exhausts_offset_paging(self):
-        pages = list(self.client.all_pages(self.tracks))
-        self.assertIsNone(pages[-1].next)
+    def test_all_items_from_cursor_paging_share_type(self, user_client, played):
+        items = user_client.all_items(played)
+        type_ = type(played.items[0])
+        assert all(isinstance(i, type_) for i in items)
 
-    def test_all_pages_exhausts_cursor_paging(self):
-        pages = list(self.client.all_pages(self.played))
+    def test_all_pages_from_offset_paging_share_type(self, app_client, tracks):
+        pages = app_client.all_pages(tracks)
+        assert all(isinstance(p, type(tracks)) for p in pages)
 
-        with self.subTest('Next is None'):
-            self.assertIsNone(pages[-1].next)
-        with self.subTest('Cursors is None'):
-            self.assertIsNone(pages[-1].cursors)
+    def test_all_items_from_offset_paging_share_type(self, app_client, tracks):
+        items = app_client.all_items(tracks)
+        type_ = type(tracks.items[0])
+        assert all(isinstance(i, type_) for i in items)
 
-    def test_async_all_pages_exhausts_offset_paging(self):
-        async def f():
-            return [i async for i in self.aclient.all_pages(self.tracks)]
-
-        pages = run(f())
-        self.assertIsNone(pages[-1].next)
-
-    def test_all_pages_from_cursor_paging_share_type(self):
-        pages = self.client.all_pages(self.played)
-        self.assertTrue(all(isinstance(p, type(self.played)) for p in pages))
-
-    def test_all_items_from_cursor_paging_share_type(self):
-        items = self.client.all_items(self.played)
-        type_ = type(self.played.items[0])
-        self.assertTrue(all(isinstance(i, type_) for i in items))
-
-    def test_all_pages_from_offset_paging_share_type(self):
-        pages = self.client.all_pages(self.tracks)
-        self.assertTrue(all(isinstance(p, type(self.tracks)) for p in pages))
-
-    def test_all_items_from_offset_paging_share_type(self):
-        items = self.client.all_items(self.tracks)
-        type_ = type(self.tracks.items[0])
-        self.assertTrue(all(isinstance(i, type_) for i in items))
-
-    def test_async_all_items_from_offset_paging_share_type(self):
-        async def f():
-            return [i async for i in self.aclient.all_items(self.tracks)]
-
-        items = run(f())
-        type_ = type(self.tracks.items[0])
-        self.assertTrue(all(isinstance(i, type_) for i in items))
+    @pytest.mark.asyncio
+    async def test_async_all_items_from_offset_paging_share_type(
+            self, app_aclient, tracks
+    ):
+        items = [i async for i in app_aclient.all_items(tracks)]
+        type_ = type(tracks.items[0])
+        assert all(isinstance(i, type_) for i in items)
