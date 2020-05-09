@@ -160,6 +160,9 @@ class PersistentSender(SyncSender):
         prepared = self.session.prepare_request(request)
         return self.session.send(prepared, **self.requests_kwargs)
 
+    def __del__(self):
+        self.session.close()
+
 
 class AsyncPersistentSender(AsyncSender):
     """
