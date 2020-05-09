@@ -39,10 +39,6 @@ class TestSpotifyTrack:
         assert track_relinked == track.linked_from.id
         assert track.is_playable is True
 
-    def test_track_doesnt_have_episode_or_track(self, app_client):
-        track = app_client.track(track_id)
-        assert all(i is None for i in (track.episode, track.track))
-
     def test_tracks_with_market(self, app_client):
         tracks = app_client.tracks(track_ids, market='US')
         assert len(tracks) == len(track_ids)

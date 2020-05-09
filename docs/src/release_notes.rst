@@ -56,6 +56,17 @@ and serialisation clear. (:issue:`149`)
   Enumerations and timestamps are no longer preserved in the conversion.
 - :meth:`pprint <model.Serialisable.pprint>` output is now compact by default
 
+Playlist items
+~~~~~~~~~~~~~~
+Boolean attributes of :class:`FullTrack <model.FullTrack>` and
+:class:`FullEpisode <model.FullEpisode>` on a playlist were previously also
+available elsewhere, but had :class:`None` values. They were removed.
+The booleans are still available in playlist-related calls with the new
+:class:`FullPlaylistTrack <model.FullPlaylistTrack>` and
+:class:`FullPlaylistEpisode <model.FullPlaylistEpisode>`.
+:class:`LocalPlaylistTrack <model.LocalPlaylistTrack>` now also provides
+these booleans. (:issue:`170`)
+
 Miscellaneous
 ~~~~~~~~~~~~~
 - Exceptions thrown in :ref:`auth` now match :ref:`client`.

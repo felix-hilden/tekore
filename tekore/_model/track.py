@@ -77,8 +77,6 @@ class FullTrack(Track):
     Is playable is not available when market is None.
     Restrictions is available if restrictions have been placed on
     the track, making it unplayable.
-
-    Episode and track are only available on a playlist.
     """
     album: SimpleAlbum
     external_ids: dict
@@ -87,8 +85,6 @@ class FullTrack(Track):
     linked_from: TrackLink = None
     is_playable: bool = None
     restrictions: Restrictions = None
-    episode: bool = None
-    track: bool = None
 
     def __post_init__(self):
         super().__post_init__()

@@ -164,7 +164,9 @@ Playlist
    SimplePlaylist
    SimplePlaylistPaging
    FullPlaylist
-
+   FullPlaylistTrack
+   FullPlaylistEpisode
+   LocalPlaylistTrack
    LocalItem
    LocalAlbum
    LocalArtist
@@ -176,12 +178,15 @@ Playlist
 .. autoclass:: SimplePlaylist
 .. autoclass:: SimplePlaylistPaging
 .. autoclass:: FullPlaylist
+.. autoclass:: FullPlaylistTrack
+.. autoclass:: FullPlaylistEpisode
 
 Local items
 ***********
 Some playlists contain locally stored tracks.
 They contain mostly `None` values along with empty lists and dictionaries.
 
+.. autoclass:: LocalPlaylistTrack
 .. autoclass:: LocalItem
 .. autoclass:: LocalAlbum
 .. autoclass:: LocalArtist

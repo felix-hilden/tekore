@@ -20,9 +20,9 @@ because they cannot be analysed.
     track = spotify.playlist_tracks(playlist.id, limit=1).items[0].track
     name = f'"{track.name}" from {playlist.name}'
 
-    if getattr(track, 'episode', False):
+    if track.episode:
         print(f'Cannot analyse episodes!\nGot {name}.')
-    elif getattr(track, 'is_local', False):
+    elif track.track and track.is_local:
         print(f'Cannot analyse local tracks!\nGot {name}.')
     else:
         print(f'Analysing {name}...\n')
