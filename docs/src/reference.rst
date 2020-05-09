@@ -23,5 +23,7 @@ All public objects are documented in these sections.
 
    reference/*
 
-The module structure was flattened in version 2.0.
-For more information see :ref:`release-notes` and GitHub issue :issue:`81`.
+.. warning::
+
+    Tekore 2 has been released! It brings major improvements to the library.
+    See :ref:`release-notes` for more information.

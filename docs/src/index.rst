@@ -32,6 +32,11 @@ After your first calls to the API you might want to look at :ref:`advanced-usage
 More ellaborate example scripts can be found in :ref:`examples`.
 Detailed information can be found in our concise :ref:`reference`.
 
+.. warning::
+
+    Tekore 2 has been released! It brings major improvements to the library.
+    See :ref:`release-notes` for more information.
+
 Features
 ========
 The `Web API`_ provides access to a plethora of data on music and users.
