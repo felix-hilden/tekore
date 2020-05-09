@@ -78,6 +78,10 @@ Miscellaneous
   :class:`PersistentSender`, also affects :class:`Client` behavior
   (:issue:`141`)
 
+Fixed
+*****
+- Properly close sessions in :class:`PersistentSender` (:issue:`179`)
+
 1.7.0 (2020-04-28)
 ------------------
 Added
