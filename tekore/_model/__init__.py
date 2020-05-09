@@ -60,6 +60,9 @@ from .playlist import (
     SimplePlaylist,
     FullPlaylist,
     SimplePlaylistPaging,
+    FullPlaylistTrack,
+    FullPlaylistEpisode,
+    LocalPlaylistTrack,
 )
 from .recommendations import (
     Recommendations,

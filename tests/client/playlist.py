@@ -3,11 +3,10 @@ from ._resources import (
     user_id,
     playlist_id,
     playlist_local,
-    playlist_podcast,
+    playlist_special,
     track_ids,
     image,
 )
-from tekore import Spotify
 
 
 class TestSpotifyPlaylistView:
@@ -18,18 +17,29 @@ class TestSpotifyPlaylistView:
         playlist = app_client.playlist(playlist_id)
         assert playlist.id == playlist_id
 
-    def test_playlist_track_has_episode_and_track(self, app_client):
-        track = app_client.playlist(playlist_id).tracks.items[0].track
-        assert all(i is not None for i in (track.episode, track.track))
+    def test_playlist_track_attributes(self, app_client):
+        track = app_client.playlist_tracks(playlist_id, limit=1).items[0].track
+        assert track.track is True
+        assert track.episode is False
+        assert track.is_local is False
+
+    def test_playlist_episode_attributes(self, app_client):
+        tracks = app_client.playlist_tracks(playlist_special, limit=1, market='FI')
+        episode = tracks.items[0].track
+        assert episode.track is False
+        assert episode.episode is True
+        assert hasattr(episode, 'is_local') is False
+
+    def test_playlist_local_track_attributes(self, app_client):
+        track = app_client.playlist_tracks(playlist_local).items[0].track
+        assert track.track is True
+        assert track.episode is False
+        assert track.is_local is True
 
     def test_playlist_owner_attributes(self, app_client):
         owner = app_client.playlist(playlist_id).owner
         nones = [i is None for i in (owner.followers, owner.images)]
         assert all(nones)
-
-    def test_playlist_with_local_track(self, app_client):
-        playlist = app_client.playlist(playlist_local)
-        assert playlist.tracks.items[0].is_local is True
 
     def test_playlist_cover_image(self, app_client):
         app_client.playlist_cover_image(playlist_id)
@@ -62,42 +72,42 @@ class TestSpotifyPlaylistView:
         assert isinstance(tracks, dict)
 
     def test_playlist_podcast_no_market_returns_none(self, app_client):
-        playlist = app_client.playlist(playlist_podcast)
+        playlist = app_client.playlist(playlist_special)
         assert playlist.tracks.items[0].track is None
 
     def test_playlist_podcast_with_market_returned(self, app_client):
-        playlist = app_client.playlist(playlist_podcast, market='FI')
+        playlist = app_client.playlist(playlist_special, market='FI')
         assert playlist.tracks.items[0].track.episode is True
 
     def test_playlist_with_podcast_as_tracks_no_market_returns_object(
             self, app_client
     ):
-        playlist = app_client.playlist(playlist_podcast, episodes_as_tracks=True)
+        playlist = app_client.playlist(playlist_special, episodes_as_tracks=True)
         assert playlist['tracks']['items'][0]['track'] is None
 
     def test_playlist_with_podcast_as_tracks_with_market_returns_object(
             self, app_client
     ):
         playlist = app_client.playlist(
-            playlist_podcast,
+            playlist_special,
             market='FI',
             episodes_as_tracks=True
         )
         assert playlist['tracks']['items'][0]['track']['track'] is True
 
     def test_playlist_tracks_podcast_no_market_returns_none(self, app_client):
-        tracks = app_client.playlist_tracks(playlist_podcast)
+        tracks = app_client.playlist_tracks(playlist_special)
         assert tracks.items[0].track is None
 
     def test_playlist_tracks_podcast_with_market_returned(self, app_client):
-        tracks = app_client.playlist_tracks(playlist_podcast, market='FI')
+        tracks = app_client.playlist_tracks(playlist_special, market='FI')
         assert tracks.items[0].track.episode is True
 
     def test_playlist_tracks_with_podcast_as_tracks_no_market_returns_object(
             self, app_client
     ):
         tracks = app_client.playlist_tracks(
-            playlist_podcast,
+            playlist_special,
             episodes_as_tracks=True
         )
         assert tracks['items'][0]['track'] is None
@@ -106,7 +116,7 @@ class TestSpotifyPlaylistView:
             self, app_client
     ):
         tracks = app_client.playlist_tracks(
-            playlist_podcast,
+            playlist_special,
             market='FI',
             episodes_as_tracks=True
         )
@@ -116,12 +126,12 @@ class TestSpotifyPlaylistView:
         user_client.followed_playlists()
 
     def test_playlist_with_podcast(self, user_client):
-        playlist = user_client.playlist(playlist_podcast)
-        assert playlist.id == playlist_podcast
+        playlist = user_client.playlist(playlist_special)
+        assert playlist.id == playlist_special
 
     def test_playlist_tracks_with_podcast(self, user_client):
-        playlist = user_client.playlist(playlist_podcast)
-        assert playlist.id == playlist_podcast
+        playlist = user_client.playlist(playlist_special)
+        assert playlist.id == playlist_special
 
 
 def assert_tracks_equal(client, playlist: str, tracks: list):

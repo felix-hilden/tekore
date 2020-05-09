@@ -10,9 +10,46 @@ from .member import Followers, Image
 from .episode import FullEpisode
 from .serialise import Model, ModelList, Timestamp
 
+
+@dataclass(repr=False)
+class FullPlaylistTrack(FullTrack):
+    """
+    Track on a playlist.
+
+    Provides :attr:`episode` and :attr:`track` booleans
+    to easily determine the type of playlist item.
+    """
+    episode: bool = False
+    track: bool = True
+
+
+@dataclass(repr=False)
+class FullPlaylistEpisode(FullEpisode):
+    """
+    Episode on a playlist.
+
+    Provides :attr:`episode` and :attr:`track` booleans
+    to easily determine the type of playlist item.
+    """
+    episode: bool = True
+    track: bool = False
+
+
+@dataclass(repr=False)
+class LocalPlaylistTrack(LocalTrack):
+    """
+    Local track on a playlist.
+
+    Provides :attr:`episode` and :attr:`track` booleans
+    to easily determine the type of playlist item.
+    """
+    episode: bool = False
+    track: bool = True
+
+
 track_type = {
-    'track': FullTrack,
-    'episode': FullEpisode,
+    'track': FullPlaylistTrack,
+    'episode': FullPlaylistEpisode,
 }
 
 
@@ -26,7 +63,7 @@ class PlaylistTrack(Model):
     is_local: bool
     primary_color: str
     video_thumbnail: Optional[Image]
-    track: Union[FullTrack, LocalTrack, FullEpisode, None]
+    track: Union[FullPlaylistTrack, LocalPlaylistTrack, FullPlaylistEpisode, None]
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
@@ -37,7 +74,7 @@ class PlaylistTrack(Model):
 
         if self.track is not None:
             if self.is_local:
-                self.track = LocalTrack(**self.track)
+                self.track = LocalPlaylistTrack(**self.track)
             else:
                 self.track = track_type[self.track['type']](**self.track)
 

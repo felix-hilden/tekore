@@ -12,8 +12,8 @@ genres = ['pop', 'rock']
 playlist_id = '37i9dQZEVXbMDoHDwVN2tF'
 playlist_local = '1L09qNetvjqCFsPtkhgyuI'
 
-# Exactly one podcast and one track in that order
-playlist_podcast = '10zlxJ3uV3dm7gJZEMf4ks'
+# Exactly one podcast, one track and one local track in that order
+playlist_special = '10zlxJ3uV3dm7gJZEMf4ks'
 
 track_id = '6v3KW9xbzN5yKLt9YKDYA2'
 track_ids = [track_id, '5ZULALImTm80tzUbYQYM9d']

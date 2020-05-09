@@ -61,12 +61,8 @@ class SimpleEpisode(Episode):
 class FullEpisode(Episode):
     """
     Complete episode object.
-
-    :attr:`episode` and :attr:`track` are only available on a playlist.
     """
     show: SimpleShow
-    episode: bool = None
-    track: bool = None
     resume_point: ResumePoint = None
 
     def __post_init__(self):
