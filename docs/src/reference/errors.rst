@@ -9,6 +9,8 @@ Web errors for :ref:`auth` and :ref:`client`.
    :nosignatures:
 
    HTTPError
+   ClientError
+   ServerError
    BadRequest
    Unauthorised
    Forbidden
@@ -20,6 +22,7 @@ Web errors for :ref:`auth` and :ref:`client`.
 
 
 Clients facing the Web API raise errors when recieving bad status codes.
+Only errors documented in the Web API documentation are expected and provided.
 Specific errors or all web errors can be caught.
 
 .. code:: python
@@ -38,6 +41,8 @@ Specific errors or all web errors can be caught.
         print('Something is seriously wrong.')
 
 .. autoclass:: HTTPError
+.. autoclass:: ClientError
+.. autoclass:: ServerError
 .. autoclass:: BadRequest
 .. autoclass:: Unauthorised
 .. autoclass:: Forbidden
