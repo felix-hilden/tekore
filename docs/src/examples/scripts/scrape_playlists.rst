@@ -29,14 +29,14 @@ To avoid errors when hitting rate limits, a :class:`RetryingSender` is used.
 
 
     def get_artist(track) -> str:
-        if getattr(track, 'episode', False):
+        if track.episode:
             return track.show.name
         else:
             return track.artists[0].name
 
 
     async def count_artists(playlist_id: str):
-        tracks = await spotify.playlist_tracks(playlist_id)
+        tracks = await spotify.playlist_items(playlist_id)
         tracks = spotify.all_items(tracks)
         return Counter([get_artist(t.track) async for t in tracks])
 

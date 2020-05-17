@@ -1,4 +1,5 @@
-from typing import Union, Callable
+from typing import Union, Callable, Iterable
+from warnings import warn
 from functools import wraps
 
 from ...base import SpotifyBase
@@ -46,6 +47,18 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
             return post_func(json)
         return wrapper
     return decorator
+
+
+def parse_additional_types(as_tracks):
+    types = {'track', 'episode'}
+    if as_tracks is True:
+        types = set()
+    elif as_tracks is False:
+        pass
+    else:
+        types = types.difference(as_tracks)
+
+    return ','.join(types) if types else None
 
 
 class SpotifyPlaylistView(SpotifyBase):
@@ -115,7 +128,8 @@ class SpotifyPlaylistView(SpotifyBase):
     @process_if_not_specified(
         single(FullPlaylist),
         ('fields', 2),
-        ('episodes_as_tracks', 4)
+        ('episodes_as_tracks', 4),
+        ('as_tracks', 5)
     )
     @send_and_process(nothing)
     def playlist(
@@ -124,9 +138,15 @@ class SpotifyPlaylistView(SpotifyBase):
             fields: str = None,
             market: str = None,
             episodes_as_tracks: bool = False,
+            as_tracks: Union[bool, Iterable[str]] = False,
     ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
+
+        .. note::
+
+            Returns a dictionary if ``fields``, ``as_tracks``
+            or ``episodes_as_tracks`` is specified.
 
         Parameters
         ----------
@@ -142,19 +162,29 @@ class SpotifyPlaylistView(SpotifyBase):
             If an application token is used and no market is specified,
             episodes are considered unavailable and returned as None.
         episodes_as_tracks
-            if True, return episodes with track-like fields
+            Deprecated since version 2.0, removed in 3.0,
+            use ``as_tracks`` instead.
+            If :class:`True`, return episodes with track-like fields.
+        as_tracks
+            return types of items with track-like fields.
+            If :class:`True`, return all other types as tracks.
+            If an iterable is passed, types contained are returned as tracks.
+            Currently the only extra type is ``episode``.
 
         Returns
         -------
         Union[FullPlaylist, dict]
-            playlist object, or raw dictionary
-            if ``fields`` or ``episodes_as_tracks`` was specified
+            playlist object, or raw dictionary if ``fields``, ``as_tracks``
+            or ``episodes_as_tracks`` was specified
         """
         if episodes_as_tracks is True:
-            additional_types = None
-        else:
-            additional_types = 'track,episode'
+            msg = (
+                'Deprecated argument `episodes_as_tracks`!\n'
+                'Removed in version 3.0, use `as_tracks=True` instead.'
+            )
+            warn(msg, DeprecationWarning, stacklevel=4)
 
+        additional_types = parse_additional_types(as_tracks or episodes_as_tracks)
         return self._get(
             'playlists/' + playlist_id,
             fields=fields,
@@ -182,20 +212,24 @@ class SpotifyPlaylistView(SpotifyBase):
     @process_if_not_specified(
         single(PlaylistTrackPaging),
         ('fields', 2),
-        ('episodes_as_tracks', 4)
+        ('as_tracks', 4)
     )
     @send_and_process(nothing)
-    def playlist_tracks(
+    def playlist_items(
             self,
             playlist_id: str,
             fields: str = None,
             market: str = None,
-            episodes_as_tracks: bool = False,
+            as_tracks: Union[bool, Iterable[str]] = False,
             limit: int = 100,
             offset: int = 0
     ) -> Union[PlaylistTrackPaging, dict]:
         """
-        Get full details of the tracks of a playlist owned by a user.
+        Full details of items on a playlist.
+
+        .. note::
+
+            Returns a dictionary if ``fields`` or ``as_tracks`` is specified.
 
         Parameters
         ----------
@@ -210,8 +244,11 @@ class SpotifyPlaylistView(SpotifyBase):
             the country associated with it overrides this parameter.
             If an application token is used and no market is specified,
             episodes are considered unavailable and returned as None.
-        episodes_as_tracks
-            if True, return episodes with track-like fields
+        as_tracks
+            return types of items with track-like fields.
+            If :class:`True`, return all other types as tracks.
+            If an iterable is passed, types contained are returned as tracks.
+            Currently the only extra type is ``episode``.
         limit
             the number of items to return (1..100)
         offset
@@ -220,19 +257,14 @@ class SpotifyPlaylistView(SpotifyBase):
         Returns
         -------
         Union[PlaylistTrackPaging, dict]
-            paging object containing playlist tracks, or raw dictionary
-            if ``fields`` or ``episodes_as_tracks`` was specified
+            paging object containing playlist items, or raw dictionary
+            if ``fields`` or ``as_tracks`` was specified
         """
-        if episodes_as_tracks is True:
-            additional_types = None
-        else:
-            additional_types = 'track,episode'
-
         return self._get(
             f'playlists/{playlist_id}/tracks',
             limit=limit,
             offset=offset,
             fields=fields,
             market=market,
-            additional_types=additional_types,
+            additional_types=parse_additional_types(as_tracks),
         )

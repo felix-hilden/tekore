@@ -26,5 +26,5 @@ and you have used Spotify enough to have top tracks.
         public=False,
         description='Recommendations based on your top tracks <3'
     )
-    track_ids = [t.id for t in recommendations]
-    spotify.playlist_tracks_add(playlist.id, track_ids=track_ids)
+    uris = [t.uri for t in recommendations]
+    spotify.playlist_add(playlist.id, uris=uris)
