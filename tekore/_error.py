@@ -3,11 +3,23 @@ import requests
 
 class HTTPError(requests.HTTPError):
     """
-    Base error for all web errors.
+    Base error for all web errors
     """
 
 
-class BadRequest(HTTPError):
+class ClientError(HTTPError):
+    """
+    4xx - Base client error
+    """
+
+
+class ServerError(HTTPError):
+    """
+    5xx - Base server error
+    """
+
+
+class BadRequest(ClientError):
     """
     400 - Bad request
 
@@ -15,7 +27,7 @@ class BadRequest(HTTPError):
     """
 
 
-class Unauthorised(HTTPError):
+class Unauthorised(ClientError):
     """
     401 - Unauthorised
 
@@ -25,7 +37,7 @@ class Unauthorised(HTTPError):
     """
 
 
-class Forbidden(HTTPError):
+class Forbidden(ClientError):
     """
     403 - Forbidden
 
@@ -33,7 +45,7 @@ class Forbidden(HTTPError):
     """
 
 
-class NotFound(HTTPError):
+class NotFound(ClientError):
     """
     404 - Not found
 
@@ -42,7 +54,7 @@ class NotFound(HTTPError):
     """
 
 
-class TooManyRequests(HTTPError):
+class TooManyRequests(ClientError):
     """
     429 - Too many requests
 
@@ -50,7 +62,7 @@ class TooManyRequests(HTTPError):
     """
 
 
-class InternalServerError(HTTPError):
+class InternalServerError(ServerError):
     """
     500 - Internal server error
 
@@ -60,7 +72,7 @@ class InternalServerError(HTTPError):
     """
 
 
-class BadGateway(HTTPError):
+class BadGateway(ClientError):
     """
     502 - Bad gateway
 
@@ -69,7 +81,7 @@ class BadGateway(HTTPError):
     """
 
 
-class ServiceUnavailable(HTTPError):
+class ServiceUnavailable(ClientError):
     """
     503 - Service unavailable
 

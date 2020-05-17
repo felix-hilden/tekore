@@ -21,6 +21,8 @@ from tekore._auth import (
 from tekore._client import Spotify
 from tekore._error import (
     HTTPError,
+    ClientError,
+    ServerError,
     BadRequest,
     Unauthorised,
     Forbidden,
@@ -77,6 +79,8 @@ _classes = [
     scope,
     Scope,
     HTTPError,
+    ClientError,
+    ServerError,
     BadRequest,
     Unauthorised,
     Forbidden,
