@@ -31,8 +31,11 @@ from your playlists, and prompt you to do so.
         if not prompt_user(f"Analyze playlist '{playlist.name}'?"):
             continue
 
-        for track in s.all_items(s.playlist_tracks(playlist.id)):
-            for artist in track.track.artists:
+        for item in s.all_items(s.playlist_items(playlist.id)):
+            if not item.track.track or item.track.is_local:
+                continue
+
+            for artist in item.track.artists:
                 artists.add((artist.id, artist.name))
 
 

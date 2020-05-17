@@ -1,4 +1,5 @@
 from typing import Callable
+from warnings import warn
 from functools import wraps
 
 from requests import Request
@@ -61,5 +62,27 @@ def maximise_limit(max_limit: int) -> Callable:
             if self.max_limits_on and len(args) <= arg_pos:
                 kwargs.setdefault('limit', max_limit)
             return function(self, *args, **kwargs)
+        return wrapper
+    return decorator
+
+
+def deprecated(in_: str, removed: str, instead: str, level: int = 2):
+    doc_msg = f'.. deprecated:: {in_}\n   Removed in {removed}.'
+    doc_msg += f'\n   Use :meth:`Spotify.{instead}` instead.'
+
+    err_msg = f'Removed in version {removed}, use Spotify.{instead} instead.'
+
+    def decorator(function: Callable) -> Callable:
+        _, head, body = function.__doc__.split('\n', maxsplit=2)
+        indent = (len(head) - len(head.lstrip(' '))) * ' '
+
+        nonlocal doc_msg
+        doc_msg = indent + doc_msg.replace('\n', '\n' + indent)
+        function.__doc__ = '\n'.join([_, head, '', doc_msg, body])
+
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+            warn(err_msg, DeprecationWarning, stacklevel=level)
+            return function(*args, **kwargs)
         return wrapper
     return decorator

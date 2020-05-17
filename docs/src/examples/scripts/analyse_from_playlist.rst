@@ -17,7 +17,7 @@ because they cannot be analysed.
 
     spotify = tk.Spotify(token)
     playlist = spotify.followed_playlists(limit=1).items[0]
-    track = spotify.playlist_tracks(playlist.id, limit=1).items[0].track
+    track = spotify.playlist_items(playlist.id, limit=1).items[0].track
     name = f'"{track.name}" from {playlist.name}'
 
     if track.episode:

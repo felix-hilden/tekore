@@ -225,16 +225,34 @@ Player API
 .. automethod:: Spotify.playback_transfer
 .. automethod:: Spotify.playback_volume
 
+.. _client-playlist:
+
 Playlist API
 ------------
 .. autosummary::
    :nosignatures:
 
    Spotify.playlist
+   Spotify.playlists
+   Spotify.playlist_create
    Spotify.playlist_change_details
    Spotify.playlist_cover_image
    Spotify.playlist_cover_image_upload
-   Spotify.playlist_create
+   Spotify.playlist_items
+   Spotify.playlist_add
+   Spotify.playlist_clear
+   Spotify.playlist_remove
+   Spotify.playlist_remove_indices
+   Spotify.playlist_remove_occurrences
+   Spotify.playlist_reorder
+   Spotify.playlist_replace
+
+The following methods have been deprecated
+and will be removed in a future version.
+
+.. autosummary::
+   :nosignatures:
+
    Spotify.playlist_tracks
    Spotify.playlist_tracks_add
    Spotify.playlist_tracks_clear
@@ -243,13 +261,22 @@ Playlist API
    Spotify.playlist_tracks_remove_occurrences
    Spotify.playlist_tracks_reorder
    Spotify.playlist_tracks_replace
-   Spotify.playlists
 
 .. automethod:: Spotify.playlist
+.. automethod:: Spotify.playlists
+.. automethod:: Spotify.playlist_create
 .. automethod:: Spotify.playlist_change_details
 .. automethod:: Spotify.playlist_cover_image
 .. automethod:: Spotify.playlist_cover_image_upload
-.. automethod:: Spotify.playlist_create
+.. automethod:: Spotify.playlist_items
+.. automethod:: Spotify.playlist_add
+.. automethod:: Spotify.playlist_clear
+.. automethod:: Spotify.playlist_remove
+.. automethod:: Spotify.playlist_remove_indices
+.. automethod:: Spotify.playlist_remove_occurrences
+.. automethod:: Spotify.playlist_reorder
+.. automethod:: Spotify.playlist_replace
+
 .. automethod:: Spotify.playlist_tracks
 .. automethod:: Spotify.playlist_tracks_add
 .. automethod:: Spotify.playlist_tracks_clear
@@ -258,7 +285,6 @@ Playlist API
 .. automethod:: Spotify.playlist_tracks_remove_occurrences
 .. automethod:: Spotify.playlist_tracks_reorder
 .. automethod:: Spotify.playlist_tracks_replace
-.. automethod:: Spotify.playlists
 
 Search API
 ----------

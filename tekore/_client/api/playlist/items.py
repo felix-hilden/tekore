@@ -4,20 +4,19 @@ from ...base import SpotifyBase
 from ...decor import send_and_process
 from ...process import top_item, nothing
 from ...chunked import chunked, return_last
-from tekore._convert import to_uri
 
 
-class SpotifyPlaylistTracks(SpotifyBase):
-    @chunked('track_ids', 2, 100, return_last, reverse='position', reverse_pos=3)
+class SpotifyPlaylistItems(SpotifyBase):
+    @chunked('uris', 2, 100, return_last, reverse='position', reverse_pos=3)
     @send_and_process(top_item('snapshot_id'))
-    def playlist_tracks_add(
+    def playlist_add(
             self,
             playlist_id: str,
-            track_ids: list,
+            uris: list,
             position: int = None
     ) -> str:
         """
-        Add tracks to a playlist.
+        Add items.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -26,17 +25,17 @@ class SpotifyPlaylistTracks(SpotifyBase):
         ----------
         playlist_id
             playlist ID
-        track_ids
-            list of track IDs, max 100 without chunking
+        uris
+            list of URIs, max 100 without chunking
         position
-            position to add the tracks
+            index to insert the items in
 
         Returns
         -------
         str
             snapshot ID for the playlist
         """
-        payload = {'uris': [to_uri('track', t) for t in track_ids]}
+        payload = {'uris': uris}
         return self._post(
             f'playlists/{playlist_id}/tracks',
             payload=payload,
@@ -44,9 +43,9 @@ class SpotifyPlaylistTracks(SpotifyBase):
         )
 
     @send_and_process(nothing)
-    def playlist_tracks_clear(self, playlist_id: str) -> None:
+    def playlist_clear(self, playlist_id: str) -> None:
         """
-        Remove all tracks in a playlist.
+        Remove all items.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -59,9 +58,9 @@ class SpotifyPlaylistTracks(SpotifyBase):
         return self._put(f'playlists/{playlist_id}/tracks', payload={'uris': []})
 
     @send_and_process(nothing)
-    def playlist_tracks_replace(self, playlist_id: str, track_ids: list) -> None:
+    def playlist_replace(self, playlist_id: str, uris: list) -> None:
         """
-        Replace all tracks in a playlist.
+        Replace all items.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -70,17 +69,16 @@ class SpotifyPlaylistTracks(SpotifyBase):
         ----------
         playlist_id
             playlist ID
-        track_ids
-            list of track IDs, max 100
+        uris
+            list of URIs, max 100
         """
-        track_uris = [to_uri('track', t) for t in track_ids]
         return self._put(
             f'playlists/{playlist_id}/tracks',
-            payload={'uris': track_uris}
+            payload={'uris': uris}
         )
 
     @send_and_process(top_item('snapshot_id'))
-    def playlist_tracks_reorder(
+    def playlist_reorder(
             self,
             playlist_id: str,
             range_start: int,
@@ -89,7 +87,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
             snapshot_id: str = None
     ) -> str:
         """
-        Reorder tracks in a playlist.
+        Reorder items.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -99,11 +97,11 @@ class SpotifyPlaylistTracks(SpotifyBase):
         playlist_id
             playlist ID
         range_start
-            position of the first track to be reordered
+            position of the first item to be reordered
         range_length
-            the number of tracks to be reordered
+            number of items to be reordered
         insert_before
-            position where the tracks should be inserted
+            position where the items should be inserted
         snapshot_id
             snapshot ID for the playlist
 
@@ -121,7 +119,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
             payload['snapshot_id'] = snapshot_id
         return self._put(f'playlists/{playlist_id}/tracks', payload=payload)
 
-    def _generic_playlist_tracks_remove(
+    def _generic_playlist_remove(
             self,
             playlist_id: str,
             payload: dict,
@@ -131,17 +129,18 @@ class SpotifyPlaylistTracks(SpotifyBase):
             payload['snapshot_id'] = snapshot_id
         return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
-    @chunked('track_ids', 2, 100, return_last, chain='snapshot_id', chain_pos=3)
+    @chunked('uris', 2, 100, return_last, chain='snapshot_id', chain_pos=3)
     @send_and_process(top_item('snapshot_id'))
-    def playlist_tracks_remove(
+    def playlist_remove(
             self,
             playlist_id: str,
-            track_ids: list,
+            uris: list,
             snapshot_id: str = None
     ) -> str:
         """
-        Remove all occurrences of tracks from a playlist.
+        Remove items by URI.
 
+        Removes all occurrences of the specified items.
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
 
@@ -151,8 +150,8 @@ class SpotifyPlaylistTracks(SpotifyBase):
         ----------
         playlist_id
             playlist ID
-        track_ids
-            list of track IDs, max 100 without chunking
+        uris
+            list of URIs, max 100 without chunking
         snapshot_id
             snapshot ID for the playlist
 
@@ -161,22 +160,22 @@ class SpotifyPlaylistTracks(SpotifyBase):
         str
             snapshot ID for the playlist
         """
-        tracks = [{'uri': to_uri('track', t)} for t in track_ids]
-        return self._generic_playlist_tracks_remove(
+        items = [{'uri': uri} for uri in uris]
+        return self._generic_playlist_remove(
             playlist_id,
-            {'tracks': tracks},
+            {'tracks': items},
             snapshot_id
         )
 
     @send_and_process(top_item('snapshot_id'))
-    def playlist_tracks_remove_occurrences(
+    def playlist_remove_occurrences(
             self,
             playlist_id: str,
-            track_refs: List[Tuple[str, int]],
+            refs: List[Tuple[str, int]],
             snapshot_id: str = None
     ) -> str:
         """
-        Remove tracks from a playlist by track ID and position.
+        Remove items by URI and position.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -185,8 +184,8 @@ class SpotifyPlaylistTracks(SpotifyBase):
         ----------
         playlist_id
             playlist ID
-        track_refs
-            a list of tuples containing the ID and index of tracks to remove
+        refs
+            a list of tuples containing the URI and index of items to remove
         snapshot_id
             snapshot ID for the playlist
 
@@ -196,31 +195,31 @@ class SpotifyPlaylistTracks(SpotifyBase):
             snapshot ID for the playlist
         """
         gathered = {}
-        for id_, ix in track_refs:
-            gathered.setdefault(id_, []).append(ix)
+        for uri, ix in refs:
+            gathered.setdefault(uri, []).append(ix)
 
-        tracks = [
+        items = [
             {
-                'uri': to_uri('track', id_),
+                'uri': uri,
                 'positions': ix_list
             }
-            for id_, ix_list in gathered.items()
+            for uri, ix_list in gathered.items()
         ]
-        return self._generic_playlist_tracks_remove(
+        return self._generic_playlist_remove(
             playlist_id,
-            {'tracks': tracks},
+            {'tracks': items},
             snapshot_id
         )
 
     @send_and_process(top_item('snapshot_id'))
-    def playlist_tracks_remove_indices(
+    def playlist_remove_indices(
             self,
             playlist_id: str,
             indices: list,
             snapshot_id: str
     ) -> str:
         """
-        Remove tracks from a playlist by position.
+        Remove items by position.
 
         Requires the playlist-modify-public scope. To modify private playlists
         the playlist-modify-private scope is required.
@@ -239,7 +238,7 @@ class SpotifyPlaylistTracks(SpotifyBase):
         str
             snapshot ID for the playlist
         """
-        return self._generic_playlist_tracks_remove(
+        return self._generic_playlist_remove(
             playlist_id,
             {'positions': indices},
             snapshot_id

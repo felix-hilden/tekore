@@ -114,7 +114,7 @@ Effect of cache size:
     t = np.zeros(len(sizes))
 
     spotify = tk.Spotify(token, sender=tk.PersistentSender())
-    tracks = spotify.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
+    tracks = spotify.playlist_items('37i9dQZF1DX5Ejj0EkURtP')
     tracks = spotify.all_items(tracks)
     track_ids = [t.track.id for t in tracks]
 

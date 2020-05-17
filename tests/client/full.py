@@ -75,7 +75,7 @@ class TestSpotifyMaxLimits:
 
 @pytest.fixture(scope='class')
 def track_ids(data_client):
-    tracks = data_client.playlist_tracks('37i9dQZF1DX5Ejj0EkURtP')
+    tracks = data_client.playlist_items('37i9dQZF1DX5Ejj0EkURtP')
     return [t.track.id for t in tracks.items]
 
 

@@ -19,12 +19,20 @@ Removed
 - Importing from submodules (:issue:`81`)
 - :class:`OAuthError` in :ref:`auth` - see below for details (:issue:`154`)
 
+Deprecated
+**********
+- :ref:`client-playlist` - methods specifically for playlist tracks
+  and ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` (:issue:`178`)
+
 Added
 *****
 - :ref:`auth` - a list of :class:`scopes <scope>` and strings is accepted
   in `scope` arguments (:issue:`81`)
 - :class:`Scope` operations were expanded to properly handle all combinations
   of :class:`str`, :class:`scope` and :class:`Scope` (:issue:`177`)
+- :ref:`client-playlist` - new methods to fully support episodes in playlists.
+  The new endpoints are direct counterparts to ``playlist_tracks_*`` methods
+  but without ``tracks``. (:issue:`178`)
 
 Changed
 *******
