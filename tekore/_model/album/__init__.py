@@ -10,10 +10,10 @@ class AlbumGroup(StrEnum):
     """
     Relationship between artist and album.
     """
-    album = 'album',
-    appears_on = 'appears_on',
-    compilation = 'compilation',
-    single = 'single',
+    album = 'album'
+    appears_on = 'appears_on'
+    compilation = 'compilation'
+    single = 'single'
 
 
 @dataclass(repr=False)
