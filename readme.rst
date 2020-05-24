@@ -35,8 +35,8 @@ Contributing
 We welcome new contributors to Tekore!
 If you've found a bug or would like to propose a feature,
 please submit an `issue <https://github.com/felix-hilden/tekore/issues>`_.
-Those that would like to get involved beyond that
-can clone the repository and install it as an editable Python package.
+Those who would like to get more involved may start
+by cloning the repository and installing it as an editable package.
 
 .. code:: sh
 
@@ -44,7 +44,20 @@ can clone the repository and install it as an editable Python package.
     $ cd tekore
     $ pip install -e .[dev]
 
-Please have a look at the following sections for help in development.
+The last command installs all the necessary dependencies for development.
+For specialised uses, ``tests`` and ``docs`` extras can be installed separately.
+The former installs dependencies related to executing tests
+and the latter is for building documentation locally.
+The ``dev`` extra combines them and also provides ``tox`` for automation.
+The install can be verified by running all essential tasks with tox.
+
+.. code:: sh
+
+    $ tox
+
+Now a subset of tests have been run, and documentation has been built.
+Please have a look at the following sections for additional information
+regarding specific tasks and configuration.
 
 Documentation
 -------------
@@ -52,9 +65,22 @@ Documentation can be built locally with Sphinx.
 
 .. code:: sh
 
-    $ cd docs && make html
+    $ cd docs
+    $ make html
 
-The main page ``index.html`` can be found in ``build/html/src``.
+The main page ``index.html`` can be found in ``build/html``.
+If tox is installed, this is equivalent to running ``tox -e docs``.
+
+Code style
+----------
+A set of code style rules is followed.
+To check for violations, run ``flake8``.
+
+.. code:: sh
+
+    $ flake8
+
+One can also use ``tox -e lint``.
 
 Running tests
 -------------
@@ -63,7 +89,9 @@ which can be studied and run to ensure the package works as intended.
 
 .. code:: sh
 
-    $ pytest tests -o python_files=*.py
+    $ pytest
+
+For tox, this is the default command when running e.g. ``tox -e py``.
 
 Tests against the live Web API use environment variables for credentials.
 These tests manipulate your data and player,
@@ -86,25 +114,10 @@ To measure test coverage and view uncovered lines or branches run ``coverage``.
 
 .. code:: sh
 
-    $ coverage run --branch -m pytest tests -o python_files=*.py
-    $ coverage report -m
+    $ coverage run
+    $ coverage report
 
-Scripts
--------
-Scripts for testing and linting can be found in the scripts folder.
-They need to be executed from the top level folder.
-
-.. code:: sh
-
-    $ scripts/lint
-    $ scripts/test
-
-Windows users should use a batch wrapper to execute the files.
-
-.. code:: batch
-
-    > scripts\exec lint
-    > scripts\exec test
+This can be achieved with tox by running ``tox -e coverage``.
 
 
 .. |logo| image:: docs/src/logo_small.png
