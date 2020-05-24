@@ -33,6 +33,24 @@ pypi_url = 'https://pypi.org/project/tekore'
 github_url = 'https://github.com/felix-hilden/tekore'
 documentation_url = 'https://tekore.readthedocs.io'
 
+extras_require = {
+    'docs': [
+        'sphinx',
+        'sphinx-rtd-theme',
+        'sphinx-autodoc-typehints'
+    ],
+    'tests': [
+        'flake8',
+        'flake8-bugbear',
+        'coverage',
+        'pytest>=5.4',
+        'pytest-asyncio',
+    ]
+}
+extras_require['dev'] = (
+    extras_require['docs'] + extras_require['tests'] + ['tox']
+)
+
 setuptools.setup(
     name='tekore',
     version=version_file.read_text().strip(),
@@ -67,19 +85,7 @@ setuptools.setup(
         'httpx>=0.11,<0.13',
         'dataclasses;python_version<"3.7"'
     ],
-    extras_require={
-        'dev': [
-            'pygments',
-            'flake8',
-            'flake8-bugbear',
-            'coverage',
-            'pytest>=5.4',
-            'pytest-asyncio',
-            'sphinx',
-            'sphinx-rtd-theme',
-            'sphinx-autodoc-typehints'
-        ]
-    },
+    extras_require=extras_require,
 
     classifiers=[
         'Development Status :: 5 - Production/Stable',

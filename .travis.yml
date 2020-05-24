@@ -11,8 +11,8 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - flake8 . --select=C,E,F,W,B,B9 --ignore=B305,E402,E501,E722,F401
-  - coverage run --branch -m pytest tests -o python_files=*.py
+  - flake8
+  - coverage run
   - cd docs && make html && cd ..
 
 after_script:
