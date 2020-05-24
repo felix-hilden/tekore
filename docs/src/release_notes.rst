@@ -91,6 +91,7 @@ Fixed
 - Properly close sessions in :class:`PersistentSender` (:issue:`179`)
 - Members of :class:`AlbumGroup <model.AlbumGroup>` are now strings as intended,
   rather than one-element tuples (:issue:`181`)
+- Include readme to source distributions to fix setup (:issue:`182`)
 
 1.7.0 (2020-04-28)
 ------------------

@@ -56,6 +56,7 @@ setuptools.setup(
     license='MIT',
     keywords='spotify web api client',
     packages=setuptools.find_packages(exclude=('tests', 'tests.*',)),
+    include_package_data=True,
     package_data={
         'tekore': ['VERSION']
     },
