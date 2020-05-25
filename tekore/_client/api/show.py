@@ -6,6 +6,8 @@ from tekore.model import FullShow, SimpleEpisodePaging, ModelList
 
 
 class SpotifyShow(SpotifyBase):
+    """Show API endpoints."""
+
     @send_and_process(single(FullShow))
     def show(
             self,

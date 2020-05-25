@@ -14,6 +14,8 @@ from tekore.model import (
 
 
 class SpotifyBrowse(SpotifyBase):
+    """Browse API endpoints."""
+
     @send_and_process(multiple(
         top_item('message'),
         single(SimplePlaylistPaging, from_item='playlists')

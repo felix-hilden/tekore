@@ -8,18 +8,19 @@ from dataclasses import dataclass, asdict, fields
 
 
 class StrEnum(Enum):
-    """
-    Convert enumeration members to strings using their name.
-    """
+    """Convert enumeration members to strings using their name."""
+
     def __str__(self):
         return self.name
 
 
 class Timestamp(datetime):
     """
-    Timestamp whose string representation is its value
-    in ISO 8601 format with second precision.
+    Timestamp from different precisions.
+
+    String representation is the ISO 8601 format with second precision.
     """
+
     f_second = '%Y-%m-%dT%H:%M:%SZ'
     f_microsecond = '%Y-%m-%dT%H:%M:%S.%fZ'
 
@@ -51,13 +52,10 @@ class Timestamp(datetime):
 
 
 class JSONEncoder(json.JSONEncoder):
-    """
-    JSON Encoder for response models.
-    """
+    """JSON Encoder for response models."""
+
     def default(self, o):
-        """
-        Convert into serialisable data types.
-        """
+        """Convert into serialisable data types."""
         if isinstance(o, (Enum, Timestamp)):
             return str(o)
         elif isinstance(o, Model):
@@ -67,18 +65,21 @@ class JSONEncoder(json.JSONEncoder):
 
 
 def member_repr(dataclass_type) -> str:
+    """Construct representation of fields of type Model."""
     v_fields = sorted(fields(dataclass_type), key=lambda f: f.name)
     joined = ', '.join(f.name for f in v_fields)
     return dataclass_type.__name__ + '(' + joined + ')'
 
 
 def cut_by_comma(line: str, end: str, max_len: int) -> str:
+    """Cut line to the appropriate comma."""
     cut = line[:max_len - len(end)]
     mend = ','.join(cut.split(',')[:-1])
     return mend + end
 
 
 def field_repr(field, value) -> str:
+    """Construct field representations."""
     if isinstance(value, Model):
         text = member_repr(type(value))
     elif isinstance(value, list):
@@ -102,6 +103,7 @@ def field_repr(field, value) -> str:
 
 
 def trim_line(line: str, value, max_len: int = 75) -> str:
+    """Trim line based on field type."""
     if len(line) > max_len:
         if isinstance(value, Model):
             line = cut_by_comma(line, ', ...)', max_len)
@@ -116,9 +118,8 @@ def trim_line(line: str, value, max_len: int = 75) -> str:
 
 
 class Serialisable:
-    """
-    Serialisation and convenience methods for response models.
-    """
+    """Serialisation and convenience methods for response models."""
+
     def json(self) -> str:
         """
         JSON representation of a model.
@@ -164,9 +165,8 @@ class Serialisable:
 
 @dataclass(repr=False)
 class Model(Serialisable):
-    """
-    Dataclass that provides a readable ``repr`` of its fields.
-    """
+    """Dataclass that provides a readable ``repr`` of its fields."""
+
     def __repr__(self):
         name = type(self).__name__
         lines = [f'{name} with fields:']
@@ -181,9 +181,8 @@ class Model(Serialisable):
 
 
 class ModelList(list, Serialisable):
-    """
-    List that provides a readable ``repr`` of its items.
-    """
+    """List that provides a readable ``repr`` of its items."""
+
     def __repr__(self):
         name = type(self).__name__
         lines = [f'{name} with items: [']

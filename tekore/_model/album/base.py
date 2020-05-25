@@ -8,9 +8,8 @@ from ..serialise import StrEnum, ModelList
 
 
 class AlbumType(StrEnum):
-    """
-    Type of album.
-    """
+    """Type of album."""
+
     album = 'album'
     compilation = 'compilation'
     single = 'single'
@@ -18,9 +17,8 @@ class AlbumType(StrEnum):
 
 @dataclass(repr=False)
 class Album(Item):
-    """
-    Album base.
-    """
+    """Album base."""
+
     album_type: AlbumType
     artists: List[SimpleArtist]
     external_urls: dict

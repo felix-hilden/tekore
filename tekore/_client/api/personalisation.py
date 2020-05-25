@@ -5,6 +5,8 @@ from tekore.model import FullArtistOffsetPaging, FullTrackPaging
 
 
 class SpotifyPersonalisation(SpotifyBase):
+    """Personalisation API endpoints."""
+
     @send_and_process(single(FullArtistOffsetPaging))
     @maximise_limit(50)
     def current_user_top_artists(

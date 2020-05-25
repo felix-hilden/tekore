@@ -6,14 +6,13 @@ from .concrete import Sender, PersistentSender, AsyncPersistentSender
 
 
 def new_default_sender() -> Sender:
+    """Return a default sender based on configuration."""
     from tekore import default_sender_instance, default_sender_type
     return default_sender_instance or default_sender_type()
 
 
 class SenderConflictWarning(RuntimeWarning):
-    """
-    Sender arguments to a client are in conflict.
-    """
+    """Sender arguments to a client are in conflict."""
 
 
 class Client:
@@ -30,6 +29,7 @@ class Client:
         sender and defaults if they are in conflict and instantiates
         a persistent sender of the requested type
     """
+
     def __init__(self, sender: Optional[Sender], asynchronous: bool = None):
         new_sender = sender or new_default_sender()
 
@@ -50,4 +50,5 @@ class Client:
 
     @property
     def is_async(self) -> bool:
+        """Client asynchronicity, delegated to the underlying sender."""
         return self.sender.is_async

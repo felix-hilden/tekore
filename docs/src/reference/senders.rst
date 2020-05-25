@@ -19,7 +19,8 @@ Manipulate the way clients send requests.
 
 See also :ref:`senders-bases` and :ref:`senders-options`.
 
-Senders provide a hook between defining a request and sending it to the Web API.
+Senders provide a hook between
+defining a request and sending it to the Web API.
 The sender of a :class:`Client` also determines whether synchronous or
 asynchronous calls are used to send requests and process responses.
 
@@ -106,7 +107,8 @@ Bases for subclassing or other endeavours.
 Options
 -------
 Default senders and keyword arguments can be changed.
-:attr:`default_sender_instance` has precedence over :attr:`default_sender_type`.
+:attr:`default_sender_instance` has precedence over
+:attr:`default_sender_type`.
 Using an :class:`ExtendingSender` as the default type will raise an error
 as it tries to instantiate itself recursively.
 Use :attr:`default_sender_instance` instead.

@@ -40,15 +40,21 @@ extras_require = {
         'sphinx-autodoc-typehints'
     ],
     'tests': [
-        'flake8',
-        'flake8-bugbear',
         'coverage',
         'pytest>=5.4',
         'pytest-asyncio',
+    ],
+    'checks': [
+        'tox',
+        'doc8',
+        'flake8',
+        'flake8-bugbear',
+        'pydocstyle',
+        'pygments',
     ]
 }
 extras_require['dev'] = (
-    extras_require['docs'] + extras_require['tests'] + ['tox']
+    extras_require['docs'] + extras_require['tests'] + extras_require['checks']
 )
 
 setuptools.setup(

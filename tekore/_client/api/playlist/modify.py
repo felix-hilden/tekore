@@ -7,6 +7,8 @@ from tekore.model import FullPlaylist
 
 
 class SpotifyPlaylistModify(SpotifyBase):
+    """Playlist API endpoints for modifying playlists."""
+
     @send_and_process(nothing)
     def playlist_cover_image_upload(self, playlist_id: str, image: str) -> None:
         """

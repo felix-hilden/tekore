@@ -8,9 +8,8 @@ from ..serialise import ModelList
 
 @dataclass(repr=False)
 class Show(Item):
-    """
-    Show base.
-    """
+    """Show base."""
+
     available_markets: List[str]
     copyrights: List[Copyright]
     description: str

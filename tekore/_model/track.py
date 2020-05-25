@@ -10,17 +10,15 @@ from .serialise import Model, ModelList, Timestamp
 
 @dataclass(repr=False)
 class TrackLink(Item):
-    """
-    Relinked track.
-    """
+    """Relinked track."""
+
     external_urls: dict
 
 
 @dataclass(repr=False)
 class Track(Item):
-    """
-    Track base.
-    """
+    """Track base."""
+
     artists: List[SimpleArtist]
     disc_number: int
     duration_ms: int
@@ -37,9 +35,8 @@ class Track(Item):
 
 @dataclass(repr=False)
 class Restrictions(Model):
-    """
-    Restrictions on relinked track.
-    """
+    """Restrictions on relinked track."""
+
     reason: str
 
 
@@ -53,6 +50,7 @@ class SimpleTrack(Track):
     Restrictions is available if restrictions have been placed on
     the track, making it unplayable.
     """
+
     available_markets: List[str] = None
     linked_from: TrackLink = None
     is_playable: bool = None
@@ -78,6 +76,7 @@ class FullTrack(Track):
     Restrictions is available if restrictions have been placed on
     the track, making it unplayable.
     """
+
     album: SimpleAlbum
     external_ids: dict
     popularity: int
@@ -99,9 +98,8 @@ class FullTrack(Track):
 
 @dataclass(repr=False)
 class FullTrackPaging(OffsetPaging):
-    """
-    Paging of full tracks.
-    """
+    """Paging of full tracks."""
+
     items: List[FullTrack]
 
     def __post_init__(self):
@@ -110,9 +108,8 @@ class FullTrackPaging(OffsetPaging):
 
 @dataclass(repr=False)
 class SimpleTrackPaging(OffsetPaging):
-    """
-    Paging of simplified tracks.
-    """
+    """Paging of simplified tracks."""
+
     items: List[SimpleTrack]
 
     def __post_init__(self):
@@ -121,18 +118,16 @@ class SimpleTrackPaging(OffsetPaging):
 
 @dataclass(repr=False)
 class Tracks(Model):
-    """
-    Minimal representation of playlist tracks.
-    """
+    """Minimal representation of playlist tracks."""
+
     href: str
     total: int
 
 
 @dataclass(repr=False)
 class SavedTrack(Model):
-    """
-    Track saved to library.
-    """
+    """Track saved to library."""
+
     added_at: Timestamp
     track: FullTrack
 
@@ -143,9 +138,8 @@ class SavedTrack(Model):
 
 @dataclass(repr=False)
 class SavedTrackPaging(OffsetPaging):
-    """
-    Paging of tracks in library.
-    """
+    """Paging of tracks in library."""
+
     items: List[SavedTrack]
 
     def __post_init__(self):

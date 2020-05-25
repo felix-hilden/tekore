@@ -19,15 +19,14 @@ class ExtendingSender(Sender, ABC):
     sender
         request sender, :attr:`default_sender_type` if not specified
     """
+
     def __init__(self, sender: Optional[Sender]):
         from tekore import default_sender_type
         self.sender = sender or default_sender_type()
 
     @property
     def is_async(self) -> bool:
-        """
-        Sender asynchronicity, delegated to the underlying sender.
-        """
+        """Sender asynchronicity, delegated to the underlying sender."""
         return self.sender.is_async
 
 
@@ -65,11 +64,13 @@ class RetryingSender(ExtendingSender):
 
         tk.RetryingSender(retries=3)
     """
+
     def __init__(self, retries: int = 0, sender: Sender = None):
         super().__init__(sender)
         self.retries = retries
 
     def send(self, request: Request) -> Response:
+        """Delegate request to underlying sender and retry if failed."""
         if self.is_async:
             return self._async_send(request)
 
@@ -132,6 +133,7 @@ class CachingSender(ExtendingSender):
         maximum cache size (amount of responses), if specified the least
         recently used response is discarded when the cache would overflow
     """
+
     def __init__(self, sender: Sender = None, max_size: int = None):
         super().__init__(sender)
         self._max_size = max_size
@@ -143,13 +145,16 @@ class CachingSender(ExtendingSender):
     def max_size(self) -> Optional[int]:
         """
         Maximum amount of requests stored in the cache.
+
+        Returns
+        -------
+        Optional[int]
+            maximum cache size
         """
         return self._max_size
 
     def clear(self) -> None:
-        """
-        Clear sender cache.
-        """
+        """Clear sender cache."""
         self._cache = {}
         self._deque.clear()
 
@@ -265,6 +270,7 @@ class CachingSender(ExtendingSender):
             return fresh
 
     def send(self, request: Request) -> Response:
+        """Maybe load request from cache, or delegate to underlying sender."""
         if self.is_async:
             return self._async_send(request)
 

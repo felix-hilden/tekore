@@ -11,9 +11,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - flake8
-  - coverage run
-  - cd docs && make html && cd ..
+  - tox
 
 after_script:
   - coverage xml

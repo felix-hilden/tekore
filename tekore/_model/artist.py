@@ -9,25 +9,21 @@ from .serialise import ModelList
 
 @dataclass(repr=False)
 class Artist(Item):
-    """
-    Artist base.
-    """
+    """Artist base."""
+
     external_urls: dict
     name: str
 
 
 @dataclass(repr=False)
 class SimpleArtist(Artist):
-    """
-    Simplified artist object.
-    """
+    """Simplified artist object."""
 
 
 @dataclass(repr=False)
 class FullArtist(Artist):
-    """
-    Complete artist object.
-    """
+    """Complete artist object."""
+
     followers: Followers
     genres: List[str]
     images: List[Image]
@@ -41,9 +37,8 @@ class FullArtist(Artist):
 
 @dataclass(repr=False)
 class FullArtistCursorPaging(CursorPaging):
-    """
-    Paging of full artists.
-    """
+    """Paging of full artists."""
+
     items: List[FullArtist]
     total: int
 
@@ -54,9 +49,8 @@ class FullArtistCursorPaging(CursorPaging):
 
 @dataclass(repr=False)
 class FullArtistOffsetPaging(OffsetPaging):
-    """
-    Paging of full artists.
-    """
+    """Paging of full artists."""
+
     items: List[FullArtist]
 
     def __post_init__(self):

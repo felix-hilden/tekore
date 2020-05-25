@@ -21,6 +21,8 @@ def offset_to_dict(offset: Union[int, str]):
 
 
 class SpotifyPlayerModify(SpotifyBase):
+    """Player API endpoints that modify state."""
+
     @send_and_process(nothing)
     def playback_transfer(self, device_id: str, force_play: bool = False) -> None:
         """

@@ -13,6 +13,8 @@ from tekore.model import (
 
 
 class SpotifyPlayerView(SpotifyBase):
+    """Player API endpoints that view state."""
+
     @send_and_process(single(CurrentlyPlayingContext))
     def playback(
             self,

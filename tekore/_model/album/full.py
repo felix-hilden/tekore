@@ -18,6 +18,7 @@ class FullAlbum(Album):
     The presence of is_playable is undocumented
     and it appears to only be True when it is present.
     """
+
     copyrights: List[Copyright]
     external_ids: dict
     genres: List[str]
@@ -38,9 +39,8 @@ class FullAlbum(Album):
 
 @dataclass(repr=False)
 class SavedAlbum(Model):
-    """
-    Album saved to library.
-    """
+    """Album saved to library."""
+
     added_at: Timestamp
     album: FullAlbum
 
@@ -51,9 +51,8 @@ class SavedAlbum(Model):
 
 @dataclass(repr=False)
 class SavedAlbumPaging(OffsetPaging):
-    """
-    Paging of albums in library.
-    """
+    """Paging of albums in library."""
+
     items: List[SavedAlbum]
 
     def __post_init__(self):

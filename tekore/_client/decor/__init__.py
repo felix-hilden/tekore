@@ -67,6 +67,20 @@ def maximise_limit(max_limit: int) -> Callable:
 
 
 def deprecated(in_: str, removed: str, instead: str, level: int = 2):
+    """
+    Inject deprecation notice to :class:`Spotify` methods.
+
+    Parameters
+    ----------
+    in_
+        deprecated in version
+    removed
+        removed in version
+    instead
+        use this instead
+    level
+        warning stacklevel
+    """
     doc_msg = f'.. deprecated:: {in_}\n   Removed in {removed}.'
     doc_msg += f'\n   Use :meth:`Spotify.{instead}` instead.'
 

@@ -5,9 +5,7 @@ from configparser import ConfigParser
 
 
 class MissingConfigurationWarning(RuntimeWarning):
-    """
-    Missing value read from configuration.
-    """
+    """Missing value read from configuration."""
 
 
 def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:

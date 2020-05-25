@@ -7,9 +7,8 @@ from .serialise import Model, ModelList, StrEnum
 
 
 class RecommendationAttribute(StrEnum):
-    """
-    Attributes available in recommendations.
-    """
+    """Attributes available in recommendations."""
+
     acousticness = 'acousticness'
     danceability = 'danceability'
     duration_ms = 'duration_ms'
@@ -28,9 +27,8 @@ class RecommendationAttribute(StrEnum):
 
 @dataclass(repr=False)
 class RecommendationSeed(Identifiable):
-    """
-    Recommendation seeds.
-    """
+    """Recommendation seeds."""
+
     afterFilteringSize: int
     afterRelinkingSize: int
     href: str
@@ -40,9 +38,8 @@ class RecommendationSeed(Identifiable):
 
 @dataclass(repr=False)
 class Recommendations(Model):
-    """
-    Track recommendations.
-    """
+    """Track recommendations."""
+
     seeds: List[RecommendationSeed]
     tracks: List[FullTrack]
 

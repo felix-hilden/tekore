@@ -45,10 +45,10 @@ by cloning the repository and installing it as an editable package.
     $ pip install -e .[dev]
 
 The last command installs all the necessary dependencies for development.
-For specialised uses, ``tests`` and ``docs`` extras can be installed separately.
-The former installs dependencies related to executing tests
-and the latter is for building documentation locally.
-The ``dev`` extra combines them and also provides ``tox`` for automation.
+For specialised uses, sets of extras can be installed separately.
+``tests`` installs dependencies related to executing tests,
+``docs`` is for building documentation locally,
+and ``checks`` contains ``tox`` and tools for static checking.
 The install can be verified by running all essential tasks with tox.
 
 .. code:: sh
@@ -56,6 +56,12 @@ The install can be verified by running all essential tasks with tox.
     $ tox
 
 Now a subset of tests have been run, and documentation has been built.
+A list of all individual tasks can be viewed with their descriptions.
+
+.. code:: sh
+
+    $ tox -a -v
+
 Please have a look at the following sections for additional information
 regarding specific tasks and configuration.
 
@@ -80,7 +86,8 @@ To check for violations, run ``flake8``.
 
     $ flake8
 
-One can also use ``tox -e lint``.
+Style checks for docstrings and documentation files are also available.
+To run all style checks use ``tox -e lint``.
 
 Running tests
 -------------

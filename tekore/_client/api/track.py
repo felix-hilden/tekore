@@ -6,6 +6,8 @@ from tekore.model import FullTrack, AudioFeatures, AudioAnalysis, ModelList
 
 
 class SpotifyTrack(SpotifyBase):
+    """Track API endpoints."""
+
     @send_and_process(single(FullTrack))
     def track(
             self,

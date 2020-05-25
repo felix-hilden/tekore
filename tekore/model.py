@@ -1,3 +1,5 @@
+"""Response model definitions for client."""
+
 from tekore._model import (
     AlbumType,
     Album,

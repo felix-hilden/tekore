@@ -6,6 +6,8 @@ from tekore.model import FullAlbum, SimpleTrackPaging, ModelList
 
 
 class SpotifyAlbum(SpotifyBase):
+    """Album API endpoints."""
+
     @send_and_process(single(FullAlbum))
     def album(
             self,

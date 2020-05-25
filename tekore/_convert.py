@@ -9,9 +9,8 @@ class ConversionError(Exception):
 
 
 class IdentifierType(StrEnum):
-    """
-    Valid types of Spotify IDs.
-    """
+    """Valid types of Spotify IDs."""
+
     artist = 'artist'
     album = 'album'
     episode = 'episode'
