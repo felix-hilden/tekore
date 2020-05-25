@@ -14,6 +14,7 @@ class PlayHistory(Model):
 
     Context is supposedly sometimes available.
     """
+
     track: FullTrack
     played_at: Timestamp
     context: Optional[Context]
@@ -28,9 +29,8 @@ class PlayHistory(Model):
 
 @dataclass(repr=False)
 class PlayHistoryCursor(Cursor):
-    """
-    Cursor to play history.
-    """
+    """Cursor to play history."""
+
     before: str
 
 
@@ -41,6 +41,7 @@ class PlayHistoryPaging(CursorPaging):
 
     Cursors are not available when paging is exhausted.
     """
+
     items: List[PlayHistory]
     cursors: PlayHistoryCursor
 

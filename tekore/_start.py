@@ -22,18 +22,14 @@ https://pypi.org/project/tekore
 
 
 def check_python_version():
-    """
-    Verify that the Python version is acceptable.
-    """
+    """Verify that the Python version is acceptable."""
     if sys.version_info < required_version:
         _required_version_str = '.'.join(str(i) for i in required_version)
         raise ImportError(error_msg.format(_required_version_str))
 
 
 def read_version_file() -> str:
-    """
-    Read version file to determine current library version.
-    """
+    """Read version file to determine current library version."""
     from pathlib import Path
     version_file = Path(os.path.realpath(__file__)).parent / 'VERSION'
     return version_file.read_text().strip()

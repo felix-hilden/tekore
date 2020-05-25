@@ -22,7 +22,8 @@ Removed
 Deprecated
 **********
 - :ref:`client-playlist` - methods specifically for playlist tracks
-  and ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` (:issue:`178`)
+  and ``episodes_as_tracks`` argument of :meth:`Spotify.playlist`
+  (:issue:`178`)
 
 Added
 *****
@@ -89,8 +90,8 @@ Miscellaneous
 Fixed
 *****
 - Properly close sessions in :class:`PersistentSender` (:issue:`179`)
-- Members of :class:`AlbumGroup <model.AlbumGroup>` are now strings as intended,
-  rather than one-element tuples (:issue:`181`)
+- Members of :class:`AlbumGroup <model.AlbumGroup>` are now strings
+  as intended, rather than one-element tuples (:issue:`181`)
 - Include readme to source distributions to fix setup (:issue:`182`)
 
 1.7.0 (2020-04-28)
@@ -185,13 +186,15 @@ Added
 ------------------
 Added
 *****
-- :ref:`client` - optionally use maximum limits in all paging calls (:issue:`66`)
+- :ref:`client` - optionally use maximum limits in all paging calls
+  (:issue:`66`)
 
 Fixed
 *****
 - :ref:`client-paging` - respect API limits when retrieving all items or pages
   of a :meth:`search <Spotify.search>` (:issue:`145`)
-- :ref:`client-paging` - always return an awaitable when asynchronous (:issue:`146`)
+- :ref:`client-paging` - always return an awaitable when asynchronous
+  (:issue:`146`)
 
 1.1.0 (2020-02-02)
 ------------------
@@ -199,7 +202,8 @@ Added
 *****
 - Async support in authentication and API endpoints (:issue:`131`)
 - :class:`CachingSender` - a sender for response caching (:issue:`4`)
-- :ref:`config` - reading missing values produces a warning (:commit:`0fa61801`)
+- :ref:`config` - reading missing values produces a warning
+  (:commit:`0fa61801`)
 
 Fixed
 *****

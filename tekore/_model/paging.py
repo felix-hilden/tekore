@@ -6,9 +6,8 @@ from .serialise import Model
 
 @dataclass(repr=False)
 class Paging(Model):
-    """
-    Paging base.
-    """
+    """Paging base."""
+
     href: str
     items: List[Model]
     limit: int
@@ -22,6 +21,7 @@ class OffsetPaging(Paging):
 
     Paging that can be navigated both forward and back.
     """
+
     total: int
     offset: int
     previous: str
@@ -29,9 +29,8 @@ class OffsetPaging(Paging):
 
 @dataclass(repr=False)
 class Cursor(Model):
-    """
-    Data cursor.
-    """
+    """Data cursor."""
+
     after: str
 
 
@@ -42,6 +41,7 @@ class CursorPaging(Paging):
 
     Paging that can be navigated only forward following the cursor.
     """
+
     cursors: Cursor
 
     def __post_init__(self):

@@ -6,9 +6,8 @@ from ..episode import SimpleEpisodePaging
 
 @dataclass(repr=False)
 class FullShow(Show):
-    """
-    Complete show object.
-    """
+    """Complete show object."""
+
     episodes: SimpleEpisodePaging = None
 
     def __post_init__(self):

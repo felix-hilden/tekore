@@ -9,17 +9,21 @@ prefix = 'https://api.spotify.com/v1/'
 
 
 def build_url(url: str) -> str:
+    """Attach API address to endpoint."""
     if not url.startswith('http'):
         url = prefix + url
     return url
 
 
 def parse_url_params(params: Optional[dict]) -> Optional[dict]:
+    """Generate parameter dict and filter Nones."""
     params = params or {}
     return {k: v for k, v in params.items() if v is not None} or None
 
 
 class SpotifyBase(Client):
+    """Base client with options and utility functions."""
+
     def __init__(
             self,
             token=None,

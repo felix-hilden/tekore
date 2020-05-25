@@ -1,11 +1,13 @@
 Discord bot
 ===========
-The following example script creates a simple Discord bot that can be used to search tracks.
+The following example script creates a simple Discord bot
+that can be used to search tracks.
 
 A bot account is required for sending messages in Discord.
 A quickstart guide for setting up a bot can be found here_.
 
-Once the bot is added to the server users can call it with the prefix ``>tk track``.
+Once the bot is added to the server
+users can call it with the prefix ``>tk track``.
 The bot responds to the query by sending a brief summary of the search results.
 Queries can be for example:
 

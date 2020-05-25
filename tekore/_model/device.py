@@ -6,9 +6,8 @@ from .serialise import StrEnum
 
 
 class DeviceType(StrEnum):
-    """
-    Type of playback device.
-    """
+    """Type of playback device."""
+
     Computer = 'Computer'
     Tablet = 'Tablet'
     Smartphone = 'Smartphone'
@@ -26,9 +25,8 @@ class DeviceType(StrEnum):
 
 @dataclass(repr=False)
 class Device(Identifiable):
-    """
-    Playback device.
-    """
+    """Playback device."""
+
     is_active: bool
     is_private_session: bool
     is_restricted: bool

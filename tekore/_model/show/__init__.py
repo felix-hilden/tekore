@@ -8,16 +8,13 @@ from ..serialise import Model, ModelList, Timestamp
 
 @dataclass(repr=False)
 class SimpleShow(Show):
-    """
-    Simplified show object.
-    """
+    """Simplified show object."""
 
 
 @dataclass(repr=False)
 class SimpleShowPaging(OffsetPaging):
-    """
-    Paging of simplified shows.
-    """
+    """Paging of simplified shows."""
+
     items: List[SimpleShow]
 
     def __post_init__(self):
@@ -26,9 +23,8 @@ class SimpleShowPaging(OffsetPaging):
 
 @dataclass(repr=False)
 class SavedShow(Model):
-    """
-    Show saved in library.
-    """
+    """Show saved in library."""
+
     added_at: Timestamp
     show: SimpleShow
 
@@ -39,9 +35,8 @@ class SavedShow(Model):
 
 @dataclass(repr=False)
 class SavedShowPaging(OffsetPaging):
-    """
-    Paging of shows in library.
-    """
+    """Paging of shows in library."""
+
     items: List[SavedShow]
 
     def __post_init__(self):

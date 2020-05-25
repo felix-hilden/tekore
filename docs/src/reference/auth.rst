@@ -85,7 +85,8 @@ Refreshing credentials
 
 Scopes
 ------
-Scopes are used in user authorisation to retrieve tokens with additional privileges.
+Scopes are used in user authorisation
+to retrieve tokens with additional privileges.
 :class:`scope` is an enumeration of every possible such privilege.
 
 .. code:: python
@@ -97,8 +98,11 @@ Scopes are used in user authorisation to retrieve tokens with additional privile
     token = tk.prompt_for_user_token(*cred, scope)
 
 .. autoclass:: scope
+   :special-members:
    :undoc-members:
+   :exclude-members: __module__
 .. autoclass:: Scope
+   :special-members:
 
 Utility functions
 -----------------

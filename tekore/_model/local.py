@@ -6,9 +6,8 @@ from .serialise import Model, ModelList
 
 @dataclass(repr=False)
 class LocalItem(Model):
-    """
-    Base for local items.
-    """
+    """Base for local items."""
+
     id: None
     href: None
     name: str
@@ -18,9 +17,8 @@ class LocalItem(Model):
 
 @dataclass(repr=False)
 class LocalAlbum(LocalItem):
-    """
-    Album of a locally saved track.
-    """
+    """Album of a locally saved track."""
+
     album_type: None
     artists: List[None]
     available_markets: List[None]
@@ -32,9 +30,8 @@ class LocalAlbum(LocalItem):
 
 @dataclass(repr=False)
 class LocalArtist(LocalItem):
-    """
-    Artist of a locally saved track.
-    """
+    """Artist of a locally saved track."""
+
     external_urls: dict
 
 
@@ -46,6 +43,7 @@ class LocalTrack(LocalItem):
     Locally saved track where most attributes are
     always None, empty, zero or False.
     """
+
     album: LocalAlbum
     artists: List[LocalArtist]
     available_markets: List[None]

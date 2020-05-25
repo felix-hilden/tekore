@@ -23,6 +23,7 @@ class scope(Enum):
     Addition and subtraction from both sides is supported
     but delegated to :class:`Scope` and always returns a :class:`Scope`.
     """
+
     user_read_email = 'user-read-email'
     user_read_private = 'user-read-private'
     user_top_read = 'user-top-read'
@@ -46,18 +47,23 @@ class scope(Enum):
     ugc_image_upload = 'ugc-image-upload'
 
     def __str__(self):
+        """Enum value."""
         return self.value
 
     def __add__(self, other) -> 'Scope':
+        """Combine to a set of scopes."""
         return Scope(self) + other
 
     def __radd__(self, other) -> 'Scope':
+        """Combine to a set of scopes."""
         return other + Scope(self)
 
     def __sub__(self, other) -> 'Scope':
+        """Remove scope from another."""
         return Scope(self) - other
 
     def __rsub__(self, other) -> 'Scope':
+        """Remove scope from another."""
         return other - Scope(self)
 
 
@@ -90,17 +96,29 @@ class Scope(frozenset):
        s = tk.Scope('b', 'c', 'a')
        print(s)  # -> 'a b c'
     """
+
     def __new__(cls, *members):
+        """
+        Construct a new set of scopes.
+
+        Parameters
+        ----------
+        members
+            unpacked list of members of the new scope
+        """
         return super().__new__(cls, [str(m) for m in members])
 
     def __repr__(self):
+        """Readable representation."""
         members = "'" + "', '".join(sorted(self)) + "'"
         return f'Scope({members})'
 
     def __str__(self):
+        """Join members with spaces."""
         return ' '.join(sorted(self))
 
     def __add__(self, other) -> 'Scope':
+        """Combine two sets of scopes."""
         if isinstance(other, (str, scope)):
             other = {str(other)}
         elif not isinstance(other, Scope):
@@ -109,9 +127,11 @@ class Scope(frozenset):
         return type(self)(*self.union(other))
 
     def __radd__(self, other) -> 'Scope':
+        """Combine two sets of scopes."""
         return self + other
 
     def __sub__(self, other) -> 'Scope':
+        """Remove scopes from a set."""
         if isinstance(other, (str, scope)):
             other = {str(other)}
         elif not isinstance(other, Scope):
@@ -120,6 +140,7 @@ class Scope(frozenset):
         return type(self)(*self.difference(other))
 
     def __rsub__(self, other) -> 'Scope':
+        """Remove scopes from a set."""
         if not isinstance(other, (str, scope)):
             e = f'Difference not defined for {type(other)} and {type(self)}!'
             raise NotImplementedError(e)

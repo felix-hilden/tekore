@@ -6,6 +6,8 @@ from tekore.model import FullEpisode, ModelList
 
 
 class SpotifyEpisode(SpotifyBase):
+    """Episode API endpoints."""
+
     @send_and_process(single(FullEpisode))
     def episode(
             self,

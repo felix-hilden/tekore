@@ -8,6 +8,8 @@ from tekore.model import FullArtistCursorPaging
 
 
 class SpotifyFollow(SpotifyBase):
+    """Follow API endpoints."""
+
     @chunked('user_ids', 2, 5, join_lists)
     @send_and_process(nothing)
     def playlist_is_following(self, playlist_id: str, user_ids: list) -> List[bool]:

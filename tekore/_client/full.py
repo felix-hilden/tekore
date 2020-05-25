@@ -35,7 +35,7 @@ class Spotify(
     SpotifyPaging,
 ):
     """
-    Bases: :class:`tekore.Client`
+    Bases: :class:`tekore.Client`.
 
     Client to Web API endpoints.
 
@@ -61,6 +61,7 @@ class Spotify(
     chunked_on
         use chunking when requesting lists of resources
     """
+
     @contextmanager
     def token_as(self, token) -> 'Spotify':
         """

@@ -3,4 +3,4 @@ from .view import SpotifyPlayerView
 
 
 class SpotifyPlayer(SpotifyPlayerModify, SpotifyPlayerView):
-    pass
+    """All player API endpoints."""

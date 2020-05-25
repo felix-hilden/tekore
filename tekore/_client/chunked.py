@@ -27,9 +27,7 @@ def _chunks(lst: list, n: int, reverse: bool) -> list:
 
 
 def _get_arg(position, name, args, kwargs):
-    """
-    Get argument from args or kwargs.
-    """
+    """Get argument from args or kwargs."""
     return kwargs.get(name, None) if len(args) <= position else args[position]
 
 
@@ -137,12 +135,15 @@ def chunked(
 
 
 def join_lists(responses):
+    """Join lists of models into ModelList."""
     return sum(responses, ModelList())
 
 
 def return_none(_):
+    """Return None always."""
     return None
 
 
 def return_last(responses):
+    """Return last item of a list."""
     return responses[-1]

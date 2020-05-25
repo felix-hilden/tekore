@@ -28,7 +28,8 @@ Join our `Discord <https://discord.gg/wcRXgJu>`_ community
 to ask for help or discuss just about anything related to Tekore.
 
 If you're new here, have a look at :ref:`getting-started`.
-After your first calls to the API you might want to look at :ref:`advanced-usage`.
+After your first calls to the API
+you might want to look at :ref:`advanced-usage`.
 More ellaborate example scripts can be found in :ref:`examples`.
 Detailed information can be found in our concise :ref:`reference`.
 

@@ -9,9 +9,8 @@ from .serialise import Model, StrEnum
 
 
 class CurrentlyPlayingType(StrEnum):
-    """
-    Type of currently playing item.
-    """
+    """Type of currently playing item."""
+
     ad = 'ad'
     episode = 'episode'
     track = 'track'
@@ -19,9 +18,8 @@ class CurrentlyPlayingType(StrEnum):
 
 
 class RepeatState(StrEnum):
-    """
-    Playback repeat state.
-    """
+    """Playback repeat state."""
+
     off = 'off'
     track = 'track'
     context = 'context'
@@ -29,9 +27,8 @@ class RepeatState(StrEnum):
 
 @dataclass(repr=False)
 class Disallows(Model):
-    """
-    Disallowed player actions.
-    """
+    """Disallowed player actions."""
+
     interrupting_playback: bool = False
     pausing: bool = False
     resuming: bool = False
@@ -46,9 +43,8 @@ class Disallows(Model):
 
 @dataclass(repr=False)
 class Actions(Model):
-    """
-    Player actions.
-    """
+    """Player actions."""
+
     disallows: Disallows
 
     def __post_init__(self):
@@ -69,6 +65,7 @@ class CurrentlyPlaying(Model):
     :attr:`context`, :attr:`progress_ms` and :attr:`item` may be ``None``
     e.g. during a private session.
     """
+
     actions: Actions
     currently_playing_type: CurrentlyPlayingType
     is_playing: bool
@@ -91,9 +88,8 @@ class CurrentlyPlaying(Model):
 
 @dataclass(repr=False)
 class CurrentlyPlayingContext(CurrentlyPlaying):
-    """
-    Extended current playback context.
-    """
+    """Extended current playback context."""
+
     device: Device
     repeat_state: RepeatState
     shuffle_state: bool

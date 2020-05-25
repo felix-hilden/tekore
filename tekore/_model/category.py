@@ -9,9 +9,8 @@ from .serialise import ModelList
 
 @dataclass(repr=False)
 class Category(Identifiable):
-    """
-    Spotify tag category.
-    """
+    """Spotify tag category."""
+
     href: str
     icons: List[Image]
     name: str
@@ -22,9 +21,8 @@ class Category(Identifiable):
 
 @dataclass(repr=False)
 class CategoryPaging(OffsetPaging):
-    """
-    Paging of categories.
-    """
+    """Paging of categories."""
+
     items: List[Category]
 
     def __post_init__(self):

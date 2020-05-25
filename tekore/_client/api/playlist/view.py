@@ -50,6 +50,7 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
 
 
 def parse_additional_types(as_tracks):
+    """Determine `additional_types` argument content."""
     types = {'track', 'episode'}
     if as_tracks is True:
         types = set()
@@ -62,6 +63,8 @@ def parse_additional_types(as_tracks):
 
 
 class SpotifyPlaylistView(SpotifyBase):
+    """Playlist API endpoints for viewing playlists."""
+
     @send_and_process(single(SimplePlaylistPaging))
     @maximise_limit(50)
     def followed_playlists(

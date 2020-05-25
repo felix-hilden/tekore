@@ -10,18 +10,16 @@ from .serialise import Model, ModelList
 
 @dataclass(repr=False)
 class ResumePoint(Model):
-    """
-    Episode resume point.
-    """
+    """Episode resume point."""
+
     fully_played: bool
     resume_position_ms: int
 
 
 @dataclass(repr=False)
 class Episode(Item):
-    """
-    Episode base.
-    """
+    """Episode base."""
+
     audio_preview_url: str
     description: str
     duration_ms: int
@@ -46,9 +44,8 @@ class Episode(Item):
 
 @dataclass(repr=False)
 class SimpleEpisode(Episode):
-    """
-    Simplified episode object.
-    """
+    """Simplified episode object."""
+
     resume_point: ResumePoint = None
 
     def __post_init__(self):
@@ -59,9 +56,8 @@ class SimpleEpisode(Episode):
 
 @dataclass(repr=False)
 class FullEpisode(Episode):
-    """
-    Complete episode object.
-    """
+    """Complete episode object."""
+
     show: SimpleShow
     resume_point: ResumePoint = None
 
@@ -74,9 +70,8 @@ class FullEpisode(Episode):
 
 @dataclass(repr=False)
 class SimpleEpisodePaging(OffsetPaging):
-    """
-    Paging of simplified episodes.
-    """
+    """Paging of simplified episodes."""
+
     items = List[SimpleEpisode]
 
     def __post_init__(self):

@@ -4,9 +4,8 @@ from .base import Identifiable
 
 @dataclass(repr=False)
 class AudioFeatures(Identifiable):
-    """
-    Features of a track.
-    """
+    """Features of a track."""
+
     acousticness: float
     analysis_url: str
     danceability: float

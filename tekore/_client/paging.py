@@ -7,6 +7,7 @@ from tekore._error import NotFound
 
 
 def parse_paging_result(result):
+    """Parse through the varying paging layouts."""
     # If only one top-level key, the paging object is one level deeper
     if len(result) == 1:
         key = list(result.keys())[0]
@@ -16,6 +17,8 @@ def parse_paging_result(result):
 
 
 class SpotifyPaging(SpotifyBase):
+    """Paging navigation endpoints."""
+
     @send_and_process(parse_paging_result)
     def _get_paging_result(self, address: str):
         return self._get(address)

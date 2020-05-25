@@ -10,6 +10,7 @@ class TimeInterval(Model):
 
     Attributes are sometimes not available.
     """
+
     duration: float
     start: float = None
     confidence: float = None
@@ -22,6 +23,7 @@ class Section(Model):
 
     Attributes are sometimes not available.
     """
+
     duration: float
     loudness: float
     tempo: float
@@ -43,6 +45,7 @@ class Segment(Model):
 
     Attributes are sometimes not available.
     """
+
     duration: float
     loudness_start: float
     loudness_max: float
@@ -68,6 +71,7 @@ class AudioAnalysis(Model):
     reference/tracks/get-audio-analysis/>`_
     for more details.
     """
+
     bars: List[TimeInterval]
     beats: List[TimeInterval]
     sections: List[Section]

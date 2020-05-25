@@ -27,12 +27,14 @@ class RefreshingToken(AccessToken):
     credentials
         credentials manager for token refreshing
     """
+
     def __init__(self, token: Token, credentials: Credentials):
         self._token = token
         self._credentials = credentials
 
     @property
     def access_token(self) -> str:
+        """Bearer token value."""
         if self._token.is_expiring:
             self._token = self._credentials.refresh(self._token)
 
@@ -49,9 +51,7 @@ class RefreshingToken(AccessToken):
 
     @property
     def token_type(self) -> str:
-        """
-        How the token may be used, always 'Bearer'.
-        """
+        """How the token may be used, always 'Bearer'."""
         return self._token.token_type
 
     @property
@@ -66,23 +66,17 @@ class RefreshingToken(AccessToken):
 
     @property
     def expires_in(self) -> None:
-        """
-        Seconds until token expiration, always ``None``.
-        """
+        """Seconds until token expiration, always ``None``."""
         return None
 
     @property
     def expires_at(self) -> None:
-        """
-        When the token expires, always ``None``.
-        """
+        """When the token expires, always ``None``."""
         return None
 
     @property
     def is_expiring(self) -> bool:
-        """
-        Determine whether token is about to expire, always ``False``.
-        """
+        """Determine whether token is about to expire, always ``False``."""
         return False
 
 
@@ -104,6 +98,7 @@ class RefreshingCredentials:
     sender
         synchronous request sender
     """
+
     def __init__(
             self,
             client_id: str,

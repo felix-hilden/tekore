@@ -5,6 +5,8 @@ from tekore.model import PublicUser, PrivateUser
 
 
 class SpotifyUser(SpotifyBase):
+    """User API endpoints."""
+
     @send_and_process(single(PublicUser))
     def user(self, user_id: str) -> PublicUser:
         """

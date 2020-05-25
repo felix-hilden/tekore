@@ -17,16 +17,13 @@ OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 
 
 def b64encode(msg: str) -> str:
-    """
-    Base 64 encoding for Unicode strings.
-    """
+    """Encode a unicode string in base-64."""
     return _b64encode(msg.encode()).decode()
 
 
 class AccessToken(ABC):
-    """
-    Access token base class.
-    """
+    """Access token base class."""
+
     @property
     @abstractmethod
     def access_token(self) -> str:
@@ -38,6 +35,7 @@ class AccessToken(ABC):
         raise NotImplementedError
 
     def __str__(self):
+        """Bearer token value."""
         return self.access_token
 
 
@@ -48,6 +46,7 @@ class Token(AccessToken):
     Represents both client and user tokens.
     The refresh token of a client token is ``None``.
     """
+
     def __init__(self, token_info: dict):
         self._access_token = token_info['access_token']
         self._token_type = token_info['token_type']
@@ -61,6 +60,7 @@ class Token(AccessToken):
 
     @property
     def access_token(self) -> str:
+        """Bearer token value."""
         return self._access_token
 
     @property
@@ -74,9 +74,7 @@ class Token(AccessToken):
 
     @property
     def token_type(self) -> str:
-        """
-        How the token may be used, always 'Bearer'.
-        """
+        """How the token may be used, always 'Bearer'."""
         return self._token_type
 
     @property
@@ -91,27 +89,22 @@ class Token(AccessToken):
 
     @property
     def expires_in(self) -> int:
-        """
-        Seconds until token expiration.
-        """
+        """Seconds until token expiration."""
         return self.expires_at - int(time.time())
 
     @property
     def expires_at(self) -> int:
-        """
-        When the token expires.
-        """
+        """When the token expires."""
         return self._expires_at
 
     @property
     def is_expiring(self) -> bool:
-        """
-        Determine whether token is about to expire.
-        """
+        """Determine whether token is about to expire."""
         return self.expires_in < 60
 
 
 def handle_errors(response: Response) -> None:
+    """Examine response and raise errors accordingly."""
     if response.status_code < 400:
         return
 
@@ -130,6 +123,7 @@ def handle_errors(response: Response) -> None:
 
 
 def parse_token(response):
+    """Parse token object from response."""
     handle_errors(response)
     content = response.json()
     return Token(content)
@@ -138,6 +132,7 @@ def parse_token(response):
 def send_and_process_token(
         function: Callable[..., Request]
 ) -> Callable[..., Token]:
+    """Send request and parse reponse for token."""
     async def async_send(self, request: Request):
         response = await self._send(request)
         return parse_token(response)
@@ -155,6 +150,7 @@ def send_and_process_token(
 
 
 def parse_refreshed_token(response, refresh_token: str) -> Token:
+    """Replace new refresh token with old value if empty."""
     refreshed = parse_token(response)
 
     if refreshed.refresh_token is None:
@@ -166,6 +162,7 @@ def parse_refreshed_token(response, refresh_token: str) -> Token:
 def send_and_process_refreshed_token(
         function: Callable[..., Request]
 ) -> Callable[..., Token]:
+    """Send request and parse refreshed token."""
     async def async_send(self, request: Request, refresh_token: str):
         response = await self._send(request)
         return parse_refreshed_token(response, refresh_token)
@@ -201,6 +198,7 @@ class Credentials(Client):
     asynchronous
         synchronicity requirement
     """
+
     def __init__(
             self,
             client_id: str,

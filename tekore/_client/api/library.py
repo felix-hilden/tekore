@@ -8,6 +8,8 @@ from tekore.model import SavedAlbumPaging, SavedTrackPaging, SavedShowPaging
 
 
 class SpotifyLibrary(SpotifyBase):
+    """Library API endpoints."""
+
     @send_and_process(single(SavedAlbumPaging))
     @maximise_limit(50)
     def saved_albums(

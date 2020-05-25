@@ -19,6 +19,7 @@ class FullPlaylistTrack(FullTrack):
     Provides :attr:`episode` and :attr:`track` booleans
     to easily determine the type of playlist item.
     """
+
     episode: bool = False
     track: bool = True
 
@@ -31,6 +32,7 @@ class FullPlaylistEpisode(FullEpisode):
     Provides :attr:`episode` and :attr:`track` booleans
     to easily determine the type of playlist item.
     """
+
     episode: bool = True
     track: bool = False
 
@@ -43,6 +45,7 @@ class LocalPlaylistTrack(LocalTrack):
     Provides :attr:`episode` and :attr:`track` booleans
     to easily determine the type of playlist item.
     """
+
     episode: bool = False
     track: bool = True
 
@@ -55,9 +58,8 @@ track_type = {
 
 @dataclass(repr=False)
 class PlaylistTrack(Model):
-    """
-    Track or episode on a playlist.
-    """
+    """Track or episode on a playlist."""
+
     added_at: Timestamp
     added_by: PublicUser
     is_local: bool
@@ -81,9 +83,8 @@ class PlaylistTrack(Model):
 
 @dataclass(repr=False)
 class PlaylistTrackPaging(OffsetPaging):
-    """
-    Paging of playlist tracks.
-    """
+    """Paging of playlist tracks."""
+
     items: List[PlaylistTrack]
 
     def __post_init__(self):
@@ -92,9 +93,8 @@ class PlaylistTrackPaging(OffsetPaging):
 
 @dataclass(repr=False)
 class Playlist(Item):
-    """
-    Playlist base.
-    """
+    """Playlist base."""
+
     collaborative: bool
     external_urls: dict
     images: List[Image]
@@ -112,9 +112,8 @@ class Playlist(Item):
 
 @dataclass(repr=False)
 class SimplePlaylist(Playlist):
-    """
-    Simplified playlist object.
-    """
+    """Simplified playlist object."""
+
     tracks: Tracks
 
     def __post_init__(self):
@@ -124,9 +123,8 @@ class SimplePlaylist(Playlist):
 
 @dataclass(repr=False)
 class FullPlaylist(Playlist):
-    """
-    Complete playlist object.
-    """
+    """Complete playlist object."""
+
     followers: Followers
     tracks: PlaylistTrackPaging
 
@@ -138,9 +136,8 @@ class FullPlaylist(Playlist):
 
 @dataclass(repr=False)
 class SimplePlaylistPaging(OffsetPaging):
-    """
-    Paging of simplified playlists.
-    """
+    """Paging of simplified playlists."""
+
     items: List[SimplePlaylist]
 
     def __post_init__(self):

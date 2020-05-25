@@ -14,6 +14,8 @@ from tekore.model import (
 
 
 class SpotifyArtist(SpotifyBase):
+    """Artist API endpoints."""
+
     @send_and_process(single(FullArtist))
     def artist(self, artist_id: str) -> FullArtist:
         """

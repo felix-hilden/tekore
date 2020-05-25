@@ -8,9 +8,8 @@ from .serialise import Model, ModelList
 
 @dataclass(repr=False)
 class ExplicitContent(Model):
-    """
-    Explicit content filter of a user.
-    """
+    """Explicit content filter of a user."""
+
     filter_enabled: bool
     filter_locked: bool
 
@@ -22,6 +21,7 @@ class User(Item):
 
     Display name, followers and images may not be available.
     """
+
     external_urls: dict
     display_name: str = None
     followers: Followers = None
@@ -42,6 +42,7 @@ class PrivateUser(User):
     Country, explicit content and product require user-read-private scope.
     Email requires user-read-email scope.
     """
+
     country: str = None
     email: str = None
     explicit_content: ExplicitContent = None
@@ -55,6 +56,4 @@ class PrivateUser(User):
 
 @dataclass(repr=False)
 class PublicUser(User):
-    """
-    User as viewable by anyone.
-    """
+    """User as viewable by anyone."""

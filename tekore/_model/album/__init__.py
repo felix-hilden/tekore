@@ -7,9 +7,8 @@ from ..album.base import Album, AlbumType
 
 
 class AlbumGroup(StrEnum):
-    """
-    Relationship between artist and album.
-    """
+    """Relationship between artist and album."""
+
     album = 'album'
     appears_on = 'appears_on'
     compilation = 'compilation'
@@ -27,6 +26,7 @@ class SimpleAlbum(Album):
     The presence of is_playable is undocumented
     and it appears to only be True when it is present.
     """
+
     album_group: AlbumGroup = None
     available_markets: List[str] = None
     is_playable: True = None
@@ -41,9 +41,8 @@ class SimpleAlbum(Album):
 
 @dataclass(repr=False)
 class SimpleAlbumPaging(OffsetPaging):
-    """
-    Paging containing simplified albums.
-    """
+    """Paging containing simplified albums."""
+
     items: List[SimpleAlbum]
 
     def __post_init__(self):

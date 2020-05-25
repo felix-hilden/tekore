@@ -14,6 +14,8 @@ class SpotifyPlaylist(
     SpotifyPlaylistModify,
     SpotifyPlaylistItems,
 ):
+    """All playlist API endpoints."""
+
     @deprecated('2.0', '3.0', 'playlist_items')
     def playlist_tracks(
             self,

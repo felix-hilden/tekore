@@ -7,6 +7,8 @@ from ...chunked import chunked, return_last
 
 
 class SpotifyPlaylistItems(SpotifyBase):
+    """Playlist API endpoints for manipulating playlist items."""
+
     @chunked('uris', 2, 100, return_last, reverse='position', reverse_pos=3)
     @send_and_process(top_item('snapshot_id'))
     def playlist_add(

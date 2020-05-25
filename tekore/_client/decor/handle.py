@@ -9,6 +9,7 @@ error_format = """Error in {url}:
 
 
 def parse_json(response):
+    """Get JSON dict if available."""
     try:
         return response.json()
     except ValueError:
@@ -16,6 +17,7 @@ def parse_json(response):
 
 
 def parse_error_reason(response):
+    """Extract error reason from response content."""
     content = parse_json(response)
     reason = getattr(response, 'reason', '')
 
@@ -30,6 +32,7 @@ def parse_error_reason(response):
 
 
 def handle_errors(request: Request, response: Response) -> None:
+    """Examine response and raise errors accordingly."""
     if response.status_code >= 400:
         error_str = error_format.format(
             url=response.url,

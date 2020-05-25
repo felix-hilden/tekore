@@ -20,13 +20,13 @@ paging_type = {
 
 
 def search_result(json: dict):
-    """
-    Unpack search result dicts into respective paging type constructors.
-    """
+    """Unpack search result dicts into respective paging type constructors."""
     return tuple(paging_type[key](**json[key]) for key in json.keys())
 
 
 class SpotifySearch(SpotifyBase):
+    """Search API endpoints."""
+
     @send_and_process(search_result)
     @maximise_limit(50)
     def search(
