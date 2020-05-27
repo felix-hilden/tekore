@@ -26,6 +26,8 @@ If you've found a bug or would like to propose a feature,
 please submit an issue on `GitHub`_.
 Join our `Discord <https://discord.gg/wcRXgJu>`_ community
 to ask for help or discuss just about anything related to Tekore.
+You can also ask a question on
+`Stack Overflow <https://stackoverflow.com/questions/tagged/tekore>`_.
 
 Installation
 ============

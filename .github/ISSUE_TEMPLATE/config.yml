@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/tekore
+    about: Forum for asking and answering questions
+  - name: Spotify for Developers forum
+    url: https://community.spotify.com/t5/Spotify-for-Developers/bd-p/Spotify_Developer
+    about: Issues with the Web API, not only Tekore
+  - name: Tekore Discord server
+    url: https://discord.gg/wcRXgJu
+    about: Our Discord server for help and general discussion
