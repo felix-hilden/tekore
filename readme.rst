@@ -27,16 +27,20 @@ Visit our online documentation on `Read The Docs`_ for tutorials,
 examples, package reference and a detailed description of features.
 Join our `Discord <https://discord.gg/wcRXgJu>`_ community
 to ask for help or discuss just about anything related to Tekore.
+You can also ask a question on
+`Stack Overflow <https://stackoverflow.com/questions/tagged/tekore>`_.
 
 Contributing
 ============
 |issues_open| |issue_resolution|
 
-We welcome new contributors to Tekore!
+New contributors are always welcome!
 If you've found a bug or would like to propose a feature,
 please submit an `issue <https://github.com/felix-hilden/tekore/issues>`_.
-Those who would like to get more involved may start
-by cloning the repository and installing it as an editable package.
+If you'd like to get
+`more involved <https://opensource.guide/how-to-contribute/>`_,
+you can start by cloning installing the most recent version from GitHub
+as an editable package and begin hacking.
 
 .. code:: sh
 
