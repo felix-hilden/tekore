@@ -53,7 +53,7 @@ For example:
 
     setup(
         install_requires=[
-            'tekore>=1.1,<2'
+            'tekore>=2,<3'
         ]
     )
 

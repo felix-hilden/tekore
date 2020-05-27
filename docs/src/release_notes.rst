@@ -3,16 +3,13 @@
 
 Release notes
 =============
-2.0.0 (Unreleased)
+2.0.0 (2020-05-27)
 ------------------
-Tekore 2.0 significantly improves the overall structure of the library
+This release significantly improves the overall structure of the library
 and provides quality of life enhancements to various tasks.
-
-Most importantly, the submodule structure was removed
+Most notably, submodules were removed in favor of a flat structure.
+Everything is now imported from the top level
 with the exception of :ref:`models`.
-Everything is now imported from the top level.
-Options for :ref:`senders` and :ref:`config` are set at the top level too.
-See :ref:`reference` for details.
 
 Removed
 *******
@@ -32,13 +29,14 @@ Added
 - :class:`Scope` operations were expanded to properly handle all combinations
   of :class:`str`, :class:`scope` and :class:`Scope` (:issue:`177`)
 - :ref:`client-playlist` - new methods to fully support episodes in playlists.
-  The new endpoints are direct counterparts to ``playlist_tracks_*`` methods
-  but without ``tracks``. (:issue:`178`)
+  The new endpoints are direct counterparts to ``playlist_tracks_*`` methods.
+  (:issue:`178`)
 
 Changed
 *******
 Import structure
 ~~~~~~~~~~~~~~~~
+Submodules were removed in favor of a flat structure.
 In addition to simply relocating objects, some changes were made as well.
 (:issue:`81`)
 
