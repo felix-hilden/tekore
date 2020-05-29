@@ -5,6 +5,10 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Dependency to HTTPX upgraded to include version ``0.13.*`` (:issue:`186`)
+
 Fixed
 *****
 - :ref:`errors` - correctly fall back to :class:`ClientError` and
