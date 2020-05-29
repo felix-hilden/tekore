@@ -1,6 +1,6 @@
-from requests import Request, Response, HTTPError
+from requests import Request, Response
 
-from tekore._error import errors
+from tekore._error import get_error
 from tekore.model import PlayerErrorReason
 
 error_format = """Error in {url}:
@@ -39,5 +39,5 @@ def handle_errors(request: Request, response: Response) -> None:
             code=response.status_code,
             msg=parse_error_reason(response)
         )
-        error_cls = errors.get(response.status_code, HTTPError)
+        error_cls = get_error(response.status_code)
         raise error_cls(error_str, request=request, response=response)

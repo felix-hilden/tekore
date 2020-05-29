@@ -5,11 +5,11 @@ from base64 import b64encode as _b64encode
 from typing import Callable, Union
 from functools import wraps
 
-from requests import HTTPError, Request, Response
+from requests import Request, Response
 from urllib.parse import urlencode
 
 from .scope import Scope
-from tekore._error import errors
+from tekore._error import get_error
 from tekore._sender import Sender, Client
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
@@ -118,7 +118,7 @@ def handle_errors(response: Response) -> None:
     else:
         error_str = 'Unexpected error!'
 
-    error_cls = errors.get(response.status_code, HTTPError)
+    error_cls = get_error(response.status_code)
     raise error_cls(error_str, response=response)
 
 

@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`errors` - correctly fall back to :class:`ClientError` and
+  :class:`ServerError` when encountering an unknown status code (:issue:`185`)
+
 2.0.0 (2020-05-27)
 ------------------
 This release significantly improves the overall structure of the library

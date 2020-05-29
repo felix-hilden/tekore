@@ -95,3 +95,14 @@ errors = {
     502: BadGateway,
     503: ServiceUnavailable,
 }
+
+
+def get_error(code):
+    """Get error based on status code or default error."""
+    cls = errors.get(code, None)
+    if cls is None:
+        if code < 500:
+            cls = ClientError
+        else:
+            cls = ServerError
+    return cls
