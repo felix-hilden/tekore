@@ -3,9 +3,10 @@ from warnings import warn
 from functools import wraps
 
 from ...base import SpotifyBase
-from ...decor import send_and_process, maximise_limit
+from ...decor import send_and_process, maximise_limit, scopes
 from ...chunked import _get_arg
 from ...process import single, model_list, nothing
+from tekore._auth import scope
 from tekore.model import (
     ModelList,
     SimplePlaylistPaging,
@@ -65,6 +66,7 @@ def parse_additional_types(as_tracks):
 class SpotifyPlaylistView(SpotifyBase):
     """Playlist API endpoints for viewing playlists."""
 
+    @scopes(optional=[scope.playlist_read_private, scope.playlist_read_collaborative])
     @send_and_process(single(SimplePlaylistPaging))
     @maximise_limit(50)
     def followed_playlists(
@@ -74,10 +76,6 @@ class SpotifyPlaylistView(SpotifyBase):
     ) -> SimplePlaylistPaging:
         """
         Get a list of the playlists owned or followed by the current user.
-
-        Requires the playlist-read-private scope to return private playlists.
-        Requires the playlist-read-collaborative scope
-        to return collaborative playlists.
 
         Parameters
         ----------
@@ -93,6 +91,7 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         return self._get('me/playlists', limit=limit, offset=offset)
 
+    @scopes(optional=[scope.playlist_read_private, scope.playlist_read_collaborative])
     @send_and_process(single(SimplePlaylistPaging))
     @maximise_limit(50)
     def playlists(
@@ -104,9 +103,7 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         Get a list of the playlists owned or followed by a user.
 
-        Requires the playlist-read-private scope to return private playlists.
-        Requires the playlist-read-collaborative scope to return collaborative
-        playlists. Collaborative playlists are only returned for current user.
+        Collaborative playlists are only returned for the current user.
 
         Parameters
         ----------
@@ -128,6 +125,7 @@ class SpotifyPlaylistView(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @process_if_not_specified(
         single(FullPlaylist),
         ('fields', 2),
@@ -195,10 +193,13 @@ class SpotifyPlaylistView(SpotifyBase):
             additional_types=additional_types,
         )
 
+    @scopes()
     @send_and_process(model_list(Image))
     def playlist_cover_image(self, playlist_id: str) -> ModelList:
         """
-        Get cover image of a playlist. Note: returns a list of images.
+        Get cover image of a playlist.
+
+        .. note:: Returns a list of images.
 
         Parameters
         ----------
@@ -212,6 +213,7 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         return self._get(f'playlists/{playlist_id}/images')
 
+    @scopes()
     @process_if_not_specified(
         single(PlaylistTrackPaging),
         ('fields', 2),
@@ -230,9 +232,7 @@ class SpotifyPlaylistView(SpotifyBase):
         """
         Full details of items on a playlist.
 
-        .. note::
-
-            Returns a dictionary if ``fields`` or ``as_tracks`` is specified.
+        .. note:: Returns a dictionary if ``fields`` or ``as_tracks`` is specified.
 
         Parameters
         ----------

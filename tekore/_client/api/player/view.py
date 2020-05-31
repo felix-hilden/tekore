@@ -1,8 +1,9 @@
 from typing import List
 
 from ...process import single, model_list
-from ...decor import send_and_process, maximise_limit
+from ...decor import send_and_process, maximise_limit, scopes
 from ...base import SpotifyBase
+from tekore._auth import scope
 from tekore.model import (
     ModelList,
     CurrentlyPlayingContext,
@@ -15,6 +16,7 @@ from tekore.model import (
 class SpotifyPlayerView(SpotifyBase):
     """Player API endpoints that view state."""
 
+    @scopes([scope.user_read_playback_state])
     @send_and_process(single(CurrentlyPlayingContext))
     def playback(
             self,
@@ -23,8 +25,6 @@ class SpotifyPlayerView(SpotifyBase):
     ) -> CurrentlyPlayingContext:
         """
         Get information about user's current playback.
-
-        Requires the user-read-playback-state scope.
 
         Parameters
         ----------
@@ -50,6 +50,10 @@ class SpotifyPlayerView(SpotifyBase):
             additional_types=additional_types
         )
 
+    @scopes(
+        [scope.user_read_playback_state, scope.user_read_currently_playing],
+        [scope.user_read_playback_state, scope.user_read_currently_playing]
+    )
     @send_and_process(single(CurrentlyPlaying))
     def playback_currently_playing(
             self,
@@ -59,8 +63,7 @@ class SpotifyPlayerView(SpotifyBase):
         """
         Get user's currently playing track.
 
-        Requires the user-read-playback-state or
-        the user-read-currently-playing scope.
+        Only one of the scopes above is required.
 
         Parameters
         ----------
@@ -86,6 +89,7 @@ class SpotifyPlayerView(SpotifyBase):
             additional_types=additional_types
         )
 
+    @scopes([scope.user_read_recently_played])
     @send_and_process(single(PlayHistoryPaging))
     @maximise_limit(50)
     def playback_recently_played(
@@ -97,8 +101,7 @@ class SpotifyPlayerView(SpotifyBase):
         """
         Get tracks from the current user's recently played tracks.
 
-        Only after or before should be specified at one time.
-        Requires the user-read-recently-played scope.
+        Only ``after`` or ``before`` should be specified at one time.
 
         Parameters
         ----------
@@ -121,12 +124,11 @@ class SpotifyPlayerView(SpotifyBase):
             before=before
         )
 
+    @scopes([scope.user_read_playback_state])
     @send_and_process(model_list(Device, 'devices'))
     def playback_devices(self) -> List[Device]:
         """
         Get a user's available devices.
-
-        Requires the user-read-playback-state scope.
 
         Returns
         -------

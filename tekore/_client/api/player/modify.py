@@ -1,9 +1,10 @@
 from typing import Union
 
+from tekore._auth import scope
 from tekore.model import RepeatState
 from tekore._convert import to_uri
 from ...base import SpotifyBase
-from ...decor import send_and_process
+from ...decor import send_and_process, scopes
 from ...process import nothing
 
 
@@ -23,14 +24,11 @@ def offset_to_dict(offset: Union[int, str]):
 class SpotifyPlayerModify(SpotifyBase):
     """Player API endpoints that modify state."""
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_transfer(self, device_id: str, force_play: bool = False) -> None:
         """
         Transfer playback to another device.
-
-        Requires the user-modify-playback-state scope.
-        Note that the API accepts a list of device ids,
-        but only actually supports one.
 
         Parameters
         ----------
@@ -45,12 +43,11 @@ class SpotifyPlayerModify(SpotifyBase):
         }
         return self._put('me/player', payload=data)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_resume(self, device_id: str = None) -> None:
         """
         Resume user's playback.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -59,6 +56,7 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._put('me/player/play', device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_start_tracks(
             self,
@@ -69,8 +67,6 @@ class SpotifyPlayerModify(SpotifyBase):
     ) -> None:
         """
         Start playback of one or more tracks.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -91,6 +87,7 @@ class SpotifyPlayerModify(SpotifyBase):
         payload = {k: v for k, v in payload.items() if v is not None}
         return self._put('me/player/play', payload=payload, device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_start_context(
             self,
@@ -101,8 +98,6 @@ class SpotifyPlayerModify(SpotifyBase):
     ) -> None:
         """
         Start playback of a context: an album, artist or playlist.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -124,12 +119,11 @@ class SpotifyPlayerModify(SpotifyBase):
         payload = {k: v for k, v in payload.items() if v is not None}
         return self._put('me/player/play', payload=payload, device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_queue_add(self, uri: str, device_id: str = None) -> None:
         """
         Add a track or an episode to a user's queue.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -140,12 +134,11 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._post('me/player/queue', uri=uri, device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_pause(self, device_id: str = None) -> None:
         """
         Pause a user's playback.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -154,12 +147,11 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._put('me/player/pause', device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_next(self, device_id: str = None) -> None:
         """
         Skip user's playback to next track.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -168,12 +160,11 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._post('me/player/next', device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_previous(self, device_id: str = None) -> None:
         """
         Skip user's playback to previous track.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -182,12 +173,11 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._post('me/player/previous', device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_seek(self, position_ms: int, device_id: str = None) -> None:
         """
         Seek to position in current playing track.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -202,6 +192,7 @@ class SpotifyPlayerModify(SpotifyBase):
             device_id=device_id
         )
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_repeat(
             self,
@@ -210,8 +201,6 @@ class SpotifyPlayerModify(SpotifyBase):
     ) -> None:
         """
         Set repeat mode for playback.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -222,12 +211,11 @@ class SpotifyPlayerModify(SpotifyBase):
         """
         return self._put('me/player/repeat', state=str(state), device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_shuffle(self, state: bool, device_id: str = None) -> None:
         """
         Toggle shuffle for user's playback.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------
@@ -239,12 +227,11 @@ class SpotifyPlayerModify(SpotifyBase):
         state = 'true' if state else 'false'
         return self._put('me/player/shuffle', state=state, device_id=device_id)
 
+    @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_volume(self, volume_percent: int, device_id: str = None) -> None:
         """
         Set volume for user's playback.
-
-        Requires the user-modify-playback-state scope.
 
         Parameters
         ----------

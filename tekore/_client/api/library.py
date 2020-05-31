@@ -1,15 +1,17 @@
 from typing import List
 
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, nothing
 from ..chunked import chunked, join_lists, return_none
+from tekore._auth import scope
 from tekore.model import SavedAlbumPaging, SavedTrackPaging, SavedShowPaging
 
 
 class SpotifyLibrary(SpotifyBase):
     """Library API endpoints."""
 
+    @scopes([scope.user_library_read])
     @send_and_process(single(SavedAlbumPaging))
     @maximise_limit(50)
     def saved_albums(
@@ -19,9 +21,7 @@ class SpotifyLibrary(SpotifyBase):
             offset: int = 0
     ) -> SavedAlbumPaging:
         """
-        Get a list of the albums saved in the current user's Your Music library.
-
-        Requires the user-library-read scope.
+        Get the albums saved in the current user's library.
 
         Parameters
         ----------
@@ -39,13 +39,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/albums', market=market, limit=limit, offset=offset)
 
+    @scopes([scope.user_library_read])
     @chunked('album_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def saved_albums_contains(self, album_ids: list) -> List[bool]:
         """
         Check if user has saved albums.
-
-        Requires the user-library-read scope.
 
         Parameters
         ----------
@@ -59,13 +58,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/albums/contains?ids=' + ','.join(album_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('album_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_albums_add(self, album_ids: list) -> None:
         """
         Save albums for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------
@@ -74,13 +72,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._put('me/albums?ids=' + ','.join(album_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('album_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_albums_delete(self, album_ids: list) -> None:
         """
         Remove albums for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------
@@ -89,6 +86,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._delete('me/albums?ids=' + ','.join(album_ids))
 
+    @scopes([scope.user_library_read])
     @send_and_process(single(SavedTrackPaging))
     @maximise_limit(50)
     def saved_tracks(
@@ -98,9 +96,7 @@ class SpotifyLibrary(SpotifyBase):
             offset: int = 0
     ) -> SavedTrackPaging:
         """
-        Get a list of the songs saved in the current user's Your Music library.
-
-        Requires the user-library-read scope.
+        Get the songs saved in the current user's library.
 
         Parameters
         ----------
@@ -118,13 +114,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/tracks', market=market, limit=limit, offset=offset)
 
+    @scopes([scope.user_library_read])
     @chunked('track_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def saved_tracks_contains(self, track_ids: list) -> List[bool]:
         """
         Check if user has saved tracks.
-
-        Requires the user-library-read scope.
 
         Parameters
         ----------
@@ -138,13 +133,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/tracks/contains?ids=' + ','.join(track_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('track_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_tracks_add(self, track_ids: list) -> None:
         """
         Save tracks for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------
@@ -153,13 +147,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._put('me/tracks/?ids=' + ','.join(track_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('track_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_tracks_delete(self, track_ids: list) -> None:
         """
         Remove tracks for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------
@@ -168,6 +161,7 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._delete('me/tracks/?ids=' + ','.join(track_ids))
 
+    @scopes([scope.user_library_read])
     @send_and_process(single(SavedShowPaging))
     @maximise_limit(50)
     def saved_shows(
@@ -177,9 +171,7 @@ class SpotifyLibrary(SpotifyBase):
             offset: int = 0
     ) -> SavedShowPaging:
         """
-        Get a list of the shows saved in the current user's Your Music library.
-
-        Requires the user-library-read scope.
+        Get the shows saved in the current user's library.
 
         Parameters
         ----------
@@ -197,13 +189,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/shows', market=market, limit=limit, offset=offset)
 
+    @scopes([scope.user_library_read])
     @chunked('show_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def saved_shows_contains(self, show_ids: list) -> List[bool]:
         """
         Check if user has saved shows.
-
-        Requires the user-library-read scope.
 
         Parameters
         ----------
@@ -217,13 +208,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._get('me/shows/contains?ids=' + ','.join(show_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('show_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_shows_add(self, show_ids: list) -> None:
         """
         Save shows for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------
@@ -232,13 +222,12 @@ class SpotifyLibrary(SpotifyBase):
         """
         return self._put('me/shows/?ids=' + ','.join(show_ids))
 
+    @scopes([scope.user_library_modify])
     @chunked('show_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def saved_shows_delete(self, show_ids: list, market: str = None) -> None:
         """
         Remove shows for current user.
-
-        Requires the user-library-modify scope.
 
         Parameters
         ----------

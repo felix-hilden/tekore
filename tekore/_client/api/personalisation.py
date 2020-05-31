@@ -1,12 +1,14 @@
 from ..process import single
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..base import SpotifyBase
+from tekore._auth import scope
 from tekore.model import FullArtistOffsetPaging, FullTrackPaging
 
 
 class SpotifyPersonalisation(SpotifyBase):
     """Personalisation API endpoints."""
 
+    @scopes([scope.user_top_read])
     @send_and_process(single(FullArtistOffsetPaging))
     @maximise_limit(50)
     def current_user_top_artists(
@@ -17,8 +19,6 @@ class SpotifyPersonalisation(SpotifyBase):
     ) -> FullArtistOffsetPaging:
         """
         Get the current user's top artists.
-
-        Requires the user-top-read scope.
 
         Parameters
         ----------
@@ -42,6 +42,7 @@ class SpotifyPersonalisation(SpotifyBase):
             offset=offset
         )
 
+    @scopes([scope.user_top_read])
     @send_and_process(single(FullTrackPaging))
     @maximise_limit(50)
     def current_user_top_tracks(
@@ -52,8 +53,6 @@ class SpotifyPersonalisation(SpotifyBase):
     ) -> FullTrackPaging:
         """
         Get the current user's top tracks.
-
-        Requires the user-top-read scope.
 
         Parameters
         ----------

@@ -1,5 +1,5 @@
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
@@ -27,6 +27,7 @@ def search_result(json: dict):
 class SpotifySearch(SpotifyBase):
     """Search API endpoints."""
 
+    @scopes()
     @send_and_process(search_result)
     @maximise_limit(50)
     def search(
@@ -41,8 +42,7 @@ class SpotifySearch(SpotifyBase):
         """
         Search for an item.
 
-        Requires the user-read-private scope.
-        Returns 404 - Not Found if limit+offset would be above 2000.
+        Returns :class:`NotFound` if limit+offset would be above 2000.
 
         Parameters
         ----------

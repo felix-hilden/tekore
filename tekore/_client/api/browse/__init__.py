@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 from .validate import validate_attributes
 from ...base import SpotifyBase
-from ...decor import send_and_process, maximise_limit
+from ...decor import send_and_process, maximise_limit, scopes
 from ...process import single, top_item, multiple
 from tekore.model import (
     SimplePlaylistPaging,
@@ -16,6 +16,7 @@ from tekore.model import (
 class SpotifyBrowse(SpotifyBase):
     """Browse API endpoints."""
 
+    @scopes()
     @send_and_process(multiple(
         top_item('message'),
         single(SimplePlaylistPaging, from_item='playlists')
@@ -63,6 +64,7 @@ class SpotifyBrowse(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @send_and_process(single(SimpleAlbumPaging, from_item='albums'))
     @maximise_limit(50)
     def new_releases(
@@ -95,6 +97,7 @@ class SpotifyBrowse(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @send_and_process(single(CategoryPaging, from_item='categories'))
     @maximise_limit(50)
     def categories(
@@ -132,6 +135,7 @@ class SpotifyBrowse(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @send_and_process(single(Category))
     def category(
             self,
@@ -163,6 +167,7 @@ class SpotifyBrowse(SpotifyBase):
             locale=locale
         )
 
+    @scopes()
     @send_and_process(single(SimplePlaylistPaging, from_item='playlists'))
     @maximise_limit(50)
     def category_playlists(
@@ -198,6 +203,7 @@ class SpotifyBrowse(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @send_and_process(single(Recommendations))
     @maximise_limit(100)
     def recommendations(
@@ -251,6 +257,7 @@ class SpotifyBrowse(SpotifyBase):
 
         return self._get('recommendations', **params)
 
+    @scopes()
     @send_and_process(top_item('genres'))
     def recommendation_genre_seeds(self) -> List[str]:
         """

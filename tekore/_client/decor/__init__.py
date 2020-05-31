@@ -4,6 +4,7 @@ from functools import wraps
 
 from requests import Request
 from .handle import handle_errors, parse_json
+from tekore import Scope
 
 
 def send_and_process(post_func: Callable) -> Callable:
@@ -66,6 +67,15 @@ def maximise_limit(max_limit: int) -> Callable:
     return decorator
 
 
+def _add_doc_section(doc: str, section: str) -> str:
+    """Add section with correct indentation to docstring."""
+    _, head, body = doc.split('\n', maxsplit=2)
+    indent = (len(head) - len(head.lstrip(' '))) * ' '
+
+    section = indent + section.replace('\n', '\n' + indent)
+    return '\n'.join([_, head, '', section, body])
+
+
 def deprecated(in_: str, removed: str, instead: str, level: int = 2):
     """
     Inject deprecation notice to :class:`Spotify` methods.
@@ -81,22 +91,53 @@ def deprecated(in_: str, removed: str, instead: str, level: int = 2):
     level
         warning stacklevel
     """
-    doc_msg = f'.. deprecated:: {in_}\n   Removed in {removed}.'
-    doc_msg += f'\n   Use :meth:`Spotify.{instead}` instead.'
+    doc_msg = '\n'.join([
+        f'.. deprecated:: {in_}',
+        f'   Removed in {removed}.',
+        f'   Use :meth:`Spotify.{instead}` instead.'
+    ])
 
     err_msg = f'Removed in version {removed}, use Spotify.{instead} instead.'
 
     def decorator(function: Callable) -> Callable:
-        _, head, body = function.__doc__.split('\n', maxsplit=2)
-        indent = (len(head) - len(head.lstrip(' '))) * ' '
-
-        nonlocal doc_msg
-        doc_msg = indent + doc_msg.replace('\n', '\n' + indent)
-        function.__doc__ = '\n'.join([_, head, '', doc_msg, body])
+        function.__doc__ = _add_doc_section(function.__doc__, doc_msg)
 
         @wraps(function)
         def wrapper(*args, **kwargs):
             warn(err_msg, DeprecationWarning, stacklevel=level)
             return function(*args, **kwargs)
         return wrapper
+    return decorator
+
+
+def scopes(required: list = None, optional: list = None) -> Callable:
+    """
+    List the scopes that a call uses.
+
+    Provides ``required_scopes``, ``optional_scopes``
+    and their combination ``scopes``.
+    Also modifies the docstring to include scope information.
+
+    Parameters
+    ----------
+    required
+        required scopes
+    optional
+        optional scopes
+    """
+    required = required or []
+    optional = optional or []
+    required_scope = Scope(*required)
+    optional_scope = Scope(*optional)
+    doc_msg = '\n'.join([
+        '| Required :class:`scope`: ' + (str(required_scope) or 'none'),
+        '| Optional :class:`scope`: ' + (str(optional_scope) or 'none')
+    ])
+
+    def decorator(function: Callable) -> Callable:
+        function.required_scope = required_scope
+        function.optional_scope = optional_scope
+        function.scope = required_scope + optional_scope
+        function.__doc__ = _add_doc_section(function.__doc__, doc_msg)
+        return function
     return decorator

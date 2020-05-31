@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, model_list
 from ..chunked import chunked, join_lists
 from tekore.model import (
@@ -16,6 +16,7 @@ from tekore.model import (
 class SpotifyArtist(SpotifyBase):
     """Artist API endpoints."""
 
+    @scopes()
     @send_and_process(single(FullArtist))
     def artist(self, artist_id: str) -> FullArtist:
         """
@@ -33,6 +34,7 @@ class SpotifyArtist(SpotifyBase):
         """
         return self._get('artists/' + artist_id)
 
+    @scopes()
     @chunked('artist_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullArtist, 'artists'))
     def artists(self, artist_ids: list) -> ModelList:
@@ -51,6 +53,7 @@ class SpotifyArtist(SpotifyBase):
         """
         return self._get('artists/?ids=' + ','.join(artist_ids))
 
+    @scopes()
     @send_and_process(single(SimpleAlbumPaging))
     @maximise_limit(50)
     def artist_albums(
@@ -92,6 +95,7 @@ class SpotifyArtist(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @send_and_process(model_list(FullTrack, 'tracks'))
     def artist_top_tracks(
             self,
@@ -115,6 +119,7 @@ class SpotifyArtist(SpotifyBase):
         """
         return self._get(f'artists/{artist_id}/top-tracks', country=market)
 
+    @scopes()
     @send_and_process(model_list(FullArtist, 'artists'))
     def artist_related_artists(self, artist_id: str) -> ModelList:
         """

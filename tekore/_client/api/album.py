@@ -1,5 +1,5 @@
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, model_list
 from ..chunked import chunked, join_lists
 from tekore.model import FullAlbum, SimpleTrackPaging, ModelList
@@ -8,6 +8,7 @@ from tekore.model import FullAlbum, SimpleTrackPaging, ModelList
 class SpotifyAlbum(SpotifyBase):
     """Album API endpoints."""
 
+    @scopes()
     @send_and_process(single(FullAlbum))
     def album(
             self,
@@ -31,6 +32,7 @@ class SpotifyAlbum(SpotifyBase):
         """
         return self._get('albums/' + album_id, market=market)
 
+    @scopes()
     @send_and_process(single(SimpleTrackPaging))
     @maximise_limit(50)
     def album_tracks(
@@ -66,6 +68,7 @@ class SpotifyAlbum(SpotifyBase):
             offset=offset
         )
 
+    @scopes()
     @chunked('album_ids', 1, 20, join_lists)
     @send_and_process(model_list(FullAlbum, 'albums'))
     def albums(

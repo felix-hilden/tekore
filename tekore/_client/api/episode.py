@@ -1,5 +1,5 @@
 from ..base import SpotifyBase
-from ..decor import send_and_process
+from ..decor import send_and_process, scopes
 from ..process import single, model_list
 from ..chunked import chunked, join_lists
 from tekore.model import FullEpisode, ModelList
@@ -8,6 +8,7 @@ from tekore.model import FullEpisode, ModelList
 class SpotifyEpisode(SpotifyBase):
     """Episode API endpoints."""
 
+    @scopes()
     @send_and_process(single(FullEpisode))
     def episode(
             self,
@@ -35,6 +36,7 @@ class SpotifyEpisode(SpotifyBase):
         """
         return self._get('episodes/' + episode_id, market=market)
 
+    @scopes()
     @chunked('episode_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullEpisode, 'episodes'))
     def episodes(

@@ -7,6 +7,8 @@ Unreleased
 ----------
 Added
 *****
+- :ref:`client` - required and optional scopes can now be determined in code
+  for any endpoint of the client (:issue:`180`)
 - Dependency to HTTPX upgraded to include version ``0.13.*`` (:issue:`186`)
 
 Fixed

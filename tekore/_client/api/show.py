@@ -1,13 +1,15 @@
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, model_list
 from ..chunked import chunked, join_lists
+from tekore._auth import scope
 from tekore.model import FullShow, SimpleEpisodePaging, ModelList
 
 
 class SpotifyShow(SpotifyBase):
     """Show API endpoints."""
 
+    @scopes(optional=[scope.user_read_playback_position])
     @send_and_process(single(FullShow))
     def show(
             self,
@@ -17,8 +19,8 @@ class SpotifyShow(SpotifyBase):
         """
         Get information for a show.
 
-        Reading the user's episode resume points requires
-        the user-read-playback-position scope.
+        The user-read-playback-position scope allows
+        episode resume points to be returned.
 
         Parameters
         ----------
@@ -38,6 +40,7 @@ class SpotifyShow(SpotifyBase):
         """
         return self._get('shows/' + show_id, market=market)
 
+    @scopes(optional=[scope.user_read_playback_position])
     @chunked('show_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullShow, 'shows'))
     def shows(
@@ -48,8 +51,8 @@ class SpotifyShow(SpotifyBase):
         """
         Get information for multiple shows.
 
-        Reading the user's episode resume points requires
-        the user-read-playback-position scope.
+        The user-read-playback-position scope allows
+        episode resume points to be returned.
 
         Parameters
         ----------
@@ -69,6 +72,7 @@ class SpotifyShow(SpotifyBase):
         """
         return self._get('shows/?ids=' + ','.join(show_ids), market=market)
 
+    @scopes()
     @send_and_process(single(SimpleEpisodePaging))
     @maximise_limit(50)
     def show_episodes(

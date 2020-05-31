@@ -1,21 +1,20 @@
 from requests import Request
 
 from ...base import SpotifyBase, build_url
-from ...decor import send_and_process
+from ...decor import send_and_process, scopes
 from ...process import single, nothing
+from tekore._auth import scope
 from tekore.model import FullPlaylist
 
 
 class SpotifyPlaylistModify(SpotifyBase):
     """Playlist API endpoints for modifying playlists."""
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_cover_image_upload(self, playlist_id: str, image: str) -> None:
         """
         Upload a custom playlist cover image.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -31,6 +30,7 @@ class SpotifyPlaylistModify(SpotifyBase):
             data=image
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(single(FullPlaylist))
     def playlist_create(
             self,
@@ -41,9 +41,6 @@ class SpotifyPlaylistModify(SpotifyBase):
     ) -> FullPlaylist:
         """
         Create a playlist.
-
-        Requires the playlist-modify-public scope. To create a private playlist
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -68,6 +65,7 @@ class SpotifyPlaylistModify(SpotifyBase):
         }
         return self._post(f'users/{user_id}/playlists', payload=payload)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_change_details(
             self,
@@ -79,9 +77,6 @@ class SpotifyPlaylistModify(SpotifyBase):
     ) -> None:
         """
         Change a playlist's details.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------

@@ -1,7 +1,9 @@
 import pytest
+from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
 
 from tekore import BadRequest, Spotify
+from tekore._auth import Scope
 from tekore._client.chunked import chunked, return_none, return_last
 
 
@@ -10,7 +12,7 @@ def client():
     return Spotify('token')
 
 
-class TestSpotifyBaseUnits:
+class TestSpotifyUnits:
     def test_new_token_used_in_context(self, client):
         with client.token_as('new'):
             assert client.token == 'new'
@@ -33,6 +35,25 @@ class TestSpotifyBaseUnits:
 
         previous = client.previous(paging)
         assert previous is None
+
+    def test_all_endpoints_have_scope_attributes(self, client):
+        # Skip paging calls and options
+        skips = {
+            'next',
+            'previous',
+            'all_pages',
+            'all_items',
+            'chunked',
+            'max_limits',
+            'token_as',
+        }
+        for name, method in getmembers(client, predicate=ismethod):
+            if name.startswith('_') or name in skips:
+                continue
+            assert isinstance(method.scope, Scope)
+            assert isinstance(method.required_scope, Scope)
+            assert isinstance(method.optional_scope, Scope)
+            assert method.scope == method.required_scope + method.optional_scope
 
 
 class TestSpotifyMaxLimits:

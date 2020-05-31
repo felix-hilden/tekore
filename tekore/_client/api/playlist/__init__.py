@@ -1,12 +1,13 @@
 from typing import List, Tuple, Union
 
-from ...decor import deprecated
+from ...decor import deprecated, scopes
 from .items import SpotifyPlaylistItems
 from .modify import SpotifyPlaylistModify
 from .view import SpotifyPlaylistView
 
 from tekore._convert import to_uri
 from tekore.model import PlaylistTrackPaging
+from tekore._auth import scope
 
 
 class SpotifyPlaylist(
@@ -16,6 +17,7 @@ class SpotifyPlaylist(
 ):
     """All playlist API endpoints."""
 
+    @scopes()
     @deprecated('2.0', '3.0', 'playlist_items')
     def playlist_tracks(
             self,
@@ -27,7 +29,7 @@ class SpotifyPlaylist(
             offset: int = 0
     ) -> Union[PlaylistTrackPaging, dict]:
         """
-        Get full details of the tracks of a playlist owned by a user.
+        Get full details of the tracks of a playlist.
 
         Parameters
         ----------
@@ -64,6 +66,7 @@ class SpotifyPlaylist(
             offset,
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_add')
     def playlist_tracks_add(
             self,
@@ -73,9 +76,6 @@ class SpotifyPlaylist(
     ) -> str:
         """
         Add tracks to a playlist.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -98,13 +98,11 @@ class SpotifyPlaylist(
             position
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_clear')
     def playlist_tracks_clear(self, playlist_id: str) -> None:
         """
         Remove all tracks in a playlist.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -113,13 +111,11 @@ class SpotifyPlaylist(
         """
         return self.playlist_clear(playlist_id)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_replace')
     def playlist_tracks_replace(self, playlist_id: str, track_ids: list) -> None:
         """
         Replace all tracks in a playlist.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -131,6 +127,7 @@ class SpotifyPlaylist(
         uris = [to_uri('track', t) for t in track_ids]
         return self.playlist_replace(playlist_id, uris)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_reorder')
     def playlist_tracks_reorder(
             self,
@@ -142,9 +139,6 @@ class SpotifyPlaylist(
     ) -> str:
         """
         Reorder tracks in a playlist.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -172,6 +166,7 @@ class SpotifyPlaylist(
             snapshot_id,
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_remove')
     def playlist_tracks_remove(
             self,
@@ -181,9 +176,6 @@ class SpotifyPlaylist(
     ) -> str:
         """
         Remove all occurrences of tracks from a playlist.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Note that when chunked, ``snapshot_id`` is not updated between requests.
 
@@ -204,6 +196,7 @@ class SpotifyPlaylist(
         uris = [to_uri('track', t) for t in track_ids]
         return self.playlist_remove(playlist_id, uris, snapshot_id)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_remove_occurrences')
     def playlist_tracks_remove_occurrences(
             self,
@@ -213,9 +206,6 @@ class SpotifyPlaylist(
     ) -> str:
         """
         Remove tracks from a playlist by track ID and position.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -234,6 +224,7 @@ class SpotifyPlaylist(
         refs = [(to_uri('track', id_), ix) for id_, ix in track_refs]
         return self.playlist_remove_occurrences(playlist_id, refs, snapshot_id)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @deprecated('2.0', '3.0', 'playlist_remove_indices')
     def playlist_tracks_remove_indices(
             self,
@@ -243,9 +234,6 @@ class SpotifyPlaylist(
     ) -> str:
         """
         Remove tracks from a playlist by position.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------

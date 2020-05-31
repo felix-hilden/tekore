@@ -22,6 +22,17 @@ Further documentation on endpoints can be viewed in the Web API
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
+Required and optional scopes to call any endpoint can be determined in code.
+Endpoints provide ``scope``, ``required_scope`` and ``optional_scope``
+attributes that return a :class:`Scope`.
+They can be accessed via the class itself or its instances.
+
+.. code:: python
+
+    scope_cls = tk.Spotify.current_user_top_tracks.scope
+    scope_inst = spotify.current_user_top_tracks.scope
+    assert scope_cls == scope_inst
+
 Instantiation and options
 -------------------------
 .. autoclass:: Spotify

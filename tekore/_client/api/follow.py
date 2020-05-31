@@ -1,22 +1,22 @@
 from typing import List
 
 from ..base import SpotifyBase
-from ..decor import send_and_process, maximise_limit
+from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, nothing
 from ..chunked import chunked, join_lists, return_none
+from tekore._auth import scope
 from tekore.model import FullArtistCursorPaging
 
 
 class SpotifyFollow(SpotifyBase):
     """Follow API endpoints."""
 
+    @scopes(optional=[scope.playlist_read_private])
     @chunked('user_ids', 2, 5, join_lists)
     @send_and_process(nothing)
     def playlist_is_following(self, playlist_id: str, user_ids: list) -> List[bool]:
         """
-        Check to see if the given users are following a playlist.
-
-        Requires the playlist-read-private scope to check private playlists.
+        Check if users are following a playlist.
 
         Parameters
         ----------
@@ -35,6 +35,7 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(user_ids)
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_follow(
             self,
@@ -43,9 +44,6 @@ class SpotifyFollow(SpotifyBase):
     ) -> None:
         """
         Follow a playlist as current user.
-
-        Requires the playlist-modify-public scope.
-        Following privately requires the playlist-modify-private scope.
 
         Parameters
         ----------
@@ -59,13 +57,11 @@ class SpotifyFollow(SpotifyBase):
         }
         return self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_unfollow(self, playlist_id: str) -> None:
         """
         Unfollow a playlist as current user.
-
-        Requires the playlist-modify-public scope. Unfollowing a privately
-        followed playlist requires the playlist-modify-private scope.
 
         Parameters
         ----------
@@ -74,6 +70,7 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._delete(f'playlists/{playlist_id}/followers')
 
+    @scopes([scope.user_follow_read])
     @send_and_process(single(FullArtistCursorPaging, from_item='artists'))
     @maximise_limit(50)
     def followed_artists(
@@ -83,8 +80,6 @@ class SpotifyFollow(SpotifyBase):
     ) -> FullArtistCursorPaging:
         """
         Get artists followed by the current user.
-
-        Requires the user-follow-read scope.
 
         Parameters
         ----------
@@ -100,13 +95,12 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._get('me/following', type='artist', limit=limit, after=after)
 
+    @scopes([scope.user_follow_read])
     @chunked('artist_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def artists_is_following(self, artist_ids: list) -> List[bool]:
         """
         Check if current user follows artists.
-
-        Requires the user-follow-read scope.
 
         Parameters
         ----------
@@ -124,13 +118,12 @@ class SpotifyFollow(SpotifyBase):
             ids=','.join(artist_ids)
         )
 
+    @scopes([scope.user_follow_modify])
     @chunked('artist_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def artists_follow(self, artist_ids: list) -> None:
         """
         Follow artists as current user.
-
-        Requires the user-follow-modify scope.
 
         Parameters
         ----------
@@ -139,13 +132,12 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._put('me/following', type='artist', ids=','.join(artist_ids))
 
+    @scopes([scope.user_follow_modify])
     @chunked('artist_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def artists_unfollow(self, artist_ids: list) -> None:
         """
         Unfollow artists as current user.
-
-        Requires the user-follow-modify scope.
 
         Parameters
         ----------
@@ -154,13 +146,12 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._delete('me/following', type='artist', ids=','.join(artist_ids))
 
+    @scopes([scope.user_follow_read])
     @chunked('user_ids', 1, 50, join_lists)
     @send_and_process(nothing)
     def users_is_following(self, user_ids: list) -> List[bool]:
         """
         Check if current user follows users.
-
-        Requires the user-follow-read scope.
 
         Parameters
         ----------
@@ -176,13 +167,12 @@ class SpotifyFollow(SpotifyBase):
             'me/following/contains', type='user', ids=','.join(user_ids)
         )
 
+    @scopes([scope.user_follow_modify])
     @chunked('user_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def users_follow(self, user_ids: list) -> None:
         """
         Follow users as current user.
-
-        Requires the user-follow-modify scope.
 
         Parameters
         ----------
@@ -191,13 +181,12 @@ class SpotifyFollow(SpotifyBase):
         """
         return self._put('me/following', type='user', ids=','.join(user_ids))
 
+    @scopes([scope.user_follow_modify])
     @chunked('user_ids', 1, 50, return_none)
     @send_and_process(nothing)
     def users_unfollow(self, user_ids: list) -> None:
         """
         Unfollow users as current user.
-
-        Requires the user-follow-modify scope.
 
         Parameters
         ----------

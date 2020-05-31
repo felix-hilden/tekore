@@ -1,7 +1,8 @@
 from typing import List, Tuple
 
+from tekore._auth import scope
 from ...base import SpotifyBase
-from ...decor import send_and_process
+from ...decor import send_and_process, scopes
 from ...process import top_item, nothing
 from ...chunked import chunked, return_last
 
@@ -9,6 +10,7 @@ from ...chunked import chunked, return_last
 class SpotifyPlaylistItems(SpotifyBase):
     """Playlist API endpoints for manipulating playlist items."""
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @chunked('uris', 2, 100, return_last, reverse='position', reverse_pos=3)
     @send_and_process(top_item('snapshot_id'))
     def playlist_add(
@@ -19,9 +21,6 @@ class SpotifyPlaylistItems(SpotifyBase):
     ) -> str:
         """
         Add items.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -44,13 +43,11 @@ class SpotifyPlaylistItems(SpotifyBase):
             position=position
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_clear(self, playlist_id: str) -> None:
         """
         Remove all items.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -59,13 +56,11 @@ class SpotifyPlaylistItems(SpotifyBase):
         """
         return self._put(f'playlists/{playlist_id}/tracks', payload={'uris': []})
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
     def playlist_replace(self, playlist_id: str, uris: list) -> None:
         """
         Replace all items.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -79,6 +74,7 @@ class SpotifyPlaylistItems(SpotifyBase):
             payload={'uris': uris}
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(top_item('snapshot_id'))
     def playlist_reorder(
             self,
@@ -90,9 +86,6 @@ class SpotifyPlaylistItems(SpotifyBase):
     ) -> str:
         """
         Reorder items.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -131,6 +124,7 @@ class SpotifyPlaylistItems(SpotifyBase):
             payload['snapshot_id'] = snapshot_id
         return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @chunked('uris', 2, 100, return_last, chain='snapshot_id', chain_pos=3)
     @send_and_process(top_item('snapshot_id'))
     def playlist_remove(
@@ -143,9 +137,6 @@ class SpotifyPlaylistItems(SpotifyBase):
         Remove items by URI.
 
         Removes all occurrences of the specified items.
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
-
         Note that when chunked, ``snapshot_id`` is not updated between requests.
 
         Parameters
@@ -169,6 +160,7 @@ class SpotifyPlaylistItems(SpotifyBase):
             snapshot_id
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(top_item('snapshot_id'))
     def playlist_remove_occurrences(
             self,
@@ -178,9 +170,6 @@ class SpotifyPlaylistItems(SpotifyBase):
     ) -> str:
         """
         Remove items by URI and position.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
@@ -213,6 +202,7 @@ class SpotifyPlaylistItems(SpotifyBase):
             snapshot_id
         )
 
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(top_item('snapshot_id'))
     def playlist_remove_indices(
             self,
@@ -222,9 +212,6 @@ class SpotifyPlaylistItems(SpotifyBase):
     ) -> str:
         """
         Remove items by position.
-
-        Requires the playlist-modify-public scope. To modify private playlists
-        the playlist-modify-private scope is required.
 
         Parameters
         ----------
