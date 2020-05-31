@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+2.1.0 (2020-05-31)
+------------------
 Added
 *****
 - :ref:`client` - required and optional scopes can now be determined in code
