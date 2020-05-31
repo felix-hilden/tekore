@@ -39,8 +39,8 @@ If you've found a bug or would like to propose a feature,
 please submit an `issue <https://github.com/felix-hilden/tekore/issues>`_.
 If you'd like to get
 `more involved <https://opensource.guide/how-to-contribute/>`_,
-you can start by cloning installing the most recent version from GitHub
-as an editable package and begin hacking.
+you can start by cloning the most recent version from GitHub
+and installing it as an editable package.
 
 .. code:: sh
 
