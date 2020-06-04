@@ -4,10 +4,13 @@ Authenticating server
 =====================
 The script below starts up a simple Flask web server for authentication.
 
-The configured redirect URI must match ``http://localhost:5000/callback``
-and be whitelisted in your
+In this example the configured redirect URI must match
+``http://localhost:5000/callback`` and be whitelisted in your
 `application <https://developer.spotify.com/dashboard>`_ settings.
 Note that the server need not be accessible from the web.
+With a server that is hosted elsewhere
+or one that needs to be accessible from outside,
+whitelist another redirect URI that matches the server's address.
 
 Run the script and navigate to ``localhost:5000`` to see your user ID.
 It should be ``None`` before logging in.

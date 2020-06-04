@@ -24,7 +24,7 @@ Response models and lists of models are made easy to work with.
 They provide a readable ``repr`` for quickly inspecting the contents of a model
 and a :meth:`pprint <Serialisable.pprint>` method to view the model in more detail.
 It is also possible to convert models to builtin and JSON representations.
-See :class:`Serialisable` for more details.
+See :class:`Serialisable` for more details on all available functionality.
 
 .. code:: python
 
