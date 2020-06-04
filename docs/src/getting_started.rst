@@ -2,17 +2,14 @@
 
 Getting started
 ===============
-To use the Web API, you'll need to register an
-`application <https://developer.spotify.com/dashboard/applications>`_.
-From its page retrieve the client ID and secret,
-and define a whitelisted redirect URI in application settings.
-Note that a server listening to that address isn't required for a demo,
-though it is required for programmatic extraction of user access tokens.
+To use the Web API, you'll need to register an `application`_.
+From its page retrieve the client ID and secret.
+They are your application's credentials to the API.
 
 Retrieving a client token
 -------------------------
 First we'll retrieve a client token for the Spotify application.
-It is a token associated with your registered application
+It is a token associated with your application
 and can be used to make basic calls to the API.
 
 .. code:: python
@@ -38,15 +35,27 @@ on an album given the album ID.
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
+Response attributes can be directly accessed with dot notation as above.
+To quickly inspect a response or any part of it, print its contents.
+
+.. code:: python
+
+    print(album)
+    print(album.artists[0])
+
 Retrieving a user token
 -----------------------
 Many endpoints require user authentication,
 for which another type of access token is needed.
 User tokens are associated with a Spotify user account.
+Retrieving them requires some more setting up.
+A redirect URI should be whitelisted in `application`_ settings.
+It is the address to which users are redirected
+after authorising the application.
+
 Different privileges or `scopes` can be requested when authenticating.
 Below we'll retrieve a token that has every possible scope.
-
-The script below will open a web page prompting for a Spotify login.
+The script will open a web page prompting for a Spotify login.
 The user is then redirected back to the whitelisted redirect URI.
 Paste the redirected URI in full to the shell to finalise token retrieval.
 
@@ -60,6 +69,12 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
         redirect_uri,
         scope=tk.scope.every
     )
+
+.. note::
+
+    :func:`prompt_for_user_token` eliminates the need of a web server
+    because of the manual entering of information.
+    However, that also makes it unusable on a server.
 
 Calling the API as a user
 -------------------------
@@ -75,7 +90,7 @@ lists some of the user's most listened tracks.
         print(track.name)
 
 The snippet below will play Sibelius' Finlandia if the user has
-an active (recently used) Spotify application open.
+a recently used Spotify application open.
 If no active device is found, an error is thrown.
 
 .. code:: python
@@ -85,7 +100,12 @@ If no active device is found, an error is thrown.
 
 What's next?
 ------------
-Have a look at some :ref:`example scripts <examples>` to start familiarising
-yourself with the Web API.
+Spotify's `authorisation guide <https://developer.spotify.com/
+documentation/general/guides/authorization-guide/>`_
+contains more information about the underlying authentication procedures.
 :ref:`advanced-usage` provides an overview of what Tekore has to offer
 and things to keep in mind when building an actual application.
+You could also have a look at some :ref:`example scripts <examples>`
+to start familiarising yourself with the Web API.
+
+.. _application: https://developer.spotify.com/dashboard/applications

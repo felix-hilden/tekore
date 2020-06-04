@@ -95,8 +95,10 @@ To help with this restriction, those lists can be chunked.
 
 Application configuration
 -------------------------
-Environment variables or configuration files can be used
-to provide application credentials (see :ref:`configuration <config>`).
+It is generally advisable to separate configuration from code,
+and more importantly keep secrets outside public version control.
+To facilitate that, environment variables and configuration files
+can be used to provide application credentials.
 Set values in your environment or write a configuration file,
 then read the configuration.
 
@@ -141,6 +143,8 @@ This is handy if a user's refresh token needs to be stored.
 .. code:: python
 
     tk.config_to_file(filename, (id_, secret, uri, refresh))
+
+For more information see :ref:`config`.
 
 Using senders
 -------------
