@@ -109,8 +109,6 @@ Episode
 
 Playback
 --------
-Currently playing
-*****************
 .. autosummary::
    :nosignatures:
 
@@ -130,6 +128,8 @@ Currently playing
    Context
    ContextType
 
+Currently playing
+*****************
 .. autoclass:: CurrentlyPlaying
 .. autoclass:: CurrentlyPlayingContext
 .. autoclass:: CurrentlyPlayingType
