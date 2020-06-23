@@ -38,7 +38,7 @@ class SpotifySearch(SpotifyBase):
             include_external: str = None,
             limit: int = 20,
             offset: int = 0
-    ):
+    ) -> tuple:
         """
         Search for an item.
 
@@ -63,8 +63,15 @@ class SpotifySearch(SpotifyBase):
         Returns
         -------
         tuple
-            paging objects containing the types of items searched for
-            in the order that they were specified in 'types'
+            Paging objects containing the types of items searched for
+            in the order that they were specified in 'types'.
+
+            * artist: :class:`FullArtistOffsetPaging <model.FullArtistOffsetPaging>`
+            * album: :class:`SimpleAlbumPaging <model.SimpleAlbumPaging>`
+            * episode: :class:`SimpleEpisodePaging <model.SimpleEpisodePaging>`
+            * playlist: :class:`SimplePlaylistPaging <model.SimplePlaylistPaging>`
+            * show: :class:`SimpleShowPaging <model.SimpleShowPaging>`
+            * track: :class:`FullTrackPaging <model.FullTrackPaging>`
 
         Examples
         --------

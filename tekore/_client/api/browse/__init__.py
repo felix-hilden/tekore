@@ -51,8 +51,8 @@ class SpotifyBrowse(SpotifyBase):
 
         Returns
         -------
-        tuple
-            (str, SimplePlaylistPaging): message for the playlists and a list of
+        Tuple[str, SimplePlaylistPaging]
+            message for the playlists and a list of
             simplified playlist objects wrapped in a paging object
         """
         return self._get(

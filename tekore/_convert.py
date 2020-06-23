@@ -1,6 +1,6 @@
 import re
 
-from typing import Union
+from typing import Union, Tuple
 from tekore.model import StrEnum
 
 
@@ -101,7 +101,7 @@ def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
     return f'https://open.spotify.com/{type_}/{id_}'
 
 
-def from_uri(uri: str) -> tuple:
+def from_uri(uri: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URI.
 
@@ -112,8 +112,8 @@ def from_uri(uri: str) -> tuple:
 
     Returns
     -------
-    tuple
-        (type, ID) parsed from the URI
+    Tuple[str, str]
+        type and ID parsed from the URI
 
     Raises
     ------
@@ -137,7 +137,7 @@ _url_prefixes = (
 )
 
 
-def from_url(url: str) -> tuple:
+def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
@@ -148,8 +148,8 @@ def from_url(url: str) -> tuple:
 
     Returns
     -------
-    tuple
-        (type, ID) parsed from the URL
+    Tuple[str, str]
+        type and ID parsed from the URL
 
     Raises
     ------
