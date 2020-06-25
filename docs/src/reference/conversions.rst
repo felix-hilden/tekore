@@ -37,3 +37,4 @@ Conversions between Spotify IDs, URIs and URLs.
 .. autofunction:: to_uri
 .. autofunction:: to_url
 .. autoclass:: IdentifierType
+   :undoc-members:
