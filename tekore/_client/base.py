@@ -81,7 +81,7 @@ class SpotifyBase(Client):
             url=url,
             params=parse_url_params(params),
             data=json.dumps(payload) if payload is not None else None,
-        )
+        ), ()
 
     def _get(self, url: str, payload=None, **params):
         return self._request('GET', url, payload=payload, params=params)

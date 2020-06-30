@@ -1,5 +1,6 @@
-from typing import Optional, Union, Coroutine
+from typing import Optional, Union, Coroutine, Callable
 from warnings import warn
+from functools import wraps
 
 from .base import Request, Response
 from .concrete import Sender, SyncSender, AsyncSender
@@ -44,3 +45,37 @@ class Client(ExtendingSender):
     ) -> Union[Response, Coroutine[None, None, Response]]:
         """Send request with underlying sender."""
         return self.sender.send(request)
+
+
+def send_and_process(post_func: Callable) -> Callable:
+    """
+    Decorate a Client function to send a request and process its content.
+
+    The first parameter of a decorated function must be the instance (self)
+    of a :class:`Sender` (has :meth:`send` and :attr:`is_async`).
+    The decorated function must return a tuple with two items:
+    a :class:`Request` and a tuple with arguments to unpack to ``post_func``.
+    The result of ``post_func`` is returned to the caller.
+
+    Parameters
+    ----------
+    post_func
+        function to call with the request and response
+        and possible additional arguments
+    """
+    def decorator(function: Callable[..., Request]) -> Callable:
+        async def async_send(self, request: Request, params: tuple):
+            response = await self.send(request)
+            return post_func(request, response, *params)
+
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            request, params = function(self, *args, **kwargs)
+
+            if self.is_async:
+                return async_send(self, request, params)
+
+            response = self.send(request)
+            return post_func(request, response, *params)
+        return wrapper
+    return decorator

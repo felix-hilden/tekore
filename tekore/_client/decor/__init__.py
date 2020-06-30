@@ -4,40 +4,23 @@ from functools import wraps
 
 from .handle import handle_errors
 from tekore._auth import Scope
-from tekore._sender import Request
+from tekore._sender import send_and_process as _send_and_process
 
 
 def send_and_process(post_func: Callable) -> Callable:
     """
-    Decorate a function to send a request and process its content.
-
-    The first parameter of a decorated function must be the instance (self)
-    of a :class:`Sender` (has :meth:`send` and :attr:`is_async`).
-    The result of ``post_func`` is returned to the caller.
+    Decorate a Spotify endpoint to send a request and process its content.
 
     Parameters
     ----------
     post_func
         function to call with response JSON content
     """
-    def decorator(function: Callable[..., Request]) -> Callable:
-        async def async_send(self, request: Request):
-            response = await self.send(request)
-            handle_errors(request, response)
-            return post_func(response.content)
+    def parse_response(request, response):
+        handle_errors(request, response)
+        return post_func(response.content)
 
-        @wraps(function)
-        def wrapper(self, *args, **kwargs):
-            request = function(self, *args, **kwargs)
-
-            if self.is_async:
-                return async_send(self, request)
-
-            response = self.send(request)
-            handle_errors(request, response)
-            return post_func(response.content)
-        return wrapper
-    return decorator
+    return _send_and_process(parse_response)
 
 
 def maximise_limit(max_limit: int) -> Callable:

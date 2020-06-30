@@ -27,7 +27,7 @@ class SpotifyPlaylistModify(SpotifyBase):
             url=f'playlists/{playlist_id}/images',
             headers={'Content-Type': 'image/jpeg'},
             data=image,
-        )
+        ), ()
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(single(FullPlaylist))

@@ -2,14 +2,13 @@ import time
 
 from abc import ABC, abstractmethod
 from base64 import b64encode as _b64encode
-from typing import Callable, Union
-from functools import wraps
+from typing import Union
 
 from urllib.parse import urlencode
 
 from .scope import Scope
 from .._error import get_error
-from .._sender import Sender, Client, Request, Response
+from .._sender import Sender, Client, send_and_process, Request, Response
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
@@ -134,26 +133,6 @@ def parse_token(request: Request, response: Response) -> Token:
     return Token(response.content)
 
 
-def send_and_process_token(
-        function: Callable[..., Request]
-) -> Callable[..., Token]:
-    """Send request and parse reponse for token."""
-    async def async_send(self, request: Request):
-        response = await self.send(request)
-        return parse_token(request, response)
-
-    @wraps(function)
-    def wrapper(self, *args, **kwargs):
-        request = function(self, *args, **kwargs)
-
-        if self.is_async:
-            return async_send(self, request)
-
-        response = self.send(request)
-        return parse_token(request, response)
-    return wrapper
-
-
 def parse_refreshed_token(
     request: Request, response: Response, refresh_token: str
 ) -> Token:
@@ -164,26 +143,6 @@ def parse_refreshed_token(
         refreshed._refresh_token = refresh_token
 
     return refreshed
-
-
-def send_and_process_refreshed_token(
-        function: Callable[..., Request]
-) -> Callable[..., Token]:
-    """Send request and parse refreshed token."""
-    async def async_send(self, request: Request, refresh_token: str):
-        response = await self.send(request)
-        return parse_refreshed_token(request, response, refresh_token)
-
-    @wraps(function)
-    def wrapper(self, *args, **kwargs):
-        request, refresh_token = function(self, *args, **kwargs)
-
-        if self.is_async:
-            return async_send(self, request, refresh_token)
-
-        response = self.send(request)
-        return parse_refreshed_token(request, response, refresh_token)
-    return wrapper
 
 
 class Credentials(Client):
@@ -232,11 +191,11 @@ class Credentials(Client):
     def _auth(self) -> str:
         return b64encode(self.client_id + ':' + self.client_secret)
 
-    def _request_token(self, payload: dict):
+    def _token_request(self, payload: dict):
         headers = {'Authorization': f'Basic {self._auth}'}
         return Request('POST', OAUTH_TOKEN_URL, data=payload, headers=headers)
 
-    @send_and_process_token
+    @send_and_process(parse_token)
     def request_client_token(self) -> Token:
         """
         Request a client token.
@@ -247,7 +206,7 @@ class Credentials(Client):
             client access token
         """
         payload = {'grant_type': 'client_credentials'}
-        return self._request_token(payload)
+        return self._token_request(payload), ()
 
     def user_authorisation_url(
             self,
@@ -292,7 +251,7 @@ class Credentials(Client):
 
         return OAUTH_AUTHORIZE_URL + '?' + urlencode(payload)
 
-    @send_and_process_token
+    @send_and_process(parse_token)
     def request_user_token(self, code: str) -> Token:
         """
         Request a new user token.
@@ -316,9 +275,9 @@ class Credentials(Client):
             'redirect_uri': self.redirect_uri,
             'grant_type': 'authorization_code'
         }
-        return self._request_token(payload)
+        return self._token_request(payload), ()
 
-    @send_and_process_refreshed_token
+    @send_and_process(parse_refreshed_token)
     def refresh_user_token(self, refresh_token: str) -> Token:
         """
         Request a refreshed user token.
@@ -337,8 +296,7 @@ class Credentials(Client):
             'refresh_token': refresh_token,
             'grant_type': 'refresh_token'
         }
-
-        return self._request_token(payload), refresh_token
+        return self._token_request(payload), (refresh_token,)
 
     def refresh(self, token: Token) -> Token:
         """
