@@ -35,17 +35,17 @@ documentation_url = 'https://tekore.readthedocs.io'
 
 extras_require = {
     'docs': [
-        'sphinx',
+        'sphinx~=3.1',
         'sphinx-rtd-theme',
-        'sphinx-autodoc-typehints'
+        'sphinx-autodoc-typehints~=1.11'
     ],
     'tests': [
-        'coverage',
-        'pytest>=5.4',
-        'pytest-asyncio',
+        'coverage~=5.0',
+        'pytest~=5.4',
+        'pytest-asyncio>=0.11,<0.15',
     ],
     'checks': [
-        'tox',
+        'tox~=3.0',
         'doc8',
         'flake8',
         'flake8-bugbear',
@@ -87,7 +87,7 @@ setuptools.setup(
 
     python_requires='>=' + python_requires_str,
     install_requires=[
-        'requests>=2.19,<3',
+        'requests~=2.19',
         'httpx>=0.11,<0.14',
         'dataclasses;python_version<"3.7"'
     ],
