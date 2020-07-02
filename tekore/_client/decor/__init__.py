@@ -69,11 +69,19 @@ def maximise_limit(max_limit: int) -> Callable:
 
 def _add_doc_section(doc: str, section: str) -> str:
     """Add section with correct indentation to docstring."""
-    _, head, body = doc.split('\n', maxsplit=2)
+    items = doc.split('\n', maxsplit=2)
+
+    if len(items) == 1:
+        empty = ''
+        head = items[0]
+        body = ''
+    else:
+        empty, head, body = items
+
     indent = (len(head) - len(head.lstrip(' '))) * ' '
 
     section = indent + section.replace('\n', '\n' + indent)
-    return '\n'.join([_, head, '', section, body])
+    return '\n'.join([empty, head, '', section, body])
 
 
 def deprecated(in_: str, removed: str, instead: str, level: int = 2):
