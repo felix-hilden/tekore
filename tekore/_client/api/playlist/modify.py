@@ -52,11 +52,6 @@ class SpotifyPlaylistModify(SpotifyBase):
             is the created playlist public
         description
             the description of the playlist
-
-        Returns
-        -------
-        FullPlaylist
-            created playlist
         """
         payload = {
             'name': name,

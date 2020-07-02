@@ -35,7 +35,7 @@ class SpotifyPaging(SpotifyBase):
         Returns
         -------
         Paging
-            paging object containing the next result set
+            next result set
         """
         if self.is_async:
             return self._async_next(page)
@@ -71,7 +71,7 @@ class SpotifyPaging(SpotifyBase):
         Returns
         -------
         OffsetPaging
-            paging object containing the previous result set
+            previous result set
         """
         if self.is_async:
             return self._async_previous(page)

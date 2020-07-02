@@ -26,18 +26,13 @@ class SpotifyArtist(SpotifyBase):
         ----------
         artist_id
             artist ID
-
-        Returns
-        -------
-        FullArtist
-            full artist object
         """
         return self._get('artists/' + artist_id)
 
     @scopes()
     @chunked('artist_ids', 1, 50, join_lists)
     @send_and_process(model_list(FullArtist, 'artists'))
-    def artists(self, artist_ids: list) -> ModelList:
+    def artists(self, artist_ids: list) -> ModelList[FullArtist]:
         """
         Get information for multiple artists.
 
@@ -45,11 +40,6 @@ class SpotifyArtist(SpotifyBase):
         ----------
         artist_ids
             list of artist IDs, max 50 without chunking
-
-        Returns
-        -------
-        ModelList
-            list of full artist objects
         """
         return self._get('artists/?ids=' + ','.join(artist_ids))
 
@@ -79,11 +69,6 @@ class SpotifyArtist(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimpleAlbumPaging
-            paging containing simple album objects
         """
         if include_groups is not None:
             include_groups = ','.join(str(g) for g in include_groups)
@@ -101,7 +86,7 @@ class SpotifyArtist(SpotifyBase):
             self,
             artist_id: str,
             market: str
-    ) -> ModelList:
+    ) -> ModelList[FullTrack]:
         """
         Get an artist's top 10 tracks by country.
 
@@ -111,17 +96,12 @@ class SpotifyArtist(SpotifyBase):
             the artist ID
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
-
-        Returns
-        -------
-        ModelList
-            list of full track objects
         """
         return self._get(f'artists/{artist_id}/top-tracks', country=market)
 
     @scopes()
     @send_and_process(model_list(FullArtist, 'artists'))
-    def artist_related_artists(self, artist_id: str) -> ModelList:
+    def artist_related_artists(self, artist_id: str) -> ModelList[FullArtist]:
         """
         Get artists similar to an identified artist.
 
@@ -132,10 +112,5 @@ class SpotifyArtist(SpotifyBase):
         ----------
         artist_id
             artist ID
-
-        Returns
-        -------
-        ModelList
-            list of full artist objects
         """
         return self._get(f'artists/{artist_id}/related-artists')

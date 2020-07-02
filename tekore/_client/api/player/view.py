@@ -1,5 +1,3 @@
-from typing import List
-
 from ...process import single, model_list
 from ...decor import send_and_process, maximise_limit, scopes
 from ...base import SpotifyBase
@@ -111,11 +109,6 @@ class SpotifyPlayerView(SpotifyBase):
             a unix timestamp in milliseconds, must not be specified with 'before'
         before
             a unix timestamp in milliseconds, must not be specified with 'after'
-
-        Returns
-        -------
-        PlayHistoryPaging
-            cursor-based paging containing play history objects
         """
         return self._get(
             'me/player/recently-played',
@@ -126,13 +119,6 @@ class SpotifyPlayerView(SpotifyBase):
 
     @scopes([scope.user_read_playback_state])
     @send_and_process(model_list(Device, 'devices'))
-    def playback_devices(self) -> List[Device]:
-        """
-        Get a user's available devices.
-
-        Returns
-        -------
-        ModelList
-            list of device objects
-        """
+    def playback_devices(self) -> ModelList[Device]:
+        """Get a user's available devices."""
         return self._get('me/player/devices')

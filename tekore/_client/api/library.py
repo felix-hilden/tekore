@@ -31,11 +31,6 @@ class SpotifyLibrary(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SavedAlbumPaging
-            paging object containing saved albums
         """
         return self._get('me/albums', market=market, limit=limit, offset=offset)
 
@@ -53,8 +48,8 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order the album IDs were given
+        List[bool]
+            save statuses in the same order the album IDs were given
         """
         return self._get('me/albums/contains?ids=' + ','.join(album_ids))
 
@@ -106,11 +101,6 @@ class SpotifyLibrary(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SavedTrackPaging
-            paging object containing saved tracks
         """
         return self._get('me/tracks', market=market, limit=limit, offset=offset)
 
@@ -128,8 +118,8 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order the track IDs were given
+        List[bool]
+            save statuses in the same order the track IDs were given
         """
         return self._get('me/tracks/contains?ids=' + ','.join(track_ids))
 
@@ -181,11 +171,6 @@ class SpotifyLibrary(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SavedShowPaging
-            paging object containing saved shows
         """
         return self._get('me/shows', market=market, limit=limit, offset=offset)
 
@@ -203,8 +188,8 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order the show IDs were given
+        List[bool]
+            save statuses in the same order the show IDs were given
         """
         return self._get('me/shows/contains?ids=' + ','.join(show_ids))
 

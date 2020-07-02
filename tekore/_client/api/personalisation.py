@@ -29,11 +29,6 @@ class SpotifyPersonalisation(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        FullArtistOffsetPaging
-            paging object containing artists
         """
         return self._get(
             'me/top/artists',
@@ -63,11 +58,6 @@ class SpotifyPersonalisation(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        FullTrackPaging
-            paging object containing full tracks
         """
         return self._get(
             'me/top/tracks',

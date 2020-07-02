@@ -28,11 +28,6 @@ class SpotifyEpisode(SpotifyBase):
             with it overrides this parameter.
             If an application token is used and no market is specified,
             the episode is considered unavailable.
-
-        Returns
-        -------
-        FullEpisode
-            episode object
         """
         return self._get('episodes/' + episode_id, market=market)
 
@@ -43,7 +38,7 @@ class SpotifyEpisode(SpotifyBase):
             self,
             episode_ids: list,
             market: str = None
-    ) -> ModelList:
+    ) -> ModelList[FullEpisode]:
         """
         Get information for multiple episodes.
 
@@ -57,10 +52,5 @@ class SpotifyEpisode(SpotifyBase):
             with it overrides this parameter.
             If an application token is used and no market is specified,
             the episode is considered unavailable.
-
-        Returns
-        -------
-        ModelList
-            list of episode objects
         """
         return self._get('episodes/?ids=' + ','.join(episode_ids), market=market)

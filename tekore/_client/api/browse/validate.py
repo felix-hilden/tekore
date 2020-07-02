@@ -10,12 +10,15 @@ def validate_attributes(candidates: dict) -> None:
     """
     Validate recommendation attributes.
 
-    Raise ValueError if any attribute is not allowed.
-
     Parameters
     ----------
     candidates
         recommendation attributes to validate
+
+    Raises
+    ------
+    ValueError
+        if any attribute is not allowed
     """
     for name in candidates:
         if name not in valid:

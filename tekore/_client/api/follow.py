@@ -27,8 +27,8 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order that the user IDs were given
+        List[bool]
+            follow statuses in the same order that the user IDs were given
         """
         return self._get(
             f'playlists/{playlist_id}/followers/contains',
@@ -87,11 +87,6 @@ class SpotifyFollow(SpotifyBase):
             the number of items to return (1..50)
         after
             the last artist ID retrieved from the previous request
-
-        Returns
-        -------
-        FullArtistCursorPaging
-            cursor-based paging object containing a list of full artist objects
         """
         return self._get('me/following', type='artist', limit=limit, after=after)
 
@@ -109,8 +104,8 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order that the artist IDs were given
+        List[bool]
+            follow statuses in the same order that the artist IDs were given
         """
         return self._get(
             'me/following/contains',
@@ -160,8 +155,8 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        list
-            list of booleans in the same order that the user IDs were given
+        List[bool]
+            follow statuses in the same order that the user IDs were given
         """
         return self._get(
             'me/following/contains', type='user', ids=','.join(user_ids)

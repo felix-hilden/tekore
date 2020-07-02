@@ -24,11 +24,6 @@ class SpotifyAlbum(SpotifyBase):
             album ID
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
-
-        Returns
-        -------
-        FullAlbum
-            full album object
         """
         return self._get('albums/' + album_id, market=market)
 
@@ -55,11 +50,6 @@ class SpotifyAlbum(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimpleTrackPaging
-            paging containing simplified track objects
         """
         return self._get(
             f'albums/{album_id}/tracks',
@@ -75,7 +65,7 @@ class SpotifyAlbum(SpotifyBase):
             self,
             album_ids: list,
             market: str = None
-    ) -> ModelList:
+    ) -> ModelList[FullAlbum]:
         """
         Get multiple albums.
 
@@ -85,10 +75,5 @@ class SpotifyAlbum(SpotifyBase):
             list of album IDs, max 20 without chunking
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
-
-        Returns
-        -------
-        ModelList
-            list of full album objects
         """
         return self._get('albums/?ids=' + ','.join(album_ids), market=market)

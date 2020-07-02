@@ -1,7 +1,7 @@
 import json
 
 from enum import Enum
-from typing import Union
+from typing import Union, TypeVar, List
 from pprint import pprint
 from datetime import datetime
 from dataclasses import dataclass, asdict, fields
@@ -180,7 +180,10 @@ class Model(Serialisable):
         return '\n'.join(lines)
 
 
-class ModelList(list, Serialisable):
+T = TypeVar('T')
+
+
+class ModelList(List[T], Serialisable):
     """List that provides a readable ``repr`` of its items."""
 
     def __repr__(self):

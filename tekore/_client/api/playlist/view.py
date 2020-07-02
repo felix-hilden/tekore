@@ -83,11 +83,6 @@ class SpotifyPlaylistView(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimplePlaylistPaging
-            paging object containing simplified playlists
         """
         return self._get('me/playlists', limit=limit, offset=offset)
 
@@ -113,11 +108,6 @@ class SpotifyPlaylistView(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimplePlaylistPaging
-            paging object containing simplified playlists
         """
         return self._get(
             f'users/{user_id}/playlists',
@@ -195,7 +185,7 @@ class SpotifyPlaylistView(SpotifyBase):
 
     @scopes()
     @send_and_process(model_list(Image))
-    def playlist_cover_image(self, playlist_id: str) -> ModelList:
+    def playlist_cover_image(self, playlist_id: str) -> ModelList[Image]:
         """
         Get cover image of a playlist.
 
@@ -205,11 +195,6 @@ class SpotifyPlaylistView(SpotifyBase):
         ----------
         playlist_id
             playlist ID
-
-        Returns
-        -------
-        ModelList
-            list of cover images
         """
         return self._get(f'playlists/{playlist_id}/images')
 

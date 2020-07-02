@@ -52,8 +52,7 @@ class SpotifyBrowse(SpotifyBase):
         Returns
         -------
         Tuple[str, SimplePlaylistPaging]
-            message for the playlists and a list of
-            simplified playlist objects wrapped in a paging object
+            message and playlists
         """
         return self._get(
             'browse/featured-playlists',
@@ -84,11 +83,6 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimpleAlbumPaging
-            paging containing simplified album objects
         """
         return self._get(
             'browse/new-releases',
@@ -121,11 +115,6 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        CategoryPaging
-            paging object containing a list of categories
         """
         return self._get(
             'browse/categories',
@@ -155,11 +144,6 @@ class SpotifyBrowse(SpotifyBase):
         locale
             the desired language, consisting of a lowercase ISO 639 language code
             and an uppercase ISO 3166-1 alpha-2 country code joined by an underscore
-
-        Returns
-        -------
-        Category
-            category object
         """
         return self._get(
             'browse/categories/' + category_id,
@@ -190,11 +174,6 @@ class SpotifyBrowse(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimplePlaylistPaging
-            paging object containing a list of simplified playlist objects
         """
         return self._get(
             f'browse/categories/{category_id}/playlists',
@@ -237,10 +216,10 @@ class SpotifyBrowse(SpotifyBase):
             :class:`model.RecommendationAttribute`,
             these values provide filters and targeting on results.
 
-        Returns
-        -------
-        Recommendations
-            recommendations object containing track recommendations and seeds
+        Raises
+        ------
+        ValueError
+            if any attribute is not allowed
         """
         params = dict(limit=limit)
         if artist_ids is not None:
@@ -260,12 +239,5 @@ class SpotifyBrowse(SpotifyBase):
     @scopes()
     @send_and_process(top_item('genres'))
     def recommendation_genre_seeds(self) -> List[str]:
-        """
-        Get a list of available genre seeds.
-
-        Returns
-        -------
-        list
-            list of genres to use as seeds
-        """
+        """Get a list of available genre seeds."""
         return self._get('recommendations/available-genre-seeds')

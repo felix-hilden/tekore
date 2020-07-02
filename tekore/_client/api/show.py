@@ -32,11 +32,6 @@ class SpotifyShow(SpotifyBase):
             with it overrides this parameter.
             If an application token is used and no market is specified,
             the show is considered unavailable.
-
-        Returns
-        -------
-        FullShow
-            show object
         """
         return self._get('shows/' + show_id, market=market)
 
@@ -47,7 +42,7 @@ class SpotifyShow(SpotifyBase):
             self,
             show_ids: list,
             market: str = None
-    ) -> ModelList:
+    ) -> ModelList[FullShow]:
         """
         Get information for multiple shows.
 
@@ -64,11 +59,6 @@ class SpotifyShow(SpotifyBase):
             with it overrides this parameter.
             If an application token is used and no market is specified,
             the show is considered unavailable.
-
-        Returns
-        -------
-        ModelList
-            list of show objects
         """
         return self._get('shows/?ids=' + ','.join(show_ids), market=market)
 
@@ -99,11 +89,6 @@ class SpotifyShow(SpotifyBase):
             the number of items to return (1..50)
         offset
             the index of the first item to return
-
-        Returns
-        -------
-        SimpleEpisodePaging
-            paging containing simplified episode objects
         """
         return self._get(
             f'shows/{show_id}/episodes',

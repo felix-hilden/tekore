@@ -18,11 +18,6 @@ class SpotifyUser(SpotifyBase):
         ----------
         user_id
             user ID
-
-        Returns
-        -------
-        PublicUser
-            public user information
         """
         return self._get('users/' + user_id)
 
@@ -34,10 +29,5 @@ class SpotifyUser(SpotifyBase):
 
         The user-read-private scope allows the user's country and
         product subscription level to be returned.
-
-        Returns
-        -------
-        PrivateUser
-            private user information
         """
         return self._get('me/')
