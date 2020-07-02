@@ -161,6 +161,8 @@ class TestSpotifyPlayerSequence:
         user_client.playback_next()
         playing = currently_playing(user_client)
         assert playing.item.id == episode_id
+        # Episode.show has total_episodes
+        assert playing.item.show.total_episodes is not None
 
         # Currently playing item is none if only tracks
         playing = user_client.playback_currently_playing(tracks_only=True)

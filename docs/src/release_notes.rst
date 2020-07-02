@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :class:`SimpleShow <model.SimpleShow>` - add optional ``total_episodes``
+  parameter (:issue:`190`)
+
 2.1.0 (2020-05-31)
 ------------------
 Added

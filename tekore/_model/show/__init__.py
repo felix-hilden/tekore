@@ -8,7 +8,16 @@ from ..serialise import Model, ModelList, Timestamp
 
 @dataclass(repr=False)
 class SimpleShow(Show):
-    """Simplified show object."""
+    """
+    Simplified show object.
+
+    :attr:`total_episodes` is only available in
+    :meth:`Spotify.playback <tekore.Spotify.playback>` and
+    :meth:`Spotify.playback_currently_playing
+    <tekore.Spotify.playback_currently_playing>`.
+    """
+
+    total_episodes: int = None
 
 
 @dataclass(repr=False)
