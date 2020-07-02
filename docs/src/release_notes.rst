@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+2.1.1 (2020-07-02)
+------------------
 Fixed
 *****
 - :class:`SimpleShow <model.SimpleShow>` - add optional ``total_episodes``
