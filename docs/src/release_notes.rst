@@ -3,6 +3,14 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :class:`FullShow <model.FullShow>` - add undocumented ``total_episodes``
+  parameter, mark ``total_episodes`` of :class:`SimpleShow <model.SimpleShow>`
+  undocumented (:issue:`194`)
+
 2.1.1 (2020-07-02)
 ------------------
 Fixed

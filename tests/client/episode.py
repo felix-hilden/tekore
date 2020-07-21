@@ -28,7 +28,3 @@ class TestSpotifyEpisode:
     def test_resume_point_exists(self, user_client):
         episode = user_client.episode(episode_id)
         assert episode.resume_point is not None
-
-    def test_episode_show_does_not_contain_total_count(self, app_client):
-        episode = app_client.episode(episode_id, market='FI')
-        assert episode.show.total_episodes is None

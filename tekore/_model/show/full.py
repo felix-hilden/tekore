@@ -6,8 +6,14 @@ from ..episode import SimpleEpisodePaging
 
 @dataclass(repr=False)
 class FullShow(Show):
-    """Complete show object."""
+    """
+    Complete show object.
 
+    :attr:`total_episodes` is undocumented by Spotify,
+    so it might be missing or removed in a future version.
+    """
+
+    total_episodes: int = None
     episodes: SimpleEpisodePaging = None
 
     def __post_init__(self):

@@ -11,10 +11,8 @@ class SimpleShow(Show):
     """
     Simplified show object.
 
-    :attr:`total_episodes` is only available in
-    :meth:`Spotify.playback <tekore.Spotify.playback>` and
-    :meth:`Spotify.playback_currently_playing
-    <tekore.Spotify.playback_currently_playing>`.
+    :attr:`total_episodes` is undocumented by Spotify,
+    so it might be missing or removed in a future version.
     """
 
     total_episodes: int = None
