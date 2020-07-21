@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+2.1.2 (2020-07-21)
+------------------
 Fixed
 *****
 - :class:`FullShow <model.FullShow>` - add undocumented ``total_episodes``
