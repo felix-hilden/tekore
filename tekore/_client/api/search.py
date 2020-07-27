@@ -84,7 +84,7 @@ class SpotifySearch(SpotifyBase):
             spotify.search('bob year:1980-2020', types=('show',))
 
         .. note::
-            You can narrow down search results by specifying filed filters
+            You can narrow down search results by specifying field filters
             (e.g. year range, genre).
             See the `Search for an Item
             <https://developer.spotify.com/documentation/web-api/reference/>`
