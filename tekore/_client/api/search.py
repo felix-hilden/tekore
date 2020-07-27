@@ -80,6 +80,16 @@ class SpotifySearch(SpotifyBase):
             tracks, = spotify.search('monty python')
             artists, = spotify.search('sheeran', types=('artist',))
             albums, tracks = spotify.search('piano', types=('album', 'track'))
+            spotify.search('gold album:boba artist:abba', types=('track',))
+            spotify.search('bob year:1980-2020', types=('show',))
+
+        .. note::
+            You can narrow down search results by specifying field filters
+            (e.g. year range, genre).
+            See the `Search for an Item
+            <https://developer.spotify.com/documentation/web-api/reference/>`
+            page of the official documentation for more information.
+
         """
         return self._get(
             'search',
