@@ -19,6 +19,15 @@ The steps are covered by two methods of the :class:`Credentials` class.
 See this recipe on an :ref:`auth-server` for an example implementation.
 The same process can be implemented using :class:`RefreshingCredentials`.
 
+Expanding scopes
+****************
+The scope of a token can be gradually expanded.
+When authorising with a user, the scope of the resulting token is determined
+by the scopes that were set at the start of authorisation.
+But when refreshing a token, the scope is expanded to cover all scopes
+that the user has granted a particular application in previous authorisations.
+This holds for refresh tokens of both new and previously generated tokens.
+
 Providing tokens
 ****************
 The :ref:`client <client>` provides two ways of authenticating requests.
@@ -33,8 +42,7 @@ Firstly an access token is accepted in the client's constructor.
 
 Secondly, the client can temporarily use another token for requests.
 This is particularly handy if only one client instance is created but there are
-many users, several tokens are associated with a single user perhaps due to
-different scopes, or tokens are manually refreshed.
+many users, or if tokens are manually refreshed.
 
 .. code:: python
 
