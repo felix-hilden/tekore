@@ -9,6 +9,8 @@ Fixed
 *****
 - :ref:`client` - correctly return :class:`ModelList <model.ModelList>`
   when chunking input (:issue:`196`)
+- :ref:`auth` - fix error handling when response does not contain an error
+  description (:issue:`199`)
 
 2.1.2 (2020-07-21)
 ------------------

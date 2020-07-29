@@ -1,8 +1,6 @@
 import pytest
 
-from unittest import TestCase
 from unittest.mock import MagicMock, patch
-
 from tekore import HTTPError, AccessToken, Token, Credentials, Scope
 
 

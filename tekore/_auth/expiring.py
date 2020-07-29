@@ -110,11 +110,10 @@ def handle_errors(response: Response) -> None:
 
     if response.status_code < 500:
         content = response.json()
-        error_str = '{} {}: {}'.format(
-            response.status_code,
-            content['error'],
-            content['error_description']
-        )
+        error_str = f"{response.status_code} {content['error']}"
+        description = content.get('error_description', None)
+        if description is not None:
+            error_str += ': ' + description
     else:
         error_str = 'Unexpected error!'
 
