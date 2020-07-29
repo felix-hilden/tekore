@@ -2,8 +2,8 @@ import pytest
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
 
-from tekore import BadRequest, Spotify
-from tekore._auth import Scope
+from tekore import BadRequest, Spotify, Scope
+from tekore.model import ModelList
 from tekore._client.chunked import chunked, return_none, return_last
 
 
@@ -121,6 +121,11 @@ class TestSpotifyChunked:
         client = Spotify(app_token, chunked_on=True, asynchronous=True)
         tracks = await client.tracks(track_ids)
         assert len(track_ids) == len(tracks)
+
+    def test_returns_model_list(self, app_token, track_ids):
+        client = Spotify(app_token, chunked_on=True)
+        tracks = client.tracks(track_ids)
+        assert isinstance(tracks, ModelList)
 
     def test_chunked_context_enables(self):
         client = Spotify()

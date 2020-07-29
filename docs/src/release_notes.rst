@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`client` - correctly return :class:`ModelList <model.ModelList>`
+  when chunking input (:issue:`196`)
+
 2.1.2 (2020-07-21)
 ------------------
 Fixed

@@ -136,7 +136,7 @@ def chunked(
 
 def join_lists(responses):
     """Join lists of models into ModelList."""
-    return sum(responses, ModelList())
+    return ModelList(sum(responses, []))
 
 
 def return_none(_):
