@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+2.1.3 (2020-08-04)
+------------------
 Fixed
 *****
 - :ref:`client` - correctly return :class:`ModelList <model.ModelList>`
