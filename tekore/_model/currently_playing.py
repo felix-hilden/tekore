@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from .context import Context
 from .device import Device
 from .track import FullTrack
+from .local import LocalTrack
 from .episode import FullEpisode
 from .serialise import Model, StrEnum
 
@@ -72,7 +73,7 @@ class CurrentlyPlaying(Model):
     timestamp: int
     context: Optional[Context]
     progress_ms: Optional[int]
-    item: Union[FullTrack, FullEpisode, None]
+    item: Union[FullTrack, LocalTrack, FullEpisode, None]
 
     def __post_init__(self):
         self.actions = Actions(**self.actions)
@@ -83,7 +84,10 @@ class CurrentlyPlaying(Model):
         if self.context is not None:
             self.context = Context(**self.context)
         if self.item is not None:
-            self.item = item_type[self.item['type']](**self.item)
+            if self.item.get('is_local', False) is True:
+                self.item = LocalTrack(**self.item)
+            else:
+                self.item = item_type[self.item['type']](**self.item)
 
 
 @dataclass(repr=False)

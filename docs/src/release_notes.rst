@@ -11,6 +11,9 @@ Fixed
   when chunking input (:issue:`196`)
 - :ref:`auth` - fix error handling when response does not contain an error
   description (:issue:`199`)
+- :meth:`playback <Spotify.playback>` and
+  :meth:`playback_currently_playing <Spotify.playback_currently_playing>` -
+  correctly handle local tracks (:issue:`200`)
 
 2.1.2 (2020-07-21)
 ------------------
