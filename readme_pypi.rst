@@ -1,6 +1,6 @@
 |logo|
 
-|python|
+|python| |downloads|
 
 Welcome to the Python Package Index page of Tekore!
 We provide a client for the Spotify Web API for Python,
@@ -53,7 +53,7 @@ For example:
 
     setup(
         install_requires=[
-            'tekore>=2,<3'
+            'tekore~=2.1'
         ]
     )
 
@@ -74,6 +74,9 @@ See the Web API `documentation <web api_>`_ for further information on beta endp
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/tekore
    :alt: python version
+
+.. |downloads| image:: https://pepy.tech/badge/tekore/month
+   :alt: monthly downloads
 
 .. _github: https://github.com/felix-hilden/tekore
 .. _read the docs: https://tekore.readthedocs.io
