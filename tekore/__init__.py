@@ -1,3 +1,12 @@
+"""
+Client for the Spotify Web API.
+
+This module holds all public objects provided by Tekore
+with the exception of response models, which are located in ``tekore.model``.
+
+See online documentation at `RTD <http://tekore.rtfd.io>`_.
+"""
+
 from tekore._start import check_python_version as _check_python_version
 from tekore._start import read_version_file as _read_version_file
 
