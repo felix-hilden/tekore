@@ -56,6 +56,8 @@ class Spotify(
     ----------
     token
         bearer token for requests
+    sender
+        underlying sender
     max_limits_on
         use maximum limits in paging calls, overrided by endpoint arguments
     chunked_on
@@ -65,7 +67,7 @@ class Spotify(
     @contextmanager
     def token_as(self, token) -> 'Spotify':
         """
-        Context manager. Use a different token with requests.
+        Use a different token with requests. Context manager.
 
         Parameters
         ----------
@@ -96,7 +98,7 @@ class Spotify(
     @contextmanager
     def max_limits(self, on: bool = True) -> 'Spotify':
         """
-        Context manager. Toggle using maximum limits in paging calls.
+        Toggle using maximum limits in paging calls. Context manager.
 
         Parameters
         ----------
@@ -127,7 +129,7 @@ class Spotify(
     @contextmanager
     def chunked(self, on: bool = True) -> 'Spotify':
         """
-        Context manager. Toggle chunking lists of resources.
+        Toggle chunking lists of resources. Context manager.
 
         Parameters
         ----------

@@ -33,11 +33,18 @@ They can be accessed via the class itself or its instances.
     scope_inst = spotify.current_user_top_tracks.scope
     assert scope_cls == scope_inst
 
-Instantiation and options
--------------------------
 .. autoclass:: Spotify
    :no-members:
    :no-show-inheritance:
+
+Non-endpoint methods
+--------------------
+.. autosummary::
+   :nosignatures:
+
+   Spotify.chunked
+   Spotify.max_limits
+   Spotify.token_as
 
 .. automethod:: Spotify.chunked
 .. automethod:: Spotify.max_limits
