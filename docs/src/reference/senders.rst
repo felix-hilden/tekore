@@ -8,16 +8,12 @@ Manipulate the way clients send requests.
 .. autosummary::
    :nosignatures:
 
-   TransientSender
-   AsyncTransientSender
-   PersistentSender
-   AsyncPersistentSender
-   SingletonSender
-   AsyncSingletonSender
+   SyncSender
+   AsyncSender
    RetryingSender
    CachingSender
 
-See also :ref:`senders-bases` and :ref:`senders-options`.
+See also :ref:`senders-other`.
 
 Senders provide a hook between
 defining a request and sending it to the Web API.
@@ -30,13 +26,11 @@ Sender instances are passed to a client at initialisation.
 
     import tekore as tk
 
-    tk.Credentials(*conf, sender=tk.PersistentSender())
-    tk.Spotify(sender=tk.AsyncTransientSender())
+    tk.Credentials(*conf, sender=tk.SyncSender())
+    tk.Spotify(sender=tk.RetryingSender())
 
-Synchronous senders wrap around the :mod:`requests` library,
-while asynchronous senders use :mod:`httpx`.
-Senders accept additional keyword arguments to :meth:`requests.Session.send`
-or :meth:`httpx.AsyncClient.request` that are passed on each request.
+Senders wrap around the :mod:`httpx` library
+and accept additional keyword arguments to :meth:`httpx.Client`.
 
 .. code:: python
 
@@ -44,32 +38,24 @@ or :meth:`httpx.AsyncClient.request` that are passed on each request.
         'http': 'http://10.10.10.10:8000',
         'https': 'http://10.10.10.10:8000',
     }
-    tk.TransientSender(proxies=proxies)
+    tk.SyncSender(proxies=proxies)
 
-Custom instances of :class:`requests.Session` or :class:`httpx.AsyncClient`
-can also be used.
+Instances of :class:`httpx.Client` or :class:`httpx.AsyncClient`
+can also be passed in for a finer control over sender behaviour.
 
 .. code:: python
 
-    from requests import Session
+    from httpx import Client
 
-    session = Session()
-    session.proxies = proxies
-
-    # Attach the session to a sender
-    tk.PersistentSender(session)
-    tk.SingletonSender.session = session
+    client = Client(proxies=proxies)
+    tk.SyncSender(client)
 
 Concrete senders
 ----------------
 Final senders in a possible chain that concretely make the request to Spotify.
 
-.. autoclass:: TransientSender
-.. autoclass:: AsyncTransientSender
-.. autoclass:: PersistentSender
-.. autoclass:: AsyncPersistentSender
-.. autoclass:: SingletonSender
-.. autoclass:: AsyncSingletonSender
+.. autoclass:: SyncSender
+.. autoclass:: AsyncSender
 
 Extending senders
 -----------------
@@ -78,58 +64,27 @@ Senders that extend the functionality of other senders.
 .. autoclass:: RetryingSender
 .. autoclass:: CachingSender
 
-.. _senders-bases:
+.. _senders-other:
 
-Sender bases
-------------
+Other classes
+-------------
 Bases for subclassing or other endeavours.
 
 .. autosummary::
    :nosignatures:
 
    Sender
-   SyncSender
-   AsyncSender
    ExtendingSender
    SenderConflictWarning
    Client
+   Request
+   Response
 
 .. autoclass:: Sender
-.. autoclass:: SyncSender
-.. autoclass:: AsyncSender
 .. autoclass:: ExtendingSender
 .. autoclass:: SenderConflictWarning
 .. autoclass:: Client
+.. autoclass:: Request
    :no-show-inheritance:
-
-.. _senders-options:
-
-Options
--------
-Default senders and keyword arguments can be changed.
-:attr:`default_sender_instance` has precedence over
-:attr:`default_sender_type`.
-Using an :class:`ExtendingSender` as the default type will raise an error
-as it tries to instantiate itself recursively.
-Use :attr:`default_sender_instance` instead.
-
-.. code:: python
-
-    tk.default_sender_type = tk.PersistentSender
-    tk.default_sender_instance = tk.RetryingSender()
-    tk.default_requests_kwargs = {'proxies': proxies}
-
-    # Now the following are equal
-    tk.Spotify()
-    tk.Spotify(
-        sender=tk.RetryingSender(
-            sender=tk.PersistentSender(proxies=proxies)
-        )
-    )
-
-See also :attr:`default_httpx_kwargs` for asynchronous senders.
-
-.. autodata:: default_requests_kwargs
-.. autodata:: default_httpx_kwargs
-.. autodata:: default_sender_type
-.. autodata:: default_sender_instance
+.. autoclass:: Response
+   :no-show-inheritance:

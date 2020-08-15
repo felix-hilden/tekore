@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 
-from tekore._sender import CachingSender
+from tekore import CachingSender, Request, Response
 from tests._util import AsyncMock
 
 
@@ -16,19 +16,22 @@ def mock_sender(*responses, is_async: bool = False):
     return sender
 
 
-def request(url, params, headers) -> MagicMock:
-    r = MagicMock()
-    r.method = 'GET'
-    r.url = url
-    r.params = params
-    r.headers = headers
-    return r
+def request(url, params, headers) -> Request:
+    return Request(
+        method='GET',
+        url=url,
+        params=params,
+        headers=headers,
+    )
 
 
-def response(code, url, params, cc=None, etag=None, vary=None) -> MagicMock:
-    r = MagicMock()
-    r.status_code = code
-    r.url = url + ('&' + urlencode(params) if params else '')
+def response(code, url, params, cc=None, etag=None, vary=None) -> Response:
+    r = Response(
+        status_code=code,
+        url=url + ('&' + urlencode(params) if params else ''),
+        headers={},
+        content=None
+    )
     if isinstance(cc, int):
         cc = f'public, max-age={cc}'
     h = {
@@ -40,7 +43,7 @@ def response(code, url, params, cc=None, etag=None, vary=None) -> MagicMock:
     return r
 
 
-def pair(code, url, params=None, cc=None, etag=None, vary_h=None) -> MagicMock:
+def pair(code, url, params=None, cc=None, etag=None, vary_h=None) -> tuple:
     req = request(url, params or {}, vary_h or {})
     if vary_h is not None:
         vary = ', '.join([k for k in vary_h])

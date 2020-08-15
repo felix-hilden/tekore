@@ -91,7 +91,7 @@ class TestToken:
 def mock_response(code: int = 200, content: dict = None) -> MagicMock:
     response = MagicMock()
     response.status_code = code
-    response.json = MagicMock(return_value=content or make_token_dict())
+    response.content = content or make_token_dict()
     return response
 
 
@@ -136,7 +136,7 @@ class TestCredentialsOffline:
         c = Credentials('id', 'secret')
 
         send = MagicMock(return_value=mock_response(500))
-        with patch(module + '.Credentials._send', send):
+        with patch(module + '.Credentials.send', send):
             with pytest.raises(HTTPError):
                 c.request_client_token()
 
@@ -155,7 +155,7 @@ class TestCredentialsOffline:
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
         send = MagicMock(return_value=mock_response())
-        with patch(module + '.Credentials._send', send):
+        with patch(module + '.Credentials.send', send):
             c.request_user_token('code')
             send.assert_called_once()
 
@@ -166,7 +166,7 @@ class TestCredentialsOffline:
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials._send', send):
+        with patch(module + '.Credentials.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == 'refresh'
 
@@ -176,7 +176,7 @@ class TestCredentialsOffline:
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials._send', send):
+        with patch(module + '.Credentials.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == token['refresh_token']
 

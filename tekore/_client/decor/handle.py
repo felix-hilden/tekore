@@ -1,6 +1,5 @@
-from requests import Request, Response
-
 from tekore._error import get_error
+from tekore._sender import Request, Response
 from tekore.model import PlayerErrorReason
 
 error_format = """Error in {url}:
@@ -8,23 +7,14 @@ error_format = """Error in {url}:
 """
 
 
-def parse_json(response):
-    """Get JSON dict if available."""
-    try:
-        return response.json()
-    except ValueError:
-        return None
-
-
-def parse_error_reason(response):
+def parse_error_reason(response: Response) -> str:
     """Extract error reason from response content."""
-    content = parse_json(response)
     reason = getattr(response, 'reason', '')
 
-    if content is None:
+    if response.content is None:
         return reason
 
-    error = content['error']
+    error = response.content['error']
     message = error.get('message', reason)
     if 'reason' in error:
         message += '\n' + PlayerErrorReason[error['reason']].value

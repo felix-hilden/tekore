@@ -29,14 +29,10 @@ class TestSpotifyBaseUnits:
         class BadResponse:
             status_code = 404
             url = 'example.com'
-            reason = 'Service not found!'
-
-            @staticmethod
-            def json():
-                return {'error': {
-                    'message': 'Error message',
-                    'reason': error.name
-                }}
+            content = {'error': {
+                'message': 'Error message',
+                'reason': error.name
+            }}
 
         sender = MagicMock()
         sender.send.return_value = BadResponse()

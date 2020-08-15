@@ -1,8 +1,22 @@
-import requests
+from ._sender import Request, Response
 
 
-class HTTPError(requests.HTTPError):
-    """Base error for all web errors."""
+class HTTPError(Exception):
+    """
+    Base error for all web status errors.
+
+    Attributes
+    ----------
+    request
+        request that led to the error
+    response
+        response from the web server
+    """
+
+    def __init__(self, message: str, request: Request, response: Response):
+        super(HTTPError, self).__init__(message)
+        self.request = request
+        self.response = response
 
 
 class ClientError(HTTPError):

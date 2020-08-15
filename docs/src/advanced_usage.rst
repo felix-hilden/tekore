@@ -159,14 +159,10 @@ Using senders
 By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <senders>`.
-They can be used for e.g. retrying and caching.
-User-defined sessions and additional keyword arguments
-to :func:`requests.Session.send` can also be passed in.
-For example, connection persistence and per-instance sessions are enabled
-by default thanks to :class:`PersistentSender`.
+Builtin senders can be used for retrying and caching.
 
 Keepalive connections, retries and caching make up a performance-boosting
-and convenient sender setup, easily constructed from simple building blocks.
+and convenient setup, easily constructed from simple building blocks.
 Less errors, less requests and faster responses, particularly for
 busy applications that request the same static resources repeatedly.
 
@@ -178,8 +174,6 @@ busy applications that request the same static resources repeatedly.
     )
 
     tk.Spotify(sender=sender)
-
-For more detailed information, see :ref:`performance`.
 
 Traversing paging objects
 -------------------------
@@ -220,7 +214,7 @@ Alternatively, an asynchronous sender may be passed directly into a client.
 
 .. code:: python
 
-    spotify = tk.Spotify(token, sender=tk.AsyncPersistentSender())
+    spotify = tk.Spotify(token, sender=tk.AsyncSender())
 
 .. note::
 
@@ -263,11 +257,10 @@ This is helpful for example in viewing names with non-latin alphabet.
 
 .. code:: python
 
-    from requests import Session
+    from httpx import Client
 
-    sess = Session()
-    sess.headers = {'Accept-Language': 'ru'}
+    client = Client(headers={'Accept-Language': 'ru'})
+    spotify = tk.Spotify(token, sender=tk.SyncSender(client))
 
-    spotify = tk.Spotify(token, sender=tk.PersistentSender(session=sess))
     artist = spotify.artist('2LbinT29RFLaXOGAN0jfQN')
     print(artist.name)

@@ -45,10 +45,12 @@ Non-endpoint methods
    Spotify.chunked
    Spotify.max_limits
    Spotify.token_as
+   Spotify.send
 
 .. automethod:: Spotify.chunked
 .. automethod:: Spotify.max_limits
 .. automethod:: Spotify.token_as
+.. automethod:: Spotify.send
 
 .. _client-paging:
 

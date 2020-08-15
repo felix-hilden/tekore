@@ -37,8 +37,9 @@ class TestSpotifyUnits:
         assert previous is None
 
     def test_all_endpoints_have_scope_attributes(self, client):
-        # Skip paging calls and options
+        # Skip non-endpoint functions
         skips = {
+            'send',
             'next',
             'previous',
             'all_pages',

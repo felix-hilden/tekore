@@ -2,9 +2,9 @@ from typing import Callable
 from warnings import warn
 from functools import wraps
 
-from requests import Request
-from .handle import handle_errors, parse_json
-from tekore import Scope
+from .handle import handle_errors
+from tekore._auth import Scope
+from tekore._sender import Request
 
 
 def send_and_process(post_func: Callable) -> Callable:
@@ -12,10 +12,7 @@ def send_and_process(post_func: Callable) -> Callable:
     Decorate a function to send a request and process its content.
 
     The first parameter of a decorated function must be the instance (self)
-    of a client with a :meth:`_send` method.
-    The instance must also have :attr:`is_async`, based on which a synchronous
-    or an asynchronous function is used in the process.
-    The decorated function must return a :class:`requests.Request`.
+    of a :class:`Sender` (has :meth:`send` and :attr:`is_async`).
     The result of ``post_func`` is returned to the caller.
 
     Parameters
@@ -25,10 +22,9 @@ def send_and_process(post_func: Callable) -> Callable:
     """
     def decorator(function: Callable[..., Request]) -> Callable:
         async def async_send(self, request: Request):
-            response = await self._send(request)
+            response = await self.send(request)
             handle_errors(request, response)
-            content = parse_json(response)
-            return post_func(content)
+            return post_func(response.content)
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
@@ -37,10 +33,9 @@ def send_and_process(post_func: Callable) -> Callable:
             if self.is_async:
                 return async_send(self, request)
 
-            response = self._send(request)
+            response = self.send(request)
             handle_errors(request, response)
-            content = parse_json(response)
-            return post_func(content)
+            return post_func(response.content)
         return wrapper
     return decorator
 
