@@ -24,7 +24,7 @@ To avoid errors when hitting rate limits, a :class:`RetryingSender` is used.
     scope = tk.scope.playlist_read_private
     token = tk.prompt_for_user_token(*conf, scope=scope)
 
-    sender = tk.RetryingSender(sender=tk.AsyncPersistentSender())
+    sender = tk.RetryingSender(sender=tk.AsyncSender())
     spotify = tk.Spotify(token, sender=sender, max_limits_on=True)
 
 

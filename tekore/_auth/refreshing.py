@@ -2,7 +2,7 @@ from typing import Union
 
 from .scope import Scope
 from .expiring import AccessToken, Token, Credentials
-from tekore._sender import SyncSender
+from tekore._sender import Sender
 
 
 class RefreshingToken(AccessToken):
@@ -104,7 +104,7 @@ class RefreshingCredentials:
             client_id: str,
             client_secret: str,
             redirect_uri: str = None,
-            sender: SyncSender = None
+            sender: Sender = None
     ):
         self._client = Credentials(
             client_id,

@@ -5,12 +5,11 @@ from base64 import b64encode as _b64encode
 from typing import Callable, Union
 from functools import wraps
 
-from requests import Request, Response
 from urllib.parse import urlencode
 
 from .scope import Scope
-from tekore._error import get_error
-from tekore._sender import Sender, Client
+from .._error import get_error
+from .._sender import Sender, Client, Request, Response
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
@@ -103,29 +102,27 @@ class Token(AccessToken):
         return self.expires_in < 60
 
 
-def handle_errors(response: Response) -> None:
+def handle_errors(request: Request, response: Response) -> None:
     """Examine response and raise errors accordingly."""
     if response.status_code < 400:
         return
 
     if response.status_code < 500:
-        content = response.json()
-        error_str = f"{response.status_code} {content['error']}"
-        description = content.get('error_description', None)
+        error_str = f"{response.status_code} {response.content['error']}"
+        description = response.content.get('error_description', None)
         if description is not None:
             error_str += ': ' + description
     else:
         error_str = 'Unexpected error!'
 
     error_cls = get_error(response.status_code)
-    raise error_cls(error_str, response=response)
+    raise error_cls(error_str, request=request, response=response)
 
 
-def parse_token(response):
+def parse_token(request: Request, response: Response) -> Token:
     """Parse token object from response."""
-    handle_errors(response)
-    content = response.json()
-    return Token(content)
+    handle_errors(request, response)
+    return Token(response.content)
 
 
 def send_and_process_token(
@@ -133,8 +130,8 @@ def send_and_process_token(
 ) -> Callable[..., Token]:
     """Send request and parse reponse for token."""
     async def async_send(self, request: Request):
-        response = await self._send(request)
-        return parse_token(response)
+        response = await self.send(request)
+        return parse_token(request, response)
 
     @wraps(function)
     def wrapper(self, *args, **kwargs):
@@ -143,14 +140,16 @@ def send_and_process_token(
         if self.is_async:
             return async_send(self, request)
 
-        response = self._send(request)
-        return parse_token(response)
+        response = self.send(request)
+        return parse_token(request, response)
     return wrapper
 
 
-def parse_refreshed_token(response, refresh_token: str) -> Token:
+def parse_refreshed_token(
+    request: Request, response: Response, refresh_token: str
+) -> Token:
     """Replace new refresh token with old value if empty."""
-    refreshed = parse_token(response)
+    refreshed = parse_token(request, response)
 
     if refreshed.refresh_token is None:
         refreshed._refresh_token = refresh_token
@@ -163,8 +162,8 @@ def send_and_process_refreshed_token(
 ) -> Callable[..., Token]:
     """Send request and parse refreshed token."""
     async def async_send(self, request: Request, refresh_token: str):
-        response = await self._send(request)
-        return parse_refreshed_token(response, refresh_token)
+        response = await self.send(request)
+        return parse_refreshed_token(request, response, refresh_token)
 
     @wraps(function)
     def wrapper(self, *args, **kwargs):
@@ -173,8 +172,8 @@ def send_and_process_refreshed_token(
         if self.is_async:
             return async_send(self, request, refresh_token)
 
-        response = self._send(request)
-        return parse_refreshed_token(response, refresh_token)
+        response = self.send(request)
+        return parse_refreshed_token(request, response, refresh_token)
     return wrapper
 
 

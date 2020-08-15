@@ -1,9 +1,7 @@
 import json
 
-from typing import Optional
-from requests import Request
-
-from tekore._sender import Sender, Client
+from typing import Optional, Union, Coroutine
+from tekore._sender import Sender, Client, Request, Response
 
 prefix = 'https://api.spotify.com/v1/'
 
@@ -44,8 +42,26 @@ class SpotifyBase(Client):
             'Content-Type': content_type
         }
 
+    def send(
+        self, request: Request
+    ) -> Union[Response, Coroutine[None, None, Response]]:
+        """
+        Build request url and headers, and send with underlying sender.
+
+        Exposed to easily send arbitrary requests,
+        for custom behavior in some endpoint e.g. for a subclass.
+        It may also come in handy if a bugfix or a feature is not implemented
+        in a timely manner, or in debugging related to the client or Web API.
+        """
+        request.url = build_url(request.url)
+        headers = self._create_headers()
+        if request.headers is not None:
+            headers.update(request.headers)
+        request.headers = headers
+        return self.sender.send(request)
+
+    @staticmethod
     def _request(
-            self,
             method: str,
             url: str,
             payload=None,
@@ -53,10 +69,9 @@ class SpotifyBase(Client):
     ):
         return Request(
             method=method,
-            url=build_url(url),
-            headers=self._create_headers(),
+            url=url,
             params=parse_url_params(params),
-            data=json.dumps(payload) if payload is not None else None
+            data=json.dumps(payload) if payload is not None else None,
         )
 
     def _get(self, url: str, payload=None, **params):

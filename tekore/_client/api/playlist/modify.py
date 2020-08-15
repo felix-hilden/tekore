@@ -1,9 +1,8 @@
-from requests import Request
-
-from ...base import SpotifyBase, build_url
+from ...base import SpotifyBase
 from ...decor import send_and_process, scopes
 from ...process import single, nothing
 from tekore._auth import scope
+from tekore._sender import Request
 from tekore.model import FullPlaylist
 
 
@@ -25,9 +24,9 @@ class SpotifyPlaylistModify(SpotifyBase):
         """
         return Request(
             method='PUT',
-            url=build_url(f'playlists/{playlist_id}/images'),
-            headers=self._create_headers(content_type='image/jpeg'),
-            data=image
+            url=f'playlists/{playlist_id}/images',
+            headers={'Content-Type': 'image/jpeg'},
+            data=image,
         )
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])

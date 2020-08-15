@@ -3,6 +3,34 @@
 
 Release notes
 =============
+3.0.0 (Unreleased)
+------------------
+Added
+*****
+- :ref:`senders` - Tekore's own :class:`Request` and :class:`Response` wrappers
+  are now used in the sender interface (:issue:`139`)
+
+Removed
+*******
+- Dependency to Requests dropped in favor of HTTPX (:issue:`139`)
+- :ref:`senders` - :class:`TransientSender` and :class:`SingletonSender`
+  along with their asynchronous variants were removed (:issue:`139`)
+- :ref:`senders` - default sender and keyword argument options were removed
+  (:issue:`139`)
+
+Changed
+*******
+- :ref:`errors` - web exceptions now inherit from :class:`Exception` rather
+  than the underlying HTTP library's top-level exception. They always contain
+  the relevant :class:`Request` and :class:`Response` (:issue:`139`)
+- :ref:`senders` - as the only concrete senders, :class:`PersistentSender` and
+  :class:`AsyncPersistentSender` are now implemented in :class:`SyncSender` and
+  :class:`AsyncSender`, respectively (:issue:`139`)
+- :class:`CachingSender` - argument order is now in line with
+  :class:`RetryingSender` (:issue:`139`)
+- :ref:`senders` - clients (:class:`Spotify` and :class:`Credentials`) now
+  inherit from :class:`ExtendingSender` (:issue:`139`)
+
 2.1.3 (2020-08-04)
 ------------------
 Fixed
