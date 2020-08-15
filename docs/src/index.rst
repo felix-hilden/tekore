@@ -79,7 +79,6 @@ Additional features are provided for your pleasure and convenience.
    getting_started
    advanced_usage
    examples
-   extras
 
 .. |logo| image:: logo.png
    :alt: logo
