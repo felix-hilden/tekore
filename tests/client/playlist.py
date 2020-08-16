@@ -105,10 +105,6 @@ class TestSpotifyPlaylistView:
         )
         assert playlist['tracks']['items'][0]['track']['track'] is True
 
-    def test_playlist_episodes_as_tracks_deprecated(self, app_client):
-        with pytest.warns(DeprecationWarning):
-            app_client.playlist(playlist_id, episodes_as_tracks=True)
-
     def test_playlist_items_podcast_no_market_returns_none(self, app_client):
         items = app_client.playlist_items(playlist_special)
         assert items.items[0].track is None
@@ -142,113 +138,6 @@ class TestSpotifyPlaylistView:
     def test_playlist_with_podcast(self, user_client):
         playlist = user_client.playlist(playlist_special)
         assert playlist.id == playlist_special
-
-
-def assert_tracks_equal(client, playlist: str, tracks: list):
-    observed = client.playlist_tracks(playlist)
-    assert [t.track.id for t in observed.items] == tracks
-
-
-class TestSpotifyPlaylistModifyDeprecated:
-    """
-    Ordered test set to test deprecated playlist methods.
-    """
-    def test_playlist_modifications(self, user_client, current_user_id):
-        playlist = user_client.playlist_create(
-            current_user_id,
-            'tekore-test',
-            public=False,
-            description='Temporary test playlist for Tekore'
-        )
-        # Playlist created
-        assert playlist is not None
-
-        try:
-            # Tracks added
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_add(playlist.id, track_ids[::-1])
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, track_ids[::-1])
-
-            # Tracks replaced
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_replace(playlist.id, track_ids)
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, track_ids)
-
-            # Note: reordering tracks can sometimes result in another version of
-            # the track to be added to the playlist instead. This occurred with
-            # a 'single' being converted to the album version.
-            with pytest.warns(DeprecationWarning):
-                snapshot = user_client.playlist_tracks_reorder(
-                    playlist.id,
-                    range_start=1,
-                    insert_before=0
-                )
-            # Tracks reordered
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(
-                    user_client,
-                    playlist.id,
-                    [track_ids[1], track_ids[0]] + track_ids[2:]
-                )
-
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_reorder(
-                    playlist.id,
-                    range_start=1,
-                    insert_before=0,
-                    snapshot_id=snapshot
-                )
-            # Tracks reordered with snapshot
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, track_ids)
-
-            # Tracks removed
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_remove(playlist.id, track_ids)
-            with pytest.warns(DeprecationWarning):
-                tracks = user_client.playlist_tracks(playlist.id)
-            assert tracks.total == 0
-
-            # Add tracks back with duplicates and test removing occurrences
-            new_tracks = track_ids + track_ids[::-1]
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_replace(playlist.id, new_tracks)
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_remove_occurrences(
-                    playlist.id,
-                    [(id_, ix) for ix, id_ in enumerate(track_ids)]
-                )
-            # Occurrences removed
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, track_ids[::-1])
-
-            # Add tracks back with duplicates and test removing indices
-            new_tracks = track_ids + track_ids[::-1]
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_replace(playlist.id, new_tracks)
-            playlist = user_client.playlist(playlist.id)
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_remove_indices(
-                    playlist.id,
-                    list(range(len(track_ids))),
-                    playlist.snapshot_id
-                )
-            # Indices removed
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, track_ids[::-1])
-
-            # Tracks cleared
-            with pytest.warns(DeprecationWarning):
-                user_client.playlist_tracks_clear(playlist.id)
-            with pytest.warns(DeprecationWarning):
-                assert_tracks_equal(user_client, playlist.id, [])
-        except Exception:
-            raise
-        finally:
-            # Unfollow (delete) playlist to tear down
-            user_client.playlist_unfollow(playlist.id)
 
 
 def assert_items_equal(client, playlist: str, items: list):

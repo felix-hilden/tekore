@@ -79,40 +79,6 @@ def _add_doc_section(doc: str, section: str) -> str:
     return '\n'.join([empty, head, '', section, body])
 
 
-def deprecated(in_: str, removed: str, instead: str, level: int = 2):
-    """
-    Inject deprecation notice to :class:`Spotify` methods.
-
-    Parameters
-    ----------
-    in_
-        deprecated in version
-    removed
-        removed in version
-    instead
-        use this instead
-    level
-        warning stacklevel
-    """
-    doc_msg = '\n'.join([
-        f'.. deprecated:: {in_}',
-        f'   Removed in {removed}.',
-        f'   Use :meth:`Spotify.{instead}` instead.'
-    ])
-
-    err_msg = f'Removed in version {removed}, use Spotify.{instead} instead.'
-
-    def decorator(function: Callable) -> Callable:
-        function.__doc__ = _add_doc_section(function.__doc__, doc_msg)
-
-        @wraps(function)
-        def wrapper(*args, **kwargs):
-            warn(err_msg, DeprecationWarning, stacklevel=level)
-            return function(*args, **kwargs)
-        return wrapper
-    return decorator
-
-
 def scopes(required: list = None, optional: list = None) -> Callable:
     """
     List the scopes that a call uses.

@@ -17,6 +17,9 @@ Removed
   along with their asynchronous variants were removed (:issue:`139`)
 - :ref:`senders` - default sender and keyword argument options were removed
   (:issue:`139`)
+- :ref:`client-playlist` - methods for playlist tracks and
+  ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` deprecated in 2.0
+  (:issue:`178`, :issue:`202`)
 
 Changed
 *******
