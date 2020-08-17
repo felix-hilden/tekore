@@ -87,7 +87,7 @@ class SpotifySearch(SpotifyBase):
             You can narrow down search results by specifying field filters
             (e.g. year range, genre).
             See the `Search for an Item
-            <https://developer.spotify.com/documentation/web-api/reference/>`
+            <https://developer.spotify.com/documentation/web-api/reference/>`_
             page of the official documentation for more information.
 
         """
