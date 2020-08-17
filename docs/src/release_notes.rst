@@ -34,6 +34,11 @@ Changed
 - :ref:`senders` - clients (:class:`Spotify` and :class:`Credentials`) now
   inherit from :class:`ExtendingSender` (:issue:`139`)
 
+Fixed
+*****
+- :ref:`client` - fix chunking errors that occurred when passing certain
+  parameters as positional arguments (:issue:`205`)
+
 2.1.3 (2020-08-04)
 ------------------
 Fixed
