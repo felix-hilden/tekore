@@ -267,6 +267,10 @@ Playlist API
    Spotify.playlist_reorder
    Spotify.playlist_replace
 
+See Spotify's guide on `working with playlists <https://developer.spotify.com/
+documentation/general/guides/working-with-playlists/>`_
+for additional information.
+
 .. automethod:: Spotify.playlist
 .. automethod:: Spotify.playlists
 .. automethod:: Spotify.playlist_create

@@ -29,6 +29,9 @@ client credentials flow and authorisation code flow.
 They are used to retrieve application and user credentials, respectively.
 The former can be used in generic endpoints like the ones for albums,
 the latter is required for endpoints that involve a specific user.
+See Spotify's `authorisation guide <https://developer.spotify.com/
+documentation/general/guides/authorization-guide/>`_
+for more information about the underlying authentication procedures.
 
 .. code:: python
 
