@@ -9,6 +9,7 @@ Added
 *****
 - :ref:`senders` - Tekore's own :class:`Request` and :class:`Response` wrappers
   are now used in the sender interface (:issue:`139`)
+- Dependency to HTTPX upgraded to include version ``0.14.*`` (:issue:`202`)
 
 Removed
 *******
