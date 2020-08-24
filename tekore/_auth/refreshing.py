@@ -32,6 +32,14 @@ class RefreshingToken(AccessToken):
         self._token = token
         self._credentials = credentials
 
+    def __repr__(self):
+        options = [
+            f'access_token={self.access_token!r}',
+            f'refresh_token={self.refresh_token!r}',
+            f'scope={self.scope!r}',
+        ]
+        return type(self).__name__ + '(' + ', '.join(options) + ')'
+
     @property
     def access_token(self) -> str:
         """Bearer token value."""
@@ -113,6 +121,15 @@ class RefreshingCredentials:
             sender,
             asynchronous=False
         )
+
+    def __repr__(self):
+        options = [
+            f'client_id={self._client.client_id!r}',
+            f'client_secret={self._client.client_secret!r}',
+            f'redirect_uri={self._client.redirect_uri!r}',
+            f'sender={self._client.sender!r}',
+        ]
+        return type(self).__name__ + '(' + ', '.join(options) + ')'
 
     def request_client_token(self) -> RefreshingToken:
         """

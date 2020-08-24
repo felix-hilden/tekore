@@ -68,6 +68,10 @@ class RetryingSender(ExtendingSender):
         super().__init__(sender)
         self.retries = retries
 
+    def __repr__(self):
+        contains = f'(retries={self.retries}, sender={self.sender!r})'
+        return type(self).__name__ + contains
+
     def send(
         self, request: Request
     ) -> Union[Response, Coroutine[None, None, Response]]:
@@ -141,6 +145,10 @@ class CachingSender(ExtendingSender):
         self._cache = {}
         self._deque = deque(maxlen=self.max_size)
         self._lock: Optional[asyncio.Lock] = None
+
+    def __repr__(self):
+        contains = f'(max_size={self._max_size}, sender={self.sender!r})'
+        return type(self).__name__ + contains
 
     @property
     def max_size(self) -> Optional[int]:

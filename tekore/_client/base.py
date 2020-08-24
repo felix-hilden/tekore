@@ -36,6 +36,15 @@ class SpotifyBase(Client):
         self.max_limits_on = max_limits_on
         self.chunked_on = chunked_on
 
+    def __repr__(self):
+        options = [
+            f'token={self.token!r}',
+            f'max_limits_on={self.max_limits_on}',
+            f'chunked_on={self.chunked_on}',
+            f'sender={self.sender!r}',
+        ]
+        return type(self).__name__ + '(' + ', '.join(options) + ')'
+
     def _create_headers(self, content_type: str = 'application/json'):
         return {
             'Authorization': f'Bearer {str(self.token)}',

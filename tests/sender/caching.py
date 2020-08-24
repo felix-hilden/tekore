@@ -72,6 +72,10 @@ def assert_two_sent(sender, r, p1, p2):
 
 
 class TestCachingSender:
+    def test_repr(self):
+        s = CachingSender()
+        assert repr(s).startswith('CachingSender(')
+
     def test_other_methods_than_GET_not_cached(self, sender):
         methods = ('PUT', 'POST', 'DELETE')
 

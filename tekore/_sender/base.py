@@ -27,6 +27,9 @@ class Response:
 class Sender(ABC):
     """Sender interface for requests."""
 
+    def __repr__(self):
+        return type(self).__name__ + '()'
+
     @abstractmethod
     def send(
         self,

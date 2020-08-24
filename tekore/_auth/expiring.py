@@ -57,6 +57,15 @@ class Token(AccessToken):
         self._refresh_token = token_info.get('refresh_token', None)
         self._expires_at = int(time.time()) + token_info['expires_in']
 
+    def __repr__(self):
+        options = [
+            f'access_token={self.access_token!r}',
+            f'refresh_token={self.refresh_token!r}',
+            f'expires_at={self.expires_at!r}',
+            f'scope={self.scope!r}',
+        ]
+        return type(self).__name__ + '(' + ', '.join(options) + ')'
+
     @property
     def access_token(self) -> str:
         """Bearer token value."""
@@ -209,6 +218,15 @@ class Credentials(Client):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
+
+    def __repr__(self):
+        options = [
+            f'client_id={self.client_id!r}',
+            f'client_secret={self.client_secret!r}',
+            f'redirect_uri={self.redirect_uri!r}',
+            f'sender={self.sender!r}',
+        ]
+        return type(self).__name__ + '(' + ', '.join(options) + ')'
 
     @property
     def _auth(self) -> str:

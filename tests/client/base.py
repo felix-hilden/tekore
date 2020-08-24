@@ -14,6 +14,10 @@ def client():
 
 
 class TestSpotifyBaseUnits:
+    def test_repr(self):
+        s = Spotify()
+        assert repr(s).startswith('Spotify(')
+
     def test_token_is_given_token(self):
         token = MagicMock()
         client = Spotify(token)

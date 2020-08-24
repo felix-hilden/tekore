@@ -42,6 +42,10 @@ module = 'tekore._sender.extending'
 
 
 class TestRetryingSender:
+    def test_repr(self):
+        s = RetryingSender()
+        assert repr(s).startswith('RetryingSender(')
+
     def test_rate_limited_request_retried_after_set_seconds(self):
         time = MagicMock()
         fail = rate_limit_response()

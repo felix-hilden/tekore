@@ -33,6 +33,10 @@ module = 'tekore._auth.expiring'
 
 
 class TestToken:
+    def test_repr(self):
+        t = Token(make_token_dict())
+        assert repr(t).startswith('Token(')
+
     def test_access_token_returned(self):
         time = MagicMock()
         time.time.return_value = 0
@@ -126,6 +130,10 @@ class TestCredentialsOnline:
 
 
 class TestCredentialsOffline:
+    def test_repr(self):
+        c = Credentials('id', 'secret')
+        assert repr(c).startswith('Credentials(')
+
     def test_credentials_initialisation(self):
         Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
 
