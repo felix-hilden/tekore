@@ -88,7 +88,7 @@ To check for violations, run ``flake8``.
 
 .. code:: sh
 
-    $ flake8
+    $ flake8 tekore
 
 Style checks for docstrings and documentation files are also available.
 To run all style checks use ``tox -e lint``.
