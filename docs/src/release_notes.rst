@@ -11,6 +11,10 @@ Added
   are now used in the sender interface (:issue:`139`)
 - Classes now have a readable ``repr`` (:issue:`191`)
 - Dependency to HTTPX upgraded to include version ``0.14.*`` (:issue:`202`)
+- :func:`gen_state` - generate state for user authorisation (:issue:`207`)
+- :func:`parse_state_from_url` - parse state from URL parameters (:issue:`207`)
+- :class:`UserAuth` - implement user authorisation with security checks,
+  the caller simply provides the resulting URI after redirection (:issue:`207`)
 
 Removed
 *******

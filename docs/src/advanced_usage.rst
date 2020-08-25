@@ -58,6 +58,20 @@ Here's a summary, see :ref:`auth` for more details.
 3. These methods wrap around :class:`RefreshingCredentials` internally.
 4. Requires manually pasting text to a terminal, is not usable on a server.
 
+:class:`UserAuth` can be used to simplify the implementation
+of user authorisation with either one of the credentials clients.
+
+Security
+********
+Using a state with user authorisation prevents cross-site request forgery
+(`RFC 6749 <https://tools.ietf.org/html/rfc6749#section-10.12>`_).
+A string can be sent as state on authorisation.
+When a user is redirected back,
+the same state should be returned as a query parameter.
+:func:`gen_state` is provided to generate random strings to send as state.
+:func:`parse_state_from_url` can then be used to extract the returned state.
+State is generated and checked automatically when using :class:`UserAuth`.
+
 Expanding scopes
 ****************
 The scope of a token can be gradually expanded.

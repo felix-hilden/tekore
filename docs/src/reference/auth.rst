@@ -9,19 +9,20 @@ Web API authorisation.
    :nosignatures:
 
    Credentials
-   AccessToken
    Token
-
    RefreshingCredentials
    RefreshingToken
-
+   AccessToken
    scope
    Scope
 
-   parse_code_from_url
+   request_client_token
    prompt_for_user_token
    refresh_user_token
-   request_client_token
+   UserAuth
+   gen_state
+   parse_code_from_url
+   parse_state_from_url
 
 Access tokens are used in authorisation by the Web API.
 There are two methods of authorisation, called
@@ -138,12 +139,18 @@ Authorisation utilities.
 .. autosummary::
    :nosignatures:
 
-   prompt_for_user_token
-   parse_code_from_url
-   refresh_user_token
    request_client_token
+   prompt_for_user_token
+   refresh_user_token
+   UserAuth
+   gen_state
+   parse_code_from_url
+   parse_state_from_url
 
-.. autofunction:: prompt_for_user_token
-.. autofunction:: parse_code_from_url
-.. autofunction:: refresh_user_token
 .. autofunction:: request_client_token
+.. autofunction:: prompt_for_user_token
+.. autofunction:: refresh_user_token
+.. autoclass:: UserAuth
+.. autofunction:: gen_state
+.. autofunction:: parse_code_from_url
+.. autofunction:: parse_state_from_url
