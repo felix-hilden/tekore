@@ -29,7 +29,7 @@ def make_token_dict():
     }
 
 
-module = 'tekore._auth.expiring'
+time_module = 'tekore._auth.token.time'
 
 
 class TestToken:
@@ -41,7 +41,7 @@ class TestToken:
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch(module + '.time', time):
+        with patch(time_module, time):
             token = Token(make_token_dict())
             assert token.access_token == 'accesstoken'
 
@@ -49,7 +49,7 @@ class TestToken:
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch(module + '.time', time):
+        with patch(time_module, time):
             token = Token(make_token_dict())
             assert token.expires_in == 3600
 
@@ -57,7 +57,7 @@ class TestToken:
         time = MagicMock()
         time.time.side_effect = [0, 1]
 
-        with patch(module + '.time', time):
+        with patch(time_module, time):
             token = Token(make_token_dict())
             assert token.expires_in == 3599
 
@@ -65,7 +65,7 @@ class TestToken:
         time = MagicMock()
         time.time.side_effect = [0, 3600]
 
-        with patch(module + '.time', time):
+        with patch(time_module, time):
             token = Token(make_token_dict())
             assert token.is_expiring is True
 
@@ -129,6 +129,9 @@ class TestCredentialsOnline:
             c.request_client_token()
 
 
+cred_module = 'tekore._auth.expiring.Credentials'
+
+
 class TestCredentialsOffline:
     def test_repr(self):
         c = Credentials('id', 'secret')
@@ -144,7 +147,7 @@ class TestCredentialsOffline:
         c = Credentials('id', 'secret')
 
         send = MagicMock(return_value=mock_response(500))
-        with patch(module + '.Credentials.send', send):
+        with patch(cred_module + '.send', send):
             with pytest.raises(HTTPError):
                 c.request_client_token()
 
@@ -163,7 +166,7 @@ class TestCredentialsOffline:
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
         send = MagicMock(return_value=mock_response())
-        with patch(module + '.Credentials.send', send):
+        with patch(cred_module + '.send', send):
             c.request_user_token('code')
             send.assert_called_once()
 
@@ -174,7 +177,7 @@ class TestCredentialsOffline:
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials.send', send):
+        with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == 'refresh'
 
@@ -184,7 +187,7 @@ class TestCredentialsOffline:
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials.send', send):
+        with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == token['refresh_token']
 
@@ -194,7 +197,7 @@ class TestCredentialsOffline:
         token.refresh_token = None
 
         mock = MagicMock()
-        with patch(module + '.Credentials.request_client_token', mock):
+        with patch(cred_module + '.request_client_token', mock):
             c.refresh(token)
             mock.assert_called_once()
 
@@ -204,6 +207,6 @@ class TestCredentialsOffline:
         token.refresh_token = 'refresh'
 
         mock = MagicMock()
-        with patch(module + '.Credentials.refresh_user_token', mock):
+        with patch(cred_module + '.refresh_user_token', mock):
             c.refresh(token)
             mock.assert_called_once()

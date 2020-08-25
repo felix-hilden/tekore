@@ -1,8 +1,9 @@
 from typing import Union
 
+from .expiring import Credentials
+from .token import AccessToken, Token
 from .scope import Scope
-from .expiring import AccessToken, Token, Credentials
-from tekore._sender import Sender
+from .._sender import Sender
 
 
 class RefreshingToken(AccessToken):
