@@ -49,7 +49,6 @@ Additional features are provided for your pleasure and convenience.
 - A :ref:`self-refreshing <auth>` access token.
 - Responses are parsed into :ref:`models <models>` with explicit attributes.
   They have a readable ``repr`` and can be serialised back to JSON.
-
 - :ref:`senders`, a hook between Tekore and the Web API. Enables retries
   on failed requests, response caching and session persistence.
 - :ref:`Access rights <auth-scopes>` for user tokens.

@@ -135,7 +135,7 @@ it is possible to use unpacking to provide the configuration.
 .. code:: python
 
    conf = tk.config_from_environment()
-   token = tk.prompt_for_user_token(*conf)
+   cred = tk.Credentials(*conf)
 
 Configuring a user refresh token is also possible.
 Define ``SPOTIFY_USER_REFRESH`` and pass in a boolean flag
