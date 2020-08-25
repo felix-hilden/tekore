@@ -29,6 +29,11 @@ client credentials flow and authorisation code flow.
 They are used to retrieve application and user credentials, respectively.
 The former can be used in generic endpoints like the ones for albums,
 the latter is required for endpoints that involve a specific user.
+User authorisation involves a two-step process.
+
+- Redirect a user to a specific URL
+- Request an access token with data from the redirection
+
 See Spotify's `authorisation guide <https://developer.spotify.com/
 documentation/general/guides/authorization-guide/>`_
 for more information about the underlying authentication procedures.
@@ -46,6 +51,13 @@ for more information about the underlying authentication procedures.
     url = cred.user_authorisation_url()
     code = ...  # Redirect user to login and retrieve code
     user_token = cred.request_user_token(code)
+
+This redirection and extraction of data is carried out with a web server.
+See this recipe on an :ref:`auth-server` for an example implementation.
+Spinning up a server can be replaced with some manual work,
+e.g. the user pasting information to a terminal.
+For example :func:`prompt_for_user_token` uses this manual way,
+but this also makes it unusable on a server.
 
 Tokens expire after an hour.
 Their expiration status can be determined via
@@ -69,8 +81,9 @@ Another way of dealing with token expiration is provided with
 It is a drop-in replacement for :class:`Credentials`
 but returns tokens that refresh themselves automatically.
 Access tokens can also be retrieved without instantiating
-:class:`Credentials` classes directly.
-For that purpose, a number of `utility functions`_ are provided.
+:class:`RefreshingCredentials` directly.
+For that purpose, a number of `utilities`_ are provided.
+They also include other useful constructs related to authorisation.
 
 Expiring credentials
 --------------------
@@ -100,6 +113,10 @@ to retrieve tokens with additional privileges.
     scope = tk.scope.user_read_email + tk.scope.user_read_private
     token = tk.prompt_for_user_token(*cred, scope)
 
+Scopes that are required or optional are listed
+in each endpoint's documentation, see :ref:`client`.
+They can also be determined programmatically.
+
 .. autoclass:: scope
    :special-members:
    :undoc-members:
@@ -107,28 +124,24 @@ to retrieve tokens with additional privileges.
 .. autoclass:: Scope
    :special-members:
 
-Utility functions
------------------
-Utilities for retrieving access tokens.
+Utilities
+---------
+Authorisation utilities.
 
 .. note::
 
-   These functions are intended for getting up and running quickly.
-   Consider implementing a proper authentication procedure.
+   These utilities are meant to get users up and running quickly.
+   Consider implementing authorisation procedures
+   that suit your needs specifically.
    See :ref:`auth-server` for more details.
 
-.. code:: python
+.. autosummary::
+   :nosignatures:
 
-    import tekore as tk
-
-    conf = tk.config_from_environment()
-
-    # Request tokens
-    app_token = tk.request_client_token(*conf[:2])
-    user_token = tk.prompt_for_user_token(*conf)
-
-    # Reload user token
-    user_token = tk.refresh_user_token(*conf[:2], refresh_token)
+   prompt_for_user_token
+   parse_code_from_url
+   refresh_user_token
+   request_client_token
 
 .. autofunction:: prompt_for_user_token
 .. autofunction:: parse_code_from_url

@@ -5,19 +5,58 @@ Advanced usage
 ==============
 Working with access tokens
 --------------------------
-Retrieving user tokens
-**********************
-:func:`prompt_for_user_token` provides a convenient way of retrieving
-an access token that refreshes automatically when about to expire.
-However, it is intended for local use as it opens up a browser window.
-For situations involving a server, a two-step process should be implemented.
+Authorisation methods
+*********************
+There are many authorisation options for both applications and users.
+Here's a summary, see :ref:`auth` for more details.
 
-- Redirect a user to a specific URL
-- Receive an access token as a result of the authentication
+- **Subject**: is the resulting token an application or user token
+- **Creation**: is the method for generating new tokens or refreshing them
+- **Type**: is the resulting token expiring or automatically refreshing
 
-The steps are covered by two methods of the :class:`Credentials` class.
-See this recipe on an :ref:`auth-server` for an example implementation.
-The same process can be implemented using :class:`RefreshingCredentials`.
+.. |exp-app-new| replace:: :meth:`Credentials.request_client_token`
+.. |exp-usr-new| replace:: :meth:`Credentials.request_user_token`
+.. |exp-usr-ref| replace:: :meth:`Credentials.refresh_user_token`
+.. |exp-a-u-ref| replace:: :meth:`Credentials.refresh`
+.. |ref-app-new| replace:: :meth:`RefreshingCredentials.request_client_token`
+.. |ref-usr-new| replace:: :meth:`RefreshingCredentials.request_user_token`
+.. |ref-usr-ref| replace:: :meth:`RefreshingCredentials.refresh_user_token`
+.. |utl-app-new| replace:: :func:`request_client_token`
+.. |utl-usr-new| replace:: :func:`prompt_for_user_token`
+.. |utl-usr-ref| replace:: :func:`refresh_user_token`
+
++----------+----------+------------+-------+---------------+
+| Subject  | Creation | Type       | Notes | Method        |
++==========+==========+============+=======+===============+
+| App      | New      | Expiring   |       | |exp-app-new| |
++----------+----------+------------+-------+---------------+
+| User     | New      | Expiring   | 1     | |exp-usr-new| |
++----------+----------+------------+-------+---------------+
+| User     | Refresh  | Expiring   |       | |exp-usr-ref| |
++----------+----------+------------+-------+---------------+
+| A+U      | Refresh  | Expiring   | 2     | |exp-a-u-ref| |
++----------+----------+------------+-------+---------------+
+| App      | New      | Refreshing |       | |ref-app-new| |
++----------+----------+------------+-------+---------------+
+| User     | New      | Refreshing | 1     | |ref-usr-new| |
++----------+----------+------------+-------+---------------+
+| User     | Refresh  | Refreshing |       | |ref-usr-ref| |
++----------+----------+------------+-------+---------------+
+| App      | New      | Refreshing | 3     | |utl-app-new| |
++----------+----------+------------+-------+---------------+
+| User     | New      | Refreshing | 3, 4  | |utl-usr-new| |
++----------+----------+------------+-------+---------------+
+| User     | Refresh  | Refreshing | 3     | |utl-usr-ref| |
++----------+----------+------------+-------+---------------+
+
+**Notes**
+
+1. These methods are paired with the first step of user authorisation:
+   redirecting the user to a URL to login with Spotify.
+2. This is a subject-agnostic refresh, fit for both app and user tokens.
+   For application tokens, a new token is returned.
+3. These methods wrap around :class:`RefreshingCredentials` internally.
+4. Requires manually pasting text to a terminal, is not usable on a server.
 
 Expanding scopes
 ****************
