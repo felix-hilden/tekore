@@ -72,12 +72,12 @@ class Credentials(Client):
     """
 
     def __init__(
-            self,
-            client_id: str,
-            client_secret: str,
-            redirect_uri: str = None,
-            sender: Sender = None,
-            asynchronous: bool = None,
+        self,
+        client_id: str,
+        client_secret: str,
+        redirect_uri: str = None,
+        sender: Sender = None,
+        asynchronous: bool = None,
     ):
         super().__init__(sender, asynchronous)
         self.client_id = client_id
@@ -115,10 +115,10 @@ class Credentials(Client):
         return self._token_request(payload), ()
 
     def user_authorisation_url(
-            self,
-            scope=None,
-            state: str = None,
-            show_dialog: bool = False
+        self,
+        scope=None,
+        state: str = None,
+        show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.

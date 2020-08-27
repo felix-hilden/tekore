@@ -109,11 +109,11 @@ class RefreshingCredentials:
     """
 
     def __init__(
-            self,
-            client_id: str,
-            client_secret: str,
-            redirect_uri: str = None,
-            sender: Sender = None
+        self,
+        client_id: str,
+        client_secret: str,
+        redirect_uri: str = None,
+        sender: Sender = None
     ):
         self._client = Credentials(
             client_id,
@@ -145,10 +145,10 @@ class RefreshingCredentials:
         return RefreshingToken(token, self._client)
 
     def user_authorisation_url(
-            self,
-            scope=None,
-            state: str = None,
-            show_dialog: bool = False
+        self,
+        scope=None,
+        state: str = None,
+        show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.

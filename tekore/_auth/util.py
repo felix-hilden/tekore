@@ -153,16 +153,15 @@ class UserAuth:
 
         if self.state != state:
             raise AssertionError(
-                'Inconsistent state!'
-                f' Expected `{self.state}`, got `{state}`.'
+                f'Inconsistent state! Expected `{self.state}`, got `{state}`.'
             )
 
         return self._cred.request_user_token(code)
 
 
 def request_client_token(
-        client_id: str,
-        client_secret: str
+    client_id: str,
+    client_secret: str
 ) -> RefreshingToken:
     """
     Request for client credentials.
@@ -184,10 +183,10 @@ def request_client_token(
 
 
 def prompt_for_user_token(
-        client_id: str,
-        client_secret: str,
-        redirect_uri: str,
-        scope=None
+    client_id: str,
+    client_secret: str,
+    redirect_uri: str,
+    scope=None
 ) -> RefreshingToken:
     """
     Prompt for manual authorisation.
@@ -228,9 +227,9 @@ def prompt_for_user_token(
 
 
 def refresh_user_token(
-        client_id: str,
-        client_secret: str,
-        refresh_token: str
+    client_id: str,
+    client_secret: str,
+    refresh_token: str
 ) -> RefreshingToken:
     """
     Request a refreshed user token.
