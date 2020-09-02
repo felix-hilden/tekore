@@ -1,9 +1,9 @@
 import pytest
 from tekore import (
-    TransientSender,
-    AsyncTransientSender,
     Client,
     SenderConflictWarning,
+    SyncSender,
+    AsyncSender
 )
 
 from tests._util import handle_warnings
@@ -12,7 +12,7 @@ from tests._util import handle_warnings
 class TestClient:
     @staticmethod
     def _client(sender_async: bool, asynchronous: bool = None):
-        sender = AsyncTransientSender if sender_async else TransientSender
+        sender = AsyncSender if sender_async else SyncSender
         return Client(sender(), asynchronous=asynchronous)
 
     def test_is_async_reflects_sync_sender(self):

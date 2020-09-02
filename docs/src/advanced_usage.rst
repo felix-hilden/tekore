@@ -5,19 +5,132 @@ Advanced usage
 ==============
 Working with access tokens
 --------------------------
-Retrieving user tokens
-**********************
-:func:`prompt_for_user_token` provides a convenient way of retrieving
-an access token that refreshes automatically when about to expire.
-However, it is intended for local use as it opens up a browser window.
-For situations involving a server, a two-step process should be implemented.
+Authorisation methods
+*********************
+There are many authorisation options for both applications and users.
+Here's a summary, see :ref:`auth` for more details.
+Class names are abbreviated as :class:`C` and :class:`RC` for brevity.
 
-- Redirect a user to a specific URL
-- Receive an access token as a result of the authentication
+- **Creation**: is the method for generating new tokens or refreshing them
+- **Type**: is the resulting token expiring or automatically refreshing
 
-The steps are covered by two methods of the :class:`Credentials` class.
-See this recipe on an :ref:`auth-server` for an example implementation.
-The same process can be implemented using :class:`RefreshingCredentials`.
+.. |exp-app-new| replace::
+   :meth:`C.request_client_token <Credentials.request_client_token>`
+.. |exp-usr-new| replace::
+   :meth:`C.request_user_token <Credentials.request_user_token>`
+.. |exp-usr-ref| replace::
+   :meth:`C.refresh_user_token <Credentials.refresh_user_token>`
+.. |exp-pkc-new| replace::
+   :meth:`C.request_pkce_token <Credentials.request_pkce_token>`
+.. |exp-pkc-ref| replace::
+   :meth:`C.refresh_pkce_token <Credentials.refresh_pkce_token>`
+.. |exp-a-u-ref| replace::
+   :meth:`C.refresh <Credentials.refresh>`
+.. |ref-app-new| replace::
+   :meth:`RC.request_client_token <RefreshingCredentials.request_client_token>`
+.. |ref-usr-new| replace::
+   :meth:`RC.request_user_token <RefreshingCredentials.request_user_token>`
+.. |ref-usr-ref| replace::
+   :meth:`RC.refresh_user_token <RefreshingCredentials.refresh_user_token>`
+.. |ref-pkc-new| replace::
+   :meth:`RC.request_pkce_token <Credentials.request_pkce_token>`
+.. |ref-pkc-ref| replace::
+   :meth:`RC.refresh_pkce_token <Credentials.refresh_pkce_token>`
+.. |utl-app-new| replace:: :func:`request_client_token`
+.. |utl-usr-new| replace:: :func:`prompt_for_user_token`
+.. |utl-usr-ref| replace:: :func:`refresh_user_token`
+.. |utl-pkc-new| replace:: :func:`prompt_for_pkce_token`
+.. |utl-pkc-ref| replace:: :func:`refresh_pkce_token`
+
+**Application tokens**
+
++----------+------------+-------+---------------+
+| Creation | Type       | Notes | Method        |
++==========+============+=======+===============+
+| New      | Expiring   |       | |exp-app-new| |
++----------+------------+-------+---------------+
+| Refresh  | Expiring   | 1     | |exp-a-u-ref| |
++----------+------------+-------+---------------+
+| New      | Refreshing |       | |ref-app-new| |
++----------+------------+-------+---------------+
+| New      | Refreshing | 2     | |utl-app-new| |
++----------+------------+-------+---------------+
+
+**User tokens**
+
+There are two variants of each user authorisation method.
+One uses ordinary OAuth 2 authorisation, the other its PKCE extension
+which is more secure for public clients at the cost of convenience.
+
++----------+------------+-------+---------------+---------------+
+| Creation | Type       | Notes | Ordinary      | PKCE variant  |
++==========+============+=======+===============+===============+
+| New      | Expiring   | 3     | |exp-usr-new| | |exp-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Expiring   |       | |exp-usr-ref| | |exp-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Expiring   | 1     | |exp-a-u-ref| | |exp-a-u-ref| |
++----------+------------+-------+---------------+---------------+
+| New      | Refreshing | 3     | |ref-usr-new| | |ref-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Refreshing |       | |ref-usr-ref| | |ref-pkc-ref| |
++----------+------------+-------+---------------+---------------+
+| New      | Refreshing | 2, 4  | |utl-usr-new| | |utl-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Refreshing | 2     | |utl-usr-ref| | |utl-pkc-ref| |
++----------+------------+-------+---------------+---------------+
+
+:class:`UserAuth` can be used to simplify the implementation of user
+authorisation with either one of the credentials clients, with or without PKCE.
+
+**Notes**
+
+1. This is a subject-agnostic refresh,
+   fit for both app and user tokens with or without PKCE.
+   For application tokens, a new token is returned.
+2. These functions wrap around :class:`RefreshingCredentials` internally
+   to provide a shorthand for one-off authorisation.
+3. These methods are paired with the first step of user authorisation:
+   redirecting the user to a URL to login with Spotify.
+4. Requires manually pasting text to a terminal, is not usable on a server.
+
+Security
+********
+There are two main security concerns with authorisation,
+besides the obvious leaking of access tokens.
+
+Using a state with user authorisation prevents cross-site request forgery
+(`RFC 6749 <https://tools.ietf.org/html/rfc6749#section-10.12>`_).
+A string can be sent as state on authorisation.
+When a user is redirected back,
+the same state should be returned as a query parameter.
+:func:`gen_state` is provided to generate random strings to send as state.
+:func:`parse_state_from_url` can then be used to extract the returned state.
+State is generated and checked automatically when using :class:`UserAuth`.
+
+A client secret might not always be safe
+and the redirect URI handler might be vulnerable
+(`RFC 7636 <https://tools.ietf.org/html/rfc7636>`_).
+The PKCE extension to user authorisation allows
+retrieving user tokens without a client secret,
+and provides an added layer of security with code challenges and verifiers.
+Challenges and verifiers are handled automatically when using
+:class:`UserAuth` with PKCE enabled.
+Here's a summary of the requirements for each authorisation method.
+
++-------------------------+-----------+---------------+--------------+
+| Method                  | Client ID | Client secret | Redirect URI |
++=========================+===========+===============+==============+
+| Client authorisation    | x         | x             |              |
++-------------------------+-----------+---------------+--------------+
+| User authorisation      | x         | x             | x            |
++-------------------------+-----------+---------------+--------------+
+| User token refresh      | x         | x             |              |
++-------------------------+-----------+---------------+--------------+
+| PKCE user authorisation | x         |               | x            |
++-------------------------+-----------+---------------+--------------+
+| PKCE token refresh      | x         |               |              |
++-------------------------+-----------+---------------+--------------+
 
 Expanding scopes
 ****************
@@ -135,7 +248,7 @@ it is possible to use unpacking to provide the configuration.
 .. code:: python
 
    conf = tk.config_from_environment()
-   token = tk.prompt_for_user_token(*conf)
+   cred = tk.Credentials(*conf)
 
 Configuring a user refresh token is also possible.
 Define ``SPOTIFY_USER_REFRESH`` and pass in a boolean flag
@@ -159,14 +272,10 @@ Using senders
 By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <senders>`.
-They can be used for e.g. retrying and caching.
-User-defined sessions and additional keyword arguments
-to :func:`requests.Session.send` can also be passed in.
-For example, connection persistence and per-instance sessions are enabled
-by default thanks to :class:`PersistentSender`.
+Builtin senders can be used for retrying and caching.
 
 Keepalive connections, retries and caching make up a performance-boosting
-and convenient sender setup, easily constructed from simple building blocks.
+and convenient setup, easily constructed from simple building blocks.
 Less errors, less requests and faster responses, particularly for
 busy applications that request the same static resources repeatedly.
 
@@ -178,8 +287,6 @@ busy applications that request the same static resources repeatedly.
     )
 
     tk.Spotify(sender=sender)
-
-For more detailed information, see :ref:`performance`.
 
 Traversing paging objects
 -------------------------
@@ -220,7 +327,7 @@ Alternatively, an asynchronous sender may be passed directly into a client.
 
 .. code:: python
 
-    spotify = tk.Spotify(token, sender=tk.AsyncPersistentSender())
+    spotify = tk.Spotify(token, sender=tk.AsyncSender())
 
 .. note::
 
@@ -263,11 +370,10 @@ This is helpful for example in viewing names with non-latin alphabet.
 
 .. code:: python
 
-    from requests import Session
+    from httpx import Client
 
-    sess = Session()
-    sess.headers = {'Accept-Language': 'ru'}
+    client = Client(headers={'Accept-Language': 'ru'})
+    spotify = tk.Spotify(token, sender=tk.SyncSender(client))
 
-    spotify = tk.Spotify(token, sender=tk.PersistentSender(session=sess))
     artist = spotify.artist('2LbinT29RFLaXOGAN0jfQN')
     print(artist.name)

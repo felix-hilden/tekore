@@ -35,11 +35,6 @@ you might want to look at :ref:`advanced-usage`.
 More ellaborate example scripts can be found in :ref:`examples`.
 Detailed information can be found in our concise :ref:`reference`.
 
-.. warning::
-
-    Tekore 2 has been released! It brings major improvements to the library.
-    See :ref:`release-notes` for more information.
-
 Features
 ========
 The `Web API`_ provides access to a plethora of data on music and users.
@@ -54,7 +49,6 @@ Additional features are provided for your pleasure and convenience.
 - A :ref:`self-refreshing <auth>` access token.
 - Responses are parsed into :ref:`models <models>` with explicit attributes.
   They have a readable ``repr`` and can be serialised back to JSON.
-
 - :ref:`senders`, a hook between Tekore and the Web API. Enables retries
   on failed requests, response caching and session persistence.
 - :ref:`Access rights <auth-scopes>` for user tokens.
@@ -79,7 +73,7 @@ Additional features are provided for your pleasure and convenience.
    getting_started
    advanced_usage
    examples
-   extras
+   resources
 
 .. |logo| image:: logo.png
    :alt: logo

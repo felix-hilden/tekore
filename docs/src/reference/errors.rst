@@ -23,7 +23,7 @@ Web errors for :ref:`auth` and :ref:`client`.
 
 Clients facing the Web API raise errors when recieving bad status codes.
 Only errors documented in the Web API documentation are expected and provided.
-Specific errors or all web errors can be caught.
+Other exceptions are raised as :class:`ClientError` or :class:`ServerError`.
 
 .. code:: python
 
@@ -39,6 +39,18 @@ Specific errors or all web errors can be caught.
         print('Whoops, bad request!')
     except tk.HTTPError:
         print('Something is seriously wrong.')
+
+Error objects also contain the relevant :class:`Request` and :class:`Response`
+objects for closer inspection.
+
+.. code:: python
+
+    try:
+        spotify.album('not-a-real-album')
+    except tk.BadRequest as ex:
+        print(str(ex))
+        print(ex.request)
+        print(ex.response)
 
 .. autoclass:: HTTPError
 .. autoclass:: ClientError

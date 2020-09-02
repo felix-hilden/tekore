@@ -45,10 +45,12 @@ Non-endpoint methods
    Spotify.chunked
    Spotify.max_limits
    Spotify.token_as
+   Spotify.send
 
 .. automethod:: Spotify.chunked
 .. automethod:: Spotify.max_limits
 .. automethod:: Spotify.token_as
+.. automethod:: Spotify.send
 
 .. _client-paging:
 
@@ -265,20 +267,9 @@ Playlist API
    Spotify.playlist_reorder
    Spotify.playlist_replace
 
-The following methods have been deprecated
-and will be removed in a future version.
-
-.. autosummary::
-   :nosignatures:
-
-   Spotify.playlist_tracks
-   Spotify.playlist_tracks_add
-   Spotify.playlist_tracks_clear
-   Spotify.playlist_tracks_remove
-   Spotify.playlist_tracks_remove_indices
-   Spotify.playlist_tracks_remove_occurrences
-   Spotify.playlist_tracks_reorder
-   Spotify.playlist_tracks_replace
+See Spotify's guide on `working with playlists <https://developer.spotify.com/
+documentation/general/guides/working-with-playlists/>`_
+for additional information.
 
 .. automethod:: Spotify.playlist
 .. automethod:: Spotify.playlists
@@ -294,15 +285,6 @@ and will be removed in a future version.
 .. automethod:: Spotify.playlist_remove_occurrences
 .. automethod:: Spotify.playlist_reorder
 .. automethod:: Spotify.playlist_replace
-
-.. automethod:: Spotify.playlist_tracks
-.. automethod:: Spotify.playlist_tracks_add
-.. automethod:: Spotify.playlist_tracks_clear
-.. automethod:: Spotify.playlist_tracks_remove
-.. automethod:: Spotify.playlist_tracks_remove_indices
-.. automethod:: Spotify.playlist_tracks_remove_occurrences
-.. automethod:: Spotify.playlist_tracks_reorder
-.. automethod:: Spotify.playlist_tracks_replace
 
 Search API
 ----------

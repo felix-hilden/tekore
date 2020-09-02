@@ -12,9 +12,8 @@ from tekore._start import read_version_file as _read_version_file
 
 _check_python_version()
 
-from typing import Union as _Union, Type as _Type
 from tekore import model
-from tekore._auth import (
+from ._auth import (
     Credentials,
     Token,
     AccessToken,
@@ -22,13 +21,18 @@ from tekore._auth import (
     RefreshingToken,
     scope,
     Scope,
+    UserAuth,
+    gen_state,
     parse_code_from_url,
+    parse_state_from_url,
     prompt_for_user_token,
     refresh_user_token,
+    prompt_for_pkce_token,
+    refresh_pkce_token,
     request_client_token,
 )
-from tekore._client import Spotify
-from tekore._error import (
+from ._client import Spotify
+from ._error import (
     HTTPError,
     ClientError,
     ServerError,
@@ -41,7 +45,7 @@ from tekore._error import (
     BadGateway,
     ServiceUnavailable,
 )
-from tekore._convert import (
+from ._convert import (
     ConversionError,
     IdentifierType,
     to_uri,
@@ -51,23 +55,19 @@ from tekore._convert import (
     check_type,
     check_id,
 )
-from tekore._sender import (
+from ._sender import (
     Sender,
     SyncSender,
     AsyncSender,
     ExtendingSender,
-    TransientSender,
-    AsyncTransientSender,
-    PersistentSender,
-    AsyncPersistentSender,
-    SingletonSender,
-    AsyncSingletonSender,
     RetryingSender,
     CachingSender,
     SenderConflictWarning,
     Client,
+    Request,
+    Response,
 )
-from tekore._config import (
+from ._config import (
     config_from_environment,
     config_from_file,
     config_to_file,
@@ -87,6 +87,7 @@ _classes = [
     RefreshingToken,
     scope,
     Scope,
+    UserAuth,
     HTTPError,
     ClientError,
     ServerError,
@@ -104,16 +105,12 @@ _classes = [
     SyncSender,
     AsyncSender,
     ExtendingSender,
-    TransientSender,
-    AsyncTransientSender,
-    PersistentSender,
-    AsyncPersistentSender,
-    SingletonSender,
-    AsyncSingletonSender,
     RetryingSender,
     CachingSender,
     SenderConflictWarning,
     Client,
+    Request,
+    Response,
     MissingConfigurationWarning,
 ]
 
@@ -131,26 +128,3 @@ redirect_uri_var: str = 'SPOTIFY_REDIRECT_URI'
 
 user_refresh_var: str = 'SPOTIFY_USER_REFRESH'
 """Configuration variable name for a user refresh token."""
-
-default_requests_kwargs: dict = {}
-"""
-Default keyword arguments to send with in synchronous mode.
-Not used when any other keyword arguments are passed in.
-"""
-
-default_httpx_kwargs: dict = {}
-"""
-Default keyword arguments to send with in asynchronous mode.
-Not used when any other keyword arguments are passed in.
-"""
-
-default_sender_type: _Union[_Type[SyncSender], _Type[AsyncSender]] = PersistentSender
-"""
-Sender to instantiate by default.
-"""
-
-default_sender_instance: Sender = None
-"""
-Default sender instance to use in clients.
-If specified, overrides :attr:`default_sender_type`.
-"""

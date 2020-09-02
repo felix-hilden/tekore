@@ -5,6 +5,8 @@ Getting started
 To use the Web API, you'll need to register an `application`_.
 From its page retrieve the client ID and secret.
 They are your application's credentials to the API.
+A walkthrough of creating an application and setting it up can be found `here
+<https://developer.spotify.com/documentation/general/guides/app-settings/>`_.
 
 Retrieving a client token
 -------------------------
@@ -72,9 +74,11 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
 
 .. note::
 
-    :func:`prompt_for_user_token` eliminates the need of a web server
-    because of the manual entering of information.
+    :func:`prompt_for_user_token` eliminates the need for a web server,
+    which would normally be used to complete authorisation,
+    by requesting the user to manually enter information to the shell.
     However, that also makes it unusable on a server.
+    Other authorisation methods are introduced in :ref:`advanced-usage`.
 
 Calling the API as a user
 -------------------------
@@ -103,8 +107,8 @@ What's next?
 Spotify's `authorisation guide <https://developer.spotify.com/
 documentation/general/guides/authorization-guide/>`_
 contains more information about the underlying authentication procedures.
-:ref:`advanced-usage` provides an overview of what Tekore has to offer
-and things to keep in mind when building an actual application.
+:ref:`advanced-usage` provides an overview of things to keep in mind
+when building an actual application and what Tekore has to offer for that.
 You could also have a look at some :ref:`example scripts <examples>`
 to start familiarising yourself with the Web API.
 

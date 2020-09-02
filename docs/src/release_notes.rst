@@ -3,6 +3,57 @@
 
 Release notes
 =============
+3.0.0 (Unreleased)
+------------------
+The next major iteration of Tekore brings fewer breaking changes than in 2.0,
+but packs a number of improvements to authorisation and senders.
+Most notably, PKCE is now provided as an option for user authorisation
+and Requests is no longer used to perform web requests.
+HTTPX, which was already in use with async, is used exclusively instead.
+
+Added
+*****
+- :ref:`auth` - PKCE can be used in user authorisation, providing added
+  security for public clients by removing the need to use a client secret.
+  (:issue:`189`)
+- :class:`UserAuth` - implement user authorisation with security checks,
+  the caller simply provides the resulting URI after redirection (:issue:`207`)
+- :ref:`senders` - Tekore's own :class:`Request` and :class:`Response` wrappers
+  are now used in the sender interface (:issue:`139`)
+- Classes now have a readable ``repr`` (:issue:`191`)
+- Dependency to HTTPX upgraded to include version ``0.14.*`` (:issue:`202`)
+- :func:`gen_state` - generate state for user authorisation (:issue:`207`)
+- :func:`parse_state_from_url` - parse state from URL parameters (:issue:`207`)
+
+Removed
+*******
+- :ref:`client-playlist` - methods for playlist tracks and
+  ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` deprecated in 2.0
+  (:issue:`178`, :issue:`202`)
+- Dependency to Requests dropped in favor of HTTPX (:issue:`139`)
+- :ref:`senders` - :class:`TransientSender` and :class:`SingletonSender`
+  along with their asynchronous variants were removed (:issue:`139`)
+- :ref:`senders` - default sender and keyword argument options were removed
+  (:issue:`139`)
+
+Changed
+*******
+- :ref:`errors` - web exceptions now inherit from :class:`Exception` rather
+  than the underlying HTTP library's top-level exception. They always contain
+  the relevant :class:`Request` and :class:`Response` (:issue:`139`)
+- :ref:`senders` - as the only concrete senders, :class:`PersistentSender` and
+  :class:`AsyncPersistentSender` are now implemented in :class:`SyncSender` and
+  :class:`AsyncSender`, respectively (:issue:`139`)
+- :class:`CachingSender` - argument order is now in line with
+  :class:`RetryingSender` (:issue:`139`)
+- :ref:`senders` - clients (:class:`Spotify` and :class:`Credentials`) now
+  inherit from :class:`ExtendingSender` (:issue:`139`)
+
+Fixed
+*****
+- :ref:`client` - fix chunking errors that occurred when passing certain
+  parameters as positional arguments (:issue:`205`)
+
 2.1.3 (2020-08-04)
 ------------------
 Fixed

@@ -1,7 +1,7 @@
 import pytest
 
 from unittest.mock import MagicMock, patch
-from tekore import HTTPError, AccessToken, Token, Credentials, Scope
+from tekore import HTTPError, AccessToken, Token, Credentials, Scope, Response
 
 
 class TestAccessToken:
@@ -19,7 +19,7 @@ class TestAccessToken:
         assert t.access_token == str(t)
 
 
-def make_token_dict():
+def token_dict():
     return {
         'access_token': 'accesstoken',
         'expires_in': 3600,
@@ -29,70 +29,67 @@ def make_token_dict():
     }
 
 
-module = 'tekore._auth.expiring'
+def make_token(attrs: dict = None, uses_pkce: bool = False):
+    a = token_dict()
+    a.update(attrs or {})
+    return Token(a, uses_pkce)
+
+
+time_module = 'tekore._auth.expiring.token.time'
 
 
 class TestToken:
+    def test_repr(self):
+        t = make_token()
+        assert repr(t).startswith('Token(')
+
     def test_access_token_returned(self):
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch(module + '.time', time):
-            token = Token(make_token_dict())
+        with patch(time_module, time):
+            token = make_token()
             assert token.access_token == 'accesstoken'
 
     def test_expires_in_set_time(self):
         time = MagicMock()
         time.time.return_value = 0
 
-        with patch(module + '.time', time):
-            token = Token(make_token_dict())
+        with patch(time_module, time):
+            token = make_token()
             assert token.expires_in == 3600
 
     def test_expires_in_is_refreshed(self):
         time = MagicMock()
         time.time.side_effect = [0, 1]
 
-        with patch(module + '.time', time):
-            token = Token(make_token_dict())
+        with patch(time_module, time):
+            token = make_token()
             assert token.expires_in == 3599
 
     def test_old_token_is_expiring(self):
         time = MagicMock()
         time.time.side_effect = [0, 3600]
 
-        with patch(module + '.time', time):
-            token = Token(make_token_dict())
+        with patch(time_module, time):
+            token = make_token()
             assert token.is_expiring is True
 
     def test_token_type(self):
-        d = make_token_dict()
-        t = Token(d)
-        assert t.token_type == d['token_type']
+        t = make_token()
+        assert isinstance(t.token_type, str)
 
     def test_scope_parsed(self):
-        d = make_token_dict()
-        scope = 'a b c'
-        d['scope'] = scope
-        t = Token(d)
-
+        t = make_token()
         assert isinstance(t.scope, Scope)
-        assert str(t.scope) == scope
 
     def test_no_scope_is_empty(self):
-        d = make_token_dict()
-        scope = ''
-        d['scope'] = scope
-        t = Token(d)
-
+        t = make_token({'scope': ''})
         assert len(t.scope) == 0
 
 
 def mock_response(code: int = 200, content: dict = None) -> MagicMock:
-    response = MagicMock()
-    response.status_code = code
-    response.json = MagicMock(return_value=content or make_token_dict())
-    return response
+    return Response('https://url.com', {}, code, content or token_dict())
 
 
 class TestCredentialsOnline:
@@ -125,77 +122,115 @@ class TestCredentialsOnline:
             c.request_client_token()
 
 
+cred_module = 'tekore._auth.expiring.Credentials'
+
+
 class TestCredentialsOffline:
+    def test_repr(self):
+        c = Credentials('id', 'secret')
+        assert repr(c).startswith('Credentials(')
+
     def test_credentials_initialisation(self):
         Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
 
-    def test_credentials_init_redirect_uri_optional(self):
-        Credentials('id', 'secret')
+    def test_credentials_only_client_id_mandatory(self):
+        Credentials('id')
 
     def test_server_error_raises_http_error(self):
         c = Credentials('id', 'secret')
+        response = mock_response(500, {})
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(HTTPError):
+            c.request_client_token()
 
-        send = MagicMock(return_value=mock_response(500))
-        with patch(module + '.Credentials._send', send):
-            with pytest.raises(HTTPError):
-                c.request_client_token()
+    def test_client_error_with_description(self):
+        c = Credentials('id', 'secret')
+        error = {'error': 'Bad thing', 'error_description': 'because reasons'}
+        response = mock_response(400, error)
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(HTTPError):
+            c.request_client_token()
+
+    def test_client_error_without_description(self):
+        c = Credentials('id', 'secret')
+        error = {'error': 'Bad thing'}
+        response = mock_response(400, error)
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(HTTPError):
+            c.request_client_token()
 
     def test_user_authorisation_url(self):
-        c = Credentials('id', 'secret', 'uri')
-        url = c.user_authorisation_url('scope', 'state', True)
+        c = Credentials('id', redirect_uri='uri')
+        url = c.user_authorisation_url('scope', 'state')
         assert 'scope=scope' in url
         assert 'state=state' in url
-        assert 'show_dialog=true' in url
 
-    def test_user_authorisation_url_accepts_scope_list(self):
-        c = Credentials('id', 'secret', 'uri')
-        url = c.user_authorisation_url(['a', 'b'], 'state', True)
+    def test_user_authorisation_accepts_scope_list(self):
+        c = Credentials('id', redirect_uri='uri')
+        url = c.user_authorisation_url(['a', 'b'], 'state')
         assert 'scope=a+b' in url
 
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
         send = MagicMock(return_value=mock_response())
-        with patch(module + '.Credentials._send', send):
+        with patch(cred_module + '.send', send):
             c.request_user_token('code')
             send.assert_called_once()
 
     def test_refresh_user_token_uses_old_refresh_if_not_returned(self):
-        c = Credentials('id', 'secret', 'uri')
-        token = make_token_dict()
+        c = Credentials('id', 'secret')
+        token = token_dict()
         token['refresh_token'] = None
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials._send', send):
+        with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == 'refresh'
 
     def test_refresh_user_token_refresh_replaced_if_returned(self):
-        c = Credentials('id', 'secret', 'uri')
-        token = make_token_dict()
+        c = Credentials('id', 'secret')
+        token = token_dict()
         response = mock_response(content=token)
 
         send = MagicMock(return_value=response)
-        with patch(module + '.Credentials._send', send):
+        with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == token['refresh_token']
 
-    def test_refresh_none_refresh_interpreted_as_client_token(self):
-        c = Credentials('id', 'secret', 'uri')
-        token = MagicMock()
-        token.refresh_token = None
+    def test_pkce_user_authorisation(self):
+        c = Credentials('id', redirect_uri='redirect')
+        c.pkce_user_authorisation('scope', 'state')
 
-        mock = MagicMock()
-        with patch(module + '.Credentials.request_client_token', mock):
-            c.refresh(token)
-            mock.assert_called_once()
+    def test_request_pkce_token(self):
+        c = Credentials('id')
+        c.send = MagicMock(return_value=mock_response())
+        token = c.request_pkce_token('scope', 'verifier')
+        assert token.uses_pkce
 
-    def test_refresh_valid_refresh_interpreted_as_user_token(self):
-        c = Credentials('id', 'secret', 'uri')
-        token = MagicMock()
-        token.refresh_token = 'refresh'
+    def test_refresh_pkce_token(self):
+        c = Credentials('id')
+        c.send = MagicMock(return_value=mock_response())
+        token = c.refresh_pkce_token('refresh')
+        assert token.uses_pkce
 
-        mock = MagicMock()
-        with patch(module + '.Credentials.refresh_user_token', mock):
-            c.refresh(token)
-            mock.assert_called_once()
+    def test_auto_refresh_client_token(self):
+        c = Credentials('id', 'secret')
+        token = make_token({'refresh_token': None})
+        c.request_client_token = MagicMock(return_value=token)
+        c.refresh(token)
+        c.request_client_token.assert_called_once()
+
+    def test_auto_refresh_user_token(self):
+        c = Credentials('id', 'secret')
+        token = make_token(uses_pkce=False)
+        c.refresh_user_token = MagicMock(return_value=token)
+        c.refresh(token)
+        c.refresh_user_token.assert_called_once()
+
+    def test_auto_refresh_pkce_token(self):
+        c = Credentials('id')
+        token = make_token(uses_pkce=True)
+        c.refresh_pkce_token = MagicMock(return_value=token)
+        c.refresh(token)
+        c.refresh_pkce_token.assert_called_once()

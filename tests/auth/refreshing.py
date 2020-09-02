@@ -10,6 +10,13 @@ def make_token_obj(value: str, expiring: bool):
 
 
 class TestRefreshingToken:
+    def test_repr(self):
+        low_token = make_token_obj('token', False)
+        cred = MagicMock()
+
+        auto_token = RefreshingToken(low_token, cred)
+        assert repr(auto_token).startswith('RefreshingToken(')
+
     def test_fresh_token_returned(self):
         low_token = make_token_obj('token', False)
         cred = MagicMock()
@@ -28,7 +35,7 @@ class TestRefreshingToken:
 
     def test_refreshing_token_has_same_attributes_as_regular(self):
         token_info = MagicMock()
-        token = Token(token_info)
+        token = Token(token_info, uses_pkce=False)
         token._expires_at = 3000
         auto_token = RefreshingToken(token, MagicMock())
 
@@ -41,7 +48,7 @@ class TestRefreshingToken:
 
     def test_refreshing_token_expiration_attributes(self):
         token_info = MagicMock()
-        token = Token(token_info)
+        token = Token(token_info, uses_pkce=False)
         token._expires_at = 0
 
         auto_token = RefreshingToken(token, MagicMock())
@@ -51,6 +58,10 @@ class TestRefreshingToken:
 
 
 class TestRefreshingCredentials:
+    def test_repr(self):
+        c = RefreshingCredentials('id', 'secret')
+        assert repr(c).startswith('RefreshingCredentials(')
+
     def test_initialisable(self, app_env):
         RefreshingCredentials(*app_env)
 

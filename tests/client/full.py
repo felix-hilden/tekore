@@ -37,8 +37,9 @@ class TestSpotifyUnits:
         assert previous is None
 
     def test_all_endpoints_have_scope_attributes(self, client):
-        # Skip paging calls and options
+        # Skip non-endpoint functions
         skips = {
+            'send',
             'next',
             'previous',
             'all_pages',
@@ -160,7 +161,16 @@ class TestSpotifyChunkedUnit:
         r = dec(mock_spotify(), list(range(20)))
         assert r == 1
 
-    def test_argument_chain(self):
+    def test_argument_chain_positional(self):
+        func = MagicMock(side_effect=[0, 1])
+        slf = mock_spotify()
+
+        dec = chunked('a', 1, 10, return_last, chain='ch', chain_pos=2)(func)
+        r = dec(slf, list(range(20)), None)
+        func.assert_called_with(slf, list(range(10, 20)), 0)
+        assert r == 1
+
+    def test_argument_chain_keyword(self):
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
@@ -169,7 +179,16 @@ class TestSpotifyChunkedUnit:
         func.assert_called_with(slf, list(range(10, 20)), ch=0)
         assert r == 1
 
-    def test_reverse_when_rev_argument_specified(self):
+    def test_reverse_when_rev_argument_specified_positional(self):
+        func = MagicMock(side_effect=[0, 1])
+        slf = mock_spotify()
+
+        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
+        r = dec(slf, list(range(20)), 1)
+        func.assert_called_with(slf, list(range(10)), 1)
+        assert r == 1
+
+    def test_reverse_when_rev_argument_specified_keyword(self):
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 

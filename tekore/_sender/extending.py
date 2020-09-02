@@ -2,12 +2,12 @@ import time
 import asyncio
 
 from abc import ABC
-from typing import Optional
+from typing import Optional, Union, Coroutine
 from collections import deque
 from urllib.parse import urlencode
 
-from requests import Request, Response
-from .concrete import Sender
+from .base import Request, Response
+from .concrete import Sender, SyncSender
 
 
 class ExtendingSender(Sender, ABC):
@@ -17,12 +17,11 @@ class ExtendingSender(Sender, ABC):
     Parameters
     ----------
     sender
-        request sender, :attr:`default_sender_type` if not specified
+        request sender, :class:`SyncSender` if not specified
     """
 
     def __init__(self, sender: Optional[Sender]):
-        from tekore import default_sender_type
-        self.sender = sender or default_sender_type()
+        self.sender = sender or SyncSender()
 
     @property
     def is_async(self) -> bool:
@@ -48,7 +47,7 @@ class RetryingSender(ExtendingSender):
     retries
         maximum number of retries on server errors before giving up
     sender
-        request sender, :attr:`default_sender_type` if not specified
+        request sender, :class:`SyncSender` if not specified
 
     Examples
     --------
@@ -69,7 +68,13 @@ class RetryingSender(ExtendingSender):
         super().__init__(sender)
         self.retries = retries
 
-    def send(self, request: Request) -> Response:
+    def __repr__(self):
+        contains = f'(retries={self.retries}, sender={self.sender!r})'
+        return type(self).__name__ + contains
+
+    def send(
+        self, request: Request
+    ) -> Union[Response, Coroutine[None, None, Response]]:
         """Delegate request to underlying sender and retry if failed."""
         if self.is_async:
             return self._async_send(request)
@@ -127,19 +132,23 @@ class CachingSender(ExtendingSender):
 
     Parameters
     ----------
-    sender
-        request sender, :attr:`default_sender_type` if not specified
     max_size
         maximum cache size (amount of responses), if specified the least
         recently used response is discarded when the cache would overflow
+    sender
+        request sender, :class:`SyncSender` if not specified
     """
 
-    def __init__(self, sender: Sender = None, max_size: int = None):
+    def __init__(self, max_size: int = None, sender: Sender = None):
         super().__init__(sender)
         self._max_size = max_size
         self._cache = {}
         self._deque = deque(maxlen=self.max_size)
-        self._lock: asyncio.Lock = None
+        self._lock: Optional[asyncio.Lock] = None
+
+    def __repr__(self):
+        contains = f'(max_size={self._max_size}, sender={self.sender!r})'
+        return type(self).__name__ + contains
 
     @property
     def max_size(self) -> Optional[int]:
@@ -269,7 +278,9 @@ class CachingSender(ExtendingSender):
             self._maybe_save(request, fresh)
             return fresh
 
-    def send(self, request: Request) -> Response:
+    def send(
+        self, request: Request
+    ) -> Union[Response, Coroutine[None, None, Response]]:
         """Maybe load request from cache, or delegate to underlying sender."""
         if self.is_async:
             return self._async_send(request)

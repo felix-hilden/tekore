@@ -22,8 +22,3 @@ All public objects are documented in these sections.
    :glob:
 
    reference/*
-
-.. warning::
-
-    Tekore 2 has been released! It brings major improvements to the library.
-    See :ref:`release-notes` for more information.

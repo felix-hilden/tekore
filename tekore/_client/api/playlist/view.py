@@ -1,5 +1,4 @@
 from typing import Union, Callable, Iterable
-from warnings import warn
 from functools import wraps
 
 from ...base import SpotifyBase
@@ -119,8 +118,7 @@ class SpotifyPlaylistView(SpotifyBase):
     @process_if_not_specified(
         single(FullPlaylist),
         ('fields', 2),
-        ('episodes_as_tracks', 4),
-        ('as_tracks', 5)
+        ('as_tracks', 4)
     )
     @send_and_process(nothing)
     def playlist(
@@ -128,16 +126,12 @@ class SpotifyPlaylistView(SpotifyBase):
             playlist_id: str,
             fields: str = None,
             market: str = None,
-            episodes_as_tracks: bool = False,
             as_tracks: Union[bool, Iterable[str]] = False,
     ) -> Union[FullPlaylist, dict]:
         """
         Get playlist of a user.
 
-        .. note::
-
-            Returns a dictionary if ``fields``, ``as_tracks``
-            or ``episodes_as_tracks`` is specified.
+        .. note:: Returns a dictionary if ``fields`` or ``as_tracks`` is specified.
 
         Parameters
         ----------
@@ -152,10 +146,6 @@ class SpotifyPlaylistView(SpotifyBase):
             the country associated with it overrides this parameter.
             If an application token is used and no market is specified,
             episodes are considered unavailable and returned as None.
-        episodes_as_tracks
-            Deprecated since version 2.0, removed in 3.0,
-            use ``as_tracks`` instead.
-            If :class:`True`, return episodes with track-like fields.
         as_tracks
             return types of items with track-like fields.
             If :class:`True`, return all other types as tracks.
@@ -165,17 +155,10 @@ class SpotifyPlaylistView(SpotifyBase):
         Returns
         -------
         Union[FullPlaylist, dict]
-            playlist object, or raw dictionary if ``fields``, ``as_tracks``
-            or ``episodes_as_tracks`` was specified
+            playlist object, or raw dictionary if ``fields``
+            or ``as_tracks`` was specified
         """
-        if episodes_as_tracks is True:
-            msg = (
-                'Deprecated argument `episodes_as_tracks`!\n'
-                'Removed in version 3.0, use `as_tracks=True` instead.'
-            )
-            warn(msg, DeprecationWarning, stacklevel=4)
-
-        additional_types = parse_additional_types(as_tracks or episodes_as_tracks)
+        additional_types = parse_additional_types(as_tracks)
         return self._get(
             'playlists/' + playlist_id,
             fields=fields,

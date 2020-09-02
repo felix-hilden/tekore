@@ -75,8 +75,12 @@ def chunked(
         position of the chain argument
     """
     def decorator(function: Callable) -> Callable:
-        nonlocal arg_pos
+        nonlocal arg_pos, reverse_pos, chain_pos
         arg_pos -= 1
+        if reverse_pos is not None:
+            reverse_pos -= 1
+        if chain_pos is not None:
+            chain_pos -= 1
 
         def replace(arg_val, chain_val, args, kwargs):
             args, kwargs = _replace_arg(arg_pos, arg_name, arg_val, args, kwargs)
