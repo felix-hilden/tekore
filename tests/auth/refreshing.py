@@ -35,7 +35,7 @@ class TestRefreshingToken:
 
     def test_refreshing_token_has_same_attributes_as_regular(self):
         token_info = MagicMock()
-        token = Token(token_info)
+        token = Token(token_info, uses_pkce=False)
         token._expires_at = 3000
         auto_token = RefreshingToken(token, MagicMock())
 
@@ -48,7 +48,7 @@ class TestRefreshingToken:
 
     def test_refreshing_token_expiration_attributes(self):
         token_info = MagicMock()
-        token = Token(token_info)
+        token = Token(token_info, uses_pkce=False)
         token._expires_at = 0
 
         auto_token = RefreshingToken(token, MagicMock())

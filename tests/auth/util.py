@@ -8,6 +8,8 @@ from tekore import (
     parse_state_from_url,
     prompt_for_user_token,
     refresh_user_token,
+    prompt_for_pkce_token,
+    refresh_pkce_token,
     request_client_token,
 )
 
@@ -50,7 +52,6 @@ class TestParseStateFromURL:
 
 def make_user_auth():
     cred = MagicMock()
-    cred.user_authorisation_url.return_value = 'http://url.com'
     cred.request_user_token.return_value = 'token'
     return UserAuth(cred, 'scope')
 
@@ -78,21 +79,20 @@ class TestUserAuth:
 class TestTokenUtilityFunctions:
     def test_prompt_for_user_token(self):
         cred = MagicMock()
-        cred.authorisation_url.return_value = 'http://example.com'
         input_ = MagicMock(return_value='http://example.com?code=1&state=s')
         state = MagicMock(return_value='s')
         util_mod = 'tekore._auth.util'
-        with patch('tekore._auth.refreshing.Credentials', cred),\
-                patch(util_mod + '.webbrowser', MagicMock()),\
-                patch(util_mod + '.input', input_),\
-                patch(util_mod + '.print', MagicMock()),\
+        with patch('tekore._auth.refreshing.Credentials', cred), \
+                patch(util_mod + '.webbrowser', MagicMock()), \
+                patch(util_mod + '.input', input_), \
+                patch(util_mod + '.print', MagicMock()), \
                 patch(util_mod + '.gen_state', state):
             prompt_for_user_token('', '', '')
 
         input_.assert_called_once()
 
     def test_request_refreshed_token_returns_refreshing_token(
-            self, app_env, user_refresh
+        self, app_env, user_refresh
     ):
         token = refresh_user_token(
             app_env[0],
@@ -120,3 +120,28 @@ class TestTokenUtilityFunctions:
         old_token = str(token)
         token._token._expires_at -= token._token.expires_in - 30
         assert old_token != str(token)
+
+    def test_prompt_for_pkce_token(self):
+        cred = MagicMock()
+        cred.pkce_user_authorisation.return_value = ('https://a.com', 'verifier')
+        cred_factory = MagicMock(return_value=cred)
+        input_ = MagicMock(return_value='http://example.com?code=1&state=s')
+        state = MagicMock(return_value='s')
+        util_mod = 'tekore._auth.util'
+        with patch('tekore._auth.refreshing.Credentials', cred_factory), \
+                patch(util_mod + '.webbrowser', MagicMock()), \
+                patch(util_mod + '.input', input_), \
+                patch(util_mod + '.print', MagicMock()), \
+                patch(util_mod + '.gen_state', state):
+            prompt_for_pkce_token('', '')
+
+        input_.assert_called_once()
+
+    def test_request_refreshed_pkce_returns_refreshing_token(
+        self, app_env, user_refresh
+    ):
+        cred = MagicMock()
+        cred_factory = MagicMock(return_value=cred)
+        with patch('tekore._auth.refreshing.Credentials', cred_factory):
+            token = refresh_pkce_token(app_env[0], user_refresh)
+        assert isinstance(token, RefreshingToken)

@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Tuple
 
 from .expiring import Credentials
 from .token import AccessToken, Token
@@ -88,6 +88,11 @@ class RefreshingToken(AccessToken):
         """Determine whether token is about to expire, always ``False``."""
         return False
 
+    @property
+    def uses_pkce(self) -> bool:
+        """Proof key for code exchange used in authorisation."""
+        return self._token.uses_pkce
+
 
 class RefreshingCredentials:
     """
@@ -101,19 +106,19 @@ class RefreshingCredentials:
     client_id
         client id
     client_secret
-        client secret
+        client secret, not required for PKCE user authorisation
     redirect_uri
-        whitelisted redirect URI
+        whitelisted redirect URI, required for user authorisation
     sender
         synchronous request sender
     """
 
     def __init__(
-            self,
-            client_id: str,
-            client_secret: str,
-            redirect_uri: str = None,
-            sender: Sender = None
+        self,
+        client_id: str,
+        client_secret: str = None,
+        redirect_uri: str = None,
+        sender: Sender = None
     ):
         self._client = Credentials(
             client_id,
@@ -145,16 +150,17 @@ class RefreshingCredentials:
         return RefreshingToken(token, self._client)
 
     def user_authorisation_url(
-            self,
-            scope=None,
-            state: str = None,
-            show_dialog: bool = False
+        self,
+        scope=None,
+        state: str = None,
+        show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.
 
         Step 1/2 in authorisation code flow.
         User should be redirected to the resulting URL for authorisation.
+        Step 2/2: :meth:`request_user_token`.
 
         Parameters
         ----------
@@ -180,7 +186,7 @@ class RefreshingCredentials:
 
         Step 2/2 in authorisation code flow.
         Code is provided as a URL parameter in the redirect URI
-        after login in step 1.
+        after login in step 1: :meth:`user_authorisation_url`.
 
         Parameters
         ----------
@@ -210,4 +216,77 @@ class RefreshingCredentials:
             automatically refreshing user token
         """
         token = self._client.refresh_user_token(refresh_token)
+        return RefreshingToken(token, self._client)
+
+    def pkce_user_authorisation(
+        self,
+        scope=None,
+        state: str = None,
+        verifier_bytes: int = 32,
+    ) -> Tuple[str, str]:
+        """
+        Construct authorisation URL and verifier.
+
+        Step 1/2 in authorisation code flow with proof key for code exchange.
+        The user should be redirected to the resulting URL for authorisation.
+        The verifier is passed to :meth:`request_pkce_token` in step 2.
+
+        Parameters
+        ----------
+        scope
+            token privileges, accepts a :class:`Scope`, a single :class:`scope`,
+            a list of :class:`scopes <scope>` and strings for :class:`Scope`,
+            or a space-separated list of scopes as a string
+        state
+            additional state
+        verifier_bytes
+            number of bytes to generate PKCE verifier with, ``32 <= bytes <= 96``.
+            The specified range of bytes generates the appropriate number of
+            characters (43 - 128) after base-64 encoding, as required in RFC 7636.
+
+        Returns
+        -------
+        Tuple[str, str]
+            authorisation URL and PKCE code verifier
+        """
+        return self._client.pkce_user_authorisation(scope, state, verifier_bytes)
+
+    def request_pkce_token(self, code: str, verifier: str) -> RefreshingToken:
+        """
+        Request a new PKCE user token.
+
+        Step 2/2 in authorisation code flow with proof key for code exchange.
+        Code is provided as a URL parameter in the redirect URI
+        after login in step 1: :meth:`pkce_user_authorisation`.
+
+        Parameters
+        ----------
+        code
+            code from redirect parameters
+        verifier
+            PKCE code verifier generated for authorisation URL
+
+        Returns
+        -------
+        RefreshingToken
+            user access token
+        """
+        token = self._client.request_pkce_token(code, verifier)
+        return RefreshingToken(token, self._client)
+
+    def refresh_pkce_token(self, refresh_token: str) -> RefreshingToken:
+        """
+        Request a refreshed PKCE user token.
+
+        Parameters
+        ----------
+        refresh_token
+            refresh token
+
+        Returns
+        -------
+        RefreshingToken
+            refreshed user access token
+        """
+        token = self._client.refresh_pkce_token(refresh_token)
         return RefreshingToken(token, self._client)
