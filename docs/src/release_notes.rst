@@ -5,30 +5,36 @@ Release notes
 =============
 3.0.0 (Unreleased)
 ------------------
+The next major iteration of Tekore brings fewer breaking changes than in 2.0,
+but packs a number of improvements to authorisation and senders.
+Most notably, PKCE is now provided as an option for user authorisation
+and Requests is no longer used to perform web requests.
+HTTPX, which was already in use with async, is used exclusively instead.
+
 Added
 *****
+- :ref:`auth` - PKCE can be used in user authorisation, providing added
+  security for public clients by removing the need to use a client secret.
+  (:issue:`189`)
+- :class:`UserAuth` - implement user authorisation with security checks,
+  the caller simply provides the resulting URI after redirection (:issue:`207`)
 - :ref:`senders` - Tekore's own :class:`Request` and :class:`Response` wrappers
   are now used in the sender interface (:issue:`139`)
 - Classes now have a readable ``repr`` (:issue:`191`)
 - Dependency to HTTPX upgraded to include version ``0.14.*`` (:issue:`202`)
 - :func:`gen_state` - generate state for user authorisation (:issue:`207`)
 - :func:`parse_state_from_url` - parse state from URL parameters (:issue:`207`)
-- :class:`UserAuth` - implement user authorisation with security checks,
-  the caller simply provides the resulting URI after redirection (:issue:`207`)
-- :ref:`auth` - PKCE can be used in user authorisation, providing added
-  security for public clients by removing the need to use a client secret.
-  (:issue:`189`)
 
 Removed
 *******
+- :ref:`client-playlist` - methods for playlist tracks and
+  ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` deprecated in 2.0
+  (:issue:`178`, :issue:`202`)
 - Dependency to Requests dropped in favor of HTTPX (:issue:`139`)
 - :ref:`senders` - :class:`TransientSender` and :class:`SingletonSender`
   along with their asynchronous variants were removed (:issue:`139`)
 - :ref:`senders` - default sender and keyword argument options were removed
   (:issue:`139`)
-- :ref:`client-playlist` - methods for playlist tracks and
-  ``episodes_as_tracks`` argument of :meth:`Spotify.playlist` deprecated in 2.0
-  (:issue:`178`, :issue:`202`)
 
 Changed
 *******
