@@ -24,9 +24,9 @@ Logging out deletes the cookie and server-stored access token.
 
 .. note::
 
-    The :code:`auths` dictionary can be used to store arbitrary information.
+    The :code:`auths` dictionary could be used to store arbitrary information.
     In this example it is used to map the state parameters
-    of ongoing authorisations to redirect destinations.
+    of ongoing authorisations to :class:`UserAuth <tekore.UserAuth>` objects.
 
 .. code:: python
 
@@ -38,11 +38,11 @@ Logging out deletes the cookie and server-stored access token.
     cred = tk.Credentials(*conf)
     spotify = tk.Spotify()
 
-    auths = {}  # Ongoing authorisations: state -> redirect destination
+    auths = {}  # Ongoing authorisations: state -> UserAuth
     users = {}  # User tokens: state -> token (use state as a user ID)
 
-    in_link = '<a href="/login?redirect=/successful">login</a>'
-    out_link = '<a href="/logout?redirect=/successful">logout</a>'
+    in_link = '<a href="/login">login</a>'
+    out_link = '<a href="/logout">logout</a>'
     login_msg = f'You can {in_link} or {out_link}'
 
 
@@ -66,7 +66,7 @@ Logging out deletes the cookie and server-stored access token.
                 users[user] = token
 
             try:
-                with spotify.token_as(users[user]):
+                with spotify.token_as(token):
                     playback = spotify.playback_currently_playing()
 
                 item = playback.item.name if playback else None
@@ -78,44 +78,34 @@ Logging out deletes the cookie and server-stored access token.
 
         @app.route('/login', methods=['GET'])
         def login():
-            destination = request.args.get('redirect', '/')
             if 'user' in session:
-                return redirect(destination, 307)
+                return redirect('/', 307)
 
-            state = tk.gen_state()
             scope = tk.scope.user_read_currently_playing
-            url = cred.user_authorisation_url(scope, state, show_dialog=True)
-
-            auths[state] = destination
-            return redirect(url, 307)
+            auth = tk.UserAuth(cred, scope)
+            auths[auth.state] = auth
+            return redirect(auth.url, 307)
 
         @app.route('/callback', methods=['GET'])
         def login_callback():
             code = request.args.get('code', None)
             state = request.args.get('state', None)
-            destination = auths.pop(state, None)
+            auth = auths.pop(state, None)
 
-            if destination is None:
+            if auth is None:
                 return 'Invalid state!', 400
 
-            token = cred.request_user_token(code)
-
+            token = auth.request_token(code, state)
             session['user'] = state
             users[state] = token
-
-            return redirect(destination, 307)
+            return redirect('/', 307)
 
         @app.route('/logout', methods=['GET'])
         def logout():
             uid = session.pop('user', None)
             if uid is not None:
                 users.pop(uid, None)
-            destination = request.args.get('redirect', '/')
-            return redirect(destination, 307)
-
-        @app.route('/successful', methods=['GET'])
-        def successful():
-            return 'Successful! <a href="/">Go home</a>'
+            return redirect('/', 307)
 
         return app
 
