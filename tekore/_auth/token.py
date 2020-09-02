@@ -32,7 +32,7 @@ class Token(AccessToken):
     The refresh token of a client token is ``None``.
     """
 
-    def __init__(self, token_info: dict):
+    def __init__(self, token_info: dict, uses_pkce: bool):
         self._access_token = token_info['access_token']
         self._token_type = token_info['token_type']
 
@@ -42,6 +42,7 @@ class Token(AccessToken):
 
         self._refresh_token = token_info.get('refresh_token', None)
         self._expires_at = int(time.time()) + token_info['expires_in']
+        self._uses_pkce = uses_pkce
 
     def __repr__(self):
         options = [
@@ -95,3 +96,8 @@ class Token(AccessToken):
     def is_expiring(self) -> bool:
         """Determine whether token is about to expire."""
         return self.expires_in < 60
+
+    @property
+    def uses_pkce(self) -> bool:
+        """Proof key for code exchange used in authorisation."""
+        return self._uses_pkce

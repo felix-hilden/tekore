@@ -15,6 +15,9 @@ Added
 - :func:`parse_state_from_url` - parse state from URL parameters (:issue:`207`)
 - :class:`UserAuth` - implement user authorisation with security checks,
   the caller simply provides the resulting URI after redirection (:issue:`207`)
+- :ref:`auth` - PKCE can be used in user authorisation, providing added
+  security for public clients by removing the need to use a client secret.
+  (:issue:`189`)
 
 Removed
 *******

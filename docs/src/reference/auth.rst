@@ -19,6 +19,8 @@ Web API authorisation.
    request_client_token
    prompt_for_user_token
    refresh_user_token
+   prompt_for_pkce_token
+   refresh_pkce_token
    UserAuth
    gen_state
    parse_code_from_url
@@ -86,6 +88,12 @@ Access tokens can also be retrieved without instantiating
 For that purpose, a number of `utilities`_ are provided.
 They also include other useful constructs related to authorisation.
 
+User authorisation can be performed using Proof Key for Code Exchange,
+an extension to ordinary user authorisation.
+It is more secure for public clients, but a refresh token can only be used
+to spawn the next token, after which it is invalidated.
+Still, all tokens are valid for their full duration.
+
 Expiring credentials
 --------------------
 .. autoclass:: Credentials
@@ -142,6 +150,8 @@ Authorisation utilities.
    request_client_token
    prompt_for_user_token
    refresh_user_token
+   prompt_for_pkce_token
+   refresh_pkce_token
    UserAuth
    gen_state
    parse_code_from_url
@@ -150,6 +160,8 @@ Authorisation utilities.
 .. autofunction:: request_client_token
 .. autofunction:: prompt_for_user_token
 .. autofunction:: refresh_user_token
+.. autofunction:: prompt_for_pkce_token
+.. autofunction:: refresh_pkce_token
 .. autoclass:: UserAuth
 .. autofunction:: gen_state
 .. autofunction:: parse_code_from_url

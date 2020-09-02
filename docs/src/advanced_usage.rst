@@ -9,60 +9,96 @@ Authorisation methods
 *********************
 There are many authorisation options for both applications and users.
 Here's a summary, see :ref:`auth` for more details.
+Class names are abbreviated as :class:`C` and :class:`RC` for brevity.
 
-- **Subject**: is the resulting token an application or user token
 - **Creation**: is the method for generating new tokens or refreshing them
 - **Type**: is the resulting token expiring or automatically refreshing
 
-.. |exp-app-new| replace:: :meth:`Credentials.request_client_token`
-.. |exp-usr-new| replace:: :meth:`Credentials.request_user_token`
-.. |exp-usr-ref| replace:: :meth:`Credentials.refresh_user_token`
-.. |exp-a-u-ref| replace:: :meth:`Credentials.refresh`
-.. |ref-app-new| replace:: :meth:`RefreshingCredentials.request_client_token`
-.. |ref-usr-new| replace:: :meth:`RefreshingCredentials.request_user_token`
-.. |ref-usr-ref| replace:: :meth:`RefreshingCredentials.refresh_user_token`
+.. |exp-app-new| replace::
+   :meth:`C.request_client_token <Credentials.request_client_token>`
+.. |exp-usr-new| replace::
+   :meth:`C.request_user_token <Credentials.request_user_token>`
+.. |exp-usr-ref| replace::
+   :meth:`C.refresh_user_token <Credentials.refresh_user_token>`
+.. |exp-pkc-new| replace::
+   :meth:`C.request_pkce_token <Credentials.request_pkce_token>`
+.. |exp-pkc-ref| replace::
+   :meth:`C.refresh_pkce_token <Credentials.refresh_pkce_token>`
+.. |exp-a-u-ref| replace::
+   :meth:`C.refresh <Credentials.refresh>`
+.. |ref-app-new| replace::
+   :meth:`RC.request_client_token <RefreshingCredentials.request_client_token>`
+.. |ref-usr-new| replace::
+   :meth:`RC.request_user_token <RefreshingCredentials.request_user_token>`
+.. |ref-usr-ref| replace::
+   :meth:`RC.refresh_user_token <RefreshingCredentials.refresh_user_token>`
+.. |ref-pkc-new| replace::
+   :meth:`RC.request_pkce_token <Credentials.request_pkce_token>`
+.. |ref-pkc-ref| replace::
+   :meth:`RC.refresh_pkce_token <Credentials.refresh_pkce_token>`
 .. |utl-app-new| replace:: :func:`request_client_token`
 .. |utl-usr-new| replace:: :func:`prompt_for_user_token`
 .. |utl-usr-ref| replace:: :func:`refresh_user_token`
+.. |utl-pkc-new| replace:: :func:`prompt_for_pkce_token`
+.. |utl-pkc-ref| replace:: :func:`refresh_pkce_token`
 
-+----------+----------+------------+-------+---------------+
-| Subject  | Creation | Type       | Notes | Method        |
-+==========+==========+============+=======+===============+
-| App      | New      | Expiring   |       | |exp-app-new| |
-+----------+----------+------------+-------+---------------+
-| User     | New      | Expiring   | 1     | |exp-usr-new| |
-+----------+----------+------------+-------+---------------+
-| User     | Refresh  | Expiring   |       | |exp-usr-ref| |
-+----------+----------+------------+-------+---------------+
-| A+U      | Refresh  | Expiring   | 2     | |exp-a-u-ref| |
-+----------+----------+------------+-------+---------------+
-| App      | New      | Refreshing |       | |ref-app-new| |
-+----------+----------+------------+-------+---------------+
-| User     | New      | Refreshing | 1     | |ref-usr-new| |
-+----------+----------+------------+-------+---------------+
-| User     | Refresh  | Refreshing |       | |ref-usr-ref| |
-+----------+----------+------------+-------+---------------+
-| App      | New      | Refreshing | 3     | |utl-app-new| |
-+----------+----------+------------+-------+---------------+
-| User     | New      | Refreshing | 3, 4  | |utl-usr-new| |
-+----------+----------+------------+-------+---------------+
-| User     | Refresh  | Refreshing | 3     | |utl-usr-ref| |
-+----------+----------+------------+-------+---------------+
+**Application tokens**
+
++----------+------------+-------+---------------+
+| Creation | Type       | Notes | Method        |
++==========+============+=======+===============+
+| New      | Expiring   |       | |exp-app-new| |
++----------+------------+-------+---------------+
+| Refresh  | Expiring   | 1     | |exp-a-u-ref| |
++----------+------------+-------+---------------+
+| New      | Refreshing |       | |ref-app-new| |
++----------+------------+-------+---------------+
+| New      | Refreshing | 2     | |utl-app-new| |
++----------+------------+-------+---------------+
+
+**User tokens**
+
+There are two variants of each user authorisation method.
+One uses ordinary OAuth 2 authorisation, the other its PKCE extension
+which is more secure for public clients at the cost of convenience.
+
++----------+------------+-------+---------------+---------------+
+| Creation | Type       | Notes | Ordinary      | PKCE variant  |
++==========+============+=======+===============+===============+
+| New      | Expiring   | 3     | |exp-usr-new| | |exp-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Expiring   |       | |exp-usr-ref| | |exp-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Expiring   | 1     | |exp-a-u-ref| | |exp-a-u-ref| |
++----------+------------+-------+---------------+---------------+
+| New      | Refreshing | 3     | |ref-usr-new| | |ref-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Refreshing |       | |ref-usr-ref| | |ref-pkc-ref| |
++----------+------------+-------+---------------+---------------+
+| New      | Refreshing | 2, 4  | |utl-usr-new| | |utl-pkc-new| |
++----------+------------+-------+---------------+---------------+
+| Refresh  | Refreshing | 2     | |utl-usr-ref| | |utl-pkc-ref| |
++----------+------------+-------+---------------+---------------+
+
+:class:`UserAuth` can be used to simplify the implementation of user
+authorisation with either one of the credentials clients, with or without PKCE.
 
 **Notes**
 
-1. These methods are paired with the first step of user authorisation:
-   redirecting the user to a URL to login with Spotify.
-2. This is a subject-agnostic refresh, fit for both app and user tokens.
+1. This is a subject-agnostic refresh,
+   fit for both app and user tokens with or without PKCE.
    For application tokens, a new token is returned.
-3. These methods wrap around :class:`RefreshingCredentials` internally.
+2. These functions wrap around :class:`RefreshingCredentials` internally
+   to provide a shorthand for one-off authorisation.
+3. These methods are paired with the first step of user authorisation:
+   redirecting the user to a URL to login with Spotify.
 4. Requires manually pasting text to a terminal, is not usable on a server.
-
-:class:`UserAuth` can be used to simplify the implementation
-of user authorisation with either one of the credentials clients.
 
 Security
 ********
+There are two main security concerns with authorisation,
+besides the obvious leaking of access tokens.
+
 Using a state with user authorisation prevents cross-site request forgery
 (`RFC 6749 <https://tools.ietf.org/html/rfc6749#section-10.12>`_).
 A string can be sent as state on authorisation.
@@ -71,6 +107,30 @@ the same state should be returned as a query parameter.
 :func:`gen_state` is provided to generate random strings to send as state.
 :func:`parse_state_from_url` can then be used to extract the returned state.
 State is generated and checked automatically when using :class:`UserAuth`.
+
+A client secret might not always be safe
+and the redirect URI handler might be vulnerable
+(`RFC 7636 <https://tools.ietf.org/html/rfc7636>`_).
+The PKCE extension to user authorisation allows
+retrieving user tokens without a client secret,
+and provides an added layer of security with code challenges and verifiers.
+Challenges and verifiers are handled automatically when using
+:class:`UserAuth` with PKCE enabled.
+Here's a summary of the requirements for each authorisation method.
+
++-------------------------+-----------+---------------+--------------+
+| Method                  | Client ID | Client secret | Redirect URI |
++=========================+===========+===============+==============+
+| Client authorisation    | x         | x             |              |
++-------------------------+-----------+---------------+--------------+
+| User authorisation      | x         | x             | x            |
++-------------------------+-----------+---------------+--------------+
+| User token refresh      | x         | x             |              |
++-------------------------+-----------+---------------+--------------+
+| PKCE user authorisation | x         |               | x            |
++-------------------------+-----------+---------------+--------------+
+| PKCE token refresh      | x         |               |              |
++-------------------------+-----------+---------------+--------------+
 
 Expanding scopes
 ****************

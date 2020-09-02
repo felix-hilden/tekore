@@ -72,6 +72,7 @@ class UserAuth:
     Implements all steps and security checks for user authorisation.
     The responsibility of the caller is to redirect a user to the given URL
     and provide the resulting redirect URI or its parameters.
+    Can be used with an asynchronous credentials client.
 
     Parameters
     ----------
@@ -81,6 +82,8 @@ class UserAuth:
         token privileges, accepts a :class:`Scope`, a single :class:`scope`,
         a list of :class:`scopes <scope>` and strings for :class:`Scope`,
         or a space-separated list of scopes as a string
+    pkce
+        use proof key for code exchange
 
     Attributes
     ----------
@@ -88,6 +91,8 @@ class UserAuth:
         address to redirect a user to for authorisation
     state: str
         generated additional state
+    verifier: str
+        PKCE code verifier, :class:`None` if PKCE is not used
 
     Examples
     --------
@@ -102,20 +107,35 @@ class UserAuth:
         # Or leave parsing to UserAuth
         redirected = ...
         token = auth.request_token(url=redirected)
+
+        # With an asynchronous client
+        token = await auth.request_token(url=redirected)
     """
 
-    def __init__(self, cred: Union[Credentials, RefreshingCredentials], scope=None):
+    def __init__(
+        self,
+        cred: Union[Credentials, RefreshingCredentials],
+        scope=None,
+        pkce: bool = False,
+    ):
         self._cred = cred
         self.state = gen_state()
-        self.url = self._cred.user_authorisation_url(
-            scope, self.state, show_dialog=True
-        )
+        self.verifier = None
+        if pkce:
+            self.url, self.verifier = self._cred.pkce_user_authorisation(
+                scope, self.state
+            )
+        else:
+            self.url = self._cred.user_authorisation_url(
+                scope, self.state, show_dialog=True
+            )
 
     def __repr__(self):
         options = [
             f'cred={self._cred!r}',
             f'url={self.url!r}',
             f'state={self.state!r}',
+            f'verifier={self.verifier}',
         ]
         return type(self).__name__ + '(' + ', '.join(options) + ')'
 
@@ -156,7 +176,10 @@ class UserAuth:
                 f'Inconsistent state! Expected `{self.state}`, got `{state}`.'
             )
 
-        return self._cred.request_user_token(code)
+        if self.verifier is not None:
+            return self._cred.request_pkce_token(code, self.verifier)
+        else:
+            return self._cred.request_user_token(code)
 
 
 def request_client_token(
@@ -250,3 +273,67 @@ def refresh_user_token(
     """
     cred = RefreshingCredentials(client_id, client_secret)
     return cred.refresh_user_token(refresh_token)
+
+
+def prompt_for_pkce_token(
+    client_id: str,
+    redirect_uri: str,
+    scope=None
+) -> RefreshingToken:
+    """
+    Prompt for manual authorisation with PKCE.
+
+    Open a web browser for the user to log in with Spotify.
+    Prompt to paste the URL after logging in to complete authorisation.
+
+    Parameters
+    ----------
+    client_id
+        client ID
+    redirect_uri
+        whitelisted redirect URI
+    scope
+        token privileges, accepts a :class:`Scope`, a single :class:`scope`,
+        a list of :class:`scopes <scope>` and strings for :class:`Scope`,
+        or a space-separated list of scopes as a string
+
+    Returns
+    -------
+    RefreshingToken
+        automatically refreshing PKCE user token
+
+    Raises
+    ------
+    AssertionError
+        if state is inconsistent
+    """
+    cred = RefreshingCredentials(client_id, redirect_uri=redirect_uri)
+    auth = UserAuth(cred, scope=scope, pkce=True)
+
+    print('Opening browser for Spotify login...')
+    webbrowser.open(auth.url)
+    redirected = input('Please paste redirect URL: ').strip()
+    return auth.request_token(url=redirected)
+
+
+def refresh_pkce_token(
+    client_id: str,
+    refresh_token: str
+) -> RefreshingToken:
+    """
+    Request a refreshed PKCE user token.
+
+    Parameters
+    ----------
+    client_id
+        client ID
+    refresh_token
+        refresh token
+
+    Returns
+    -------
+    RefreshingToken
+        automatically refreshing user token
+    """
+    cred = RefreshingCredentials(client_id)
+    return cred.refresh_pkce_token(refresh_token)
