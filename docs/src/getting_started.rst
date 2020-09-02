@@ -104,9 +104,7 @@ If no active device is found, an error is thrown.
 
 What's next?
 ------------
-Spotify's `authorisation guide <https://developer.spotify.com/
-documentation/general/guides/authorization-guide/>`_
-contains more information about the underlying authentication procedures.
+Our :ref:`auth-guide` details different authorisation options.
 :ref:`advanced-usage` provides an overview of things to keep in mind
 when building an actual application and what Tekore has to offer for that.
 You could also have a look at some :ref:`example scripts <examples>`

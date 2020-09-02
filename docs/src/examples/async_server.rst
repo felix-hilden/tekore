@@ -1,3 +1,5 @@
+.. _async-server:
+
 Async server
 ============
 The following scripts starts up a simple AIOHTTP web server for song search.

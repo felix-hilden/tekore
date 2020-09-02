@@ -30,10 +30,8 @@ You can also ask a question on
 `Stack Overflow <https://stackoverflow.com/questions/tagged/tekore>`_.
 
 If you're new here, have a look at :ref:`getting-started`.
-After your first calls to the API
-you might want to look at :ref:`advanced-usage`.
-More ellaborate example scripts can be found in :ref:`examples`.
-Detailed information can be found in our concise :ref:`reference`.
+Example scripts can be found in :ref:`examples`.
+Detailed information is available in our concise :ref:`reference`.
 
 Features
 ========
@@ -43,7 +41,7 @@ Tekore implements these integral features completely.
 - :ref:`auth` for applications and users.
 - :ref:`Endpoints <client>` for access to every resource in the API.
 
-Additional features are provided for your pleasure and convenience.
+Additional features are provided for your convenience.
 
 - Support for :ref:`asynchronous programming <async>` using ``async/await``.
 - A :ref:`self-refreshing <auth>` access token.
@@ -71,6 +69,7 @@ Additional features are provided for your pleasure and convenience.
    :caption: Guide
 
    getting_started
+   auth_guide
    advanced_usage
    examples
    resources
