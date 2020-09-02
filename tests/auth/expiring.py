@@ -35,7 +35,7 @@ def make_token(attrs: dict = None, uses_pkce: bool = False):
     return Token(a, uses_pkce)
 
 
-time_module = 'tekore._auth.token.time'
+time_module = 'tekore._auth.expiring.token.time'
 
 
 class TestToken:

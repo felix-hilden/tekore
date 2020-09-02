@@ -1,7 +1,6 @@
 from typing import Union, Tuple
 
-from .expiring import Credentials
-from .token import AccessToken, Token
+from .expiring import Credentials, AccessToken, Token
 from .scope import Scope
 from .._sender import Sender
 

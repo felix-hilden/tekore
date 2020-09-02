@@ -1,14 +1,14 @@
 from base64 import b64encode as _b64encode
-from typing import Tuple, Callable
+from typing import Tuple
 from hashlib import sha256
 from secrets import token_urlsafe
 
 from urllib.parse import urlencode
 
+from .decor import parse_token, parse_refreshed_token
 from .token import Token
-from .scope import Scope
-from .._error import get_error
-from .._sender import Sender, Client, send_and_process, Request, Response
+from ..scope import Scope
+from ..._sender import Sender, Client, send_and_process, Request
 
 OAUTH_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 OAUTH_TOKEN_URL = 'https://accounts.spotify.com/api/token'
@@ -24,48 +24,6 @@ def b64urlencode(msg: bytes) -> str:
     encoded = _b64encode(msg).decode()
     stripped = encoded.split("=")[0]
     return stripped.replace("+", "-").replace("/", "_")
-
-
-def handle_errors(request: Request, response: Response) -> None:
-    """Examine response and raise errors accordingly."""
-    if response.status_code < 400:
-        return
-
-    if response.status_code < 500:
-        error_str = f"{response.status_code} {response.content['error']}"
-        description = response.content.get('error_description', None)
-        if description is not None:
-            error_str += ': ' + description
-    else:
-        error_str = 'Unexpected error!'
-
-    error_cls = get_error(response.status_code)
-    raise error_cls(error_str, request=request, response=response)
-
-
-def parse_token(uses_pkce: bool) -> Callable:
-    """Wrap token parsing conditional to PKCE usage."""
-    def func(request: Request, response: Response) -> Token:
-        """Parse token object from response."""
-        handle_errors(request, response)
-        return Token(response.content, uses_pkce)
-    return func
-
-
-def parse_refreshed_token(uses_pkce: bool) -> Callable:
-    """Wrap token parsing conditional to PKCE usage."""
-    def func(
-        request: Request, response: Response, refresh_token: str
-    ) -> Token:
-        """Replace new refresh token with old value if empty."""
-        handle_errors(request, response)
-        refreshed = Token(response.content, uses_pkce)
-
-        if refreshed.refresh_token is None:
-            refreshed._refresh_token = refresh_token
-
-        return refreshed
-    return func
 
 
 class Credentials(Client):

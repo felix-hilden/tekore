@@ -3,7 +3,7 @@ import time
 from abc import ABC, abstractmethod
 from typing import Union
 
-from .scope import Scope
+from ..scope import Scope
 
 
 class AccessToken(ABC):

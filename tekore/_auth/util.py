@@ -4,8 +4,7 @@ from typing import Union
 from secrets import token_urlsafe
 from urllib.parse import urlparse, parse_qs
 
-from .token import Token
-from .expiring import Credentials
+from .expiring import Token, Credentials
 from .refreshing import RefreshingToken, RefreshingCredentials
 
 

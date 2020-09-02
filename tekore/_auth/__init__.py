@@ -1,7 +1,6 @@
-from .expiring import Credentials
+from .expiring import Credentials, Token, AccessToken
 from .refreshing import RefreshingCredentials, RefreshingToken
 from .scope import scope, Scope
-from .token import Token, AccessToken
 from .util import (
     UserAuth,
     gen_state,
