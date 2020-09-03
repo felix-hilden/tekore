@@ -50,10 +50,13 @@ Retrieving a user token
 Many endpoints require user authentication,
 for which another type of access token is needed.
 User tokens are associated with a Spotify user account.
+
 Retrieving them requires some more setting up.
 A redirect URI should be whitelisted in `application`_ settings.
 It is the address to which users are redirected
 after authorising the application.
+Alternatively, the default redirect URI ``https://example.com/callback``
+can be used with a client with no other redirect URIs whitelisted.
 
 Different privileges or `scopes` can be requested when authenticating.
 Below we'll retrieve a token that has every possible scope.
