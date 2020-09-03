@@ -68,6 +68,10 @@ class Credentials(Client):
 
     def _token_request(self, payload: dict, auth: bool) -> Request:
         if auth:
+            if self.client_secret is None:
+                raise ValueError(
+                    f'A client secret is required! Got `{self.client_secret}`.'
+                )
             token = b64encode(self.client_id + ':' + self.client_secret)
             headers = {'Authorization': f'Basic {token}'}
         else:

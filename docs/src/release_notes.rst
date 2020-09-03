@@ -48,6 +48,8 @@ Changed
   :class:`RetryingSender` (:issue:`139`)
 - :ref:`senders` - clients (:class:`Spotify` and :class:`Credentials`) now
   inherit from :class:`ExtendingSender` (:issue:`139`)
+- :ref:`auth` - raise a more descriptive error if secret is required
+  but not provided (:issue:`210`)
 
 Fixed
 *****

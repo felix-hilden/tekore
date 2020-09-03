@@ -136,6 +136,11 @@ class TestCredentialsOffline:
     def test_credentials_only_client_id_mandatory(self):
         Credentials('id')
 
+    def test_basic_token_with_no_secret_raises(self):
+        c = Credentials('id')
+        with pytest.raises(ValueError):
+            c.request_client_token()
+
     def test_server_error_raises_http_error(self):
         c = Credentials('id', 'secret')
         response = mock_response(500, {})
