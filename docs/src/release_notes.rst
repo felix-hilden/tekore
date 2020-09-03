@@ -3,7 +3,7 @@
 
 Release notes
 =============
-3.0.0 (Unreleased)
+3.0.0 (2020-09-03)
 ------------------
 The next major iteration of Tekore brings fewer breaking changes than in 2.0,
 but packs a number of improvements to authorisation and senders.
