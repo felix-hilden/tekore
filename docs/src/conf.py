@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 _root = Path(os.path.realpath(__file__)).parent.parent.parent
-sys.path.insert(0, _root)
+sys.path.insert(0, str(_root))
 
 
 project = 'tekore'
