@@ -107,7 +107,8 @@ class Playlist(Item):
 
     def __post_init__(self):
         self.images = ModelList(Image(**i) for i in self.images)
-        self.owner = PublicUser(**self.owner)
+        if self.owner is not None:
+            self.owner = PublicUser(**self.owner)
 
 
 @dataclass(repr=False)
