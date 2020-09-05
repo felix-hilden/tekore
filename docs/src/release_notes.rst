@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.0.1 (2020-09-05)
+------------------
 Fixed
 *****
 - :meth:`featured_playlists <Spotify.featured_playlists>` - allow missing
