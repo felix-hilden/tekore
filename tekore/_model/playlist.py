@@ -93,7 +93,11 @@ class PlaylistTrackPaging(OffsetPaging):
 
 @dataclass(repr=False)
 class Playlist(Item):
-    """Playlist base."""
+    """
+    Playlist base.
+
+    :attr:`owner` can be ``None`` on featured playlists.
+    """
 
     collaborative: bool
     external_urls: dict

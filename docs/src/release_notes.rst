@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :meth:`featured_playlists <Spotify.featured_playlists>` - allow missing
+  owner in :class:`Playlist <model.Playlist>` models (:issue:`212`)
+
 3.0.0 (2020-09-03)
 ------------------
 The next major iteration of Tekore brings fewer breaking changes than in 2.0,
