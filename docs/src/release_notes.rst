@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :class:`StrEnum <model.StrEnum>` - model enumerations now inherit from
+  ``str``, making e.g. using it as a key for sorting possible (:issue:`214`)
+
 3.0.1 (2020-09-05)
 ------------------
 Fixed

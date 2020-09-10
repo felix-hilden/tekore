@@ -7,7 +7,7 @@ from datetime import datetime
 from dataclasses import dataclass, asdict, fields
 
 
-class StrEnum(Enum):
+class StrEnum(str, Enum):
     """Convert enumeration members to strings using their name."""
 
     def __str__(self):

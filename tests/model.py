@@ -14,13 +14,24 @@ from tekore._model.serialise import (
     Timestamp,
 )
 
-module = 'tekore._model.serialise'
+
+class E(StrEnum):
+    a = 'a'
+    b = 'b'
+    c = 'c'
 
 
 class TestSerialisableEnum:
+    def test_enum_repr_shows_enum(self):
+        assert 'E.a' in repr(E.a)
+
     def test_enum_str_is_name(self):
         e = StrEnum('e', 'a b c')
         assert str(e.a) == 'a'
+
+    def test_enum_is_sortable(self):
+        enums = list(E)[::-1]
+        assert sorted(enums) == enums[::-1]
 
 
 class TestJSONEncoder:
@@ -73,6 +84,9 @@ class TestTimestamp:
 @dataclass(repr=False)
 class Data(Model):
     i: int
+
+
+module = 'tekore._model.serialise'
 
 
 class TestSerialisableDataclass:
@@ -154,13 +168,11 @@ class TestSerialisableDataclass:
             pprint.assert_called_with({'i': 1}, **kwargs)
 
     def test_enum_in_dataclass(self):
-        e = StrEnum('e', 'a b c')
-
         @dataclass(repr=False)
         class C(Model):
-            v: e
+            v: E
 
-        c = C(e.a)
+        c = C(E.a)
         assert isinstance(c.asbuiltin()['v'], str)
         assert c.json() == '{"v": "a"}'
 
