@@ -41,12 +41,15 @@ class PrivateUser(User):
 
     Country, explicit content and product require user-read-private scope.
     Email requires user-read-email scope.
+    Birthday is unavailable unless the now-invalid ``user-read-birthdate``
+    scope was granted to the token.
     """
 
     country: str = None
     email: str = None
     explicit_content: ExplicitContent = None
     product: str = None
+    birthday: str = None
 
     def __post_init__(self):
         super().__post_init__()

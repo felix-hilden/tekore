@@ -10,6 +10,12 @@ Added
 - :class:`StrEnum <model.StrEnum>` - model enumerations now inherit from
   ``str``, making e.g. using it as a key for sorting possible (:issue:`214`)
 
+Fixed
+*****
+- :class:`PrivateUser <model.PrivateUser>` - a birthday attribute was added.
+  It is not obtainable with new tokens but is returned for old tokens that have
+  the now-invalid ``user-read-birthday`` scope (:issue:`52`, :issue:`197`)
+
 3.0.1 (2020-09-05)
 ------------------
 Fixed
