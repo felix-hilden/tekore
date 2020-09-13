@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.1.0 (2020-09-13)
+------------------
 Added
 *****
 - :class:`StrEnum <model.StrEnum>` - model enumerations now inherit from
