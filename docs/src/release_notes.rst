@@ -7,6 +7,7 @@ Unreleased
 ----------
 Added
 *****
+- Support Python 3.9 (:issue:`219`)
 - Dependency to HTTPX upgraded to include versions ``0.15.*`` and ``0.16.*``
   (:issue:`216`)
 
