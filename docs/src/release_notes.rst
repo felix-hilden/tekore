@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.2.0 (2020-10-16)
+------------------
 Added
 *****
 - Support Python 3.9 (:issue:`219`)
