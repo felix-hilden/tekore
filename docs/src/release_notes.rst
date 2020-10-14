@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- Dependency to HTTPX upgraded to include versions ``0.15.*`` and ``0.16.*``
+  (:issue:`216`)
+
 3.1.0 (2020-09-13)
 ------------------
 Added
