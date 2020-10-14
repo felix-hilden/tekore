@@ -23,9 +23,9 @@ def _parse_url_param(url: str, param: str) -> str:
     code = parse_qs(query).get(param, None)
 
     if code is None:
-        raise KeyError(f'Parameter `{param}` not available!')
+        raise KeyError(f'Passed URL contains no parameter `{param}`!')
     elif len(code) > 1:
-        raise KeyError(f'Multiple values for `{param}`!')
+        raise KeyError(f'Passed URL contains multiple values for `{param}`!')
 
     return code[0]
 

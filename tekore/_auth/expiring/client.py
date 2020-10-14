@@ -217,7 +217,7 @@ class Credentials(Client):
         Tuple[str, str]
             authorisation URL and PKCE code verifier
         """
-        assert 32 <= verifier_bytes <= 96
+        assert 32 <= verifier_bytes <= 96, 'Invalid number of verifier bytes!'
         verifier = token_urlsafe(verifier_bytes)
 
         sha = sha256(verifier.encode())
