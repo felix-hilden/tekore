@@ -46,11 +46,13 @@ Non-endpoint methods
    Spotify.max_limits
    Spotify.token_as
    Spotify.send
+   Spotify.close
 
 .. automethod:: Spotify.chunked
 .. automethod:: Spotify.max_limits
 .. automethod:: Spotify.token_as
 .. automethod:: Spotify.send
+.. automethod:: Spotify.close
 
 .. _client-paging:
 

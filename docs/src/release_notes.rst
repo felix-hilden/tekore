@@ -12,6 +12,8 @@ Added
   (:issue:`216`)
 - Error messages for :func:`parse_code_from_url`, :func:`parse_state_from_url`
   and :meth:`Credentials.pkce_user_authorisation` were improved (:issue:`218`)
+- :class:`Spotify` and :ref:`senders`, both synchronous and asynchronous,
+  can now be closed directly with :meth:`close <Spotify.close>` (:issue:`220`)
 
 3.1.0 (2020-09-13)
 ------------------

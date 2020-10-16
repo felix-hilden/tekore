@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Coroutine
 from httpx import Client, AsyncClient, Response as HTTPXResponse
 
 from .base import Sender, Request, Response
@@ -52,6 +52,10 @@ class SyncSender(Sender):
         """Sender asynchronicity, always :class:`False`."""
         return False
 
+    def close(self) -> None:
+        """Close the underlying synchronous client."""
+        return self.client.close()
+
 
 class AsyncSender(Sender):
     """
@@ -92,3 +96,7 @@ class AsyncSender(Sender):
     def is_async(self) -> bool:
         """Sender asynchronicity, always :class:`True`."""
         return True
+
+    async def close(self) -> None:
+        """Close the underlying asynchronous client."""
+        return await self.client.aclose()

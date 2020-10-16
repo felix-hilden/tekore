@@ -28,6 +28,15 @@ class ExtendingSender(Sender, ABC):
         """Sender asynchronicity, delegated to the underlying sender."""
         return self.sender.is_async
 
+    def close(self) -> Union[None, Coroutine[None, None, None]]:
+        """
+        Close the underlying sender.
+
+        To close synchronous senders, call :meth:`close`.
+        To close asynchronous senders, await :meth:`close`.
+        """
+        return self.sender.close()
+
 
 class RetryingSender(ExtendingSender):
     """

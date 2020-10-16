@@ -53,3 +53,7 @@ class Sender(ABC):
     @abstractmethod
     def is_async(self) -> bool:
         """Sender asynchronicity mode."""
+
+    @abstractmethod
+    def close(self) -> Union[None, Coroutine[None, None, None]]:
+        """Close underlying client."""

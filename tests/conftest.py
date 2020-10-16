@@ -87,7 +87,8 @@ def app_client(app_token):
     Provides a client with an application token.
     """
     sender = tk.RetryingSender(sender=tk.SyncSender())
-    return tk.Spotify(app_token, sender=sender)
+    yield tk.Spotify(app_token, sender=sender)
+    sender.close()
 
 
 @pytest.fixture(scope='function')
@@ -96,7 +97,8 @@ def user_client(user_token):
     Provides a client with a user token.
     """
     sender = tk.RetryingSender(sender=tk.SyncSender())
-    return tk.Spotify(user_token, sender=sender)
+    yield tk.Spotify(user_token, sender=sender)
+    sender.close()
 
 
 @pytest.fixture(scope='class')
@@ -105,25 +107,28 @@ def data_client(user_token):
     Provides a client with a user token.
     """
     sender = tk.RetryingSender(sender=tk.SyncSender())
-    return tk.Spotify(user_token, sender=sender)
+    yield tk.Spotify(user_token, sender=sender)
+    sender.close()
 
 
 @pytest.fixture(scope='function')
-def app_aclient(app_token):
+async def app_aclient(app_token):
     """
     Provides an asynchronous client with an application token.
     """
     sender = tk.RetryingSender(sender=tk.AsyncSender())
-    return tk.Spotify(app_token, sender=sender)
+    yield tk.Spotify(app_token, sender=sender)
+    await sender.close()
 
 
 @pytest.fixture(scope='function')
-def user_aclient(user_token):
+async def user_aclient(user_token):
     """
     Provides an asynchronous client with a user token.
     """
     sender = tk.RetryingSender(sender=tk.AsyncSender())
-    return tk.Spotify(user_token, sender=sender)
+    yield tk.Spotify(user_token, sender=sender)
+    await sender.close()
 
 
 @pytest.fixture(scope='class')

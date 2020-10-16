@@ -40,6 +40,7 @@ class TestSpotifyUnits:
         # Skip non-endpoint functions
         skips = {
             'send',
+            'close',
             'next',
             'previous',
             'all_pages',
@@ -55,6 +56,19 @@ class TestSpotifyUnits:
             assert isinstance(method.required_scope, Scope)
             assert isinstance(method.optional_scope, Scope)
             assert method.scope == method.required_scope + method.optional_scope
+
+    def test_request_with_closed_client_raises(self):
+        client = Spotify()
+        client.close()
+        with pytest.raises(RuntimeError):
+            client.track('id')
+
+    @pytest.mark.asyncio
+    async def test_request_with_closed_async_client_raises(self):
+        client = Spotify(asynchronous=True)
+        await client.close()
+        with pytest.raises(RuntimeError):
+            await client.track('id')
 
 
 class TestSpotifyMaxLimits:
@@ -122,6 +136,7 @@ class TestSpotifyChunked:
         client = Spotify(app_token, chunked_on=True, asynchronous=True)
         tracks = await client.tracks(track_ids)
         assert len(track_ids) == len(tracks)
+        await client.close()
 
     def test_returns_model_list(self, app_token, track_ids):
         client = Spotify(app_token, chunked_on=True)
