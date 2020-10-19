@@ -5,6 +5,7 @@ from ._resources import (
     track_relinked,
     track_restricted,
     track_no_audio_features,
+    album_id,
 )
 from tekore import HTTPError
 
@@ -13,17 +14,13 @@ class TestSpotifyTrack:
     def test_track_with_market(self, app_client):
         track = app_client.track(track_id, market='US')
         assert track.id == track_id
-
-    def test_track_with_market_available_markets_not_in_response(self, app_client):
-        track = app_client.track(track_id, market='US')
-        assert track.available_markets is None
+        assert len(track.available_markets) == 0
+        assert track.is_playable is not None
 
     def test_track_no_market(self, app_client):
         track = app_client.track(track_id, market=None)
         assert track.id == track_id
-
-    def test_track_no_market_is_playable_not_in_response(self, app_client):
-        track = app_client.track(track_id, market=None)
+        assert len(track.available_markets) > 0
         assert track.is_playable is None
 
     def test_track_restricted(self, app_client):
@@ -42,10 +39,24 @@ class TestSpotifyTrack:
     def test_tracks_with_market(self, app_client):
         tracks = app_client.tracks(track_ids, market='US')
         assert len(tracks) == len(track_ids)
+        assert all(track.available_markets is None for track in tracks)
+        assert all(track.is_playable is not None for track in tracks)
 
     def test_tracks_no_market(self, app_client):
         tracks = app_client.tracks(track_ids, market=None)
         assert len(tracks) == len(track_ids)
+        assert all(len(track.available_markets) > 0 for track in tracks)
+        assert all(track.is_playable is None for track in tracks)
+
+    def test_simple_tracks_with_market(self, app_client):
+        tracks = app_client.album(album_id, market='US').tracks.items
+        assert all(track.available_markets is None for track in tracks)
+        assert all(track.is_playable is not None for track in tracks)
+
+    def test_simple_tracks_no_market(self, app_client):
+        tracks = app_client.album(album_id, market=None).tracks.items
+        assert all(len(track.available_markets) > 0 for track in tracks)
+        assert all(track.is_playable is None for track in tracks)
 
     def test_track_audio_analysis(self, app_client):
         app_client.track_audio_analysis(track_id)

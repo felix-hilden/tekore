@@ -10,6 +10,10 @@ Added
 - :ref:`config` - warning messages for missing configuration now include the
   variable name which was missing (:issue:`222`)
 
+Fixed
+*****
+- :ref:`client` - document new behavior of track markets (:issue:`217`)
+
 3.2.0 (2020-10-16)
 ------------------
 Added

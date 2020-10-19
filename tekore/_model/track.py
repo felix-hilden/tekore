@@ -45,9 +45,9 @@ class SimpleTrack(Track):
     """
     Simplified track object.
 
-    Available markets are not available when market is specified.
-    Is playable is not available when market is None.
-    Restrictions is available if restrictions have been placed on
+    When market is specified, :attr:`available_markets` is not available.
+    :attr:`is_playable` is not available when market is not specified.
+    :attr:`restrictions` is available if restrictions have been placed on
     the track, making it unplayable.
     """
 
@@ -71,9 +71,12 @@ class FullTrack(Track):
     """
     Complete track object.
 
-    Available markets are not available when market is specified.
-    Is playable is not available when market is None.
-    Restrictions is available if restrictions have been placed on
+    When market is specified,
+    :attr:`available_markets` is empty or not available.
+    Empty markets are returned with :meth:`track <tekore.Spotify.track>`,
+    while in :meth:`tracks <tekore.Spotify.tracks>` they are missing.
+    :attr:`is_playable` is not available when market is not specified.
+    :attr:`restrictions` is available if restrictions have been placed on
     the track, making it unplayable.
     """
 
