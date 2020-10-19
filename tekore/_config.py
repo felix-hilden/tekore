@@ -38,12 +38,13 @@ def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
 
     values = tuple(conf.get(var, None) for var in variables)
 
-    if any(c is None for c in values):
-        warn(
-            'A missing value was encountered in configuration!',
-            MissingConfigurationWarning,
-            stacklevel=3
-        )
+    for var, val in zip(variables, values):
+        if val is None:
+            warn(
+                f'`{var}` missing! None returned instead.',
+                MissingConfigurationWarning,
+                stacklevel=3
+            )
 
     return values
 
