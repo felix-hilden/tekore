@@ -177,7 +177,8 @@ class TestConfigToFile:
         written = {tk.client_secret_var: 'secret'}
 
         config_to_file(conf_path, written)
-        loaded = config_from_file(conf_path)
+        with handle_warnings('ignore'):
+            loaded = config_from_file(conf_path)
         assert (None, 'secret', None) == loaded
 
     def test_config_write_to_section(self, conf_path):
