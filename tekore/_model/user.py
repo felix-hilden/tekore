@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from .base import Item
@@ -19,13 +19,14 @@ class User(Item):
     """
     User base.
 
-    Display name, followers and images may not be available.
+    :attr:`display_name`, :attr:`followers` and :attr:`images`
+    may not be available.
     """
 
     external_urls: dict
-    display_name: str = None
-    followers: Followers = None
-    images: List[Image] = None
+    display_name: Optional[str] = None
+    followers: Optional[Followers] = None
+    images: Optional[List[Image]] = None
 
     def __post_init__(self):
         if self.followers is not None:
@@ -39,17 +40,18 @@ class PrivateUser(User):
     """
     User with private information.
 
-    Country, explicit content and product require user-read-private scope.
-    Email requires user-read-email scope.
-    Birthday is unavailable unless the now-invalid ``user-read-birthdate``
-    scope was granted to the token.
+    :attr:`country`, :attr:`explicit_content` and :attr:`product`
+    require the ``user-read-private`` scope.
+    :attr:`email` requires the ``user-read-email`` scope.
+    :attr:`birthday` is unavailable unless the now-invalid
+    ``user-read-birthdate`` scope was granted to the token.
     """
 
-    country: str = None
-    email: str = None
-    explicit_content: ExplicitContent = None
-    product: str = None
-    birthday: str = None
+    country: Optional[str] = None
+    email: Optional[str] = None
+    explicit_content: Optional[ExplicitContent] = None
+    product: Optional[str] = None
+    birthday: Optional[str] = None
 
     def __post_init__(self):
         super().__post_init__()

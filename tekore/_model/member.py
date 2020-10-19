@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 from .serialise import Model, StrEnum
 
@@ -23,7 +24,7 @@ class Followers(Model):
     """
     Followers.
 
-    Href is always None.
+    :attr:`href` is always ``None``.
     """
 
     href: None
@@ -35,10 +36,10 @@ class Image(Model):
     """
     Image link and information.
 
-    The Web API documentation reports that height and width
-    can be None or not available in the response.
+    The Web API documentation reports that :attr:`height` and :attr:`width`
+    can be ``None`` or not available in the response.
     """
 
     url: str
-    height: int = None
-    width: int = None
+    height: Optional[int] = None
+    width: Optional[int] = None

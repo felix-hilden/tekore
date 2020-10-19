@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ..paging import OffsetPaging
@@ -20,16 +20,16 @@ class SimpleAlbum(Album):
     """
     Simplified album object.
 
-    Album group is available when getting an artist's albums.
-    Available markets is available when market is not specified.
+    :attr:`album_group` is available when getting an artist's albums.
+    :attr:`available_markets` is available when market is not specified.
 
-    The presence of is_playable is undocumented
-    and it appears to only be True when it is present.
+    The presence of :attr:`is_playable` is undocumented
+    and it appears to only be ``True`` when it is present.
     """
 
-    album_group: AlbumGroup = None
-    available_markets: List[str] = None
-    is_playable: True = None
+    album_group: Optional[AlbumGroup] = None
+    available_markets: Optional[List[str]] = None
+    is_playable: Optional[bool] = None
 
     def __post_init__(self):
         super().__post_init__()

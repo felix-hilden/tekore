@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ..track import SimpleTrackPaging
@@ -13,10 +13,10 @@ class FullAlbum(Album):
     """
     Complete album object.
 
-    Available markets is available when market is not specified.
+    :attr:`available_markets` is available when market is not specified.
 
-    The presence of is_playable is undocumented
-    and it appears to only be True when it is present.
+    The presence of :attr:`is_playable` is undocumented
+    and it appears to only be ``True`` when it is present.
     """
 
     copyrights: List[Copyright]
@@ -25,8 +25,8 @@ class FullAlbum(Album):
     label: str
     popularity: int
     tracks: SimpleTrackPaging
-    available_markets: List[str] = None
-    is_playable: True = None
+    available_markets: Optional[List[str]] = None
+    is_playable: Optional[bool] = None
 
     def __post_init__(self):
         super().__post_init__()

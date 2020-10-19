@@ -9,6 +9,8 @@ Added
 *****
 - :ref:`config` - warning messages for missing configuration now include the
   variable name which was missing (:issue:`222`)
+- :ref:`models` - improved type hints and documentation
+  of potentially missing values (:issue:`221`)
 
 Fixed
 *****

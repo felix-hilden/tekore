@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from .base import Item
@@ -51,10 +51,10 @@ class SimpleTrack(Track):
     the track, making it unplayable.
     """
 
-    available_markets: List[str] = None
-    linked_from: TrackLink = None
-    is_playable: bool = None
-    restrictions: Restrictions = None
+    available_markets: Optional[List[str]] = None
+    linked_from: Optional[TrackLink] = None
+    is_playable: Optional[bool] = None
+    restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -83,10 +83,10 @@ class FullTrack(Track):
     album: SimpleAlbum
     external_ids: dict
     popularity: int
-    available_markets: List[str] = None
-    linked_from: TrackLink = None
-    is_playable: bool = None
-    restrictions: Restrictions = None
+    available_markets: Optional[List[str]] = None
+    linked_from: Optional[TrackLink] = None
+    is_playable: Optional[bool] = None
+    restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
         super().__post_init__()

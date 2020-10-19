@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ..paging import OffsetPaging
@@ -15,7 +15,7 @@ class SimpleShow(Show):
     so it might be missing or removed in a future version.
     """
 
-    total_episodes: int = None
+    total_episodes: Optional[int] = None
 
 
 @dataclass(repr=False)

@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 from ..show import Show
@@ -13,8 +14,8 @@ class FullShow(Show):
     so it might be missing or removed in a future version.
     """
 
-    total_episodes: int = None
-    episodes: SimpleEpisodePaging = None
+    total_episodes: Optional[int] = None
+    episodes: Optional[SimpleEpisodePaging] = None
 
     def __post_init__(self):
         super().__post_init__()

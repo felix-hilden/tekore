@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 from .serialise import Model, ModelList
 
@@ -12,8 +12,8 @@ class TimeInterval(Model):
     """
 
     duration: float
-    start: float = None
-    confidence: float = None
+    start: Optional[float] = None
+    confidence: Optional[float] = None
 
 
 @dataclass(repr=False)
@@ -32,10 +32,10 @@ class Section(Model):
     mode_confidence: float
     time_signature: int
     time_signature_confidence: float
-    confidence: float = None
-    mode: int = None
-    key: int = None
-    start: float = None
+    confidence: Optional[float] = None
+    mode: Optional[int] = None
+    key: Optional[int] = None
+    start: Optional[float] = None
 
 
 @dataclass(repr=False)
@@ -51,10 +51,10 @@ class Segment(Model):
     loudness_max: float
     pitches: List[float]
     timbre: List[float]
-    confidence: float = None
-    loudness_end: float = None
-    loudness_max_time: float = None
-    start: float = None
+    confidence: Optional[float] = None
+    loudness_end: Optional[float] = None
+    loudness_max_time: Optional[float] = None
+    start: Optional[float] = None
 
     def __post_init__(self):
         self.pitches = ModelList(self.pitches)

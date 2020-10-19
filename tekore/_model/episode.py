@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from .base import Item
@@ -46,7 +46,7 @@ class Episode(Item):
 class SimpleEpisode(Episode):
     """Simplified episode object."""
 
-    resume_point: ResumePoint = None
+    resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -59,7 +59,7 @@ class FullEpisode(Episode):
     """Complete episode object."""
 
     show: SimpleShow
-    resume_point: ResumePoint = None
+    resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
         super().__post_init__()
