@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.3.0 (2020-10-22)
+------------------
 Added
 *****
 - :ref:`config` - warning messages for missing configuration now include the
