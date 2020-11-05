@@ -3,6 +3,13 @@ from tekore import Token, Credentials, RefreshingToken, RefreshingCredentials
 
 
 def make_token_obj(value: str, expiring: bool):
+    """
+    Make a token object.
+
+    Args:
+        value: (todo): write your description
+        expiring: (str): write your description
+    """
     token = MagicMock()
     token.is_expiring = expiring
     token.access_token = value
@@ -11,6 +18,12 @@ def make_token_obj(value: str, expiring: bool):
 
 class TestRefreshingToken:
     def test_repr(self):
+        """
+        Test if the token has a valid token
+
+        Args:
+            self: (todo): write your description
+        """
         low_token = make_token_obj('token', False)
         cred = MagicMock()
 
@@ -18,6 +31,12 @@ class TestRefreshingToken:
         assert repr(auto_token).startswith('RefreshingToken(')
 
     def test_fresh_token_returned(self):
+        """
+        Check if the token for the given token.
+
+        Args:
+            self: (todo): write your description
+        """
         low_token = make_token_obj('token', False)
         cred = MagicMock()
 
@@ -25,6 +44,12 @@ class TestRefreshingToken:
         assert auto_token.access_token == 'token'
 
     def test_expiring_token_refreshed(self):
+        """
+        Test if a token is valid access token.
+
+        Args:
+            self: (todo): write your description
+        """
         expiring = make_token_obj('expiring', True)
         refreshed = make_token_obj('refreshed', False)
         cred = MagicMock()
@@ -34,6 +59,12 @@ class TestRefreshingToken:
         assert auto_token.access_token == 'refreshed'
 
     def test_refreshing_token_has_same_attributes_as_regular(self):
+        """
+        Test if a token attributes have a tokenized.
+
+        Args:
+            self: (todo): write your description
+        """
         token_info = MagicMock()
         token = Token(token_info, uses_pkce=False)
         token._expires_at = 3000
@@ -47,6 +78,12 @@ class TestRefreshingToken:
             assert attribute in auto_attributes
 
     def test_refreshing_token_expiration_attributes(self):
+        """
+        Test if the token is expired : return : attr : token.
+
+        Args:
+            self: (todo): write your description
+        """
         token_info = MagicMock()
         token = Token(token_info, uses_pkce=False)
         token._expires_at = 0
@@ -59,18 +96,45 @@ class TestRefreshingToken:
 
 class TestRefreshingCredentials:
     def test_repr(self):
+        """
+        Test if the test.
+
+        Args:
+            self: (todo): write your description
+        """
         c = RefreshingCredentials('id', 'secret')
         assert repr(c).startswith('RefreshingCredentials(')
 
     def test_initialisable(self, app_env):
+        """
+        The initial initial setup.
+
+        Args:
+            self: (todo): write your description
+            app_env: (todo): write your description
+        """
         RefreshingCredentials(*app_env)
 
     def test_request_client_token_returns_refreshing_token(self, app_env):
+        """
+        Returns an oauth token.
+
+        Args:
+            self: (todo): write your description
+            app_env: (todo): write your description
+        """
         cred = RefreshingCredentials(*app_env)
         token = cred.request_client_token()
         assert isinstance(token, RefreshingToken)
 
     def test_user_authorisation_url_equal_to_expiring(self, app_env):
+        """
+        Test if user is_env_authoriring.
+
+        Args:
+            self: (todo): write your description
+            app_env: (todo): write your description
+        """
         auth = Credentials(*app_env)
         util = RefreshingCredentials(*app_env)
         assert auth.user_authorisation_url() == util.user_authorisation_url()

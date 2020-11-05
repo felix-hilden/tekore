@@ -30,6 +30,12 @@ class Track(Item):
     is_local: bool
 
     def __post_init__(self):
+        """
+        Initialize the setup has been created.
+
+        Args:
+            self: (todo): write your description
+        """
         self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
 
 
@@ -57,6 +63,12 @@ class SimpleTrack(Track):
     restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
@@ -89,6 +101,12 @@ class FullTrack(Track):
     restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
+        """
+        Method to initialize the album after initialization.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
@@ -106,6 +124,12 @@ class FullTrackPaging(OffsetPaging):
     items: List[FullTrack]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(FullTrack(**t) for t in self.items)
 
 
@@ -116,6 +140,12 @@ class SimpleTrackPaging(OffsetPaging):
     items: List[SimpleTrack]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SimpleTrack(**t) for t in self.items)
 
 
@@ -135,6 +165,12 @@ class SavedTrack(Model):
     track: FullTrack
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.added_at = Timestamp.from_string(self.added_at)
         self.track = FullTrack(**self.track)
 
@@ -146,4 +182,10 @@ class SavedTrackPaging(OffsetPaging):
     items: List[SavedTrack]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SavedTrack(**t) for t in self.items)

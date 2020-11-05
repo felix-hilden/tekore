@@ -32,6 +32,14 @@ def _get_arg(position, name, args, kwargs):
 
 
 def _replace_arg(position, name, value, args, kwargs):
+    """
+    Replace an arg with kwargs.
+
+    Args:
+        position: (int): write your description
+        name: (str): write your description
+        value: (str): write your description
+    """
     if len(args) <= position:
         kwargs[name] = value
     else:
@@ -75,6 +83,12 @@ def chunked(
         position of the chain argument
     """
     def decorator(function: Callable) -> Callable:
+        """
+        Decorator to add a function to a chain.
+
+        Args:
+            function: (todo): write your description
+        """
         nonlocal arg_pos, reverse_pos, chain_pos
         arg_pos -= 1
         if reverse_pos is not None:
@@ -83,6 +97,13 @@ def chunked(
             chain_pos -= 1
 
         def replace(arg_val, chain_val, args, kwargs):
+            """
+            Replace an arg_val with kwargs.
+
+            Args:
+                arg_val: (todo): write your description
+                chain_val: (int): write your description
+            """
             args, kwargs = _replace_arg(arg_pos, arg_name, arg_val, args, kwargs)
 
             if chain is not None:
@@ -97,6 +118,14 @@ def chunked(
             return args, kwargs
 
         async def async_wrapper(self, chunks, chain_val, args, kwargs):
+              """
+              Asynchronously execute a function.
+
+              Args:
+                  self: (todo): write your description
+                  chunks: (int): write your description
+                  chain_val: (int): write your description
+              """
             responses = []
             for chunk in chunks:
                 args, kwargs = replace(chunk, chain_val, args, kwargs)
@@ -107,6 +136,12 @@ def chunked(
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
+            """
+            Decorator to call ().
+
+            Args:
+                self: (todo): write your description
+            """
             arg_val = _get_arg(arg_pos, arg_name, args, kwargs)
             if not self.chunked_on or arg_val is None:
                 return function(self, *args, **kwargs)

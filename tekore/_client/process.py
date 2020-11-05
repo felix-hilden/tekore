@@ -10,6 +10,12 @@ def nothing(json):
 def top_item(item: str) -> Callable:
     """Return ``item`` from top level of dict."""
     def post_func(json: dict):
+        """
+        Post - serializes a json.
+
+        Args:
+            json: (todo): write your description
+        """
         return json[item]
     return post_func
 
@@ -21,6 +27,12 @@ def single(type_: type, from_item: str = None) -> Callable:
     If dict or ``from_item`` is None - does nothing and returns None.
     """
     def post_func(json: dict):
+        """
+        Post - serialize a json to json.
+
+        Args:
+            json: (todo): write your description
+        """
         json = json if from_item is None else json[from_item]
         return type_(**json) if json is not None else None
     return post_func
@@ -29,6 +41,12 @@ def single(type_: type, from_item: str = None) -> Callable:
 def model_list(type_: type, from_item: str = None) -> Callable:
     """Unpack items inside ``from_item`` of dict into constructors."""
     def post_func(json: dict):
+        """
+        Post - serialize a json object to a json.
+
+        Args:
+            json: (todo): write your description
+        """
         json = json if from_item is None else json[from_item]
         return ModelList(type_(**i) if i is not None else None for i in json)
     return post_func
@@ -37,5 +55,11 @@ def model_list(type_: type, from_item: str = None) -> Callable:
 def multiple(*args: Callable):
     """Run json dict through multiple processors."""
     def post_func(json: dict):
+        """
+        Post - serializer for post - processing.
+
+        Args:
+            json: (todo): write your description
+        """
         return tuple(processor(json) for processor in args)
     return post_func

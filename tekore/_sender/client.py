@@ -25,6 +25,14 @@ class Client(ExtendingSender):
     """
 
     def __init__(self, sender: Optional[Sender], asynchronous: bool = None):
+        """
+        Initialize sender.
+
+        Args:
+            self: (todo): write your description
+            sender: (todo): write your description
+            asynchronous: (bool): write your description
+        """
         super().__init__(sender)
 
         if self.sender.is_async and asynchronous is False:
@@ -64,12 +72,34 @@ def send_and_process(post_func: Callable) -> Callable:
         and possible additional arguments
     """
     def decorator(function: Callable[..., Request]) -> Callable:
+        """
+        Decorator for decorator to the request.
+
+        Args:
+            function: (todo): write your description
+            Callable: (str): write your description
+            Request: (todo): write your description
+        """
         async def async_send(self, request: Request, params: tuple):
+              """
+              Send a request.
+
+              Args:
+                  self: (todo): write your description
+                  request: (todo): write your description
+                  params: (dict): write your description
+              """
             response = await self.send(request)
             return post_func(request, response, *params)
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
+            """
+            Wrapper for the request.
+
+            Args:
+                self: (todo): write your description
+            """
             request, params = function(self, *args, **kwargs)
 
             if self.is_async:

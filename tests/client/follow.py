@@ -4,6 +4,13 @@ from ._resources import playlist_id, artist_ids, user_ids
 
 @pytest.fixture(scope='class')
 def setup(data_client, current_user_id):
+    """
+    Get the track s playlist.
+
+    Args:
+        data_client: (todo): write your description
+        current_user_id: (str): write your description
+    """
     try:
         current_playlist_follow = data_client.playlist_is_following(
             playlist_id,
@@ -61,22 +68,71 @@ class TestSpotifyFollow:
     If current user follows the tested playlist, it is set as a private follow.
     """
     def test_playlist_follow(self, user_client):
+        """
+        Use this user_playlist.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.playlist_follow(playlist_id)
 
     def test_playlist_unfollow(self, user_client):
+        """
+        .. versionadded :: 0. 17. 0
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.playlist_unfollow(playlist_id)
 
     def test_followed_artists(self, user_client):
+        """
+        Test if the ::
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.followed_artists()
 
     def test_artists_follow(self, user_client):
+        """
+        Test if a list of the user s artist.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.artists_follow(artist_ids)
 
     def test_artists_unfollow(self, user_client):
+        """
+        Test if a user has unfollow.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.artists_unfollow(artist_ids)
 
     def test_users_follow(self, user_client):
+        """
+        Test if user_client_client.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.users_follow(user_ids)
 
     def test_users_unfollow(self, user_client):
+        """
+        Test if a user is unfollow.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.users_unfollow(user_ids)

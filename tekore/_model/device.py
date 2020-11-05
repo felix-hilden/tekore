@@ -35,4 +35,10 @@ class Device(Identifiable):
     volume_percent: Optional[int]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.type = DeviceType[self.type]

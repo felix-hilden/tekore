@@ -17,6 +17,13 @@ def send_and_process(post_func: Callable) -> Callable:
         function to call with response JSON content
     """
     def parse_response(request, response):
+        """
+        Parse the response from the request.
+
+        Args:
+            request: (todo): write your description
+            response: (todo): write your description
+        """
         handle_errors(request, response)
         return post_func(response.content)
 
@@ -33,11 +40,23 @@ def maximise_limit(max_limit: int) -> Callable:
         maximum value of the limit
     """
     def decorator(function: Callable) -> Callable:
+        """
+        A decorator that registers a function as a decorators.
+
+        Args:
+            function: (todo): write your description
+        """
         varnames = function.__code__.co_varnames
         arg_pos = varnames.index('limit') - 1
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
+            """
+            Decorator to apply a function.
+
+            Args:
+                self: (todo): write your description
+            """
             if self.max_limits_on and len(args) <= arg_pos:
                 kwargs.setdefault('limit', max_limit)
             return function(self, *args, **kwargs)
@@ -87,6 +106,12 @@ def scopes(required: list = None, optional: list = None) -> Callable:
     ])
 
     def decorator(function: Callable) -> Callable:
+        """
+        Decorator to specify a function as a function is registered.
+
+        Args:
+            function: (todo): write your description
+        """
         function.required_scope = required_scope
         function.optional_scope = optional_scope
         function.scope = required_scope + optional_scope

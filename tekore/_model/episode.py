@@ -35,6 +35,12 @@ class Episode(Item):
     release_date_precision: ReleaseDatePrecision
 
     def __post_init__(self):
+        """
+        Initialize all images.
+
+        Args:
+            self: (todo): write your description
+        """
         self.images = ModelList(Image(**i) for i in self.images)
         self.languages = ModelList(self.languages)
         self.release_date_precision = ReleaseDatePrecision[
@@ -49,6 +55,12 @@ class SimpleEpisode(Episode):
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
+        """
+        Resume after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.resume_point is not None:
             self.resume_point = ResumePoint(**self.resume_point)
@@ -62,6 +74,12 @@ class FullEpisode(Episode):
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
+        """
+        Resume after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         self.show = SimpleShow(**self.show)
         if self.resume_point is not None:
@@ -75,6 +93,12 @@ class SimpleEpisodePaging(OffsetPaging):
     items = List[SimpleEpisode]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(
             SimpleEpisode(**i) if i is not None else None
             for i in self.items

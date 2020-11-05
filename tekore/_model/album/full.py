@@ -29,6 +29,12 @@ class FullAlbum(Album):
     is_playable: Optional[bool] = None
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
@@ -45,6 +51,12 @@ class SavedAlbum(Model):
     album: FullAlbum
 
     def __post_init__(self):
+        """
+        Initialize the album.
+
+        Args:
+            self: (todo): write your description
+        """
         self.added_at = Timestamp.from_string(self.added_at)
         self.album = FullAlbum(**self.album)
 
@@ -56,4 +68,10 @@ class SavedAlbumPaging(OffsetPaging):
     items: List[SavedAlbum]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SavedAlbum(**a) for a in self.items)

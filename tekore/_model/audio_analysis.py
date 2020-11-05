@@ -57,6 +57,12 @@ class Segment(Model):
     start: Optional[float] = None
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.pitches = ModelList(self.pitches)
         self.timbre = ModelList(self.timbre)
 
@@ -81,6 +87,12 @@ class AudioAnalysis(Model):
     track: dict
 
     def __post_init__(self):
+        """
+        Initialize all segments
+
+        Args:
+            self: (todo): write your description
+        """
         self.bars = ModelList(TimeInterval(**i) for i in self.bars)
         self.beats = ModelList(TimeInterval(**i) for i in self.beats)
         self.sections = ModelList(Section(**s) for s in self.sections)

@@ -27,12 +27,30 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
         arguments to check, tuples of (name, position in argument list)
     """
     def decorator(function: Callable) -> Callable:
+        """
+        Decorator for decorators.
+
+        Args:
+            function: (todo): write your description
+        """
         async def async_wrapper(self, *args, **kwargs):
+              """
+              Decorator to make a function asynchronously.
+
+              Args:
+                  self: (todo): write your description
+              """
             json = await function(self, *args, **kwargs)
             return post_func(json)
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
+            """
+            Decorator to wrap a function arguments.
+
+            Args:
+                self: (todo): write your description
+            """
             falsies = [
                 bool(_get_arg(arg_pos - 1, arg_name, args, kwargs))
                 for arg_name, arg_pos in arguments

@@ -44,5 +44,11 @@ class Recommendations(Model):
     tracks: List[FullTrack]
 
     def __post_init__(self):
+        """
+        Initialize all the track after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.seeds = ModelList(RecommendationSeed(**s) for s in self.seeds)
         self.tracks = ModelList(FullTrack(**t) for t in self.tracks)

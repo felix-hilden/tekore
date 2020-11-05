@@ -21,6 +21,13 @@ class SpotifyPaging(SpotifyBase):
 
     @send_and_process(parse_paging_result)
     def _get_paging_result(self, address: str):
+        """
+        Returns the result of an address.
+
+        Args:
+            self: (dict): write your description
+            address: (str): write your description
+        """
         return self._get(address)
 
     def next(self, page: Paging) -> Optional[Paging]:
@@ -50,6 +57,13 @@ class SpotifyPaging(SpotifyBase):
             return
 
     async def _async_next(self, page: Paging) -> Optional[Paging]:
+          """
+          Returns the next page of the next page.
+
+          Args:
+              self: (todo): write your description
+              page: (int): write your description
+          """
         if page.next is None:
             return
 
@@ -83,6 +97,13 @@ class SpotifyPaging(SpotifyBase):
         return type(page)(**previous_set)
 
     async def _async_previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
+          """
+          Return a page of the previous page.
+
+          Args:
+              self: (todo): write your description
+              page: (int): write your description
+          """
         if page.previous is None:
             return
 
@@ -112,11 +133,25 @@ class SpotifyPaging(SpotifyBase):
             return self._sync_all_pages(page)
 
     def _sync_all_pages(self, page: Paging):
+        """
+        Iterate over all pages.
+
+        Args:
+            self: (todo): write your description
+            page: (str): write your description
+        """
         while page is not None:
             yield page
             page = self.next(page)
 
     async def _async_all_pages(self, page: Paging):
+          """
+          A generator over all pages.
+
+          Args:
+              self: (todo): write your description
+              page: (str): write your description
+          """
         while page is not None:
             yield page
             page = await self._async_next(page)
@@ -147,10 +182,24 @@ class SpotifyPaging(SpotifyBase):
             return self._sync_all_items(page)
 
     def _sync_all_items(self, page: Paging):
+        """
+        Iterate over - items in the page.
+
+        Args:
+            self: (todo): write your description
+            page: (int): write your description
+        """
         for p in self.all_pages(page):
             yield from p.items
 
     async def _async_all_items(self, page: Paging):
+          """
+          Yields all pages.
+
+          Args:
+              self: (todo): write your description
+              page: (int): write your description
+          """
         async for page in self._async_all_pages(page):
             for item in page.items:
                 yield item

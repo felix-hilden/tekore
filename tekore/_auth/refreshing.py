@@ -29,10 +29,24 @@ class RefreshingToken(AccessToken):
     """
 
     def __init__(self, token: Token, credentials: Credentials):
+        """
+        Initialize the credentials.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+            credentials: (todo): write your description
+        """
         self._token = token
         self._credentials = credentials
 
     def __repr__(self):
+        """
+        Return a representation of this representation.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'access_token={self.access_token!r}',
             f'refresh_token={self.refresh_token!r}',
@@ -119,6 +133,16 @@ class RefreshingCredentials:
         redirect_uri: str = None,
         sender: Sender = None
     ):
+        """
+        Initialize a client.
+
+        Args:
+            self: (todo): write your description
+            client_id: (str): write your description
+            client_secret: (str): write your description
+            redirect_uri: (str): write your description
+            sender: (todo): write your description
+        """
         self._client = Credentials(
             client_id,
             client_secret,
@@ -128,6 +152,12 @@ class RefreshingCredentials:
         )
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'client_id={self._client.client_id!r}',
             f'client_secret={self._client.client_secret!r}',

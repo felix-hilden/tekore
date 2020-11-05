@@ -30,6 +30,17 @@ class SpotifyBase(Client):
             max_limits_on: bool = False,
             chunked_on: bool = False,
     ):
+        """
+        Initialize the token.
+
+        Args:
+            self: (todo): write your description
+            token: (str): write your description
+            sender: (todo): write your description
+            asynchronous: (bool): write your description
+            max_limits_on: (int): write your description
+            chunked_on: (todo): write your description
+        """
         # Docstring in the main client
         super().__init__(sender, asynchronous)
         self.token = token
@@ -37,6 +48,12 @@ class SpotifyBase(Client):
         self.chunked_on = chunked_on
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'token={self.token!r}',
             f'max_limits_on={self.max_limits_on}',
@@ -46,6 +63,13 @@ class SpotifyBase(Client):
         return type(self).__name__ + '(' + ', '.join(options) + ')'
 
     def _create_headers(self, content_type: str = 'application/json'):
+        """
+        Create the content - type header.
+
+        Args:
+            self: (todo): write your description
+            content_type: (str): write your description
+        """
         return {
             'Authorization': f'Bearer {str(self.token)}',
             'Content-Type': content_type
@@ -76,6 +100,15 @@ class SpotifyBase(Client):
             payload=None,
             params: dict = None
     ):
+        """
+        Make a http request.
+
+        Args:
+            method: (str): write your description
+            url: (str): write your description
+            payload: (str): write your description
+            params: (dict): write your description
+        """
         return Request(
             method=method,
             url=url,
@@ -84,13 +117,49 @@ class SpotifyBase(Client):
         ), ()
 
     def _get(self, url: str, payload=None, **params):
+        """
+        Make a get request.
+
+        Args:
+            self: (todo): write your description
+            url: (str): write your description
+            payload: (str): write your description
+            params: (dict): write your description
+        """
         return self._request('GET', url, payload=payload, params=params)
 
     def _post(self, url: str, payload=None, **params):
+        """
+        Make a post request.
+
+        Args:
+            self: (todo): write your description
+            url: (todo): write your description
+            payload: (todo): write your description
+            params: (dict): write your description
+        """
         return self._request('POST', url, payload=payload, params=params)
 
     def _delete(self, url: str, payload=None, **params):
+        """
+        Make a delete request.
+
+        Args:
+            self: (todo): write your description
+            url: (str): write your description
+            payload: (str): write your description
+            params: (dict): write your description
+        """
         return self._request('DELETE', url, payload=payload, params=params)
 
     def _put(self, url: str, payload=None, **params):
+        """
+        Make a put request.
+
+        Args:
+            self: (todo): write your description
+            url: (todo): write your description
+            payload: (todo): write your description
+            params: (dict): write your description
+        """
         return self._request('PUT', url, payload=payload, params=params)

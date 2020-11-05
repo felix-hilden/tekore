@@ -18,6 +18,12 @@ class FullShow(Show):
     episodes: Optional[SimpleEpisodePaging] = None
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.episodes is not None:
             self.episodes = SimpleEpisodePaging(**self.episodes)

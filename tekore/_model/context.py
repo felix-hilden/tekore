@@ -21,4 +21,10 @@ class Context(Model):
     uri: str
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.type = ContextType[self.type]

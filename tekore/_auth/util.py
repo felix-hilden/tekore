@@ -19,6 +19,13 @@ def gen_state(n_bytes: int = 32) -> str:
 
 
 def _parse_url_param(url: str, param: str) -> str:
+    """
+    Parse query parameters.
+
+    Args:
+        url: (str): write your description
+        param: (todo): write your description
+    """
     query = urlparse(url).query
     code = parse_qs(query).get(param, None)
 
@@ -117,6 +124,15 @@ class UserAuth:
         scope=None,
         pkce: bool = False,
     ):
+        """
+        Initialize the credentials.
+
+        Args:
+            self: (todo): write your description
+            cred: (todo): write your description
+            scope: (str): write your description
+            pkce: (int): write your description
+        """
         self._cred = cred
         self.state = gen_state()
         self.verifier = None
@@ -130,6 +146,12 @@ class UserAuth:
             )
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'cred={self._cred!r}',
             f'url={self.url!r}',
