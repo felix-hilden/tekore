@@ -14,6 +14,15 @@ class HTTPError(Exception):
     """
 
     def __init__(self, message: str, request: Request, response: Response):
+        """
+        Initialize the request.
+
+        Args:
+            self: (todo): write your description
+            message: (str): write your description
+            request: (dict): write your description
+            response: (list): write your description
+        """
         super(HTTPError, self).__init__(message)
         self.request = request
         self.response = response

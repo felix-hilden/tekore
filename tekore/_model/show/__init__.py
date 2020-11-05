@@ -25,6 +25,12 @@ class SimpleShowPaging(OffsetPaging):
     items: List[SimpleShow]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SimpleShow(**i) for i in self.items)
 
 
@@ -36,6 +42,12 @@ class SavedShow(Model):
     show: SimpleShow
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.added_at = Timestamp.from_string(self.added_at)
         self.show = SimpleShow(**self.show)
 
@@ -47,4 +59,10 @@ class SavedShowPaging(OffsetPaging):
     items: List[SavedShow]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SavedShow(**i) for i in self.items)

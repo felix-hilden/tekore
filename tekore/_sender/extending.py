@@ -21,6 +21,13 @@ class ExtendingSender(Sender, ABC):
     """
 
     def __init__(self, sender: Optional[Sender]):
+        """
+        Initialize the sender.
+
+        Args:
+            self: (todo): write your description
+            sender: (todo): write your description
+        """
         self.sender = sender or SyncSender()
 
     @property
@@ -74,10 +81,24 @@ class RetryingSender(ExtendingSender):
     """
 
     def __init__(self, retries: int = 0, sender: Sender = None):
+        """
+        Initialize the session.
+
+        Args:
+            self: (todo): write your description
+            retries: (todo): write your description
+            sender: (todo): write your description
+        """
         super().__init__(sender)
         self.retries = retries
 
     def __repr__(self):
+        """
+        Return a repr representation of this type.
+
+        Args:
+            self: (todo): write your description
+        """
         contains = f'(retries={self.retries}, sender={self.sender!r})'
         return type(self).__name__ + contains
 
@@ -105,6 +126,13 @@ class RetryingSender(ExtendingSender):
                 return r
 
     async def _async_send(self, request: Request) -> Response:
+          """
+          Asynchronously send request and return the response.
+
+          Args:
+              self: (todo): write your description
+              request: (todo): write your description
+          """
         tries = self.retries + 1
         delay_seconds = 1
 
@@ -149,6 +177,14 @@ class CachingSender(ExtendingSender):
     """
 
     def __init__(self, max_size: int = None, sender: Sender = None):
+        """
+        Initialize the cache.
+
+        Args:
+            self: (todo): write your description
+            max_size: (int): write your description
+            sender: (todo): write your description
+        """
         super().__init__(sender)
         self._max_size = max_size
         self._cache = {}
@@ -156,6 +192,12 @@ class CachingSender(ExtendingSender):
         self._lock: Optional[asyncio.Lock] = None
 
     def __repr__(self):
+        """
+        Return a repr representation of this type.
+
+        Args:
+            self: (todo): write your description
+        """
         contains = f'(max_size={self._max_size}, sender={self.sender!r})'
         return type(self).__name__ + contains
 
@@ -178,28 +220,71 @@ class CachingSender(ExtendingSender):
 
     @staticmethod
     def _vary_key(request: Request, vary: Optional[list]):
+        """
+        Convert the key of the vary key.
+
+        Args:
+            request: (todo): write your description
+            vary: (str): write your description
+        """
         if vary is not None:
             return ' '.join(request.headers[k] for k in vary)
 
     @staticmethod
     def _cc_fresh(item: dict) -> bool:
+        """
+        Determine if the given dict.
+
+        Args:
+            item: (todo): write your description
+        """
         return item['expires_at'] > time.time()
 
     @staticmethod
     def _has_etag(item: dict) -> bool:
+        """
+        Return true if the dict has etag has etag.
+
+        Args:
+            item: (todo): write your description
+        """
         return item['etag'] is not None
 
     def _is_fresh(self, url, vary_key) -> bool:
+        """
+        Checks if the given url is already fetched.
+
+        Args:
+            self: (todo): write your description
+            url: (str): write your description
+            vary_key: (str): write your description
+        """
         item = self._cache[url][1][vary_key]
         return self._cc_fresh(item) or self._has_etag(item)
 
     def _delete(self, url, vary_key) -> None:
+        """
+        Deletes the item from the cache.
+
+        Args:
+            self: (todo): write your description
+            url: (str): write your description
+            vary_key: (str): write your description
+        """
         item = self._cache[url]
         del item[1][vary_key]
         if not item[1]:
             del item
 
     def _maybe_save(self, request: Request, response: Response) -> None:
+        """
+        Saves the cached item.
+
+        Args:
+            self: (todo): write your description
+            request: (todo): write your description
+            response: (todo): write your description
+        """
         cc = response.headers.get('Cache-Control', 'private, max-age=0')
 
         if response.status_code >= 400 or 'private' in cc:
@@ -249,6 +334,13 @@ class CachingSender(ExtendingSender):
         self._deque.append((response.url, vary_key))
 
     def _update_usage(self, item) -> None:
+        """
+        Update the usage for the given item.
+
+        Args:
+            self: (todo): write your description
+            item: (todo): write your description
+        """
         if self.max_size is None:
             return
 
@@ -256,6 +348,13 @@ class CachingSender(ExtendingSender):
         self._deque.append(item)
 
     def _load(self, request: Request) -> tuple:
+        """
+        Load a single fetch request.
+
+        Args:
+            self: (todo): write your description
+            request: (todo): write your description
+        """
         params = ('&' + urlencode(request.params)) if request.params else ''
         url = request.url + params
         item = self._cache.get(url, None)
@@ -281,6 +380,15 @@ class CachingSender(ExtendingSender):
         return None, None
 
     def _handle_fresh(self, request, fresh: Response, cached: Response):
+        """
+        Handles a request.
+
+        Args:
+            self: (todo): write your description
+            request: (todo): write your description
+            fresh: (todo): write your description
+            cached: (bool): write your description
+        """
         if fresh.status_code == 304:
             return cached
         else:
@@ -307,6 +415,13 @@ class CachingSender(ExtendingSender):
         return self._handle_fresh(request, fresh, cached)
 
     async def _async_send(self, request: Request):
+          """
+          Asynchronously request.
+
+          Args:
+              self: (todo): write your description
+              request: (todo): write your description
+          """
         if request.method.lower() != 'get':
             return await self.sender.send(request)
 

@@ -32,6 +32,12 @@ class SimpleAlbum(Album):
     is_playable: Optional[bool] = None
 
     def __post_init__(self):
+        """
+        Method to initialize the completed.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.album_group is not None:
             self.album_group = AlbumGroup[self.album_group]
@@ -46,4 +52,10 @@ class SimpleAlbumPaging(OffsetPaging):
     items: List[SimpleAlbum]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SimpleAlbum(**a) for a in self.items)

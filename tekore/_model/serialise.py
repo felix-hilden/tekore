@@ -11,6 +11,12 @@ class StrEnum(str, Enum):
     """Convert enumeration members to strings using their name."""
 
     def __str__(self):
+        """
+        Return the string representation of this object.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.name
 
 
@@ -48,6 +54,12 @@ class Timestamp(datetime):
             raise ValueError(f'Date `{s}` does not match accepted formats!')
 
     def __str__(self):
+        """
+        Returns the string representation of the field.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.strftime(self.f_second)
 
 
@@ -168,6 +180,12 @@ class Model(Serialisable):
     """Dataclass that provides a readable ``repr`` of its fields."""
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this field.
+
+        Args:
+            self: (todo): write your description
+        """
         name = type(self).__name__
         lines = [f'{name} with fields:']
 
@@ -187,6 +205,12 @@ class ModelList(List[T], Serialisable):
     """List that provides a readable ``repr`` of its items."""
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         name = type(self).__name__
         lines = [f'{name} with items: [']
 

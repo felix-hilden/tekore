@@ -23,6 +23,12 @@ class Show(Item):
     publisher: str
 
     def __post_init__(self):
+        """
+        Initialize the setup
+
+        Args:
+            self: (todo): write your description
+        """
         self.available_markets = ModelList(self.available_markets)
         self.copyrights = ModelList(Copyright(**c) for c in self.copyrights)
         self.images = ModelList(Image(**i) for i in self.images)

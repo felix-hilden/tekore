@@ -45,4 +45,10 @@ class CursorPaging(Paging):
     cursors: Cursor
 
     def __post_init__(self):
+        """
+        Do some cursor.
+
+        Args:
+            self: (todo): write your description
+        """
         self.cursors = Cursor(**self.cursors)

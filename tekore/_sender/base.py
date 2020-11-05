@@ -28,6 +28,12 @@ class Sender(ABC):
     """Sender interface for requests."""
 
     def __repr__(self):
+        """
+        Return a repr representation of this type.
+
+        Args:
+            self: (todo): write your description
+        """
         return type(self).__name__ + '()'
 
     @abstractmethod

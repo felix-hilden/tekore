@@ -52,12 +52,29 @@ class Credentials(Client):
         sender: Sender = None,
         asynchronous: bool = None,
     ):
+        """
+        Initialize a client.
+
+        Args:
+            self: (todo): write your description
+            client_id: (str): write your description
+            client_secret: (str): write your description
+            redirect_uri: (str): write your description
+            sender: (todo): write your description
+            asynchronous: (bool): write your description
+        """
         super().__init__(sender, asynchronous)
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'client_id={self.client_id!r}',
             f'client_secret={self.client_secret!r}',
@@ -67,6 +84,14 @@ class Credentials(Client):
         return type(self).__name__ + '(' + ', '.join(options) + ')'
 
     def _token_request(self, payload: dict, auth: bool) -> Request:
+        """
+        Makes a token.
+
+        Args:
+            self: (todo): write your description
+            payload: (todo): write your description
+            auth: (todo): write your description
+        """
         if auth:
             if self.client_secret is None:
                 raise ValueError(
@@ -93,6 +118,14 @@ class Credentials(Client):
         return self._token_request(payload, auth=True), ()
 
     def _user_auth_payload(self, scope, state):
+        """
+        Authenticates an access token and return code.
+
+        Args:
+            self: (todo): write your description
+            scope: (str): write your description
+            state: (todo): write your description
+        """
         payload = {
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,

@@ -16,6 +16,12 @@ class Category(Identifiable):
     name: str
 
     def __post_init__(self):
+        """
+        Initialize all the images.
+
+        Args:
+            self: (todo): write your description
+        """
         self.icons = ModelList(Image(**i) for i in self.icons)
 
 
@@ -26,4 +32,10 @@ class CategoryPaging(OffsetPaging):
     items: List[Category]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(Category(**c) for c in self.items)

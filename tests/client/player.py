@@ -8,6 +8,12 @@ from tekore import HTTPError, to_uri
 
 @pytest.fixture()
 def setup(user_client):
+    """
+    Sets the device.
+
+    Args:
+        user_client: (todo): write your description
+    """
     try:
         devices = user_client.playback_devices()
     except HTTPError as e:
@@ -68,11 +74,24 @@ def setup(user_client):
 
 
 def currently_playing(client):
+    """
+    Waits a blocking thread.
+
+    Args:
+        client: (todo): write your description
+    """
     sleep(5)
     return client.playback_currently_playing()
 
 
 def assert_playing(client, track_id: str):
+    """
+    Assert that the given track has the same.
+
+    Args:
+        client: (todo): write your description
+        track_id: (int): write your description
+    """
     playing = currently_playing(client)
     assert playing.item.id == track_id
 
@@ -91,6 +110,14 @@ class TestSpotifyPlayerSequence:
     Shuffle and repeat states might be affected too.
     """
     def test_player(self, user_client, setup):
+        """
+        Test if a track.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+            setup: (todo): write your description
+        """
         device_id = setup
 
         # Set volume
@@ -179,14 +206,35 @@ class TestSpotifyPlayerSequence:
 
 class TestSpotifyPlayer:
     def test_recently_played(self, user_client):
+        """
+        Test if user_client is enabled.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         user_client.playback_recently_played()
 
     def test_recently_played_before_next_is_before_current(self, user_client):
+        """
+        Test if there is no more recent recent recent user.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         p1 = user_client.playback_recently_played(limit=1)
         p2 = user_client.next(p1)
         assert p2.cursors.after < p1.cursors.after
 
     def test_recently_played_after_next_is_after_current(self, user_client):
+        """
+        Test if the next recent recent recent recent recent.
+
+        Args:
+            self: (todo): write your description
+            user_client: (todo): write your description
+        """
         p1 = user_client.playback_recently_played(limit=1, after=1569888000)
         p2 = user_client.next(p1)
         assert p2.cursors.after > p1.cursors.after

@@ -148,5 +148,10 @@ def current_user_id(data_client):
 
 @pytest.fixture(scope='class')
 def suppress_warnings():
+    """
+    A context manager.
+
+    Args:
+    """
     with handle_warnings():
         yield

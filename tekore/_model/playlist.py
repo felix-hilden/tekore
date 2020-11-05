@@ -68,6 +68,12 @@ class PlaylistTrack(Model):
     track: Union[FullPlaylistTrack, LocalPlaylistTrack, FullPlaylistEpisode, None]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.added_at = Timestamp.from_string(self.added_at)
         self.added_by = PublicUser(**self.added_by)
 
@@ -88,6 +94,12 @@ class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(PlaylistTrack(**t) for t in self.items)
 
 
@@ -110,6 +122,12 @@ class Playlist(Item):
     description: str
 
     def __post_init__(self):
+        """
+        Post - init after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.images = ModelList(Image(**i) for i in self.images)
         if self.owner is not None:
             self.owner = PublicUser(**self.owner)
@@ -122,6 +140,12 @@ class SimplePlaylist(Playlist):
     tracks: Tracks
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         self.tracks = Tracks(**self.tracks)
 
@@ -134,6 +158,12 @@ class FullPlaylist(Playlist):
     tracks: PlaylistTrackPaging
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         self.followers = Followers(**self.followers)
         self.tracks = PlaylistTrackPaging(**self.tracks)
@@ -146,4 +176,10 @@ class SimplePlaylistPaging(OffsetPaging):
     items: List[SimplePlaylist]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(SimplePlaylist(**p) for p in self.items)

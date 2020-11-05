@@ -120,6 +120,15 @@ class SpotifyPlaylistItems(SpotifyBase):
             payload: dict,
             snapshot_id: str = None
     ) -> str:
+        """
+        Remove a playlist.
+
+        Args:
+            self: (todo): write your description
+            playlist_id: (str): write your description
+            payload: (todo): write your description
+            snapshot_id: (str): write your description
+        """
         if snapshot_id:
             payload['snapshot_id'] = snapshot_id
         return self._delete(f'playlists/{playlist_id}/tracks', payload=payload)

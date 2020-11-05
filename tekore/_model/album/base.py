@@ -29,6 +29,12 @@ class Album(Item):
     release_date_precision: ReleaseDatePrecision
 
     def __post_init__(self):
+        """
+        Create a new album type.
+
+        Args:
+            self: (todo): write your description
+        """
         self.album_type = AlbumType[self.album_type.lower()]
         self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
         self.images = ModelList(Image(**i) for i in self.images)

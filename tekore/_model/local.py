@@ -59,5 +59,11 @@ class LocalTrack(LocalItem):
     uri: str
 
     def __post_init__(self):
+        """
+        Initialize the album.
+
+        Args:
+            self: (todo): write your description
+        """
         self.album = LocalAlbum(**self.album)
         self.artists = ModelList(LocalArtist(**a) for a in self.artists)

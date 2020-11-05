@@ -29,6 +29,12 @@ class User(Item):
     images: Optional[List[Image]] = None
 
     def __post_init__(self):
+        """
+        Initialize all images
+
+        Args:
+            self: (todo): write your description
+        """
         if self.followers is not None:
             self.followers = Followers(**self.followers)
         if self.images is not None:
@@ -54,6 +60,12 @@ class PrivateUser(User):
     birthday: Optional[str] = None
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         if self.explicit_content is not None:
             self.explicit_content = ExplicitContent(**self.explicit_content)

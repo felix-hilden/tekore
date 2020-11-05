@@ -29,6 +29,13 @@ class SyncSender(Sender):
     """
 
     def __init__(self, client: Client = None):
+        """
+        Initialize the client.
+
+        Args:
+            self: (todo): write your description
+            client: (todo): write your description
+        """
         self.client = client or Client()
 
     def send(self, request: Request) -> Response:
@@ -74,6 +81,13 @@ class AsyncSender(Sender):
     """
 
     def __init__(self, client: AsyncClient = None):
+        """
+        Initialize the client.
+
+        Args:
+            self: (todo): write your description
+            client: (todo): write your description
+        """
         self.client = client or AsyncClient()
 
     async def send(self, request: Request) -> Response:

@@ -49,6 +49,12 @@ class Actions(Model):
     disallows: Disallows
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.disallows = Disallows(**self.disallows)
 
 
@@ -76,6 +82,12 @@ class CurrentlyPlaying(Model):
     item: Union[FullTrack, LocalTrack, FullEpisode, None]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.actions = Actions(**self.actions)
         self.currently_playing_type = CurrentlyPlayingType[
             self.currently_playing_type
@@ -99,6 +111,12 @@ class CurrentlyPlayingContext(CurrentlyPlaying):
     shuffle_state: bool
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         self.device = Device(**self.device)
         self.repeat_state = RepeatState[self.repeat_state]

@@ -30,6 +30,12 @@ class FullArtist(Artist):
     popularity: int
 
     def __post_init__(self):
+        """
+        Initialize all the images
+
+        Args:
+            self: (todo): write your description
+        """
         self.followers = Followers(**self.followers)
         self.genres = ModelList(self.genres)
         self.images = ModelList(Image(**i) for i in self.images)
@@ -43,6 +49,12 @@ class FullArtistCursorPaging(CursorPaging):
     total: int
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         super().__post_init__()
         self.items = ModelList(FullArtist(**a) for a in self.items)
 
@@ -54,4 +66,10 @@ class FullArtistOffsetPaging(OffsetPaging):
     items: List[FullArtist]
 
     def __post_init__(self):
+        """
+        Do some setup after initialisation.
+
+        Args:
+            self: (todo): write your description
+        """
         self.items = ModelList(FullArtist(**a) for a in self.items)

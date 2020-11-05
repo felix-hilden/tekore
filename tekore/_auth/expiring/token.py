@@ -33,6 +33,14 @@ class Token(AccessToken):
     """
 
     def __init__(self, token_info: dict, uses_pkce: bool):
+        """
+        Initialize a new token.
+
+        Args:
+            self: (todo): write your description
+            token_info: (dict): write your description
+            uses_pkce: (todo): write your description
+        """
         self._access_token = token_info['access_token']
         self._token_type = token_info['token_type']
 
@@ -45,6 +53,12 @@ class Token(AccessToken):
         self._uses_pkce = uses_pkce
 
     def __repr__(self):
+        """
+        Return a human - readable representation of this parameter.
+
+        Args:
+            self: (todo): write your description
+        """
         options = [
             f'access_token={self.access_token!r}',
             f'refresh_token={self.refresh_token!r}',
