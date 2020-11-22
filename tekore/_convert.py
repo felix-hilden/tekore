@@ -141,6 +141,9 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
+    The query parameters used for tracking sharing of links 
+    we be stripped away (.e.g. ?si=Gwpd4fnkSNSFp_9O2hEgbD)
+
     Parameters
     ----------
     url
