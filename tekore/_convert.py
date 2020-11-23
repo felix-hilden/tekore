@@ -162,7 +162,7 @@ def from_url(url: str) -> Tuple[str, str]:
     *prefixes, type_, id_ = url.split('/')
     prefix = '/'.join(prefixes)
 
-    id_, _ = id_.split('?si=')
+    id_ = id_.split('?si=')[0]
 
     if prefix not in _url_prefixes:
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')
