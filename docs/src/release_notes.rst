@@ -7,7 +7,7 @@ Unreleased
 ----------
 Added
 *****
-- :ref:`conversions` - Ignore GET parameters in :func:`from_url` (:issue:`226`)
+- :ref:`conversions` - Ignore URL parameters in :func:`from_url` (:issue:`226`)
 
 Fixed
 *****

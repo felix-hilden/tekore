@@ -141,8 +141,7 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
-    If the URL includes the tracking token (?si=x)
-    it will be stripped away.
+    Any parameters in the URL will be ignored.
 
     Parameters
     ----------
@@ -162,7 +161,7 @@ def from_url(url: str) -> Tuple[str, str]:
     *prefixes, type_, id_ = url.split('/')
     prefix = '/'.join(prefixes)
 
-    id_ = id_.split('?si=')[0]
+    id_ = id_.split('?')[0]
 
     if prefix not in _url_prefixes:
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')
