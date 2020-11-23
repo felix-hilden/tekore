@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`client` - document new behavior of track markets (:issue:`228`)
+
 3.3.0 (2020-10-22)
 ------------------
 Added
