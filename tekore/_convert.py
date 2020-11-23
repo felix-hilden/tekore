@@ -141,7 +141,7 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
-    If the URL includes the tracking token (?si=x) 
+    If the URL includes the tracking token (?si=x)
     it will be stripped away.
 
     Parameters
