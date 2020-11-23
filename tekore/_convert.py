@@ -141,8 +141,8 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
-    The query parameters used for tracking sharing of links 
-    we be stripped away (.e.g. ?si=Gwpd4fnkSNSFp_9O2hEgbD)
+    If the URL includes the tracking token (?si=x) 
+    it will be stripped away.
 
     Parameters
     ----------
@@ -162,7 +162,7 @@ def from_url(url: str) -> Tuple[str, str]:
     *prefixes, type_, id_ = url.split('/')
     prefix = '/'.join(prefixes)
 
-    id_ = id_.split("?")[0]
+    id_, _ = id_.split('?si=')
 
     if prefix not in _url_prefixes:
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')
