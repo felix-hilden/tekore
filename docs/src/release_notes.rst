@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.4.0 (2020-11-24)
+------------------
 Added
 *****
 - :ref:`conversions` - Ignore URL parameters in :func:`from_url` (:issue:`226`)
