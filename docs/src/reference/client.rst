@@ -6,7 +6,38 @@ Web API endpoints.
 
 .. currentmodule:: tekore
 
-Each method of the client corresponds to an API call, with some exceptions.
++-------------------------------+--------------------------------------+
+| API summary                                                          |
++===============================+======================================+
+| :ref:`client-album`           | Album information                    |
++-------------------------------+--------------------------------------+
+| :ref:`client-artist`          | Artist information                   |
++-------------------------------+--------------------------------------+
+| :ref:`client-browse`          | Spotify featured catalogue           |
++-------------------------------+--------------------------------------+
+| :ref:`client-episode`         | Episode information                  |
++-------------------------------+--------------------------------------+
+| :ref:`client-follow`          | Follow artists, playlists and users  |
++-------------------------------+--------------------------------------+
+| :ref:`client-library`         | Save (like) albums, shows and tracks |
++-------------------------------+--------------------------------------+
+| :ref:`client-personalisation` | User top listens                     |
++-------------------------------+--------------------------------------+
+| :ref:`client-player`          | Playback operations                  |
++-------------------------------+--------------------------------------+
+| :ref:`client-playlist`        | Playlist operations                  |
++-------------------------------+--------------------------------------+
+| :ref:`client-search`          | Search functionality                 |
++-------------------------------+--------------------------------------+
+| :ref:`client-show`            | Show information                     |
++-------------------------------+--------------------------------------+
+| :ref:`client-track`           | Track information and analysis       |
++-------------------------------+--------------------------------------+
+| :ref:`client-user`            | User information                     |
++-------------------------------+--------------------------------------+
+
+Each method of the client corresponds to an API call,
+with some :ref:`exceptions <client-non-endpoint>`.
 Further documentation on endpoints can be viewed in the Web API
 `reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
 
@@ -23,19 +54,22 @@ Further documentation on endpoints can be viewed in the Web API
         print(track.track_number, track.name)
 
 Required and optional scopes to call any endpoint can be determined in code.
-Endpoints provide ``scope``, ``required_scope`` and ``optional_scope``
-attributes that return a :class:`Scope`.
+Endpoints provide ``required_scope`` and ``optional_scope``
+attributes which return a :class:`Scope`.
+A combination of the two is provided in ``scope``.
 They can be accessed via the class itself or its instances.
 
 .. code:: python
 
     scope_cls = tk.Spotify.current_user_top_tracks.scope
-    scope_inst = spotify.current_user_top_tracks.scope
+    scope_inst = tk.Spotify().current_user_top_tracks.scope
     assert scope_cls == scope_inst
 
 .. autoclass:: Spotify
    :no-members:
    :no-show-inheritance:
+
+.. _client-non-endpoint:
 
 Non-endpoint methods
 --------------------
@@ -71,6 +105,8 @@ Paging navigation
 .. automethod:: Spotify.all_items
 .. automethod:: Spotify.all_pages
 
+.. _client-album:
+
 Album API
 ---------
 .. autosummary::
@@ -83,6 +119,8 @@ Album API
 .. automethod:: Spotify.album
 .. automethod:: Spotify.album_tracks
 .. automethod:: Spotify.albums
+
+.. _client-artist:
 
 Artist API
 ----------
@@ -100,6 +138,8 @@ Artist API
 .. automethod:: Spotify.artist_related_artists
 .. automethod:: Spotify.artist_top_tracks
 .. automethod:: Spotify.artists
+
+.. _client-browse:
 
 Browse API
 ----------
@@ -134,6 +174,8 @@ Episode API
 
 .. automethod:: Spotify.episode
 .. automethod:: Spotify.episodes
+
+.. _client-follow:
 
 Follow API
 ----------
@@ -197,6 +239,8 @@ Library API
 .. automethod:: Spotify.saved_tracks_contains
 .. automethod:: Spotify.saved_tracks_delete
 
+.. _client-personalisation:
+
 Personalisation API
 -------------------
 .. autosummary::
@@ -207,6 +251,8 @@ Personalisation API
 
 .. automethod:: Spotify.current_user_top_artists
 .. automethod:: Spotify.current_user_top_tracks
+
+.. _client-player:
 
 Player API
 ----------
@@ -288,6 +334,8 @@ for additional information.
 .. automethod:: Spotify.playlist_reorder
 .. automethod:: Spotify.playlist_replace
 
+.. _client-search:
+
 Search API
 ----------
 .. automethod:: Spotify.search
@@ -307,6 +355,8 @@ Show API
 .. automethod:: Spotify.show_episodes
 .. automethod:: Spotify.shows
 
+.. _client-track:
+
 Track API
 ---------
 .. autosummary::
@@ -323,6 +373,8 @@ Track API
 .. automethod:: Spotify.track_audio_features
 .. automethod:: Spotify.tracks
 .. automethod:: Spotify.tracks_audio_features
+
+.. _client-user:
 
 User API
 --------
