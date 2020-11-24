@@ -8,6 +8,8 @@ Unreleased
 Added
 *****
 - :ref:`conversions` - Ignore URL parameters in :func:`from_url` (:issue:`226`)
+- :ref:`conversions` - :func:`from_uri`, :func:`from_url` raise proper errors
+  with entirely invalid formats, error messages were improved (:issue:`227`)
 
 Fixed
 *****

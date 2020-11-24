@@ -118,12 +118,17 @@ def from_uri(uri: str) -> Tuple[str, str]:
     Raises
     ------
     ConversionError
-        On invalid type or ID.
+        On invalid format, prefix, type or ID.
     """
-    spotify, type_, id_ = uri.split(':')
+    try:
+        spotify, type_, id_ = uri.split(':')
+        if spotify != 'spotify':
+            raise ValueError()
+    except ValueError as e:
+        valid_uri = 'spotify:{type}:{id}'
+        msg = f'Invalid URI: expected format "{valid_uri}", got "{uri}"!'
+        raise ConversionError(msg) from e
 
-    if spotify != 'spotify':
-        raise ConversionError(f'Invalid URI prefix "{spotify}"!')
     check_type(type_)
     check_id(id_)
 
@@ -156,15 +161,19 @@ def from_url(url: str) -> Tuple[str, str]:
     Raises
     ------
     ConversionError
-        On invalid type or ID.
+        On invalid format, prefix, type or ID.
     """
-    *prefixes, type_, id_ = url.split('/')
-    prefix = '/'.join(prefixes)
+    try:
+        *prefixes, type_, id_ = url.split('/')
+        prefix = '/'.join(prefixes)
+        if prefix not in _url_prefixes:
+            raise ValueError()
+    except ValueError as e:
+        valid_url = '[http[s]://]open.spotify.com/{type}/{id}'
+        msg = f'Invalid URL: expected format "{valid_url}", got "{url}"!'
+        raise ConversionError(msg) from e
 
     id_ = id_.split('?')[0]
-
-    if prefix not in _url_prefixes:
-        raise ConversionError(f'Invalid URL prefix "{prefix}"!')
     check_type(type_)
     check_id(id_)
 
