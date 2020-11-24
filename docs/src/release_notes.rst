@@ -5,6 +5,10 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- :ref:`conversions` - Ignore URL parameters in :func:`from_url` (:issue:`226`)
+
 Fixed
 *****
 - :ref:`client` - document new behavior of track markets (:issue:`228`)

@@ -141,6 +141,8 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     Parse type and ID from an URL.
 
+    Any parameters in the URL will be ignored.
+
     Parameters
     ----------
     url
@@ -158,6 +160,8 @@ def from_url(url: str) -> Tuple[str, str]:
     """
     *prefixes, type_, id_ = url.split('/')
     prefix = '/'.join(prefixes)
+
+    id_ = id_.split('?')[0]
 
     if prefix not in _url_prefixes:
         raise ConversionError(f'Invalid URL prefix "{prefix}"!')

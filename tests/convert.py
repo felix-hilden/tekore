@@ -110,3 +110,7 @@ class TestFromURL:
         url = 'a.suspicious.site/track/b62'
         with pytest.raises(ConversionError):
             self._call(url, 'track', 'b62')
+
+    def test_params(self):
+        url = 'https://open.spotify.com/track/b62?si=a101'
+        assert self._call(url, 'track', 'b62') is True
