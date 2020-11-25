@@ -5,9 +5,9 @@ Release notes
 =============
 Unreleased
 ----------
-Changed
-*******
-- :ref:`client` - Update docstring for :func:`Spotify.recommendations`
+Fixed
+*****
+- :ref:`client` - Update documentation for :func:`Spotify.recommendations`
   (:issue:`229`)
 
 3.4.0 (2020-11-24)
