@@ -123,8 +123,8 @@ Next and previous pages can be requested one at a time.
     import tekore as tk
 
     spotify = tk.Spotify(token)
-    tracks = spotify.playlist_tracks('37i9dQZEVXbMDoHDwVN2tF', limit=10)
-    t_next = spotify.next(tracks)
+    items = spotify.playlist_items('37i9dQZEVXbMDoHDwVN2tF', limit=10)
+    t_next = spotify.next(items)
     t_prev = spotify.previous(t_next)
 
 To retrieve the whole content additional methods are available.
