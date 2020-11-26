@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`client` - Document the need for at least one seed in
+  :meth:`recommendations <Spotify.recommendations>` (:issue:`229`)
+
 3.4.0 (2020-11-24)
 ------------------
 Added

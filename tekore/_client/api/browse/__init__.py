@@ -197,7 +197,9 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of recommended tracks for seeds.
 
-        Up to 5 seed values may be provided as artists, genres and tracks.
+        .. warning::
+            The total number of seeds provided in ``artist_ids``, ``genres``
+            and ``track_ids`` must be at least 1 and at most 5.
 
         Parameters
         ----------
