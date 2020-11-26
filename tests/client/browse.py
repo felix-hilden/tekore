@@ -1,4 +1,6 @@
 import pytest
+import tekore as tk
+
 from ._resources import artist_ids, category_id, genres, track_id
 
 
@@ -65,6 +67,10 @@ class TestSpotifyArtist:
             market=None
         )
         assert len(rec.tracks) > 0
+
+    def test_recommendations_no_seeds(self, app_client):
+        with pytest.raises(tk.BadRequest):
+            app_client.recommendations()
 
     def test_recommendations_target_attribute(self, app_client):
         rec = app_client.recommendations(
