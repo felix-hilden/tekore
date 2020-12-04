@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.4.1 (2020-12-04)
+------------------
 Fixed
 *****
 - :ref:`client` - Document the need for at least one seed in
