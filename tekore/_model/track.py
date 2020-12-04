@@ -71,7 +71,7 @@ class FullTrack(Track):
     """
     Complete track object.
 
-    When market is specified, :attr:`available_markets` is empty.
+    When market is specified, :attr:`available_markets` is not available.
     :attr:`is_playable` is not available when market is not specified.
     :attr:`restrictions` is available if restrictions have been placed on
     the track, making it unplayable.
@@ -80,15 +80,16 @@ class FullTrack(Track):
     album: SimpleAlbum
     external_ids: dict
     popularity: int
-    available_markets: List[str]
+    available_markets: Optional[List[str]] = None
     linked_from: Optional[TrackLink] = None
     is_playable: Optional[bool] = None
     restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
         super().__post_init__()
-        self.available_markets = ModelList(self.available_markets)
         self.album = SimpleAlbum(**self.album)
+        if self.available_markets is not None:
+            self.available_markets = ModelList(self.available_markets)
         if self.linked_from is not None:
             self.linked_from = TrackLink(**self.linked_from)
         if self.restrictions is not None:
