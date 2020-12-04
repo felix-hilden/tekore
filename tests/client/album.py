@@ -21,7 +21,7 @@ class TestSpotifyAlbum:
     def test_album_tracks_relinking(self, app_client):
         tracks = app_client.album_tracks(album_relinked, market='US', limit=1)
         track = tracks.items[0]
-        assert track.is_playable is True
+        assert track.linked_from is not None
 
     def test_album_tracks_restricted(self, app_client):
         tracks = app_client.album_tracks(album_restricted, market='SE', limit=1)
