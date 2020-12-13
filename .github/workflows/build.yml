@@ -17,6 +17,7 @@ jobs:
       SPOTIFY_REDIRECT_URI: ${{secrets.SPOTIFY_REDIRECT_URI}}
       SPOTIFY_USER_REFRESH: ${{secrets.SPOTIFY_USER_REFRESH}}
       TEKORE_TEST_SKIP_IS_FAIL: True
+      CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
 
     steps:
       - uses: actions/checkout@v2
