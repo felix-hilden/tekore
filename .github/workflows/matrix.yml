@@ -1,6 +1,6 @@
-# Tests in multiple environments without authentication
+# Unauthorised tests in multiple environments
 
-name: environment
+name: matrix
 on:
   push:
     tags-ignore:
