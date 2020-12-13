@@ -36,6 +36,6 @@ jobs:
       - name: Run tox
         run: tox
       - name: Post coverage
-        run:
+        run: |
           coverage xml
           ./cc-test-reporter after-build --exit-code 0
