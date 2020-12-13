@@ -35,8 +35,8 @@ jobs:
           ./cc-test-reporter before-build
       - name: Run tox
         run: |
-        tox
-        TEST_RESULT=$?
+          tox
+          TEST_RESULT=$?
       - name: Post coverage
         run: |
           coverage xml
