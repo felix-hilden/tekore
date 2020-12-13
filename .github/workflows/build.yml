@@ -38,5 +38,7 @@ jobs:
         run: tox
       - name: Post coverage
         run: |
+          GIT_COMMIT_SHA=$GITHUB_SHA
+          GIT_BRANCH=${GITHUB_HEAD_REF#refs/heads/}
           coverage xml
           ./cc-test-reporter after-build --exit-code 0
