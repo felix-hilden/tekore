@@ -39,5 +39,6 @@ jobs:
           TEST_RESULT=$?
       - name: Post coverage
         run: |
+          echo Debug result: $TEST_RESULT
           coverage xml
           ./cc-test-reporter after-build --exit-code $TEST_RESULT
