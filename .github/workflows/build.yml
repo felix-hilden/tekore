@@ -34,11 +34,8 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - name: Run tox
-        run: |
-          tox
-          TEST_RESULT=$?
+        run: tox
       - name: Post coverage
-        run: |
-          echo Debug result: $TEST_RESULT
+        run:
           coverage xml
-          ./cc-test-reporter after-build --exit-code $TEST_RESULT
+          ./cc-test-reporter after-build --exit-code 0
