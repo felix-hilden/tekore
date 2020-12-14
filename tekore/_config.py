@@ -4,11 +4,6 @@ from warnings import warn
 from configparser import ConfigParser
 
 
-def _new_function():
-    x = 1
-    return x
-
-
 class MissingConfigurationWarning(RuntimeWarning):
     """Missing value read from configuration."""
 
