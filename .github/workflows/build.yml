@@ -37,7 +37,7 @@ jobs:
       - name: Run tox
         run: |
           tox
-          export TEST_RESULT=$?
+          echo "TEST_RESULT=$?" >> $GITHUB_ENV
       - name: Post coverage
         run: |
           export GIT_COMMIT_SHA=$GITHUB_SHA
