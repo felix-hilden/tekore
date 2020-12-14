@@ -42,6 +42,5 @@ jobs:
         run: |
           export GIT_COMMIT_SHA=$GITHUB_SHA
           export GIT_BRANCH=${GITHUB_HEAD_REF#refs/heads/}
-          echo $GIT_COMMIT_SHA $GIT_BRANCH
           coverage xml
-          ./cc-test-reporter after-build --exit-code $TEST_RESULT --debug
+          ./cc-test-reporter after-build --exit-code $TEST_RESULT
