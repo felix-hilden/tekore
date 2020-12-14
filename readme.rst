@@ -1,7 +1,7 @@
 ======
 |logo|
 ======
-|travis| |documentation| |coverage|
+|build| |documentation| |coverage|
 
 Welcome to the GitHub repository of Tekore!
 We provide a client for the Spotify Web API for Python,
@@ -135,8 +135,8 @@ This can be achieved with tox by running ``tox -e coverage``.
    :target: `pypi`_
    :alt: logo
 
-.. |travis| image:: https://travis-ci.org/felix-hilden/tekore.svg?branch=master
-   :target: https://travis-ci.org/felix-hilden/tekore
+.. |build| image:: https://github.com/felix-hilden/tekore/workflows/build/badge.svg
+   :target: https://github.com/felix-hilden/tekore/actions
    :alt: build status
 
 .. |documentation| image:: https://readthedocs.org/projects/tekore/badge/?version=latest
