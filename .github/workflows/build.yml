@@ -35,11 +35,13 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - name: Run tox
-        run: tox
+        run: |
+          tox
+          export TEST_RESULT=$?
       - name: Post coverage
         run: |
-          GIT_COMMIT_SHA=$GITHUB_SHA
-          GIT_BRANCH=${GITHUB_HEAD_REF#refs/heads/}
+          export GIT_COMMIT_SHA=$GITHUB_SHA
+          export GIT_BRANCH=${GITHUB_HEAD_REF#refs/heads/}
           echo $GIT_COMMIT_SHA $GIT_BRANCH
           coverage xml
-          ./cc-test-reporter after-build --exit-code 0 --debug
+          ./cc-test-reporter after-build --exit-code $TEST_RESULT --debug
