@@ -83,11 +83,16 @@ def field_repr(field, value) -> str:
     if isinstance(value, Model):
         text = member_repr(type(value))
     elif isinstance(value, list):
-        f_type = field.type.__args__[0]
-        if issubclass(f_type, Model):
-            f_str = member_repr(f_type)
+        outer_type = field.type
+        if outer_type.__origin__ is Union:
+            outer_type = outer_type.__args__[0]
+
+        inner_type = outer_type.__args__[0]
+
+        if issubclass(inner_type, Model):
+            f_str = member_repr(inner_type)
         else:
-            f_str = f_type.__name__
+            f_str = inner_type.__name__
 
         text = f'[{len(value)} x {f_str}]'
     elif isinstance(value, dict):

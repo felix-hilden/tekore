@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`models` - Fix model repr for optional lists (:issue:`233`)
+
 3.4.1 (2020-12-04)
 ------------------
 Fixed

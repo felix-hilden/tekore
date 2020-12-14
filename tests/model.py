@@ -2,7 +2,7 @@ import json
 import pytest
 
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 from unittest.mock import MagicMock, patch
 
@@ -112,6 +112,7 @@ class TestSerialisableDataclass:
         @dataclass(repr=False)
         class LongData(Model):
             data: LongContainer
+            optional_list: Optional[List[LongContainer]]
             data_list: List[LongContainer]
             builtin_list: List[int]
             raw_dict: dict
@@ -120,6 +121,7 @@ class TestSerialisableDataclass:
 
         data = LongData(
             LongContainer(),
+            [LongContainer() for _ in range(20)],
             [LongContainer() for _ in range(20)],
             list(range(10)),
             {str(k): k for k in range(20)},
