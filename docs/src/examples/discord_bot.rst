@@ -34,8 +34,8 @@ Queries can be for example:
     spotify = tk.Spotify(token_spotify, asynchronous=True)
 
 
-    @bot.command(help="Multiword query in quotes")
-    async def track(ctx, query: str = None):
+    @bot.command()
+    async def track(ctx, *, query: str = None):
         if query is None:
             await ctx.send("No search query specified")
             return
