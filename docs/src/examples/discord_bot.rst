@@ -30,7 +30,7 @@ Queries can be for example:
     token_spotify = tk.request_client_token(*conf[:2])
 
     description = "Spotify track search bot using Tekore"
-    bot = commands.Bot(command_prefix='>tk ', description=description)
+    bot = commands.Bot(command_prefix='>tk ', description=description, activity=Game(name=">tk help"))
     spotify = tk.Spotify(token_spotify, asynchronous=True)
 
 
@@ -62,7 +62,6 @@ Queries can be for example:
     @bot.event
     async def on_ready():
         print("Ready to demo!")
-        await bot.change_presence(activity=Game(name=">tk help"))
 
 
     if __name__ == "__main__":
