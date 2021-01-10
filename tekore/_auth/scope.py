@@ -44,6 +44,10 @@ class scope(Enum):
     playlist_read_private = 'playlist-read-private'
     playlist_modify_private = 'playlist-modify-private'
 
+    app_remote_control = "app-remote-control"
+
+    streaming = "streaming"
+
     ugc_image_upload = 'ugc-image-upload'
 
     def __str__(self):

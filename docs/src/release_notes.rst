@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :ref:`auth` - Add :meth:`streaming <scope.streaming>` and
+  :meth:`app-remote-control <scope.app_remote_control>` scopes.
+
 3.4.2 (2020-12-14)
 ------------------
 Fixed
