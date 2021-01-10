@@ -7,8 +7,9 @@ Unreleased
 ----------
 Added
 *****
-- :ref:`auth` - Add :meth:`streaming <scope.streaming>` and
-  :meth:`app-remote-control <scope.app_remote_control>` scopes.
+- :ref:`auth` - Add :attr:`streaming <scope.streaming>` and
+  :attr:`app-remote-control <scope.app_remote_control>`
+  as extra scopes (:issue:`237`)
 
 3.4.2 (2020-12-14)
 ------------------

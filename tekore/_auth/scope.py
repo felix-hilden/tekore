@@ -20,6 +20,11 @@ class scope(Enum):
         tk.scope.write: Scope = ...           # All write scopes
         tk.scope.every: Scope = read + write  # All available scopes
 
+    .. note::
+
+        :attr:`app_remote_control` and :attr:`streaming` are only used outside
+        of the Web API, and are not included in the premade scope combinations.
+
     Addition and subtraction from both sides is supported
     but delegated to :class:`Scope` and always returns a :class:`Scope`.
     """
