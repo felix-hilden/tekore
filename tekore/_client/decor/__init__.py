@@ -1,5 +1,4 @@
 from typing import Callable
-from warnings import warn
 from functools import wraps
 
 from .handle import handle_errors
