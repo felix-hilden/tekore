@@ -56,6 +56,9 @@ to retrieve tokens with additional privileges.
     scope = tk.scope.user_read_email + tk.scope.user_read_private
     token = tk.prompt_for_user_token(*cred, scope)
 
+See Spotify's `Authorization scopes
+<https://developer.spotify.com/documentation/general/guides/scopes/>`_
+guide for scope descriptions.
 Scopes that are required or optional are listed
 in each endpoint's documentation, see :ref:`client`.
 They can also be determined programmatically.
