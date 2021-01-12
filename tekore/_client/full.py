@@ -1,3 +1,4 @@
+from typing import Generator
 from contextlib import contextmanager
 
 from .paging import SpotifyPaging
@@ -65,7 +66,7 @@ class Spotify(
     """
 
     @contextmanager
-    def token_as(self, token) -> 'Spotify':
+    def token_as(self, token) -> Generator['Spotify', None, None]:
         """
         Use a different token with requests. Context manager.
 
@@ -76,8 +77,8 @@ class Spotify(
 
         Returns
         -------
-        Spotify
-            self
+        Generator[Spotify, None, None]
+            self as context
 
         Examples
         --------
@@ -96,7 +97,7 @@ class Spotify(
         self.token = old
 
     @contextmanager
-    def max_limits(self, on: bool = True) -> 'Spotify':
+    def max_limits(self, on: bool = True) -> Generator['Spotify', None, None]:
         """
         Toggle using maximum limits in paging calls. Context manager.
 
@@ -107,8 +108,8 @@ class Spotify(
 
         Returns
         -------
-        Spotify
-            self
+        Generator[Spotify, None, None]
+            self as context
 
         Examples
         --------
@@ -127,7 +128,7 @@ class Spotify(
         self.max_limits_on = old
 
     @contextmanager
-    def chunked(self, on: bool = True) -> 'Spotify':
+    def chunked(self, on: bool = True) -> Generator['Spotify', None, None]:
         """
         Toggle chunking lists of resources. Context manager.
 
@@ -138,8 +139,8 @@ class Spotify(
 
         Returns
         -------
-        Spotify
-            self
+        Generator[Spotify, None, None]
+            self as context
 
         Examples
         --------
