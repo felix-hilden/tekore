@@ -3,11 +3,11 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.5.0 (2021-01-15)
+------------------
 Added
 *****
-- :ref:`auth` - Add :attr:`streaming <scope.streaming>` and
+- :ref:`auth` - add :attr:`streaming <scope.streaming>` and
   :attr:`app-remote-control <scope.app_remote_control>`
   as extra scopes (:issue:`237`)
 
@@ -19,13 +19,13 @@ Fixed
 ------------------
 Fixed
 *****
-- :ref:`models` - Fix model repr for optional lists (:issue:`233`)
+- :ref:`models` - fix model repr for optional lists (:issue:`233`)
 
 3.4.1 (2020-12-04)
 ------------------
 Fixed
 *****
-- :ref:`client` - Document the need for at least one seed in
+- :ref:`client` - document the need for at least one seed in
   :meth:`recommendations <Spotify.recommendations>` (:issue:`229`)
 - :ref:`client` - match new behavior of track markets (:issue:`231`)
 
@@ -33,7 +33,7 @@ Fixed
 ------------------
 Added
 *****
-- :ref:`conversions` - Ignore URL parameters in :func:`from_url` (:issue:`226`)
+- :ref:`conversions` - ignore URL parameters in :func:`from_url` (:issue:`226`)
 - :ref:`conversions` - :func:`from_uri`, :func:`from_url` raise proper errors
   with entirely invalid formats, error messages were improved (:issue:`227`)
 
