@@ -1,4 +1,4 @@
-from typing import List
+from typing import Sequence
 from dataclasses import dataclass
 
 from .serialise import Model
@@ -9,7 +9,7 @@ class Paging(Model):
     """Paging base."""
 
     href: str
-    items: List[Model]
+    items: Sequence[Model]
     limit: int
     next: str
 

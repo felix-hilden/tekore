@@ -11,6 +11,10 @@ Added
   :attr:`app-remote-control <scope.app_remote_control>`
   as extra scopes (:issue:`237`)
 
+Fixed
+*****
+- :ref:`client` - fix type hints for context managers (:issue:`239`)
+
 3.4.2 (2020-12-14)
 ------------------
 Fixed
