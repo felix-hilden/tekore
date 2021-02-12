@@ -42,7 +42,7 @@ class SpotifySearch(SpotifyBase):
         """
         Search for an item.
 
-        Returns :class:`NotFound` if limit+offset would be above 2000.
+        Returns :class:`NotFound` if limit+offset would be above 1000.
 
         Parameters
         ----------

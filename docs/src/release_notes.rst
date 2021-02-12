@@ -3,6 +3,11 @@
 
 Release notes
 =============
+Unreleased
+----------
+- :ref:`client` - document decreased limit of :meth:`search <Spotify.search>`
+  total (:issue:`241`)
+
 3.5.0 (2021-01-15)
 ------------------
 Added

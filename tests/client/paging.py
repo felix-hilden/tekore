@@ -30,12 +30,12 @@ class TestSpotifyPaging:
         assert cat_next.total > 0
 
     def test_next_beyond_limit(self, app_client):
-        tracks, = app_client.search('piano', limit=1, offset=1999)
+        tracks, = app_client.search('piano', limit=1, offset=999)
         assert app_client.next(tracks) is None
 
     @pytest.mark.asyncio
     async def test_async_next_beyond_limit(self, app_aclient):
-        tracks, = await app_aclient.search('piano', limit=1, offset=1999)
+        tracks, = await app_aclient.search('piano', limit=1, offset=999)
         assert await app_aclient.next(tracks) is None
 
     def test_previous_of_next(self, app_client, tracks):
