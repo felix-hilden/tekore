@@ -7,7 +7,8 @@ Unreleased
 ----------
 Added
 *****
-- :ref:`client` - make context managers async safe (:issue:`242`)
+- :ref:`client` - make context managers async safe, adds a dependency to
+  the ``contextvars`` backport for Python 3.6 (:issue:`242`)
 
 3.5.1 (2021-02-12)
 ------------------
