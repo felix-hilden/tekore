@@ -174,6 +174,13 @@ While asynchronous :class:`Credentials` is supported, it is worth considering
 that concurrently refreshing tokens may lead to multiple refreshes for one token.
 Synchronous credentials clients are recommended.
 
+.. note::
+
+    :ref:`client` context managers are async safe, meaning that they can be used
+    in many tasks without affecting the state of other tasks.
+    *However*, setting values outside of all contexts modifies the persistent
+    value directly, and as such may affect other tasks.
+
 Localisation
 ------------
 Many API calls that retrieve track information accept a ``market`` or

@@ -68,7 +68,7 @@ class Spotify(
     @contextmanager
     def token_as(self, token) -> Generator['Spotify', None, None]:
         """
-        Use a different token with requests. Context manager.
+        Use a different token with requests. Context manager, async safe.
 
         Parameters
         ----------
@@ -92,14 +92,14 @@ class Spotify(
             with spotify.token_as(user_token):
                 user = spotify.current_user()
         """
-        self.token, old = token, self.token
+        cv_token = self._token_cv.set(token)
         yield self
-        self.token = old
+        self._token_cv.reset(cv_token)
 
     @contextmanager
     def max_limits(self, on: bool = True) -> Generator['Spotify', None, None]:
         """
-        Toggle using maximum limits in paging calls. Context manager.
+        Toggle using maximum limits in paging calls. Context manager, async safe.
 
         Parameters
         ----------
@@ -123,14 +123,14 @@ class Spotify(
             with spotify.max_limits(False):
                 tracks, = spotify.search('piano')
         """
-        self.max_limits_on, old = on, self.max_limits_on
+        cv_token = self._max_limits_on_cv.set(on)
         yield self
-        self.max_limits_on = old
+        self._max_limits_on_cv.reset(cv_token)
 
     @contextmanager
     def chunked(self, on: bool = True) -> Generator['Spotify', None, None]:
         """
-        Toggle chunking lists of resources. Context manager.
+        Toggle chunking lists of resources. Context manager, async safe.
 
         Parameters
         ----------
@@ -154,6 +154,6 @@ class Spotify(
             with spotify.chunked(False):
                 tracks = spotify.search(many_ids[:50])
         """
-        self.chunked_on, old = on, self.chunked_on
+        cv_token = self._chunked_on_cv.set(on)
         yield self
-        self.chunked_on = old
+        self._chunked_on_cv.reset(cv_token)

@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :ref:`client` - make context managers async safe (:issue:`242`)
+
 3.5.1 (2021-02-12)
 ------------------
 Fixed

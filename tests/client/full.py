@@ -1,3 +1,4 @@
+import asyncio
 import pytest
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
@@ -12,7 +13,15 @@ def client():
     return Spotify('token')
 
 
+async def sleep(k):
+    return await asyncio.sleep(k * 0.01)
+
+
 class TestSpotifyUnits:
+    def test_set_token_without_context(self, client):
+        client.token = 'new'
+        assert client.token == 'new'
+
     def test_new_token_used_in_context(self, client):
         with client.token_as('new'):
             assert client.token == 'new'
@@ -21,6 +30,115 @@ class TestSpotifyUnits:
         with client.token_as('new'):
             pass
         assert client.token == 'token'
+
+    def test_setting_token_in_context_returns_set(self, client):
+        with client.token_as('new'):
+            client.token = 'set'
+            assert client.token == 'set'
+
+    def test_setting_token_in_context_reset_after_context(self, client):
+        with client.token_as('new'):
+            client.token = 'set'
+        assert client.token == 'token'
+
+    def test_set_max_limits_without_context(self, client):
+        client.max_limits_on = True
+        assert client.max_limits_on is True
+
+    def test_new_max_limits_used_in_context(self, client):
+        with client.max_limits(True):
+            assert client.max_limits_on is True
+
+    def test_old_max_limits_restored_after_context(self, client):
+        with client.max_limits(True):
+            pass
+        assert client.max_limits_on is False
+
+    def test_setting_max_limits_in_context_returns_set(self, client):
+        with client.max_limits(True):
+            client.max_limits_on = False
+            assert client.max_limits_on is False
+
+    def test_setting_max_limits_in_context_reset_after_context(self, client):
+        with client.max_limits(True):
+            client.max_limits_on = True
+        assert client.max_limits_on is False
+
+    def test_set_chunked_without_context(self, client):
+        client.chunked_on = True
+        assert client.chunked_on is True
+
+    def test_new_chunked_used_in_context(self, client):
+        with client.chunked(True):
+            assert client.chunked_on is True
+
+    def test_old_chunked_restored_after_context(self, client):
+        with client.chunked(True):
+            pass
+        assert client.chunked_on is False
+
+    def test_setting_chunked_in_context_returns_set(self, client):
+        with client.chunked(True):
+            client.chunked_on = False
+            assert client.chunked_on is False
+
+    def test_setting_chunked_in_context_reset_after_context(self, client):
+        with client.chunked(True):
+            client.chunked_on = True
+        assert client.chunked_on is False
+
+    @pytest.mark.asyncio
+    async def test_token_async_interrupt_preserves_context(self, client):
+        async def do_a():
+            with client.token_as('a'):
+                assert client.token == 'a'
+                await sleep(1)
+                assert client.token == 'a'
+
+        async def do_b():
+            with client.token_as('b'):
+                assert client.token == 'b'
+                await sleep(1)
+                assert client.token == 'b'
+
+        await asyncio.gather(do_a(), do_b())
+
+    @pytest.mark.asyncio
+    async def test_token_set_visible_in_another_task(self, client):
+        async def do_a():
+            client.token = 'a'
+
+        async def do_b():
+            await sleep(1)
+            assert client.token == 'a'
+
+        await asyncio.gather(do_a(), do_b())
+
+    @pytest.mark.asyncio
+    async def test_token_context_unaffected_by_set_in_another_task(self, client):
+        async def do_a():
+            with client.token_as('a'):
+                await sleep(2)
+                assert client.token == 'a'
+
+        async def do_b():
+            await sleep(1)
+            client.token = 'b'
+
+        await asyncio.gather(do_a(), do_b())
+
+    @pytest.mark.asyncio
+    async def test_token_set_without_context_modifies_persistent_value(self, client):
+        async def do_a():
+            with client.token_as('a'):
+                await sleep(2)
+            assert client.token == 'b'
+
+        async def do_b():
+            await sleep(1)
+            client.token = 'b'
+
+        await asyncio.gather(do_a(), do_b())
 
     def test_next_with_no_next_set_returns_none(self, client):
         paging = MagicMock()

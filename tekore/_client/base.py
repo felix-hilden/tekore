@@ -1,6 +1,7 @@
 import json
 
 from typing import Optional, Union, Coroutine
+from contextvars import ContextVar
 from tekore._sender import Sender, Client, Request, Response
 
 prefix = 'https://api.spotify.com/v1/'
@@ -22,6 +23,10 @@ def parse_url_params(params: Optional[dict]) -> Optional[dict]:
 class SpotifyBase(Client):
     """Base client with options and utility functions."""
 
+    _token_cv = ContextVar('_token_cv')
+    _max_limits_on_cv = ContextVar('_max_limits_on_cv')
+    _chunked_on_cv = ContextVar('_chunked_on_cv')
+
     def __init__(
             self,
             token=None,
@@ -32,9 +37,51 @@ class SpotifyBase(Client):
     ):
         # Docstring in the main client
         super().__init__(sender, asynchronous)
-        self.token = token
-        self.max_limits_on = max_limits_on
-        self.chunked_on = chunked_on
+        self._token = token
+        self._max_limits_on = max_limits_on
+        self._chunked_on = chunked_on
+
+    @property
+    def token(self):
+        """Token getter."""
+        return self._token_cv.get(self._token)
+
+    @token.setter
+    def token(self, value):
+        try:
+            self._token_cv.get()
+        except LookupError:
+            self._token = value
+        else:
+            self._token_cv.set(value)
+
+    @property
+    def max_limits_on(self):
+        """Max limits getter."""
+        return self._max_limits_on_cv.get(self._max_limits_on)
+
+    @max_limits_on.setter
+    def max_limits_on(self, value):
+        try:
+            self._max_limits_on_cv.get()
+        except LookupError:
+            self._max_limits_on = value
+        else:
+            self._max_limits_on_cv.set(value)
+
+    @property
+    def chunked_on(self):
+        """Chunked getter."""
+        return self._chunked_on_cv.get(self._chunked_on)
+
+    @chunked_on.setter
+    def chunked_on(self, value):
+        try:
+            self._chunked_on_cv.get()
+        except LookupError:
+            self._chunked_on = value
+        else:
+            self._chunked_on_cv.set(value)
 
     def __repr__(self):
         options = [
