@@ -10,6 +10,7 @@ Added
 - :ref:`client` - make context managers async safe on Python 3.7+,
   adds a dependency to the ``contextvars`` backport for Python 3.6
   (:issue:`242`)
+- Dependency to HTTPX upgraded to include version ``0.17.*`` (:issue:`243`)
 
 3.5.1 (2021-02-12)
 ------------------
