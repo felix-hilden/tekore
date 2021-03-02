@@ -1,4 +1,5 @@
 import asyncio
+import sys
 import pytest
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
@@ -15,6 +16,12 @@ def client():
 
 async def sleep(k):
     return await asyncio.sleep(k * 0.01)
+
+
+contextvars_fail_reason = (
+    'Missing async implementation in'
+    'contextvars backport for Python 3.6!'
+)
 
 
 class TestSpotifyUnits:
@@ -87,6 +94,7 @@ class TestSpotifyUnits:
             client.chunked_on = True
         assert client.chunked_on is False
 
+    @pytest.mark.xfail(sys.version_info < (3, 7), reason=contextvars_fail_reason)
     @pytest.mark.asyncio
     async def test_token_async_interrupt_preserves_context(self, client):
         async def do_a():
@@ -114,6 +122,7 @@ class TestSpotifyUnits:
 
         await asyncio.gather(do_a(), do_b())
 
+    @pytest.mark.xfail(sys.version_info < (3, 7), reason=contextvars_fail_reason)
     @pytest.mark.asyncio
     async def test_token_context_unaffected_by_set_in_another_task(self, client):
         async def do_a():
