@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.6.0 (2021-03-02)
+------------------
 Added
 *****
 - :ref:`client` - make context managers async safe on Python 3.7+,
