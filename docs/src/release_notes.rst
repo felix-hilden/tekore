@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.6.1 (2021-03-07)
+------------------
 Fixed
 *****
 - :ref:`auth` - allow missing scope in token responses and parse it to
