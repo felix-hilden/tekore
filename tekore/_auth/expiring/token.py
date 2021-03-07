@@ -36,9 +36,11 @@ class Token(AccessToken):
         self._access_token = token_info['access_token']
         self._token_type = token_info['token_type']
 
-        self._scope = Scope(*token_info['scope'].split(' '))
-        if str(self._scope) == '':
-            self._scope = Scope()
+        scope = token_info.get('scope', '')
+        components = scope.split(' ')
+        if components[0] == '':
+            components = []
+        self._scope = Scope(*components)
 
         self._refresh_token = token_info.get('refresh_token', None)
         self._expires_at = int(time.time()) + token_info['expires_in']

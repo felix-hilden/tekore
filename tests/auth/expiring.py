@@ -97,24 +97,28 @@ class TestCredentialsOnline:
         c = Credentials(app_env[0], app_env[1])
         token = c.request_client_token()
         assert token.refresh_token is None
+        assert str(token.scope) == ''
 
     @pytest.mark.asyncio
     async def test_async_request_client_token(self, app_env):
         c = Credentials(app_env[0], app_env[1], asynchronous=True)
         token = await c.request_client_token()
         assert token.refresh_token is None
+        assert str(token.scope) == ''
         await c.close()
 
     def test_refresh_user_token(self, app_env, user_refresh):
         c = Credentials(app_env[0], app_env[1])
         token = c.refresh_user_token(user_refresh)
         assert token.refresh_token is not None
+        assert len(token.scope) > 0
 
     @pytest.mark.asyncio
     async def test_async_refresh_user_token(self, app_env, user_refresh):
         c = Credentials(app_env[0], app_env[1], asynchronous=True)
         token = await c.refresh_user_token(user_refresh)
         assert token.refresh_token is not None
+        assert len(token.scope) > 0
         await c.close()
 
     def test_bad_arguments_raises_error(self):

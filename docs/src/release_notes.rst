@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`auth` - allow missing scope in token responses and parse it to
+  an empty :class:`Scope` (:issue:`245`)
+
 3.6.0 (2021-03-02)
 ------------------
 Added
