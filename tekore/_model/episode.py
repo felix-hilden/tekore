@@ -46,6 +46,7 @@ class Episode(Item):
 class SimpleEpisode(Episode):
     """Simplified episode object."""
 
+    html_description: str = None
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
@@ -59,6 +60,7 @@ class FullEpisode(Episode):
     """Complete episode object."""
 
     show: SimpleShow
+    html_description: str = None
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):

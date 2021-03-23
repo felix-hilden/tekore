@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`models` - add missing but undocumented ``html_description``
+  field to :class:`FullEpisode` and :class:`SimpleEpisode` (:issue:`246`)
+
 3.6.1 (2021-03-07)
 ------------------
 Fixed
