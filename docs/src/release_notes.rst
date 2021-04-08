@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.7.0 (2021-04-08)
+------------------
 Added
 *****
 - :ref:`client` - add the new market API (:issue:`249`)
