@@ -21,6 +21,8 @@ Web API endpoints.
 +-------------------------------+--------------------------------------+
 | :ref:`client-library`         | Save (like) albums, shows and tracks |
 +-------------------------------+--------------------------------------+
+| :ref:`client-markets`         | Spotify market information           |
++-------------------------------+--------------------------------------+
 | :ref:`client-personalisation` | User top listens                     |
 +-------------------------------+--------------------------------------+
 | :ref:`client-player`          | Playback operations                  |
@@ -238,6 +240,17 @@ Library API
 .. automethod:: Spotify.saved_tracks_add
 .. automethod:: Spotify.saved_tracks_contains
 .. automethod:: Spotify.saved_tracks_delete
+
+.. _client-markets:
+
+Markets API
+-----------
+.. autosummary::
+   :nosignatures:
+
+   Spotify.markets
+
+.. automethod:: Spotify.markets
 
 .. _client-personalisation:
 

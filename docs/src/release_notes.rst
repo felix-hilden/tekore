@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :ref:`client` - add the new market API (:issue:`249`)
+
 3.6.2 (2021-03-23)
 ------------------
 Fixed

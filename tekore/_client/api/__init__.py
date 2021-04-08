@@ -4,6 +4,7 @@ from .browse import SpotifyBrowse
 from .episode import SpotifyEpisode
 from .follow import SpotifyFollow
 from .library import SpotifyLibrary
+from .markets import SpotifyMarkets
 from .personalisation import SpotifyPersonalisation
 from .player import SpotifyPlayer
 from .playlist import SpotifyPlaylist
