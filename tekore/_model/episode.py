@@ -5,7 +5,7 @@ from .base import Item
 from .show import SimpleShow
 from .paging import OffsetPaging
 from .member import Image, ReleaseDatePrecision
-from .serialise import Model, ModelList
+from .serialise import Model, ModelList, Timestamp
 
 
 @dataclass(repr=False)
@@ -81,3 +81,25 @@ class SimpleEpisodePaging(OffsetPaging):
             SimpleEpisode(**i) if i is not None else None
             for i in self.items
         )
+
+
+@dataclass(repr=False)
+class SavedEpisode(Model):
+    """Episode saved to library."""
+
+    added_at: Timestamp
+    episode: FullEpisode
+
+    def __post_init__(self):
+        self.added_at = Timestamp.from_string(self.added_at)
+        self.episode = FullEpisode(**self.episode)
+
+
+@dataclass(repr=False)
+class SavedEpisodePaging(OffsetPaging):
+    """Paging of episodes in library."""
+
+    items: List[SavedEpisode]
+
+    def __post_init__(self):
+        self.items = ModelList(SavedEpisode(**a) for a in self.items)

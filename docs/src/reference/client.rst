@@ -219,6 +219,10 @@ Library API
    Spotify.saved_albums_add
    Spotify.saved_albums_contains
    Spotify.saved_albums_delete
+   Spotify.saved_episodes
+   Spotify.saved_episodes_add
+   Spotify.saved_episodes_contains
+   Spotify.saved_episodes_delete
    Spotify.saved_shows
    Spotify.saved_shows_add
    Spotify.saved_shows_contains
@@ -232,6 +236,10 @@ Library API
 .. automethod:: Spotify.saved_albums_add
 .. automethod:: Spotify.saved_albums_contains
 .. automethod:: Spotify.saved_albums_delete
+.. automethod:: Spotify.saved_episodes
+.. automethod:: Spotify.saved_episodes_add
+.. automethod:: Spotify.saved_episodes_contains
+.. automethod:: Spotify.saved_episodes_delete
 .. automethod:: Spotify.saved_shows
 .. automethod:: Spotify.saved_shows_add
 .. automethod:: Spotify.saved_shows_contains

@@ -5,7 +5,9 @@ from ..decor import send_and_process, maximise_limit, scopes
 from ..process import single, nothing
 from ..chunked import chunked, join_lists, return_none
 from tekore._auth import scope
-from tekore.model import SavedAlbumPaging, SavedTrackPaging, SavedShowPaging
+from tekore.model import (
+    SavedAlbumPaging, SavedEpisodePaging, SavedTrackPaging, SavedShowPaging
+)
 
 
 class SpotifyLibrary(SpotifyBase):
@@ -80,6 +82,76 @@ class SpotifyLibrary(SpotifyBase):
             list of album IDs, max 50 without chunking
         """
         return self._delete('me/albums?ids=' + ','.join(album_ids))
+
+    @scopes([scope.user_library_read])
+    @send_and_process(single(SavedEpisodePaging))
+    @maximise_limit(50)
+    def saved_episodes(
+            self,
+            market: str = None,
+            limit: int = 20,
+            offset: int = 0
+    ) -> SavedEpisodePaging:
+        """
+        Get the episodes saved in the current user's library.
+
+        Parameters
+        ----------
+        market
+            an ISO 3166-1 alpha-2 country code or 'from_token'
+        limit
+            the number of items to return (1..50)
+        offset
+            the index of the first item to return
+        """
+        return self._get('me/episodes', market=market, limit=limit, offset=offset)
+
+    @scopes([scope.user_library_read])
+    @chunked('episode_ids', 1, 50, join_lists)
+    @send_and_process(nothing)
+    def saved_episodes_contains(self, episode_ids: list) -> List[bool]:
+        """
+        Check if user has saved episodes.
+
+        Parameters
+        ----------
+        episode_ids
+            list of episode IDs, max 50 without chunking
+
+        Returns
+        -------
+        List[bool]
+            save statuses in the same order the episode IDs were given
+        """
+        return self._get('me/episodes/contains?ids=' + ','.join(episode_ids))
+
+    @scopes([scope.user_library_modify])
+    @chunked('episode_ids', 1, 50, return_none)
+    @send_and_process(nothing)
+    def saved_episodes_add(self, episode_ids: list) -> None:
+        """
+        Save episodes for current user.
+
+        Parameters
+        ----------
+        episode_ids
+            list of episode IDs, max 50 without chunking
+        """
+        return self._put('me/episodes?ids=' + ','.join(episode_ids))
+
+    @scopes([scope.user_library_modify])
+    @chunked('episode_ids', 1, 50, return_none)
+    @send_and_process(nothing)
+    def saved_episodes_delete(self, episode_ids: list) -> None:
+        """
+        Remove episodes for current user.
+
+        Parameters
+        ----------
+        episode_ids
+            list of episode IDs, max 50 without chunking
+        """
+        return self._delete('me/episodes?ids=' + ','.join(episode_ids))
 
     @scopes([scope.user_library_read])
     @send_and_process(single(SavedTrackPaging))

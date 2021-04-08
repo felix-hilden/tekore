@@ -8,13 +8,17 @@ Unreleased
 Added
 *****
 - :ref:`client` - add the new market API (:issue:`249`)
+- :ref:`client` - add episode endpoints to library API, and the corresponding
+  :class:`SavedEpisode <model.SavedEpisode>` and
+  :class:`SavedEpisodePaging <model.SavedEpisodePaging>` models (:issue:`249`)
 
 3.6.2 (2021-03-23)
 ------------------
 Fixed
 *****
 - :ref:`models` - add missing but undocumented ``html_description``
-  field to :class:`FullEpisode` and :class:`SimpleEpisode` (:issue:`246`)
+  field to :class:`FullEpisode <model.FullEpisode>` and
+  :class:`SimpleEpisode <model.SimpleEpisode>` (:issue:`246`)
 
 3.6.1 (2021-03-07)
 ------------------

@@ -99,12 +99,16 @@ Episode
    SimpleEpisode
    SimpleEpisodePaging
    FullEpisode
+   SavedEpisode
+   SavedEpisodePaging
    ResumePoint
 
 .. autoclass:: Episode
 .. autoclass:: SimpleEpisode
 .. autoclass:: SimpleEpisodePaging
 .. autoclass:: FullEpisode
+.. autoclass:: SavedEpisode
+.. autoclass:: SavedEpisodePaging
 .. autoclass:: ResumePoint
 
 Playback

@@ -1,5 +1,5 @@
 import pytest
-from ._resources import album_ids, track_ids, show_ids
+from ._resources import album_ids, episode_ids, track_ids, show_ids
 
 
 def revert(ids, current, add, remove):
@@ -16,6 +16,7 @@ def revert(ids, current, add, remove):
 def setup(data_client):
     try:
         current_albums = data_client.saved_albums_contains(album_ids)
+        current_episodes = data_client.saved_episodes_contains(episode_ids)
         current_tracks = data_client.saved_tracks_contains(track_ids)
         current_shows = data_client.saved_shows_contains(show_ids)
     except Exception:
@@ -29,6 +30,13 @@ def setup(data_client):
         current_albums,
         data_client.saved_albums_add,
         data_client.saved_albums_delete
+    )
+
+    revert(
+        episode_ids,
+        current_episodes,
+        data_client.saved_episodes_add,
+        data_client.saved_episodes_delete
     )
 
     revert(
@@ -49,6 +57,7 @@ def setup(data_client):
 def call(client, type_: str, ids: list):
     return {
         'albums': client.saved_albums_contains,
+        'episodes': client.saved_episodes_contains,
         'shows': client.saved_shows_contains,
         'tracks': client.saved_tracks_contains,
     }[type_](ids)
@@ -65,7 +74,7 @@ def assert_not_contains(client, type_: str, ids: list):
 @pytest.mark.usefixtures('setup')
 class TestSpotifyFollow:
     """
-    If the current user has saved the tested tracks, albums or shows,
+    If the current user has saved the tested tracks, albums, episodes or shows,
     they will be deleted and added again.
     """
     def test_saved_albums(self, user_client):
@@ -78,6 +87,17 @@ class TestSpotifyFollow:
 
         user_client.saved_albums_delete(album_ids)
         assert_not_contains(user_client, 'albums', album_ids)
+
+    def test_saved_episodes(self, user_client):
+        user_client.saved_episodes_delete(episode_ids)
+
+        user_client.saved_episodes_add(episode_ids)
+        assert_contains(user_client, 'episodes', episode_ids)
+
+        user_client.saved_episodes()
+
+        user_client.saved_episodes_delete(episode_ids)
+        assert_not_contains(user_client, 'episodes', episode_ids)
 
     def test_saved_tracks(self, user_client):
         user_client.saved_tracks_delete(track_ids)

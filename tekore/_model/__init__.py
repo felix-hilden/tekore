@@ -38,6 +38,8 @@ from .episode import (
     SimpleEpisode,
     SimpleEpisodePaging,
     FullEpisode,
+    SavedEpisode,
+    SavedEpisodePaging,
 )
 from .error import PlayerErrorReason
 from .local import LocalItem, LocalAlbum, LocalArtist, LocalTrack
