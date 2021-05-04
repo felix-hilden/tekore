@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+3.7.1 (2021-05-04)
+------------------
 Fixed
 *****
 - :ref:`models` - add missing but undocumented ``html_description``
