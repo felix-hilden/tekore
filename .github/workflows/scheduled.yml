@@ -1,5 +1,5 @@
-# Scheduled tests without user authentication to verify
-# that nothing has changed in the Web API.
+# Scheduled tests without failing on skipped tests
+# to verify that nothing has changed in the Web API.
 
 name: scheduled
 on:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   auth-test:
-    name: App-authorised Pytest suite
+    name: User-authorised Pytest suite
     runs-on: ubuntu-latest
     env:
       SPOTIFY_CLIENT_ID: ${{secrets.SPOTIFY_CLIENT_ID}}
