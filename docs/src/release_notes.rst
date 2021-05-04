@@ -3,6 +3,17 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`models` - add missing but undocumented ``html_description``
+  field to :class:`FullShow <model.FullShow>` and
+  :class:`SimpleShow <model.SimpleShow>` (:issue:`251`)
+- :ref:`models` - require the newly documented ``html_description``
+  field in :class:`FullEpisode <model.FullEpisode>` and
+  :class:`SimpleEpisode <model.SimpleEpisode>` (:issue:`251`)
+
 3.7.0 (2021-04-08)
 ------------------
 Added

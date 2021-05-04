@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from ..base import Item
@@ -21,6 +21,8 @@ class Show(Item):
     media_type: str
     name: str
     publisher: str
+    total_episodes: Optional[int] = None
+    html_description: str = None
 
     def __post_init__(self):
         self.available_markets = ModelList(self.available_markets)

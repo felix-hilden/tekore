@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from dataclasses import dataclass
 
 from ..paging import OffsetPaging
@@ -14,8 +14,6 @@ class SimpleShow(Show):
     :attr:`total_episodes` is undocumented by Spotify,
     so it might be missing or removed in a future version.
     """
-
-    total_episodes: Optional[int] = None
 
 
 @dataclass(repr=False)

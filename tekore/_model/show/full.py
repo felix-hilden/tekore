@@ -14,7 +14,6 @@ class FullShow(Show):
     so it might be missing or removed in a future version.
     """
 
-    total_episodes: Optional[int] = None
     episodes: Optional[SimpleEpisodePaging] = None
 
     def __post_init__(self):

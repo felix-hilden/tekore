@@ -25,6 +25,7 @@ class Episode(Item):
     duration_ms: int
     explicit: bool
     external_urls: dict
+    html_description: str
     images: List[Image]
     is_externally_hosted: bool
     is_playable: bool
@@ -46,7 +47,6 @@ class Episode(Item):
 class SimpleEpisode(Episode):
     """Simplified episode object."""
 
-    html_description: str = None
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
@@ -60,7 +60,6 @@ class FullEpisode(Episode):
     """Complete episode object."""
 
     show: SimpleShow
-    html_description: str = None
     resume_point: Optional[ResumePoint] = None
 
     def __post_init__(self):
