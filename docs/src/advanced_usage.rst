@@ -90,8 +90,8 @@ This is handy if a user's refresh token needs to be stored.
 
 For more information see :ref:`config`.
 
-Using senders
--------------
+Customising request behavior
+----------------------------
 By default Tekore doesn't do anything clever when sending requests.
 Its functionality, however, can be extended in a number of ways
 using different kinds of :ref:`senders <senders>`.
@@ -110,6 +110,19 @@ busy applications that request the same static resources repeatedly.
     )
 
     tk.Spotify(sender=sender)
+
+At the lowest level, :class:`SyncSender` and :class:`AsyncSender` accept
+:class:`httpx.Client` instances which can further customise behavior.
+For example, setting longer request timeouts and retrying on connection errors
+is possible with the following setup.
+
+.. code:: python
+
+   import httpx
+
+   trans = httpx.HTTPTransport(retries=3)
+   client = httpx.Client(timeout=30, transport=trans)
+   sender = tk.SyncSender(client=client)
 
 Traversing paging objects
 -------------------------
