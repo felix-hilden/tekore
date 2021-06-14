@@ -120,24 +120,24 @@ class SpotifyBase(Client):
     def _request(
             method: str,
             url: str,
-            payload=None,
+            payload: dict = None,
             params: dict = None
     ):
         return Request(
             method=method,
             url=url,
             params=parse_url_params(params),
-            data=json.dumps(payload) if payload is not None else None,
+            json=payload,
         ), ()
 
-    def _get(self, url: str, payload=None, **params):
+    def _get(self, url: str, payload: dict = None, **params):
         return self._request('GET', url, payload=payload, params=params)
 
-    def _post(self, url: str, payload=None, **params):
+    def _post(self, url: str, payload: dict = None, **params):
         return self._request('POST', url, payload=payload, params=params)
 
-    def _delete(self, url: str, payload=None, **params):
+    def _delete(self, url: str, payload: dict = None, **params):
         return self._request('DELETE', url, payload=payload, params=params)
 
-    def _put(self, url: str, payload=None, **params):
+    def _put(self, url: str, payload: dict = None, **params):
         return self._request('PUT', url, payload=payload, params=params)

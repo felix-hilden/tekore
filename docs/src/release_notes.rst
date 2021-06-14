@@ -3,6 +3,15 @@
 
 Release notes
 =============
+Unreleased
+----------
+Changed
+*******
+- Dependency to HTTPX upgraded to include versions
+  from ``0.15`` to ``0.18.*`` (:issue:`250`)
+- Add fields to :class:`Request` and change their meaning to be in line with
+  the new HTTPX interface (:issue:`250`)
+
 3.7.1 (2021-05-04)
 ------------------
 Fixed

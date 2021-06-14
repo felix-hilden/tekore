@@ -26,7 +26,7 @@ class SpotifyPlaylistModify(SpotifyBase):
             method='PUT',
             url=f'playlists/{playlist_id}/images',
             headers={'Content-Type': 'image/jpeg'},
-            data=image,
+            content=image,
         ), ()
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])

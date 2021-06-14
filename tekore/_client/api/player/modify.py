@@ -37,11 +37,11 @@ class SpotifyPlayerModify(SpotifyBase):
         force_play
             true: play after transfer, false: keep current state
         """
-        data = {
+        payload = {
             'device_ids': [device_id],
             'play': force_play
         }
-        return self._put('me/player', payload=data)
+        return self._put('me/player', payload=payload)
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)

@@ -36,10 +36,9 @@ class SpotifyPlaylistItems(SpotifyBase):
         str
             snapshot ID for the playlist
         """
-        payload = {'uris': uris}
         return self._post(
             f'playlists/{playlist_id}/tracks',
-            payload=payload,
+            payload={'uris': uris},
             position=position
         )
 

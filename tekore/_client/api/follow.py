@@ -52,9 +52,7 @@ class SpotifyFollow(SpotifyBase):
         public
             follow publicly
         """
-        payload = {
-            'public': public
-        }
+        payload = {'public': public}
         return self._put(f'playlists/{playlist_id}/followers', payload=payload)
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])

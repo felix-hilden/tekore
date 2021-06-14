@@ -11,7 +11,9 @@ class Request:
     url: str
     params: Optional[dict] = None
     headers: Optional[dict] = None
-    data: Union[str, dict, None] = None
+    data: Optional[dict] = None
+    json: Optional[dict] = None
+    content: Optional[str] = None
 
 
 @dataclass

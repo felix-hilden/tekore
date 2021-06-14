@@ -1,4 +1,4 @@
-from typing import Optional, Coroutine
+from typing import Optional
 from httpx import Client, AsyncClient, Response as HTTPXResponse
 
 from .base import Sender, Request, Response
@@ -39,6 +39,8 @@ class SyncSender(Sender):
             params=request.params,
             headers=request.headers,
             data=request.data,
+            json=request.json,
+            content=request.content,
         )
         return Response(
             url=str(response.url),
@@ -84,6 +86,8 @@ class AsyncSender(Sender):
             params=request.params,
             headers=request.headers,
             data=request.data,
+            json=request.json,
+            content=request.content,
         )
         return Response(
             url=str(response.url),
