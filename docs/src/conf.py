@@ -5,10 +5,9 @@ from pathlib import Path
 _root = Path(os.path.realpath(__file__)).parent.parent.parent
 sys.path.insert(0, str(_root))
 
-
 project = 'tekore'
 author = 'Felix Hildén'
-copyright = '2019, Felix Hildén'
+copyright = '2019-2021, Felix Hildén'
 release = Path(_root, 'tekore', 'VERSION').read_text().strip()
 
 extensions = [
