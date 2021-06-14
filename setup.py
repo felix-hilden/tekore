@@ -40,9 +40,9 @@ extras_require = {
         'sphinx-autodoc-typehints~=1.11'
     ],
     'tests': [
-        'coverage~=5.0',
-        'pytest~=5.4',
-        'pytest-asyncio>=0.11,<0.15',
+        'coverage',
+        'pytest',
+        'pytest-asyncio',
     ],
     'checks': [
         'tox~=3.0',
