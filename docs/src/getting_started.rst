@@ -47,7 +47,7 @@ To quickly inspect a response or any part of it, print its contents.
 
 Retrieving a user token
 -----------------------
-Many endpoints require user authentication,
+Many endpoints require user authorisation,
 for which another type of access token is needed.
 User tokens are associated with a Spotify user account.
 
@@ -58,7 +58,7 @@ after authorising the application.
 Alternatively, the default redirect URI ``https://example.com/callback``
 can be used with a client with no other redirect URIs whitelisted.
 
-Different privileges or `scopes` can be requested when authenticating.
+Different privileges or `scopes` can be requested when authorising.
 Below we'll retrieve a token that has every possible scope.
 The script will open a web page prompting for a Spotify login.
 The user is then redirected back to the whitelisted redirect URI.
@@ -81,7 +81,7 @@ Paste the redirected URI in full to the shell to finalise token retrieval.
     which would normally be used to complete authorisation,
     by requesting the user to manually enter information to the shell.
     However, that also makes it unusable on a server.
-    Other authorisation methods are introduced in :ref:`advanced-usage`.
+    Other authorisation methods are introduced in :ref:`auth-guide`.
 
 Calling the API as a user
 -------------------------
@@ -104,6 +104,28 @@ If no active device is found, an error is thrown.
 
     finlandia = '3hHWhvw2hjwfngWcFjIzqr'
     spotify.playback_start_tracks([finlandia])
+
+Saving the configuration
+------------------------
+Currently, we need to go through the authorisation process every time
+the script is run. Let's save the configuration to avoid this in the future.
+
+.. code:: python
+
+    conf = (client_id, client_secret, redirect_uri, user_token.refresh_token)
+    tk.config_to_file('tekore.cfg', conf)
+
+Now we can replace the authorisation lines with reconstructing the token.
+
+.. code:: python
+
+    conf = tk.config_from_file('tekore.cfg', return_refresh=True)
+    user_token = tk.refresh_user_token(*conf[:2], conf[3])
+
+.. note::
+
+    This approach is not scalable to multi-user scenarios.
+    See :ref:`auth-guide` for more information.
 
 What's next?
 ------------
