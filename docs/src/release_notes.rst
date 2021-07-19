@@ -12,6 +12,10 @@ Changed
 - Add fields to :class:`Request` and change their meaning to be in line with
   the new HTTPX interface (:issue:`250`)
 
+Added
+*****
+- Improved documentation for type hints and response models (:issue:`109`)
+
 3.7.1 (2021-05-04)
 ------------------
 Fixed

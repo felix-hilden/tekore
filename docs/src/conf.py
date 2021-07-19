@@ -15,7 +15,6 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
-    'sphinx_autodoc_typehints',
     'sphinx_rtd_theme',
 ]
 
@@ -26,6 +25,9 @@ autodoc_default_options = {
     'members': True,
     'show-inheritance': True,
 }
+autodoc_typehints = 'description'
+autoclass_content = 'both'
+python_use_unqualified_type_names = True
 
 html_theme = 'sphinx_rtd_theme'
 extlinks = {

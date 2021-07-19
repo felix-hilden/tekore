@@ -35,9 +35,8 @@ documentation_url = 'https://tekore.readthedocs.io'
 
 extras_require = {
     'docs': [
-        'sphinx~=3.1',
+        'sphinx~=4.0',
         'sphinx-rtd-theme',
-        'sphinx-autodoc-typehints~=1.11'
     ],
     'tests': [
         'coverage',
