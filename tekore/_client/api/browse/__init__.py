@@ -208,7 +208,7 @@ class SpotifyBrowse(SpotifyBase):
         genres
             list of seed genre names
         track_ids
-            list of seed artist IDs
+            list of seed track IDs
         limit
             the number of items to return (1..100)
         market
