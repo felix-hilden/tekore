@@ -1,4 +1,4 @@
-.. _fastapi_auth-server:
+.. _fastapi-auth-server:
 
 FastAPI Authenticating server
 =====================

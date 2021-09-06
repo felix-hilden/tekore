@@ -1,4 +1,4 @@
-.. _flask_auth-server:
+.. _flask-auth-server:
 
 Flask Authenticating server
 =====================
