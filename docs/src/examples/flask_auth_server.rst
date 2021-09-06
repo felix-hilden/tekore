@@ -1,6 +1,6 @@
-.. _auth-server:
+.. _flask_auth-server:
 
-Authenticating server
+Flask Authenticating server
 =====================
 The script below starts up a simple Flask web server for authentication.
 
