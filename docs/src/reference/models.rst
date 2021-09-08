@@ -7,6 +7,8 @@ Response model definitions for :ref:`client <client>`.
 
 Responses are parsed into model classes.
 This allows accessing parts of the response directly as attributes.
+Further documentation on specific attribute values can be viewed in the Web API
+`reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
 
 .. code:: python
 
