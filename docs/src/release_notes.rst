@@ -8,7 +8,7 @@ Unreleased
 Changed
 *******
 - Dependency to HTTPX upgraded to include versions
-  from ``0.15`` to ``0.18.*`` (:issue:`250`)
+  from ``0.15`` to ``0.19.*`` (:issue:`250`, :issue:`261`)
 - Add fields to :class:`Request` and change their meaning to be in line with
   the new HTTPX interface (:issue:`250`)
 

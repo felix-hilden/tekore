@@ -87,7 +87,7 @@ setuptools.setup(
 
     python_requires='>=' + python_requires_str,
     install_requires=[
-        'httpx>=0.15,<0.19',
+        'httpx>=0.15,<0.20',
         'dataclasses;python_version<"3.7"',
         'contextvars;python_version<"3.7"',
     ],
