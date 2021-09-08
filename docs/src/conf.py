@@ -16,6 +16,7 @@ extensions = [
     'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
+    'sphinx_tabs.tabs',
 ]
 
 master_doc = 'index'
