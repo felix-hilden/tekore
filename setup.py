@@ -1,6 +1,6 @@
 import sys
 
-python_requires = (3, 6)
+python_requires = (3, 7)
 python_requires_str = '.'.join([str(i) for i in python_requires])
 
 error = """
@@ -88,8 +88,6 @@ setuptools.setup(
     python_requires='>=' + python_requires_str,
     install_requires=[
         'httpx>=0.15,<0.20',
-        'dataclasses;python_version<"3.7"',
-        'contextvars;python_version<"3.7"',
     ],
     extras_require=extras_require,
 
@@ -98,7 +96,6 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',

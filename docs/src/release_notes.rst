@@ -7,6 +7,7 @@ Unreleased
 ----------
 Changed
 *******
+- Removed Python 3.6 support and its conditional dependencies (:issue:`252`)
 - Dependency to HTTPX upgraded to include versions
   from ``0.15`` to ``0.19.*`` (:issue:`250`, :issue:`261`)
 - Add fields to :class:`Request` and change their meaning to be in line with
