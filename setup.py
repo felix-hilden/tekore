@@ -37,6 +37,7 @@ extras_require = {
     'docs': [
         'sphinx~=4.0',
         'sphinx-rtd-theme',
+        'sphinx-tabs',
     ],
     'tests': [
         'coverage',
