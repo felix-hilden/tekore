@@ -3,8 +3,11 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.0.0 (2021-09-09)
+------------------
+Tekore 4.0 is a maintenance release to prepare for the nearly deprecated
+Python 3.6, update dependencies and improve backwards compatibility.
+
 Changed
 *******
 - Removed Python 3.6 support and its conditional dependencies (:issue:`252`)
