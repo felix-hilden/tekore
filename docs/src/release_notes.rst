@@ -16,6 +16,9 @@ Changed
 Added
 *****
 - Improved documentation for type hints and response models (:issue:`109`)
+- Responses can now parse unknown attributes, greatly improving backwards
+  compatibility. :class:`UnknownModelAttributeWarning
+  <tekore.model.UnknownModelAttributeWarning>` was introduced (:issue:`247`)
 
 3.7.1 (2021-05-04)
 ------------------

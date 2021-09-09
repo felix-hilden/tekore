@@ -1,5 +1,5 @@
 from typing import Callable
-from tekore.model import ModelList
+from tekore.model import ModelList, Model
 
 
 def nothing(json):
@@ -14,7 +14,7 @@ def top_item(item: str) -> Callable:
     return post_func
 
 
-def single(type_: type, from_item: str = None) -> Callable:
+def single(type_: Model, from_item: str = None) -> Callable:
     """
     Unpack dict or items in ``from_item`` into single constructor.
 
@@ -22,15 +22,15 @@ def single(type_: type, from_item: str = None) -> Callable:
     """
     def post_func(json: dict):
         json = json if from_item is None else json[from_item]
-        return type_(**json) if json is not None else None
+        return type_.from_kwargs(json) if json is not None else None
     return post_func
 
 
-def model_list(type_: type, from_item: str = None) -> Callable:
+def model_list(type_: Model, from_item: str = None) -> Callable:
     """Unpack items inside ``from_item`` of dict into constructors."""
     def post_func(json: dict):
         json = json if from_item is None else json[from_item]
-        return ModelList(type_(**i) if i is not None else None for i in json)
+        return ModelList(type_.from_kwargs(i) if i is not None else None for i in json)
     return post_func
 
 

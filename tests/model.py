@@ -12,6 +12,7 @@ from tekore._model.serialise import (
     StrEnum,
     ModelList,
     Timestamp,
+    UnknownModelAttributeWarning,
 )
 
 
@@ -186,6 +187,15 @@ class TestSerialisableDataclass:
         c = C(Timestamp.from_string('2019-01-01T12:00:00Z'))
         assert isinstance(c.asbuiltin()['v'], str)
         assert c.json() == '{"v": "2019-01-01T12:00:00Z"}'
+
+
+class TestModel:
+    def test_unknown_attribute_passed(self):
+        with pytest.warns(UnknownModelAttributeWarning):
+            data = Data.from_kwargs({'i': 1, 'u': 2})
+
+        assert data.u == 2
+        assert 'u' not in data.json()
 
 
 class TestModelList:

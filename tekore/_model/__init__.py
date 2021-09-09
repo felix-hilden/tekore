@@ -99,4 +99,5 @@ from .serialise import (
     Serialisable,
     StrEnum,
     Timestamp,
+    UnknownModelAttributeWarning,
 )

@@ -37,6 +37,13 @@ See :class:`Serialisable` for more details on all available functionality.
     album.asbuiltin()
     album.json()
 
+Responses will sometimes contain unknown attributes when the API changes.
+They are parsed into the response model,
+but are not included in serialisation and other model transforms.
+An :class:`UnknownModelAttributeWarning` is issued
+when encountering an unknown attribute.
+Please consider upgrading Tekore if a newer version documents and handles it.
+
 Models are made available in the :mod:`tekore.models` namespace.
 
 Album
@@ -314,6 +321,7 @@ Model bases
    Serialisable
    Model
    ModelList
+   UnknownModelAttributeWarning
 
    Identifiable
    Item
@@ -327,6 +335,7 @@ Functionality
 .. autoclass:: Serialisable
 .. autoclass:: Model
 .. autoclass:: ModelList
+.. autoclass:: UnknownModelAttributeWarning
 
 Models
 ******

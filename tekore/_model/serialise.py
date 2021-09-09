@@ -3,6 +3,7 @@ import json
 from enum import Enum
 from typing import Union, TypeVar, List
 from pprint import pprint
+from warnings import warn
 from datetime import datetime
 from dataclasses import dataclass, asdict, fields
 
@@ -168,6 +169,10 @@ class Serialisable:
         pprint(self.asbuiltin(), depth=depth, compact=compact, **pprint_kwargs)
 
 
+class UnknownModelAttributeWarning(RuntimeWarning):
+    """The response model contains an unknown attribute."""
+
+
 @dataclass(repr=False)
 class Model(Serialisable):
     """Dataclass that provides a readable ``repr`` of its fields."""
@@ -183,6 +188,31 @@ class Model(Serialisable):
             lines.append(line)
 
         return '\n'.join(lines)
+
+    @classmethod
+    def from_kwargs(cls, kwargs):
+        """Create the Model and patch unknown kwargs in."""
+        # Adapted from Stack Overflow: https://stackoverflow.com/a/55101438/7089239
+        cls_fields = {field.name for field in fields(cls)}
+
+        # split into known and unknown kwargs
+        known_kwargs, unknown_kwargs = {}, {}
+        for name, val in kwargs.items():
+            if name in cls_fields:
+                known_kwargs[name] = val
+            else:
+                unknown_kwargs[name] = val
+
+        model = cls(**known_kwargs)
+
+        for name, val in unknown_kwargs.items():
+            setattr(model, name, val)
+            msg = (
+                f'\nResponse contains unknown attribute: `{name}`\n'
+                'This warning may be safely ignored. Please consider upgrading Tekore.'
+            )
+            warn(msg, UnknownModelAttributeWarning, stacklevel=5)
+        return model
 
 
 T = TypeVar('T')
