@@ -124,6 +124,9 @@ is possible with the following setup.
    client = httpx.Client(timeout=30, transport=trans)
    sender = tk.SyncSender(client=client)
 
+With an async sender use :class:`httpx.AsyncClient` and
+:class:`httpx.AsyncHTTPTransport` instead.
+
 Traversing paging objects
 -------------------------
 Many Web API endpoints that would return a large number of the same
