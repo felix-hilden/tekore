@@ -17,6 +17,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
     'sphinx_tabs.tabs',
+    'sphinx_codeautolink',
 ]
 
 master_doc = 'index'
@@ -35,3 +36,4 @@ extlinks = {
     'issue': ('https://github.com/felix-hilden/tekore/issues/%s', '#'),
     'commit': ('https://github.com/felix-hilden/tekore/commit/%s', '')
 }
+codeautolink_global_preface = "import tekore as tk"

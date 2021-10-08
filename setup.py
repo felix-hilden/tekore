@@ -38,6 +38,7 @@ extras_require = {
         'sphinx~=4.0',
         'sphinx-rtd-theme',
         'sphinx-tabs',
+        'sphinx-codeautolink',
     ],
     'tests': [
         'coverage',

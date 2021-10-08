@@ -16,6 +16,8 @@ However, they can be maximised when instantiating a client or as a context.
 
 .. code:: python
 
+    import tekore as tk
+
     spotify = tk.Spotify(max_limits_on=True)
     spotify.max_limits_on = False
 
@@ -34,7 +36,7 @@ To help with this restriction, those lists can be chunked.
     spotify.chunked_on = False
 
     with spotify.chunked():
-        # Go nuts with e.g. spotify.artists_follow
+        pass  # Go nuts with e.g. spotify.artists_follow
 
 
 Application configuration
@@ -134,6 +136,7 @@ type of object return paging objects for performance reasons.
 The :ref:`client <client>` defines a few ways to navigate these pagings.
 Next and previous pages can be requested one at a time.
 
+.. autolink-concat:: section
 .. code:: python
 
     import tekore as tk
@@ -164,6 +167,7 @@ Async mode may be enabled when instantiating a :class:`Client`.
 
 Alternatively, an asynchronous sender may be passed directly into a client.
 
+.. autolink-concat:: section
 .. code:: python
 
     spotify = tk.Spotify(token, sender=tk.AsyncSender())
@@ -205,6 +209,7 @@ market are returned. This sometimes changes track IDs as well.
 When calling with a user token, this country code can also be
 ``from_token``, in which case the results are for the user's locale.
 
+.. autolink-preface:: from tekore import Spotify as spotify
 .. code:: python
 
     spotify.search('sheeran', market='SE')

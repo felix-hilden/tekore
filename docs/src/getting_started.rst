@@ -14,6 +14,7 @@ First we'll retrieve a client token for the Spotify application.
 It is a token associated with your application
 and can be used to make basic calls to the API.
 
+.. autolink-concat::
 .. code:: python
 
     import tekore as tk
