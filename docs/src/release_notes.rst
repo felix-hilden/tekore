@@ -3,6 +3,10 @@
 
 Release notes
 =============
+Unreleased
+----------
+- Dependency to HTTPX upgraded to include version ``0.20.*`` (:issue:`263`)
+
 4.0.0 (2021-09-09)
 ------------------
 Tekore 4.0 is a maintenance release to prepare for the nearly deprecated
