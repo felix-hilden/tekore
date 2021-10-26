@@ -128,6 +128,15 @@ Now we can replace the authorisation lines with reconstructing the token.
     This approach is not scalable to multi-user scenarios.
     See :ref:`auth-guide` for more information.
 
+How to read the documentation
+-----------------------------
+The reference documentation is built for easy navigation.
+Each endpoint (like :meth:`playback <tekore.Spotify.playback>`) contains
+a description, required and optional scopes, arguments and return information.
+Notably, the return type often contains a link to the relevant response model.
+Follow them to discover the attributes that a model has.
+Further links can be followed down the model hierarchy.
+
 What's next?
 ------------
 Our :ref:`auth-guide` details different authorisation options.
