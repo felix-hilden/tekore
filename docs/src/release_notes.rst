@@ -5,7 +5,8 @@ Release notes
 =============
 Unreleased
 ----------
-- Dependency to HTTPX upgraded to include version ``0.20.*`` (:issue:`263`)
+- Dependency to HTTPX upgraded to include versions ``0.20.0-0.21.*``
+  (:issue:`263`, :issue:`265`)
 
 4.0.0 (2021-09-09)
 ------------------
