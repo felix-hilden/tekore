@@ -10,7 +10,7 @@ category_id = 'pop'
 genres = ['pop', 'rock']
 
 playlist_id = '37i9dQZEVXbMDoHDwVN2tF'
-playlist_local = '1L09qNetvjqCFsPtkhgyuI'
+playlist_local = '4AP7A6Z2D4mCx2Clsdn2VX'
 
 # Exactly one podcast, one track and one local track in that order
 playlist_special = '10zlxJ3uV3dm7gJZEMf4ks'
