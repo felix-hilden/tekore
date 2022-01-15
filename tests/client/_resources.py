@@ -22,6 +22,7 @@ track_restricted = '6F6CuSuM8EcD4UD0N3nuxN'     # Restricted in market 'SE'
 track_no_audio_features = ''  # No known track
 
 user_id = 'spinninrecordsofficial'
+user_id_hash = 'a#a'
 user_ids = [user_id, 'samsmithworld']
 
 show_id = '0Lsi13D8nWRkwbEkfNeItS'

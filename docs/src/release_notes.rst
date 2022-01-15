@@ -3,6 +3,17 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :ref:`conversions` - add ``user`` as a valid ID type and URL-encode hashes
+  of user IDs in :func:`to_url` (:issue:`266`)
+
+Fixed
+*****
+- URL-encode hashes in user IDs in :meth:`user <Spotify.user>` (:issue:`266`)
+
 4.1.0 (2021-11-20)
 ------------------
 - Dependency to HTTPX upgraded to include versions ``0.20.0-0.21.*``

@@ -34,7 +34,7 @@ class TestCheckID:
 
 class TestCheckType:
     def test_valid(self):
-        for t in ('artist', 'album', 'playlist', 'track'):
+        for t in ('artist', 'album', 'episode', 'playlist', 'show', 'track', 'user'):
             check_type(t)
 
     def test_invalid(self):
@@ -49,11 +49,18 @@ class TestToURI:
     def test_valid(self):
         assert to_uri('track', 'b62') == 'spotify:track:b62'
 
+    def test_user_non_b62(self):
+        assert to_uri('user', 'a#a') == 'spotify:user:a#a'
+
 
 class TestToURL:
     def test_valid(self):
         url = 'https://open.spotify.com/track/b62'
         assert to_url('track', 'b62') == url
+
+    def test_user_non_b62_hash_replaced(self):
+        url = 'https://open.spotify.com/user/a%23a'
+        assert to_url('user', 'a#a') == url
 
 
 class TestFromURI:
@@ -77,6 +84,10 @@ class TestFromURI:
         with pytest.raises(ConversionError):
             from_uri('not-a-valid-uri')
 
+    def test_user_non_b62(self):
+        t, i = from_uri('spotify:user:a#a')
+        assert t == 'user' and i == 'a#a'
+
 
 class TestFromURL:
     @staticmethod
@@ -87,6 +98,10 @@ class TestFromURL:
     def test_valid(self):
         url = 'https://open.spotify.com/track/b62'
         assert self._call(url, 'track', 'b62')
+
+    def test_user_non_b62(self):
+        url = 'https://open.spotify.com/user/a%23a'
+        assert self._call(url, 'user', 'a%23a')
 
     def test_short_prefix(self):
         url = 'open.spotify.com/track/b62'

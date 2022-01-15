@@ -17,6 +17,7 @@ class IdentifierType(StrEnum):
     playlist = 'playlist'
     show = 'show'
     track = 'track'
+    user = 'user'
 
 
 def check_type(type_: Union[str, IdentifierType]) -> None:
@@ -38,7 +39,9 @@ all_base62 = re.compile('^[0-9a-zA-Z]*$')
 
 def check_id(id_: str) -> None:
     """
-    Validate resource ID.
+    Validate resource ID to be base 62.
+
+    Note that user IDs can have special characters, so they cannot be validated.
 
     Raises
     ------
@@ -71,7 +74,8 @@ def to_uri(type_: Union[str, IdentifierType], id_: str) -> str:
         On invalid type or ID.
     """
     check_type(type_)
-    check_id(id_)
+    if type_ != IdentifierType.user:
+        check_id(id_)
     return f'spotify:{type_}:{id_}'
 
 
@@ -97,7 +101,10 @@ def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
         On invalid type or ID.
     """
     check_type(type_)
-    check_id(id_)
+    if type_ != IdentifierType.user:
+        check_id(id_)
+    else:
+        id_ = id_.replace('#', '%23')
     return f'https://open.spotify.com/{type_}/{id_}'
 
 
@@ -125,12 +132,12 @@ def from_uri(uri: str) -> Tuple[str, str]:
         if spotify != 'spotify':
             raise ValueError()
     except ValueError as e:
-        valid_uri = 'spotify:{type}:{id}'
-        msg = f'Invalid URI: expected format "{valid_uri}", got "{uri}"!'
+        msg = f'Invalid URI: expected format "spotify:{{type}}:{{id}}", got "{uri}"!'
         raise ConversionError(msg) from e
 
     check_type(type_)
-    check_id(id_)
+    if type_ != IdentifierType.user:
+        check_id(id_)
 
     return type_, id_
 
@@ -175,6 +182,7 @@ def from_url(url: str) -> Tuple[str, str]:
 
     id_ = id_.split('?')[0]
     check_type(type_)
-    check_id(id_)
+    if type_ != IdentifierType.user:
+        check_id(id_)
 
     return type_, id_

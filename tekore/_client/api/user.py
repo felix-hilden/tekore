@@ -19,7 +19,7 @@ class SpotifyUser(SpotifyBase):
         user_id
             user ID
         """
-        return self._get('users/' + user_id)
+        return self._get('users/' + user_id.replace('#', '%23'))
 
     @scopes(optional=[scope.user_read_private, scope.user_read_email])
     @send_and_process(single(PrivateUser))
