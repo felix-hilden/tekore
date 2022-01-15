@@ -43,7 +43,7 @@ extras_require = {
     'tests': [
         'coverage',
         'pytest',
-        'pytest-asyncio',
+        'pytest-asyncio>=0.17',
     ],
     'checks': [
         'tox~=3.0',
