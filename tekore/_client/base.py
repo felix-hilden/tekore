@@ -1,5 +1,3 @@
-import json
-
 from typing import Optional, Union, Coroutine
 from contextvars import ContextVar
 from tekore._sender import Sender, Client, Request, Response
