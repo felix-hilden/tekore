@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.2.0 (2022-01-19)
+------------------
 Added
 *****
 - :ref:`conversions` - add ``user`` as a valid ID type and URL-encode hashes
