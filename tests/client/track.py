@@ -29,6 +29,10 @@ class TestSpotifyTrack:
         assert track.is_playable is False
         assert track.restrictions.reason == 'market'
 
+    @pytest.mark.skipif(
+        not track_relinked,
+        reason='No known relinked track'
+    )
     def test_track_relinking(self, app_client):
         track = app_client.track(track_relinked, market='US')
 

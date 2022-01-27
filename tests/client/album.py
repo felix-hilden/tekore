@@ -1,3 +1,4 @@
+import pytest
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
 
@@ -18,6 +19,10 @@ class TestSpotifyAlbum:
         tracks = app_client.album_tracks(album_id, market=None)
         assert tracks.total > 0
 
+    @pytest.mark.skipif(
+        not album_relinked,
+        reason='No known relinked album'
+    )
     def test_album_tracks_relinking(self, app_client):
         tracks = app_client.album_tracks(album_relinked, market='US', limit=1)
         track = tracks.items[0]

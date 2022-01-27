@@ -1,6 +1,6 @@
 album_id = '3RBULTZJ97bvVzZLpxcB0j'
 album_ids = [album_id, '7khFXQNBzcfSfgGjPKerdE']
-album_relinked = '18bCKoYJA5itDHW4EGBbds'       # Relinked in market 'US'
+album_relinked = ''
 album_restricted = '0AEsAG0s6csUa3dsKv8sRH'     # Restricted in market 'SE'
 
 artist_id = '2SRIVGDkdqQnrQdaXxDkJt'
@@ -17,7 +17,7 @@ playlist_special = '10zlxJ3uV3dm7gJZEMf4ks'
 
 track_id = '6v3KW9xbzN5yKLt9YKDYA2'
 track_ids = [track_id, '5ZULALImTm80tzUbYQYM9d']
-track_relinked = '6kLCHFM39wkFjOuyPGLGeQ'       # Relinked in market 'US'
+track_relinked = ''
 track_restricted = '6F6CuSuM8EcD4UD0N3nuxN'     # Restricted in market 'SE'
 track_no_audio_features = ''  # No known track
 
