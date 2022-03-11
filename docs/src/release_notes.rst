@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.3.0 (2022-03-11)
+------------------
 Added
 *****
 - Dependency to HTTPX upgraded to include version ``0.22.*`` (:issue:`267`)
