@@ -55,13 +55,14 @@ def app_token(app_env):
     cred = tk.Credentials(*app_env)
 
     try:
-        return cred.request_client_token()
+        yield cred.request_client_token()
     except tk.HTTPError as error:
         skip_or_fail(
             tk.HTTPError,
             'Error in retrieving application token!',
             error
         )
+    cred.close()
 
 
 @pytest.fixture(scope='session')
@@ -72,13 +73,14 @@ def user_token(app_env, user_refresh):
     cred = tk.Credentials(*app_env)
 
     try:
-        return cred.refresh_user_token(user_refresh)
+        yield cred.refresh_user_token(user_refresh)
     except tk.HTTPError as error:
         skip_or_fail(
             tk.HTTPError,
             'Error in retrieving user token!',
             error
         )
+    cred.close()
 
 
 @pytest.fixture(scope='function')

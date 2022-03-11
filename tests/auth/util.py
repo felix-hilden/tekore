@@ -100,6 +100,7 @@ class TestTokenUtilityFunctions:
             user_refresh
         )
         assert isinstance(token, RefreshingToken)
+        token.credentials.close()
 
     def test_expiring_user_token_refreshed(self, app_env, user_refresh):
         token = refresh_user_token(
@@ -110,16 +111,19 @@ class TestTokenUtilityFunctions:
         old_token = str(token)
         token._token._expires_at -= token._token.expires_in - 30
         assert old_token != str(token)
+        token.credentials.close()
 
     def test_request_client_token_returns_refreshing_token(self, app_env):
         token = request_client_token(app_env[0], app_env[1])
         assert isinstance(token, RefreshingToken)
+        token.credentials.close()
 
     def test_expiring_client_token_refreshed(self, app_env):
         token = request_client_token(app_env[0], app_env[1])
         old_token = str(token)
         token._token._expires_at -= token._token.expires_in - 30
         assert old_token != str(token)
+        token.credentials.close()
 
     def test_prompt_for_pkce_token(self):
         cred = MagicMock()

@@ -5,6 +5,13 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Dependency to HTTPX upgraded to include version ``0.22.*`` (:issue:`267`)
+- Expose the underlying credentials manager in :class:`RefreshingCredentials`
+  and :class:`RefreshingToken` to facilitate closing their HTTP client, which
+  is no longer closed by default as of HTTPX version ``0.22`` (:issue:`267`)
+
 Fixed
 *****
 - Add missing context "collection" to :class:`ContextType <model.ContextType>`

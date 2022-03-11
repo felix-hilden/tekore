@@ -98,6 +98,7 @@ class TestCredentialsOnline:
         token = c.request_client_token()
         assert token.refresh_token is None
         assert str(token.scope) == ''
+        c.close()
 
     @pytest.mark.asyncio
     async def test_async_request_client_token(self, app_env):
@@ -112,6 +113,7 @@ class TestCredentialsOnline:
         token = c.refresh_user_token(user_refresh)
         assert token.refresh_token is not None
         assert len(token.scope) > 0
+        c.close()
 
     @pytest.mark.asyncio
     async def test_async_refresh_user_token(self, app_env, user_refresh):
@@ -126,6 +128,7 @@ class TestCredentialsOnline:
 
         with pytest.raises(HTTPError):
             c.request_client_token()
+        c.close()
 
 
 cred_module = 'tekore._auth.expiring.Credentials'
@@ -135,17 +138,19 @@ class TestCredentialsOffline:
     def test_repr(self):
         c = Credentials('id', 'secret')
         assert repr(c).startswith('Credentials(')
+        c.close()
 
     def test_credentials_initialisation(self):
-        Credentials(client_id='id', client_secret='secret', redirect_uri='uri')
+        Credentials(client_id='id', client_secret='secret', redirect_uri='uri').close()
 
     def test_credentials_only_client_id_mandatory(self):
-        Credentials('id')
+        Credentials('id').close()
 
     def test_basic_token_with_no_secret_raises(self):
         c = Credentials('id')
         with pytest.raises(ValueError):
             c.request_client_token()
+        c.close()
 
     def test_server_error_raises_http_error(self):
         c = Credentials('id', 'secret')
@@ -153,6 +158,7 @@ class TestCredentialsOffline:
         c.send = MagicMock(return_value=response)
         with pytest.raises(HTTPError):
             c.request_client_token()
+        c.close()
 
     def test_client_error_with_description(self):
         c = Credentials('id', 'secret')
@@ -161,6 +167,7 @@ class TestCredentialsOffline:
         c.send = MagicMock(return_value=response)
         with pytest.raises(HTTPError):
             c.request_client_token()
+        c.close()
 
     def test_client_error_without_description(self):
         c = Credentials('id', 'secret')
@@ -169,17 +176,20 @@ class TestCredentialsOffline:
         c.send = MagicMock(return_value=response)
         with pytest.raises(HTTPError):
             c.request_client_token()
+        c.close()
 
     def test_user_authorisation_url(self):
         c = Credentials('id', redirect_uri='uri')
         url = c.user_authorisation_url('scope', 'state')
         assert 'scope=scope' in url
         assert 'state=state' in url
+        c.close()
 
     def test_user_authorisation_accepts_scope_list(self):
         c = Credentials('id', redirect_uri='uri')
         url = c.user_authorisation_url(['a', 'b'], 'state')
         assert 'scope=a+b' in url
+        c.close()
 
     def test_request_user_token(self):
         c = Credentials('id', 'secret', 'uri')
@@ -187,6 +197,7 @@ class TestCredentialsOffline:
         with patch(cred_module + '.send', send):
             c.request_user_token('code')
             send.assert_called_once()
+        c.close()
 
     def test_refresh_user_token_uses_old_refresh_if_not_returned(self):
         c = Credentials('id', 'secret')
@@ -198,6 +209,7 @@ class TestCredentialsOffline:
         with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == 'refresh'
+        c.close()
 
     def test_refresh_user_token_refresh_replaced_if_returned(self):
         c = Credentials('id', 'secret')
@@ -208,22 +220,26 @@ class TestCredentialsOffline:
         with patch(cred_module + '.send', send):
             refreshed = c.refresh_user_token('refresh')
             assert refreshed.refresh_token == token['refresh_token']
+        c.close()
 
     def test_pkce_user_authorisation(self):
         c = Credentials('id', redirect_uri='redirect')
         c.pkce_user_authorisation('scope', 'state')
+        c.close()
 
     def test_request_pkce_token(self):
         c = Credentials('id')
         c.send = MagicMock(return_value=mock_response())
         token = c.request_pkce_token('scope', 'verifier')
         assert token.uses_pkce
+        c.close()
 
     def test_refresh_pkce_token(self):
         c = Credentials('id')
         c.send = MagicMock(return_value=mock_response())
         token = c.refresh_pkce_token('refresh')
         assert token.uses_pkce
+        c.close()
 
     def test_auto_refresh_client_token(self):
         c = Credentials('id', 'secret')
@@ -231,6 +247,7 @@ class TestCredentialsOffline:
         c.request_client_token = MagicMock(return_value=token)
         c.refresh(token)
         c.request_client_token.assert_called_once()
+        c.close()
 
     def test_auto_refresh_user_token(self):
         c = Credentials('id', 'secret')
@@ -238,6 +255,7 @@ class TestCredentialsOffline:
         c.refresh_user_token = MagicMock(return_value=token)
         c.refresh(token)
         c.refresh_user_token.assert_called_once()
+        c.close()
 
     def test_auto_refresh_pkce_token(self):
         c = Credentials('id')
@@ -245,3 +263,4 @@ class TestCredentialsOffline:
         c.refresh_pkce_token = MagicMock(return_value=token)
         c.refresh(token)
         c.refresh_pkce_token.assert_called_once()
+        c.close()

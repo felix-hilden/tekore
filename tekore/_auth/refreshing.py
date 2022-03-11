@@ -26,11 +26,16 @@ class RefreshingToken(AccessToken):
         access token object
     credentials
         credentials manager for token refreshing
+
+    Attributes
+    ----------
+    credentials
+        credentials manager for token refreshing
     """
 
     def __init__(self, token: Token, credentials: Credentials):
         self._token = token
-        self._credentials = credentials
+        self.credentials = credentials
 
     def __repr__(self):
         options = [
@@ -44,7 +49,7 @@ class RefreshingToken(AccessToken):
     def access_token(self) -> str:
         """Bearer token value."""
         if self._token.is_expiring:
-            self._token = self._credentials.refresh(self._token)
+            self._token = self.credentials.refresh(self._token)
 
         return self._token.access_token
 
@@ -110,6 +115,11 @@ class RefreshingCredentials:
         whitelisted redirect URI, required for user authorisation
     sender
         synchronous request sender
+
+    Attributes
+    ----------
+    credentials
+        underlying credentials manager for token refreshing
     """
 
     def __init__(
@@ -119,7 +129,7 @@ class RefreshingCredentials:
         redirect_uri: str = None,
         sender: Sender = None
     ):
-        self._client = Credentials(
+        self.credentials = Credentials(
             client_id,
             client_secret,
             redirect_uri,
@@ -129,10 +139,10 @@ class RefreshingCredentials:
 
     def __repr__(self):
         options = [
-            f'client_id={self._client.client_id!r}',
-            f'client_secret={self._client.client_secret!r}',
-            f'redirect_uri={self._client.redirect_uri!r}',
-            f'sender={self._client.sender!r}',
+            f'client_id={self.credentials.client_id!r}',
+            f'client_secret={self.credentials.client_secret!r}',
+            f'redirect_uri={self.credentials.redirect_uri!r}',
+            f'sender={self.credentials.sender!r}',
         ]
         return type(self).__name__ + '(' + ', '.join(options) + ')'
 
@@ -145,8 +155,8 @@ class RefreshingCredentials:
         RefreshingToken
             automatically refreshing client token
         """
-        token = self._client.request_client_token()
-        return RefreshingToken(token, self._client)
+        token = self.credentials.request_client_token()
+        return RefreshingToken(token, self.credentials)
 
     def user_authorisation_url(
         self,
@@ -177,7 +187,7 @@ class RefreshingCredentials:
         str
             login URL
         """
-        return self._client.user_authorisation_url(scope, state, show_dialog)
+        return self.credentials.user_authorisation_url(scope, state, show_dialog)
 
     def request_user_token(self, code: str) -> RefreshingToken:
         """
@@ -197,8 +207,8 @@ class RefreshingCredentials:
         RefreshingToken
             automatically refreshing user token
         """
-        token = self._client.request_user_token(code)
-        return RefreshingToken(token, self._client)
+        token = self.credentials.request_user_token(code)
+        return RefreshingToken(token, self.credentials)
 
     def refresh_user_token(self, refresh_token: str) -> RefreshingToken:
         """
@@ -214,8 +224,8 @@ class RefreshingCredentials:
         RefreshingToken
             automatically refreshing user token
         """
-        token = self._client.refresh_user_token(refresh_token)
-        return RefreshingToken(token, self._client)
+        token = self.credentials.refresh_user_token(refresh_token)
+        return RefreshingToken(token, self.credentials)
 
     def pkce_user_authorisation(
         self,
@@ -248,7 +258,7 @@ class RefreshingCredentials:
         Tuple[str, str]
             authorisation URL and PKCE code verifier
         """
-        return self._client.pkce_user_authorisation(scope, state, verifier_bytes)
+        return self.credentials.pkce_user_authorisation(scope, state, verifier_bytes)
 
     def request_pkce_token(self, code: str, verifier: str) -> RefreshingToken:
         """
@@ -270,8 +280,8 @@ class RefreshingCredentials:
         RefreshingToken
             user access token
         """
-        token = self._client.request_pkce_token(code, verifier)
-        return RefreshingToken(token, self._client)
+        token = self.credentials.request_pkce_token(code, verifier)
+        return RefreshingToken(token, self.credentials)
 
     def refresh_pkce_token(self, refresh_token: str) -> RefreshingToken:
         """
@@ -287,5 +297,5 @@ class RefreshingCredentials:
         RefreshingToken
             refreshed user access token
         """
-        token = self._client.refresh_pkce_token(refresh_token)
-        return RefreshingToken(token, self._client)
+        token = self.credentials.refresh_pkce_token(refresh_token)
+        return RefreshingToken(token, self.credentials)

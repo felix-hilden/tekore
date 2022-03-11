@@ -206,6 +206,7 @@ class TestSpotifyMaxLimits:
             s2, = client.search('piano')
 
         assert s1.limit < s2.limit
+        client.close()
 
     def test_turning_off_max_limits_returns_less(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
@@ -214,18 +215,21 @@ class TestSpotifyMaxLimits:
             s2, = client.search('piano')
 
         assert s1.limit > s2.limit
+        client.close()
 
     def test_specifying_limit_kwarg_overrides_max_limits(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
         s, = client.search('piano', limit=1)
 
         assert s.limit == 1
+        client.close()
 
     def test_specifying_limit_pos_arg_overrides_max_limits(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
         s, = client.search('piano', ('track',), None, None, 1)
 
         assert s.limit == 1
+        client.close()
 
     def test_specifying_pos_args_until_limit(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
@@ -234,6 +238,7 @@ class TestSpotifyMaxLimits:
             s2, = client.search('piano', ('track',), None, None)
 
         assert s1.limit > s2.limit
+        client.close()
 
 
 @pytest.fixture(scope='class')
@@ -257,6 +262,7 @@ class TestSpotifyChunked:
         client = Spotify(app_token, chunked_on=True)
         tracks = client.tracks(track_ids)
         assert len(track_ids) == len(tracks)
+        client.close()
 
     @pytest.mark.asyncio
     async def test_async_too_many_chunked_succeeds(self, app_token, track_ids):
@@ -269,16 +275,19 @@ class TestSpotifyChunked:
         client = Spotify(app_token, chunked_on=True)
         tracks = client.tracks(track_ids)
         assert isinstance(tracks, ModelList)
+        client.close()
 
     def test_chunked_context_enables(self):
         client = Spotify()
         with client.chunked(True):
             assert client.chunked_on is True
+        client.close()
 
     def test_chunked_context_disables(self):
         client = Spotify(chunked_on=True)
         with client.chunked(False):
             assert client.chunked_on is False
+        client.close()
 
 
 def mock_spotify():

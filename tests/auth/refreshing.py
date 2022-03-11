@@ -61,16 +61,19 @@ class TestRefreshingCredentials:
     def test_repr(self):
         c = RefreshingCredentials('id', 'secret')
         assert repr(c).startswith('RefreshingCredentials(')
+        c.credentials.close()
 
     def test_initialisable(self, app_env):
-        RefreshingCredentials(*app_env)
+        RefreshingCredentials(*app_env).credentials.close()
 
     def test_request_client_token_returns_refreshing_token(self, app_env):
         cred = RefreshingCredentials(*app_env)
         token = cred.request_client_token()
         assert isinstance(token, RefreshingToken)
+        token.credentials.close()
 
     def test_user_authorisation_url_equal_to_expiring(self, app_env):
         auth = Credentials(*app_env)
         util = RefreshingCredentials(*app_env)
         assert auth.user_authorisation_url() == util.user_authorisation_url()
+        auth.close()
