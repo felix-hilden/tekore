@@ -7,6 +7,7 @@ class ContextType(StrEnum):
 
     album = 'album'
     artist = 'artist'
+    collection = 'collection'
     playlist = 'playlist'
     show = 'show'
 

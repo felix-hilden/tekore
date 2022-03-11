@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Add missing context "collection" to :class:`ContextType <model.ContextType>`
+  for playing saved tracks (:issue:`270`)
+
 4.2.0 (2022-01-19)
 ------------------
 Added
