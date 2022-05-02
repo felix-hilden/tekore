@@ -190,6 +190,9 @@ See :ref:`senders` and :ref:`examples` for more information.
 
     np = asyncio.run(now_playing())
 
+Asynchronous execution can also be used for quick bursts of calls when combined
+with :func:`asyncio.gather`. See :ref:`scrape-playlists` for an example.
+
 While asynchronous :class:`Credentials` is supported, it is worth considering
 that concurrently refreshing tokens may lead to multiple refreshes for one token.
 Synchronous credentials clients are recommended.
