@@ -6,6 +6,7 @@ Release notes
 Unreleased
 ----------
 - Dependency to HTTPX upgraded to include version ``0.23.*`` (:issue:`272`)
+- Declare support for Python 3.10 (:issue:`273`)
 
 4.3.0 (2022-03-11)
 ------------------
