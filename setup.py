@@ -88,7 +88,7 @@ setuptools.setup(
 
     python_requires='>=' + python_requires_str,
     install_requires=[
-        'httpx>=0.15,<0.23',
+        'httpx>=0.15,<0.24',
     ],
     extras_require=extras_require,
 
