@@ -150,8 +150,8 @@ To retrieve the whole content additional methods are available.
 
 .. code:: python
 
-    pages = spotify.all_pages(tracks)
-    items = spotify.all_items(tracks)
+    pages = spotify.all_pages(items)
+    items = spotify.all_items(items)
 
 .. _async:
 
