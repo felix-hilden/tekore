@@ -1,7 +1,6 @@
 import time
 import asyncio
 
-from abc import ABC
 from typing import Optional, Union, Coroutine
 from collections import deque
 from urllib.parse import urlencode
@@ -10,7 +9,7 @@ from .base import Request, Response
 from .concrete import Sender, SyncSender
 
 
-class ExtendingSender(Sender, ABC):
+class ExtendingSender(Sender):
     """
     Base class for senders that extend other senders.
 

@@ -117,7 +117,7 @@ def trim_line(line: str, value, max_len: int = 75) -> str:
             line = cut_by_comma(line, ', ...)]', max_len)
         elif isinstance(value, dict):
             line = cut_by_comma(line, ', ...}', max_len)
-        elif isinstance(value, str):
+        else:
             line = line[:max_len - 4] + '...\''
 
     return line

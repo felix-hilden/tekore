@@ -6,7 +6,7 @@ album_restricted = '0AEsAG0s6csUa3dsKv8sRH'     # Restricted in market 'SE'
 artist_id = '2SRIVGDkdqQnrQdaXxDkJt'
 artist_ids = [artist_id, '2aaLAng2L2aWD2FClzwiep']
 
-category_id = 'pop'
+category_id = '0JQ5DAqbMKFEC4WFtoNRpw'
 genres = ['pop', 'rock']
 
 playlist_id = '37i9dQZEVXbMDoHDwVN2tF'

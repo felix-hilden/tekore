@@ -3,7 +3,7 @@ from typing import Generator, Optional
 from .base import SpotifyBase
 from .decor import send_and_process
 from tekore.model import Model, Paging, OffsetPaging
-from tekore._error import NotFound
+from tekore._error import BadRequest
 
 
 def parse_paging_result(result):
@@ -46,7 +46,7 @@ class SpotifyPaging(SpotifyBase):
         try:
             next_set = self._get_paging_result(page.next)
             return type(page)(**next_set)
-        except NotFound:
+        except BadRequest:
             return
 
     async def _async_next(self, page: Paging) -> Optional[Paging]:
@@ -56,7 +56,7 @@ class SpotifyPaging(SpotifyBase):
         try:
             next_set = await self._get_paging_result(page.next)
             return type(page)(**next_set)
-        except NotFound:
+        except BadRequest:
             return
 
     def previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:

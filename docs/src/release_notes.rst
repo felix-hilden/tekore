@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Handle changed response to fix paging at search limit (:issue:`275`)
+
 4.4.0 (2022-05-24)
 ------------------
 Added
