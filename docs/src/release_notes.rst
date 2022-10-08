@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.4.1 (2022-10-08)
+------------------
 Fixed
 *****
 - Handle changed response to fix paging at search limit (:issue:`275`)
