@@ -112,7 +112,7 @@ class TestSpotifyPlayerSequence:
         assert_playing(user_client, track_ids[1])
 
         # Playback start
-        user_client.playback_start_tracks(track_ids)
+        user_client.playback_start_tracks(track_ids[:2])
         assert_playing(user_client, track_ids[0])
 
         # Playback pause
@@ -151,6 +151,7 @@ class TestSpotifyPlayerSequence:
 
         # Queue consumed on next
         user_client.playback_queue_add(to_uri('track', track_ids[0]))
+        assert len(user_client.playback_queue().queue) > 0
         user_client.playback_next()
         assert_playing(user_client, track_ids[0])
 

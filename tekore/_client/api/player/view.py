@@ -7,7 +7,8 @@ from tekore.model import (
     CurrentlyPlayingContext,
     CurrentlyPlaying,
     PlayHistoryPaging,
-    Device
+    Device,
+    Queue,
 )
 
 
@@ -122,3 +123,16 @@ class SpotifyPlayerView(SpotifyBase):
     def playback_devices(self) -> ModelList[Device]:
         """Get a user's available devices."""
         return self._get('me/player/devices')
+
+    @scopes([scope.user_read_playback_state])
+    @send_and_process(single(Queue))
+    def playback_queue(self) -> Queue:
+        """
+        Get items in a user's queue.
+
+        The result also include items in the current playback context
+        even though they are not explicitly in the queue.
+        The number of items in the queue is inconsistent,
+        but from manual experimentation at least two items are returned.
+        """
+        return self._get('me/player/queue')

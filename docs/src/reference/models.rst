@@ -128,6 +128,7 @@ Playback
    CurrentlyPlaying
    CurrentlyPlayingContext
    CurrentlyPlayingType
+   Queue
    Device
    DeviceType
    Actions
@@ -147,6 +148,7 @@ Currently playing
 .. autoclass:: CurrentlyPlayingContext
 .. autoclass:: CurrentlyPlayingType
    :undoc-members:
+.. autoclass:: Queue
 .. autoclass:: Device
 .. autoclass:: DeviceType
    :undoc-members:

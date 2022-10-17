@@ -30,6 +30,7 @@ from .currently_playing import (
     RepeatState,
     Disallows,
     Actions,
+    Queue,
 )
 from .device import Device, DeviceType
 from .episode import (

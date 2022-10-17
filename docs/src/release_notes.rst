@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- :ref:`client` - add new get queue endpoint
+  :meth:`playback_queue <Spotify.playback_queue>` (:issue:`278`)
+
 4.4.1 (2022-10-08)
 ------------------
 Fixed

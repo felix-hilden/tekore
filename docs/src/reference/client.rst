@@ -286,6 +286,7 @@ Player API
    Spotify.playback_next
    Spotify.playback_pause
    Spotify.playback_previous
+   Spotify.playback_queue
    Spotify.playback_queue_add
    Spotify.playback_recently_played
    Spotify.playback_repeat
@@ -303,6 +304,7 @@ Player API
 .. automethod:: Spotify.playback_next
 .. automethod:: Spotify.playback_pause
 .. automethod:: Spotify.playback_previous
+.. automethod:: Spotify.playback_queue
 .. automethod:: Spotify.playback_queue_add
 .. automethod:: Spotify.playback_recently_played
 .. automethod:: Spotify.playback_repeat
