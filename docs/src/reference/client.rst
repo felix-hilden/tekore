@@ -13,7 +13,11 @@ Web API endpoints.
 +-------------------------------+--------------------------------------+
 | :ref:`client-artist`          | Artist information                   |
 +-------------------------------+--------------------------------------+
+| :ref:`client-audiobook`       | Audiobook information                |
++-------------------------------+--------------------------------------+
 | :ref:`client-browse`          | Spotify featured catalogue           |
++-------------------------------+--------------------------------------+
+| :ref:`client-chapter`         | Chapter information                  |
 +-------------------------------+--------------------------------------+
 | :ref:`client-episode`         | Episode information                  |
 +-------------------------------+--------------------------------------+
@@ -141,6 +145,21 @@ Artist API
 .. automethod:: Spotify.artist_top_tracks
 .. automethod:: Spotify.artists
 
+.. _client-audiobook:
+
+Audiobook API
+-------------
+.. autosummary::
+   :nosignatures:
+
+   Spotify.audiobook
+   Spotify.audiobook_chapters
+   Spotify.audiobooks
+
+.. automethod:: Spotify.audiobook
+.. automethod:: Spotify.audiobook_chapters
+.. automethod:: Spotify.audiobooks
+
 .. _client-browse:
 
 Browse API
@@ -163,6 +182,19 @@ Browse API
 .. automethod:: Spotify.new_releases
 .. automethod:: Spotify.recommendation_genre_seeds
 .. automethod:: Spotify.recommendations
+
+.. _client-chapter:
+
+Chapter API
+-----------
+.. autosummary::
+   :nosignatures:
+
+   Spotify.chapter
+   Spotify.chapters
+
+.. automethod:: Spotify.chapter
+.. automethod:: Spotify.chapters
 
 .. _client-episode:
 

@@ -6,6 +6,11 @@ album_restricted = '0AEsAG0s6csUa3dsKv8sRH'     # Restricted in market 'SE'
 artist_id = '2SRIVGDkdqQnrQdaXxDkJt'
 artist_ids = [artist_id, '2aaLAng2L2aWD2FClzwiep']
 
+audiobook_id = '7sn0W2eNkETlJgbgmhijDI'
+audiobook_ids = [audiobook_id, '0uEpCJqK3X338PiK4IdL0y']
+chapter_id = '3unl3xBGgXmvgfhx4RSXd3'
+chapter_ids = [chapter_id, '0YnqT1sFFwyZN8p7PoqJSo']
+
 category_id = '0JQ5DAqbMKFEC4WFtoNRpw'
 genres = ['pop', 'rock']
 

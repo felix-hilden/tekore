@@ -4,6 +4,7 @@ from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
     SimpleAlbumPaging,
+    SimpleAudiobookPaging,
     SimplePlaylistPaging,
     SimpleEpisodePaging,
     SimpleShowPaging,
@@ -12,6 +13,7 @@ from tekore.model import (
 paging_type = {
     'artists': FullArtistOffsetPaging,
     'albums': SimpleAlbumPaging,
+    'audiobooks': SimpleAudiobookPaging,
     'episodes': SimpleEpisodePaging,
     'playlists': SimplePlaylistPaging,
     'shows': SimpleShowPaging,
@@ -50,7 +52,7 @@ class SpotifySearch(SpotifyBase):
             search query
         types
             resources to search for, tuple of strings containing
-            artist, album, track, playlist, show and/or episode
+            artist, album, audiobook, track, playlist, show and/or episode
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
         limit
@@ -68,6 +70,7 @@ class SpotifySearch(SpotifyBase):
 
             * artist: :class:`FullArtistOffsetPaging <model.FullArtistOffsetPaging>`
             * album: :class:`SimpleAlbumPaging <model.SimpleAlbumPaging>`
+            * audiobook: :class:`SimpleAudiobookPaging <model.SimpleAudiobookPaging>`
             * episode: :class:`SimpleEpisodePaging <model.SimpleEpisodePaging>`
             * playlist: :class:`SimplePlaylistPaging <model.SimplePlaylistPaging>`
             * show: :class:`SimpleShowPaging <model.SimpleShowPaging>`

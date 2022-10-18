@@ -20,8 +20,18 @@ from .audio_analysis import (
     Segment,
 )
 from .audio_features import AudioFeatures
+from .audiobook import (
+    Author,
+    Narrator,
+    SimpleAudiobook,
+    SimpleAudiobookPaging,
+    Audiobook,
+)
+from .audiobook.full import FullAudiobook
 from .base import Identifiable, Item
 from .category import Category, CategoryPaging
+from .chapter import Chapter, SimpleChapterPaging, SimpleChapter
+from .chapter.full import FullChapter
 from .context import ContextType, Context
 from .currently_playing import (
     CurrentlyPlayingType,
@@ -34,7 +44,6 @@ from .currently_playing import (
 )
 from .device import Device, DeviceType
 from .episode import (
-    ResumePoint,
     Episode,
     SimpleEpisode,
     SimpleEpisodePaging,
@@ -49,6 +58,8 @@ from .member import (
     Copyright,
     Followers,
     Image,
+    Restrictions,
+    ResumePoint,
 )
 from .paging import Paging, OffsetPaging, Cursor, CursorPaging
 from .play_history import (
@@ -90,7 +101,6 @@ from .track import (
     SimpleTrackPaging,
     SavedTrackPaging,
     FullTrackPaging,
-    Restrictions,
 )
 from .user import ExplicitContent, User, PrivateUser, PublicUser
 

@@ -43,3 +43,18 @@ class Image(Model):
     url: str
     height: Optional[int] = None
     width: Optional[int] = None
+
+
+@dataclass(repr=False)
+class Restrictions(Model):
+    """Restrictions on relinked resource."""
+
+    reason: str
+
+
+@dataclass(repr=False)
+class ResumePoint(Model):
+    """Resume point."""
+
+    fully_played: bool
+    resume_position_ms: int

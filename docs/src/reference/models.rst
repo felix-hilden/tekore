@@ -88,6 +88,25 @@ Artist
 .. autoclass:: FullArtistCursorPaging
 .. autoclass:: FullArtistOffsetPaging
 
+Audiobook
+---------
+.. autosummary::
+   :nosignatures:
+
+   Audiobook
+   SimpleAudiobook
+   SimpleAudiobookPaging
+   FullAudiobook
+   Author
+   Narrator
+
+.. autoclass:: Audiobook
+.. autoclass:: SimpleAudiobook
+.. autoclass:: SimpleAudiobookPaging
+.. autoclass:: FullAudiobook
+.. autoclass:: Author
+.. autoclass:: Narrator
+
 Category
 --------
 .. autosummary::
@@ -98,6 +117,21 @@ Category
 
 .. autoclass:: Category
 .. autoclass:: CategoryPaging
+
+Chapter
+-------
+.. autosummary::
+   :nosignatures:
+
+   Chapter
+   SimpleChapter
+   SimpleChapterPaging
+   FullChapter
+
+.. autoclass:: Chapter
+.. autoclass:: SimpleChapter
+.. autoclass:: SimpleChapterPaging
+.. autoclass:: FullChapter
 
 Episode
 -------

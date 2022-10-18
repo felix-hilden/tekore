@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from .base import Item
 from .album import SimpleAlbum
 from .artist import SimpleArtist
+from .member import Restrictions
 from .paging import OffsetPaging
 from .serialise import Model, ModelList, Timestamp
 
@@ -31,13 +32,6 @@ class Track(Item):
 
     def __post_init__(self):
         self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
-
-
-@dataclass(repr=False)
-class Restrictions(Model):
-    """Restrictions on relinked track."""
-
-    reason: str
 
 
 @dataclass(repr=False)

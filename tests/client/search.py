@@ -23,3 +23,9 @@ class TestSpotifySearch:
             'piano', types=('episode',), market='US', limit=1
         )
         assert episodes.total > 0
+
+    def test_search_audiobooks(self, app_client):
+        audiobooks, = app_client.search(
+            'book', types=('audiobook',), market='US', limit=1
+        )
+        assert audiobooks.total > 0

@@ -4,16 +4,8 @@ from dataclasses import dataclass
 from .base import Item
 from .show import SimpleShow
 from .paging import OffsetPaging
-from .member import Image, ReleaseDatePrecision
+from .member import Image, ReleaseDatePrecision, ResumePoint
 from .serialise import Model, ModelList, Timestamp
-
-
-@dataclass(repr=False)
-class ResumePoint(Model):
-    """Episode resume point."""
-
-    fully_played: bool
-    resume_position_ms: int
 
 
 @dataclass(repr=False)

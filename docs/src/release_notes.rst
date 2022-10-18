@@ -7,8 +7,13 @@ Unreleased
 ----------
 Added
 *****
+- :ref:`client` - add new audiobook (:ref:`client-audiobook`) and chapter
+  :ref:`client-chapter` endpoints and "audiobook" as a valid search type. Note
+  that audiobooks are currently only available in the US market. The APIs also
+  seem to be unreliable. (:issue:`277`)
 - :ref:`client` - add new get queue endpoint
-  :meth:`playback_queue <Spotify.playback_queue>` (:issue:`278`)
+  :meth:`playback_queue <Spotify.playback_queue>`. Queue results seem
+  inconsistent at this time. (:issue:`278`)
 
 4.4.1 (2022-10-08)
 ------------------

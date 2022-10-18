@@ -5,7 +5,9 @@ from .paging import SpotifyPaging
 from .api import (
     SpotifyAlbum,
     SpotifyArtist,
+    SpotifyAudiobook,
     SpotifyBrowse,
+    SpotifyChapter,
     SpotifyEpisode,
     SpotifyFollow,
     SpotifyLibrary,
@@ -23,7 +25,9 @@ from .api import (
 class Spotify(
     SpotifyAlbum,
     SpotifyArtist,
+    SpotifyAudiobook,
     SpotifyBrowse,
+    SpotifyChapter,
     SpotifyEpisode,
     SpotifyFollow,
     SpotifyLibrary,
