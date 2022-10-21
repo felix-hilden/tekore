@@ -9,6 +9,7 @@ class ReleaseDatePrecision(StrEnum):
     year = 'year'
     month = 'month'
     day = 'day'
+    minute = 'minute'
 
 
 @dataclass(repr=False)
