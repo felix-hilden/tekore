@@ -49,7 +49,7 @@ class Actions(Model):
     disallows: Disallows
 
     def __post_init__(self):
-        self.disallows = Disallows(**self.disallows)
+        self.disallows = Disallows.from_kwargs(self.disallows)
 
 
 item_type = {
@@ -60,9 +60,9 @@ item_type = {
 
 def _parse_playback_item(item: dict):
     if item.get('is_local', False) is True:
-        return LocalTrack(**item)
+        return LocalTrack.from_kwargs(item)
     else:
-        return item_type[item['type']](**item)
+        return item_type[item['type']].from_kwargs(item)
 
 
 @dataclass(repr=False)
@@ -83,13 +83,13 @@ class CurrentlyPlaying(Model):
     item: Union[FullTrack, LocalTrack, FullEpisode, None]
 
     def __post_init__(self):
-        self.actions = Actions(**self.actions)
+        self.actions = Actions.from_kwargs(self.actions)
         self.currently_playing_type = CurrentlyPlayingType[
             self.currently_playing_type
         ]
 
         if self.context is not None:
-            self.context = Context(**self.context)
+            self.context = Context.from_kwargs(self.context)
         if self.item is not None:
             self.item = _parse_playback_item(self.item)
 
@@ -104,7 +104,7 @@ class CurrentlyPlayingContext(CurrentlyPlaying):
 
     def __post_init__(self):
         super().__post_init__()
-        self.device = Device(**self.device)
+        self.device = Device.from_kwargs(self.device)
         self.repeat_state = RepeatState[self.repeat_state]
 
 

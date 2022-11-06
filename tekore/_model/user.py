@@ -30,9 +30,9 @@ class User(Item):
 
     def __post_init__(self):
         if self.followers is not None:
-            self.followers = Followers(**self.followers)
+            self.followers = Followers.from_kwargs(self.followers)
         if self.images is not None:
-            self.images = ModelList(Image(**i) for i in self.images)
+            self.images = ModelList(Image.from_kwargs(i) for i in self.images)
 
 
 @dataclass(repr=False)
@@ -56,7 +56,7 @@ class PrivateUser(User):
     def __post_init__(self):
         super().__post_init__()
         if self.explicit_content is not None:
-            self.explicit_content = ExplicitContent(**self.explicit_content)
+            self.explicit_content = ExplicitContent.from_kwargs(self.explicit_content)
 
 
 @dataclass(repr=False)

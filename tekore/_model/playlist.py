@@ -69,16 +69,16 @@ class PlaylistTrack(Model):
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
-        self.added_by = PublicUser(**self.added_by)
+        self.added_by = PublicUser.from_kwargs(self.added_by)
 
         if self.video_thumbnail is not None:
-            self.video_thumbnail = Image(**self.video_thumbnail)
+            self.video_thumbnail = Image.from_kwargs(self.video_thumbnail)
 
         if self.track is not None:
             if self.is_local:
-                self.track = LocalPlaylistTrack(**self.track)
+                self.track = LocalPlaylistTrack.from_kwargs(self.track)
             else:
-                self.track = track_type[self.track['type']](**self.track)
+                self.track = track_type[self.track['type']].from_kwargs(self.track)
 
 
 @dataclass(repr=False)
@@ -88,7 +88,7 @@ class PlaylistTrackPaging(OffsetPaging):
     items: List[PlaylistTrack]
 
     def __post_init__(self):
-        self.items = ModelList(PlaylistTrack(**t) for t in self.items)
+        self.items = ModelList(PlaylistTrack.from_kwargs(t) for t in self.items)
 
 
 @dataclass(repr=False)
@@ -110,9 +110,9 @@ class Playlist(Item):
     description: str
 
     def __post_init__(self):
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
         if self.owner is not None:
-            self.owner = PublicUser(**self.owner)
+            self.owner = PublicUser.from_kwargs(self.owner)
 
 
 @dataclass(repr=False)
@@ -123,7 +123,7 @@ class SimplePlaylist(Playlist):
 
     def __post_init__(self):
         super().__post_init__()
-        self.tracks = Tracks(**self.tracks)
+        self.tracks = Tracks.from_kwargs(self.tracks)
 
 
 @dataclass(repr=False)
@@ -135,8 +135,8 @@ class FullPlaylist(Playlist):
 
     def __post_init__(self):
         super().__post_init__()
-        self.followers = Followers(**self.followers)
-        self.tracks = PlaylistTrackPaging(**self.tracks)
+        self.followers = Followers.from_kwargs(self.followers)
+        self.tracks = PlaylistTrackPaging.from_kwargs(self.tracks)
 
 
 @dataclass(repr=False)
@@ -146,4 +146,4 @@ class SimplePlaylistPaging(OffsetPaging):
     items: List[SimplePlaylist]
 
     def __post_init__(self):
-        self.items = ModelList(SimplePlaylist(**p) for p in self.items)
+        self.items = ModelList(SimplePlaylist.from_kwargs(p) for p in self.items)

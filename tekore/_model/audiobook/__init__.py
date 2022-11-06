@@ -20,4 +20,4 @@ class SimpleAudiobookPaging(OffsetPaging):
     items = List[SimpleAudiobook]
 
     def __post_init__(self):
-        self.items = ModelList(SimpleAudiobook(**i) for i in self.items)
+        self.items = ModelList(SimpleAudiobook.from_kwargs(i) for i in self.items)

@@ -40,7 +40,7 @@ class Audiobook(Item):
     total_chapters: int
 
     def __post_init__(self):
-        self.authors = ModelList(Author(**i) for i in self.authors)
-        self.copyrights = ModelList(Copyright(**i) for i in self.copyrights)
-        self.images = ModelList(Image(**i) for i in self.images)
-        self.narrators = ModelList(Narrator(**i) for i in self.narrators)
+        self.authors = ModelList(Author.from_kwargs(i) for i in self.authors)
+        self.copyrights = ModelList(Copyright.from_kwargs(i) for i in self.copyrights)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
+        self.narrators = ModelList(Narrator.from_kwargs(i) for i in self.narrators)

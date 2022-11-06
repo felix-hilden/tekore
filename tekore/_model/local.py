@@ -59,5 +59,5 @@ class LocalTrack(LocalItem):
     uri: str
 
     def __post_init__(self):
-        self.album = LocalAlbum(**self.album)
-        self.artists = ModelList(LocalArtist(**a) for a in self.artists)
+        self.album = LocalAlbum.from_kwargs(self.album)
+        self.artists = ModelList(LocalArtist.from_kwargs(a) for a in self.artists)

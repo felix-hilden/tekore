@@ -20,11 +20,11 @@ class PlayHistory(Model):
     context: Optional[Context]
 
     def __post_init__(self):
-        self.track = FullTrack(**self.track)
+        self.track = FullTrack.from_kwargs(self.track)
         self.played_at = Timestamp.from_string(self.played_at)
 
         if self.context is not None:
-            self.context = Context(**self.context)
+            self.context = Context.from_kwargs(self.context)
 
 
 @dataclass(repr=False)
@@ -47,5 +47,5 @@ class PlayHistoryPaging(CursorPaging):
 
     def __post_init__(self):
         if self.cursors is not None:
-            self.cursors = PlayHistoryCursor(**self.cursors)
-        self.items = ModelList(PlayHistory(**h) for h in self.items)
+            self.cursors = PlayHistoryCursor.from_kwargs(self.cursors)
+        self.items = ModelList(PlayHistory.from_kwargs(h) for h in self.items)

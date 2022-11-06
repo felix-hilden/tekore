@@ -45,4 +45,4 @@ class CursorPaging(Paging):
     cursors: Cursor
 
     def __post_init__(self):
-        self.cursors = Cursor(**self.cursors)
+        self.cursors = Cursor.from_kwargs(self.cursors)

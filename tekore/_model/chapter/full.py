@@ -16,6 +16,6 @@ class FullChapter(Chapter):
 
     def __post_init__(self):
         super().__post_init__()
-        self.audiobook = FullAudiobook(**self.audiobook)
+        self.audiobook = FullAudiobook.from_kwargs(self.audiobook)
         if self.restriction:
-            self.restriction = Restrictions(**self.restriction)
+            self.restriction = Restrictions.from_kwargs(self.restriction)

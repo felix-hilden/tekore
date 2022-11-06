@@ -14,4 +14,4 @@ class FullAudiobook(Audiobook):
 
     def __post_init__(self):
         super().__post_init__()
-        self.chapters = SimpleChapterPaging(**self.chapters)
+        self.chapters = SimpleChapterPaging.from_kwargs(self.chapters)

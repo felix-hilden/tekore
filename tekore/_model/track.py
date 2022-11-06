@@ -31,7 +31,7 @@ class Track(Item):
     is_local: bool
 
     def __post_init__(self):
-        self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
+        self.artists = ModelList(SimpleArtist.from_kwargs(a) for a in self.artists)
 
 
 @dataclass(repr=False)
@@ -55,9 +55,9 @@ class SimpleTrack(Track):
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
         if self.linked_from is not None:
-            self.linked_from = TrackLink(**self.linked_from)
+            self.linked_from = TrackLink.from_kwargs(self.linked_from)
         if self.restrictions is not None:
-            self.restrictions = Restrictions(**self.restrictions)
+            self.restrictions = Restrictions.from_kwargs(self.restrictions)
 
 
 @dataclass(repr=False)
@@ -81,13 +81,13 @@ class FullTrack(Track):
 
     def __post_init__(self):
         super().__post_init__()
-        self.album = SimpleAlbum(**self.album)
+        self.album = SimpleAlbum.from_kwargs(self.album)
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
         if self.linked_from is not None:
-            self.linked_from = TrackLink(**self.linked_from)
+            self.linked_from = TrackLink.from_kwargs(self.linked_from)
         if self.restrictions is not None:
-            self.restrictions = Restrictions(**self.restrictions)
+            self.restrictions = Restrictions.from_kwargs(self.restrictions)
 
 
 @dataclass(repr=False)
@@ -97,7 +97,7 @@ class FullTrackPaging(OffsetPaging):
     items: List[FullTrack]
 
     def __post_init__(self):
-        self.items = ModelList(FullTrack(**t) for t in self.items)
+        self.items = ModelList(FullTrack.from_kwargs(t) for t in self.items)
 
 
 @dataclass(repr=False)
@@ -107,7 +107,7 @@ class SimpleTrackPaging(OffsetPaging):
     items: List[SimpleTrack]
 
     def __post_init__(self):
-        self.items = ModelList(SimpleTrack(**t) for t in self.items)
+        self.items = ModelList(SimpleTrack.from_kwargs(t) for t in self.items)
 
 
 @dataclass(repr=False)
@@ -127,7 +127,7 @@ class SavedTrack(Model):
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
-        self.track = FullTrack(**self.track)
+        self.track = FullTrack.from_kwargs(self.track)
 
 
 @dataclass(repr=False)
@@ -137,4 +137,4 @@ class SavedTrackPaging(OffsetPaging):
     items: List[SavedTrack]
 
     def __post_init__(self):
-        self.items = ModelList(SavedTrack(**t) for t in self.items)
+        self.items = ModelList(SavedTrack.from_kwargs(t) for t in self.items)

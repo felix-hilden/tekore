@@ -44,5 +44,5 @@ class Recommendations(Model):
     tracks: List[FullTrack]
 
     def __post_init__(self):
-        self.seeds = ModelList(RecommendationSeed(**s) for s in self.seeds)
-        self.tracks = ModelList(FullTrack(**t) for t in self.tracks)
+        self.seeds = ModelList(RecommendationSeed.from_kwargs(s) for s in self.seeds)
+        self.tracks = ModelList(FullTrack.from_kwargs(t) for t in self.tracks)

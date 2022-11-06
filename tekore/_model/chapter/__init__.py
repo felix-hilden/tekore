@@ -18,7 +18,7 @@ class SimpleChapter(Chapter):
     def __post_init__(self):
         super().__post_init__()
         if self.restriction:
-            self.restriction = Restrictions(**self.restriction)
+            self.restriction = Restrictions.from_kwargs(self.restriction)
 
 
 @dataclass(repr=False)
@@ -28,4 +28,4 @@ class SimpleChapterPaging(OffsetPaging):
     items = List[SimpleChapter]
 
     def __post_init__(self):
-        self.items = ModelList(SimpleChapter(**i) for i in self.items)
+        self.items = ModelList(SimpleChapter.from_kwargs(i) for i in self.items)

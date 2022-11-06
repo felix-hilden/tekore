@@ -45,7 +45,7 @@ class SpotifyPaging(SpotifyBase):
 
         try:
             next_set = self._get_paging_result(page.next)
-            return type(page)(**next_set)
+            return type(page).from_kwargs(next_set)
         except BadRequest:
             return
 
@@ -55,7 +55,7 @@ class SpotifyPaging(SpotifyBase):
 
         try:
             next_set = await self._get_paging_result(page.next)
-            return type(page)(**next_set)
+            return type(page).from_kwargs(next_set)
         except BadRequest:
             return
 
@@ -80,14 +80,14 @@ class SpotifyPaging(SpotifyBase):
             return
 
         previous_set = self._get_paging_result(page.previous)
-        return type(page)(**previous_set)
+        return type(page).from_kwargs(previous_set)
 
     async def _async_previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
         if page.previous is None:
             return
 
         previous_set = await self._get_paging_result(page.previous)
-        return type(page)(**previous_set)
+        return type(page).from_kwargs(previous_set)
 
     def all_pages(self, page: Paging) -> Generator[Paging, None, None]:
         """

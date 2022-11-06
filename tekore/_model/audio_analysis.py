@@ -81,8 +81,8 @@ class AudioAnalysis(Model):
     track: dict
 
     def __post_init__(self):
-        self.bars = ModelList(TimeInterval(**i) for i in self.bars)
-        self.beats = ModelList(TimeInterval(**i) for i in self.beats)
-        self.sections = ModelList(Section(**s) for s in self.sections)
-        self.segments = ModelList(Segment(**s) for s in self.segments)
-        self.tatums = ModelList(TimeInterval(**i) for i in self.tatums)
+        self.bars = ModelList(TimeInterval.from_kwargs(i) for i in self.bars)
+        self.beats = ModelList(TimeInterval.from_kwargs(i) for i in self.beats)
+        self.sections = ModelList(Section.from_kwargs(s) for s in self.sections)
+        self.segments = ModelList(Segment.from_kwargs(s) for s in self.segments)
+        self.tatums = ModelList(TimeInterval.from_kwargs(i) for i in self.tatums)

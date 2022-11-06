@@ -32,9 +32,9 @@ class FullAlbum(Album):
         super().__post_init__()
         if self.available_markets is not None:
             self.available_markets = ModelList(self.available_markets)
-        self.copyrights = ModelList(Copyright(**c) for c in self.copyrights)
+        self.copyrights = ModelList(Copyright.from_kwargs(c) for c in self.copyrights)
         self.genres = ModelList(self.genres)
-        self.tracks = SimpleTrackPaging(**self.tracks)
+        self.tracks = SimpleTrackPaging.from_kwargs(self.tracks)
 
 
 @dataclass(repr=False)
@@ -46,7 +46,7 @@ class SavedAlbum(Model):
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
-        self.album = FullAlbum(**self.album)
+        self.album = FullAlbum.from_kwargs(self.album)
 
 
 @dataclass(repr=False)
@@ -56,4 +56,4 @@ class SavedAlbumPaging(OffsetPaging):
     items: List[SavedAlbum]
 
     def __post_init__(self):
-        self.items = ModelList(SavedAlbum(**a) for a in self.items)
+        self.items = ModelList(SavedAlbum.from_kwargs(a) for a in self.items)

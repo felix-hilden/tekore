@@ -30,8 +30,8 @@ class Album(Item):
 
     def __post_init__(self):
         self.album_type = AlbumType[self.album_type.lower()]
-        self.artists = ModelList(SimpleArtist(**a) for a in self.artists)
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.artists = ModelList(SimpleArtist.from_kwargs(a) for a in self.artists)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
         self.release_date_precision = ReleaseDatePrecision[
             self.release_date_precision
         ]

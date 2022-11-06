@@ -25,8 +25,8 @@ class Chapter(Item):
     resume_point: ResumePoint
 
     def __post_init__(self):
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
         self.release_date_precision = ReleaseDatePrecision[
             self.release_date_precision
         ]
-        self.resume_point = ResumePoint(**self.resume_point)
+        self.resume_point = ResumePoint.from_kwargs(self.resume_point)

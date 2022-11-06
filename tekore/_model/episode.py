@@ -28,7 +28,7 @@ class Episode(Item):
     release_date_precision: ReleaseDatePrecision
 
     def __post_init__(self):
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
         self.languages = ModelList(self.languages)
         self.release_date_precision = ReleaseDatePrecision[
             self.release_date_precision
@@ -44,7 +44,7 @@ class SimpleEpisode(Episode):
     def __post_init__(self):
         super().__post_init__()
         if self.resume_point is not None:
-            self.resume_point = ResumePoint(**self.resume_point)
+            self.resume_point = ResumePoint.from_kwargs(self.resume_point)
 
 
 @dataclass(repr=False)
@@ -56,9 +56,9 @@ class FullEpisode(Episode):
 
     def __post_init__(self):
         super().__post_init__()
-        self.show = SimpleShow(**self.show)
+        self.show = SimpleShow.from_kwargs(self.show)
         if self.resume_point is not None:
-            self.resume_point = ResumePoint(**self.resume_point)
+            self.resume_point = ResumePoint.from_kwargs(self.resume_point)
 
 
 @dataclass(repr=False)
@@ -69,7 +69,7 @@ class SimpleEpisodePaging(OffsetPaging):
 
     def __post_init__(self):
         self.items = ModelList(
-            SimpleEpisode(**i) if i is not None else None
+            SimpleEpisode.from_kwargs(i) if i is not None else None
             for i in self.items
         )
 
@@ -83,7 +83,7 @@ class SavedEpisode(Model):
 
     def __post_init__(self):
         self.added_at = Timestamp.from_string(self.added_at)
-        self.episode = FullEpisode(**self.episode)
+        self.episode = FullEpisode.from_kwargs(self.episode)
 
 
 @dataclass(repr=False)
@@ -93,4 +93,4 @@ class SavedEpisodePaging(OffsetPaging):
     items: List[SavedEpisode]
 
     def __post_init__(self):
-        self.items = ModelList(SavedEpisode(**a) for a in self.items)
+        self.items = ModelList(SavedEpisode.from_kwargs(a) for a in self.items)

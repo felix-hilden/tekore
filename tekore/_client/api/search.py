@@ -23,7 +23,7 @@ paging_type = {
 
 def search_result(json: dict):
     """Unpack search result dicts into respective paging type constructors."""
-    return tuple(paging_type[key](**json[key]) for key in json.keys())
+    return tuple(paging_type[key].from_kwargs(json[key]) for key in json.keys())
 
 
 class SpotifySearch(SpotifyBase):

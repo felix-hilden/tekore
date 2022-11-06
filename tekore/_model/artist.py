@@ -30,9 +30,9 @@ class FullArtist(Artist):
     popularity: int
 
     def __post_init__(self):
-        self.followers = Followers(**self.followers)
+        self.followers = Followers.from_kwargs(self.followers)
         self.genres = ModelList(self.genres)
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
 
 
 @dataclass(repr=False)
@@ -44,7 +44,7 @@ class FullArtistCursorPaging(CursorPaging):
 
     def __post_init__(self):
         super().__post_init__()
-        self.items = ModelList(FullArtist(**a) for a in self.items)
+        self.items = ModelList(FullArtist.from_kwargs(a) for a in self.items)
 
 
 @dataclass(repr=False)
@@ -54,4 +54,4 @@ class FullArtistOffsetPaging(OffsetPaging):
     items: List[FullArtist]
 
     def __post_init__(self):
-        self.items = ModelList(FullArtist(**a) for a in self.items)
+        self.items = ModelList(FullArtist.from_kwargs(a) for a in self.items)

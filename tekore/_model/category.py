@@ -16,7 +16,7 @@ class Category(Identifiable):
     name: str
 
     def __post_init__(self):
-        self.icons = ModelList(Image(**i) for i in self.icons)
+        self.icons = ModelList(Image.from_kwargs(i) for i in self.icons)
 
 
 @dataclass(repr=False)
@@ -26,4 +26,4 @@ class CategoryPaging(OffsetPaging):
     items: List[Category]
 
     def __post_init__(self):
-        self.items = ModelList(Category(**c) for c in self.items)
+        self.items = ModelList(Category.from_kwargs(c) for c in self.items)

@@ -46,4 +46,4 @@ class SimpleAlbumPaging(OffsetPaging):
     items: List[SimpleAlbum]
 
     def __post_init__(self):
-        self.items = ModelList(SimpleAlbum(**a) for a in self.items)
+        self.items = ModelList(SimpleAlbum.from_kwargs(a) for a in self.items)

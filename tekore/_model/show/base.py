@@ -26,6 +26,6 @@ class Show(Item):
 
     def __post_init__(self):
         self.available_markets = ModelList(self.available_markets)
-        self.copyrights = ModelList(Copyright(**c) for c in self.copyrights)
-        self.images = ModelList(Image(**i) for i in self.images)
+        self.copyrights = ModelList(Copyright.from_kwargs(c) for c in self.copyrights)
+        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
         self.languages = ModelList(self.languages)
