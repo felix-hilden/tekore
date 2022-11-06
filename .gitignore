@@ -11,6 +11,7 @@ dist/
 # Editors
 .idea/
 .vim/
+.vscode/
 
 # Tools
 .coverage

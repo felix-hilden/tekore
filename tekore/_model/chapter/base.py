@@ -18,7 +18,6 @@ class Chapter(Item):
     external_urls: dict
     html_description: str
     images: List[Image]
-    is_playable: bool
     languages: List[str]
     name: str
     release_date: str
