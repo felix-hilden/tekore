@@ -5,6 +5,7 @@ from tekore import NotFound, from_uri
 
 
 class TestSpotifyChapter:
+    @pytest.mark.xfail(reason='API inconsistencies.')
     def test_chapter_no_market_not_found(self, app_client):
         with pytest.raises(NotFound):
             app_client.chapter(chapter_id)
@@ -18,6 +19,7 @@ class TestSpotifyChapter:
         with pytest.raises(NotFound):
             app_client.chapter(chapter_id, market='FI')
 
+    @pytest.mark.xfail(reason='API inconsistencies.')
     def test_chapters_no_market_returns_empty(self, app_client):
         chapters = app_client.chapters(chapter_ids)
         assert not chapters
