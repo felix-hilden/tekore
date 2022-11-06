@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.5.0 (2022-11-06)
+------------------
 Added
 *****
 - :ref:`errors` - carry scope information with :class:`Unauthorised`
