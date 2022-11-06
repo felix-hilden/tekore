@@ -11,6 +11,8 @@ from .base import Chapter
 class SimpleChapter(Chapter):
     """Simplified chapter."""
 
+    available_markets: List[str] = None
+    is_playable: Optional[bool] = None
     restriction: Optional[Restrictions] = None
 
     def __post_init__(self):

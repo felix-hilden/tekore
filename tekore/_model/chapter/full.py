@@ -11,6 +11,7 @@ class FullChapter(Chapter):
     """Complete chapter object."""
 
     audiobook: FullAudiobook
+    is_playable: Optional[bool] = None
     restriction: Optional[Restrictions] = None
 
     def __post_init__(self):

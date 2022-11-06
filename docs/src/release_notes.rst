@@ -15,6 +15,11 @@ Added
   :meth:`playback_queue <Spotify.playback_queue>`. Queue results seem
   inconsistent at this time. (:issue:`278`)
 
+Fixed
+*****
+- :ref:`models` - add missing "minute" resolution to
+  :class:`ReleaseDatePrecision <models.ReleaseDatePrecision>`
+
 4.4.1 (2022-10-08)
 ------------------
 Fixed
