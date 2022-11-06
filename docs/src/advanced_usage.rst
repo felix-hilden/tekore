@@ -204,6 +204,26 @@ Synchronous credentials clients are recommended.
     *However*, setting values outside of all contexts modifies the persistent
     value directly, and as such may affect other tasks.
 
+Dynamic scoping
+---------------
+Gradually expanding token scopes and methods that "know" their associated
+scopes can be used to dynamically expand user scopes in a web application.
+:class:`Unauthorised` carries the scope information from failing calls
+and can then be used to redirect users to authorise again.
+
+.. code:: python
+
+    @app.get("/endpoint")
+    def endpoint():
+        try:
+            spotify.playback()
+        except tk.Unauthorised as e:
+            return Redirect("/login?scope=" + str(e.scope))
+
+Combined with refreshing the token on arrival to have the full scope and
+additionally redirecting the user back after authorisation, even static
+HTML applications using a Python backend become simple to implement.
+
 Localisation
 ------------
 Many API calls that retrieve track information accept a ``market`` or

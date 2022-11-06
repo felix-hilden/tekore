@@ -1,7 +1,7 @@
 from typing import Callable
 
 from .token import Token
-from ..._error import get_error
+from ..._sender.error import get_error
 from ..._sender import Request, Response
 
 

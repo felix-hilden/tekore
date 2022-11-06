@@ -3,7 +3,7 @@ from typing import Generator, Optional
 from .base import SpotifyBase
 from .decor import send_and_process
 from tekore.model import Model, Paging, OffsetPaging
-from tekore._error import BadRequest
+from tekore._sender import BadRequest
 
 
 def parse_paging_result(result):

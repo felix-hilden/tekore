@@ -32,19 +32,6 @@ from ._auth import (
     request_client_token,
 )
 from ._client import Spotify
-from ._error import (
-    HTTPError,
-    ClientError,
-    ServerError,
-    BadRequest,
-    Unauthorised,
-    Forbidden,
-    NotFound,
-    TooManyRequests,
-    InternalServerError,
-    BadGateway,
-    ServiceUnavailable,
-)
 from ._convert import (
     ConversionError,
     IdentifierType,
@@ -66,6 +53,17 @@ from ._sender import (
     Client,
     Request,
     Response,
+    HTTPError,
+    ClientError,
+    ServerError,
+    BadRequest,
+    Unauthorised,
+    Forbidden,
+    NotFound,
+    TooManyRequests,
+    InternalServerError,
+    BadGateway,
+    ServiceUnavailable,
 )
 from ._config import (
     config_from_environment,

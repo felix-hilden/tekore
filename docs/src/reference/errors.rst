@@ -57,6 +57,7 @@ objects for closer inspection.
 .. autoclass:: ServerError
 .. autoclass:: BadRequest
 .. autoclass:: Unauthorised
+   :undoc-members:
 .. autoclass:: Forbidden
 .. autoclass:: NotFound
 .. autoclass:: TooManyRequests

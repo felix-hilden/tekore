@@ -1,4 +1,4 @@
-from tekore._error import get_error
+from tekore._sender.error import get_error
 from tekore._sender import Request, Response
 from tekore.model import PlayerErrorReason
 

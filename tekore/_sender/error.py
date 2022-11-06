@@ -1,4 +1,4 @@
-from ._sender import Request, Response
+from .base import Request, Response
 
 
 class HTTPError(Exception):
@@ -42,7 +42,13 @@ class Unauthorised(ClientError):
     The request requires user authentication or,
     if the request included authorization credentials,
     authorization has been refused for those credentials.
+
+    The scopes associated with the call are attached to this class.
     """
+
+    scope: str
+    required_scope: str
+    optional_scope: str
 
 
 class Forbidden(ClientError):

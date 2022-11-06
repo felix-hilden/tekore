@@ -5,6 +5,7 @@ from functools import wraps
 from .base import Request, Response
 from .concrete import Sender, SyncSender, AsyncSender
 from .extending import ExtendingSender
+from .error import Unauthorised
 
 
 class SenderConflictWarning(RuntimeWarning):
@@ -64,9 +65,18 @@ def send_and_process(post_func: Callable) -> Callable:
         and possible additional arguments
     """
     def decorator(function: Callable[..., Request]) -> Callable:
+        def try_post_func(*args, **kwargs):
+            try:
+                return post_func(*args, **kwargs)
+            except Unauthorised as e:
+                e.scope = wrapper.scope
+                e.required_scope = wrapper.required_scope
+                e.optional_scope = wrapper.optional_scope
+                raise
+
         async def async_send(self, request: Request, params: tuple):
             response = await self.send(request)
-            return post_func(request, response, *params)
+            return try_post_func(request, response, *params)
 
         @wraps(function)
         def wrapper(self, *args, **kwargs):
@@ -76,6 +86,6 @@ def send_and_process(post_func: Callable) -> Callable:
                 return async_send(self, request, params)
 
             response = self.send(request)
-            return post_func(request, response, *params)
+            return try_post_func(request, response, *params)
         return wrapper
     return decorator

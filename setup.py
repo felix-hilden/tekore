@@ -44,6 +44,7 @@ extras_require = {
         'coverage',
         'pytest',
         'pytest-asyncio>=0.17',
+        'pytest-httpx',
     ],
     'checks': [
         'tox~=3.0',

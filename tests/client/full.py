@@ -4,7 +4,7 @@ import pytest
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
 
-from tekore import BadRequest, Spotify, Scope
+from tekore import BadRequest, Spotify, Scope, Unauthorised
 from tekore.model import ModelList
 from tekore._client.chunked import chunked, return_none, return_last
 
@@ -196,6 +196,31 @@ class TestSpotifyUnits:
         await client.close()
         with pytest.raises(RuntimeError):
             await client.track('id')
+
+    def test_unauthorised_contains_missing_scopes(self, httpx_mock):
+        httpx_mock.add_response(401)
+        client = Spotify('token')
+        func = client.playback
+        try:
+            func()
+            raise AssertionError()
+        except Unauthorised as e:
+            assert e.required_scope == func.required_scope
+            assert e.optional_scope == func.optional_scope
+            assert e.scope == func.scope
+
+    @pytest.mark.asyncio
+    async def test_async_unauthorised_contains_missing_scopes(self, httpx_mock):
+        httpx_mock.add_response(401)
+        client = Spotify('token', asynchronous=True)
+        func = client.playback
+        try:
+            await func()
+            raise AssertionError()
+        except Unauthorised as e:
+            assert e.required_scope == func.required_scope
+            assert e.optional_scope == func.optional_scope
+            assert e.scope == func.scope
 
 
 class TestSpotifyMaxLimits:

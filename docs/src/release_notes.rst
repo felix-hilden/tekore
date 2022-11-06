@@ -7,6 +7,8 @@ Unreleased
 ----------
 Added
 *****
+- :ref:`errors` - carry scope information with :class:`Unauthorised`
+  (:issue:`276`)
 - :ref:`client` - add new audiobook (:ref:`client-audiobook`) and chapter
   :ref:`client-chapter` endpoints and "audiobook" as a valid search type. Note
   that audiobooks are currently only available in the US market. The APIs also

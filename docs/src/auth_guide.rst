@@ -82,9 +82,9 @@ The scope of a user token represents its access rights to various endpoints.
 By default, tokens cannot be used, for example, to modify a user's library.
 Scopes are set during user authorisation,
 and requesting additional scopes requires another authorisation.
+
 However, the scope of a token can be gradually expanded
 across a number of authorisations.
-
 When authorising, the scope of the resulting token is determined
 by the scopes that were set at the start of authorisation.
 But when refreshing a token, the scope is expanded to cover all scopes
