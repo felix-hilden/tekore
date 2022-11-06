@@ -312,6 +312,13 @@ class TestSpotifyChunkedUnit:
         r = dec(mock_spotify(), list(range(20)))
         assert r == 1
 
+    def test_chunked_return_last_with_empty_input_returns_none(self):
+        func = MagicMock(side_effect=[0, 1, 2])
+
+        dec = chunked('a', 1, 10, return_last)(func)
+        r = dec(mock_spotify(), [])
+        assert r is None
+
     def test_argument_chain_positional(self):
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()

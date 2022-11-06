@@ -18,7 +18,8 @@ Added
 Fixed
 *****
 - :ref:`models` - add missing "minute" resolution to
-  :class:`ReleaseDatePrecision <models.ReleaseDatePrecision>`
+  :class:`ReleaseDatePrecision <models.ReleaseDatePrecision>` (:issue:`277`)
+- :ref:`client` - fix chunking of empty inputs (:issue:`281`)
 
 4.4.1 (2022-10-08)
 ------------------

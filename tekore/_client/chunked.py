@@ -150,4 +150,4 @@ def return_none(_):
 
 def return_last(responses):
     """Return last item of a list."""
-    return responses[-1]
+    return responses[-1] if responses else None
