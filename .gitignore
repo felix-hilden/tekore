@@ -26,3 +26,6 @@ env/
 venv/
 env.bak/
 venv.bak/
+
+# Platforms
+.DS_Store

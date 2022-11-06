@@ -3,6 +3,9 @@
 =========
 Reference
 =========
+
+.. module:: tekore
+
 All public objects are documented in these sections.
 
 ================== =============================
