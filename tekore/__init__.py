@@ -7,11 +7,6 @@ with the exception of response models, which are located in ``tekore.model``.
 See online documentation at `RTD <http://tekore.rtfd.io>`_.
 """
 
-from tekore._start import check_python_version as _check_python_version
-from tekore._start import read_version_file as _read_version_file
-
-_check_python_version()
-
 from tekore import model
 from ._auth import (
     Credentials,
@@ -72,7 +67,7 @@ from ._config import (
     MissingConfigurationWarning,
 )
 
-__version__ = _read_version_file()
+__version__ = "4.5.0"
 
 # Change the module of classes to hide module structure
 # and fix Sphinx base class links

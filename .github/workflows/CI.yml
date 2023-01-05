@@ -1,6 +1,4 @@
-# User-authorised full tox build and code coverage report
-
-name: build
+name: CI
 on:
   push:
     branches:
@@ -10,7 +8,28 @@ on:
   pull_request:
 
 jobs:
-  environment:
+  matrix:
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+    name: Python ${{matrix.python-version}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{matrix.python-version}}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{matrix.python-version}}
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/tests
+          pip install .
+      - name: Run test suite
+        run: pytest
+
+  full-build:
     name: User-authorised tox suite with coverage
     runs-on: ubuntu-latest
     env:
@@ -24,13 +43,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: "3.11"
       - name: Install package
         run: |
           python -m pip install --upgrade pip
-          pip install .[dev]
+          pip install -r requirements/dev
+          pip install .
       - name: Initialise coverage reporter
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

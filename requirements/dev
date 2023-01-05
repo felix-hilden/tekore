@@ -1,0 +1,6 @@
+-r build
+-r checks
+-r docs
+-r tests
+
+tox>=4
