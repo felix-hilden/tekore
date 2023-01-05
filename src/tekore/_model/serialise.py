@@ -78,33 +78,35 @@ def cut_by_comma(line: str, end: str, max_len: int) -> str:
     return mend + end
 
 
+def _list_repr(field, value) -> str:
+    outer_type = field.type
+    if outer_type.__origin__ is Union:
+        outer_type = outer_type.__args__[0]
+
+    inner_type = outer_type.__args__[0]
+
+    if issubclass(inner_type, Model):
+        f_str = member_repr(inner_type)
+    else:
+        f_str = inner_type.__name__
+
+    return f"[{len(value)} x {f_str}]"
+
+
 def field_repr(field, value) -> str:
     """Construct field representations."""
     if isinstance(value, Model):
-        text = member_repr(type(value))
+        return member_repr(type(value))
     elif isinstance(value, list):
-        outer_type = field.type
-        if outer_type.__origin__ is Union:
-            outer_type = outer_type.__args__[0]
-
-        inner_type = outer_type.__args__[0]
-
-        if issubclass(inner_type, Model):
-            f_str = member_repr(inner_type)
-        else:
-            f_str = inner_type.__name__
-
-        text = f"[{len(value)} x {f_str}]"
+        return _list_repr(field, value)
     elif isinstance(value, dict):
         v_fields = sorted(value.keys())
         f_str = ", ".join([f"'{f}'" for f in v_fields])
-        text = f"{{{f_str}}}"
+        return f"{{{f_str}}}"
     elif isinstance(value, str):
-        text = f"'{value}'"
-    else:
-        text = repr(value)
+        return f"'{value}'"
 
-    return text
+    return repr(value)
 
 
 def trim_line(line: str, value, max_len: int = 75) -> str:

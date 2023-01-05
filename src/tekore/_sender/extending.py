@@ -197,6 +197,27 @@ class CachingSender(ExtendingSender):
         if not item[1]:
             del item
 
+    def _remove_stale_items(self):
+        if len(self._deque) == self._deque.maxlen:
+            deque_items = list(self._deque)
+            self._deque.clear()
+
+            for item in deque_items:
+                fresh = self._is_fresh(*item)
+
+                if fresh:
+                    self._deque.append(item)
+                else:
+                    self._delete(*item)
+
+    def _append_item(self, item):
+        # Remove LRU item
+        if len(self._deque) == self._deque.maxlen:
+            d_url, d_vary_key = self._deque.popleft()
+            self._delete(d_url, d_vary_key)
+
+        self._deque.append(item)
+
     def _maybe_save(self, request: Request, response: Response) -> None:
         cc = response.headers.get("Cache-Control", "private, max-age=0")
 
@@ -211,9 +232,7 @@ class CachingSender(ExtendingSender):
             vary = vary.split(", ")
 
         # Construct cached response
-        cache_item = self._cache.get(response.url, (vary, {}))
-        self._cache[response.url] = cache_item
-
+        cache_item = self._cache.setdefault(response.url, (vary, {}))
         cached_response = {
             "response": response,
             "expires_at": time.time() + age - 1,
@@ -226,25 +245,8 @@ class CachingSender(ExtendingSender):
         if self.max_size is None:
             return
 
-        # Remove stale items
-        if len(self._deque) == self._deque.maxlen:
-            deque_items = list(self._deque)
-            self._deque.clear()
-
-            for item in deque_items:
-                fresh = self._is_fresh(*item)
-
-                if fresh:
-                    self._deque.append(item)
-                else:
-                    self._delete(*item)
-
-        # Remove LRU item
-        if len(self._deque) == self._deque.maxlen:
-            d_url, d_vary_key = self._deque.popleft()
-            self._delete(d_url, d_vary_key)
-
-        self._deque.append((response.url, vary_key))
+        self._remove_stale_items()
+        self._append_item((response.url, vary_key))
 
     def _update_usage(self, item) -> None:
         if self.max_size is None:
