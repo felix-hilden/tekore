@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tekore"
+description = "Client for the Spotify Web API"
+readme = "readme_pypi.rst"
+license = {file = "LICENSE"}
+dynamic = ["version"]
+
+requires-python = ">=3.7"
+dependencies = [
+    "httpx>=0.15,<0.24",
+]
+
+keywords = ["spotify", "web", "api", "client"]
+authors = [{name = "Felix Hildén", email = "felix.hilden@gmail.com"}]
+maintainers = [{name = "Felix Hildén", email = "felix.hilden@gmail.com"}]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+
+[project.urls]
+Homepage = "https://pypi.org/project/tekore"
+Download = "https://pypi.org/project/tekore"
+Source = "https://github.com/felix-hilden/tekore"
+Issues = "https://github.com/felix-hilden/tekore/issues"
+Documentation = "https://tekore.rtfd.org"
+
+[tool.setuptools.dynamic]
+version = {attr = "tekore.__version__"}
+
+[tool.pytest.ini_options]
+python_files = "*.py"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "error",
+    "ignore::tekore.MissingConfigurationWarning",
+]
+
+[tool.coverage.run]
+source = ["tekore"]
+branch = true
+command_line = "-m pytest"
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__",
+    "raise NotImplementedError",
+]
+fail_under = 0.99
+precision = 1
+show_missing = true
+skip_covered = true
+
+[tool.pydocstyle]
+ignore = "D100,D104,D105,D107,D203,D212,D213,D413,D415,D416"
+
+[tool.black]
+skip-magic-trailing-comma = true
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 88
+skip_gitignore = true

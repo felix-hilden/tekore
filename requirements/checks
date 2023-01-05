@@ -1,0 +1,6 @@
+doc8>=0.9
+flake8
+flake8-bugbear
+pydocstyle[toml]>=6.1
+black
+isort

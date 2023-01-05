@@ -1,2 +1,6 @@
-include readme_pypi.rst
-include tekore/VERSION
+graft docs
+prune docs/build
+graft requirements
+graft tests
+include contributing.rst readme_pypi.rst tox.ini
+global-exclude *.py[cod] __pycache__ *.so
