@@ -1,4 +1,5 @@
 import pytest
+
 from tekore import Sender, SyncSender
 
 
@@ -9,4 +10,4 @@ class TestSender:
 
     def test_repr(self):
         s = SyncSender()
-        assert repr(s).startswith('SyncSender(')
+        assert repr(s).startswith("SyncSender(")

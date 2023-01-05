@@ -1,17 +1,18 @@
 import asyncio
 import sys
-import pytest
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
 
-from tekore import BadRequest, Spotify, Scope, Unauthorised
+import pytest
+
+from tekore import BadRequest, Scope, Spotify, Unauthorised
+from tekore._client.chunked import chunked, return_last, return_none
 from tekore.model import ModelList
-from tekore._client.chunked import chunked, return_none, return_last
 
 
 @pytest.fixture()
 def client():
-    return Spotify('token')
+    return Spotify("token")
 
 
 async def sleep(k):
@@ -19,34 +20,33 @@ async def sleep(k):
 
 
 contextvars_fail_reason = (
-    'Missing async implementation in'
-    'contextvars backport for Python 3.6!'
+    "Missing async implementation in" "contextvars backport for Python 3.6!"
 )
 
 
 class TestSpotifyUnits:
     def test_set_token_without_context(self, client):
-        client.token = 'new'
-        assert client.token == 'new'
+        client.token = "new"
+        assert client.token == "new"
 
     def test_new_token_used_in_context(self, client):
-        with client.token_as('new'):
-            assert client.token == 'new'
+        with client.token_as("new"):
+            assert client.token == "new"
 
     def test_old_token_restored_after_context(self, client):
-        with client.token_as('new'):
+        with client.token_as("new"):
             pass
-        assert client.token == 'token'
+        assert client.token == "token"
 
     def test_setting_token_in_context_returns_set(self, client):
-        with client.token_as('new'):
-            client.token = 'set'
-            assert client.token == 'set'
+        with client.token_as("new"):
+            client.token = "set"
+            assert client.token == "set"
 
     def test_setting_token_in_context_reset_after_context(self, client):
-        with client.token_as('new'):
-            client.token = 'set'
-        assert client.token == 'token'
+        with client.token_as("new"):
+            client.token = "set"
+        assert client.token == "token"
 
     def test_set_max_limits_without_context(self, client):
         client.max_limits_on = True
@@ -98,27 +98,27 @@ class TestSpotifyUnits:
     @pytest.mark.asyncio
     async def test_token_async_interrupt_preserves_context(self, client):
         async def do_a():
-            with client.token_as('a'):
-                assert client.token == 'a'
+            with client.token_as("a"):
+                assert client.token == "a"
                 await sleep(1)
-                assert client.token == 'a'
+                assert client.token == "a"
 
         async def do_b():
-            with client.token_as('b'):
-                assert client.token == 'b'
+            with client.token_as("b"):
+                assert client.token == "b"
                 await sleep(1)
-                assert client.token == 'b'
+                assert client.token == "b"
 
         await asyncio.gather(do_a(), do_b())
 
     @pytest.mark.asyncio
     async def test_token_set_visible_in_another_task(self, client):
         async def do_a():
-            client.token = 'a'
+            client.token = "a"
 
         async def do_b():
             await sleep(1)
-            assert client.token == 'a'
+            assert client.token == "a"
 
         await asyncio.gather(do_a(), do_b())
 
@@ -126,26 +126,26 @@ class TestSpotifyUnits:
     @pytest.mark.asyncio
     async def test_token_context_unaffected_by_set_in_another_task(self, client):
         async def do_a():
-            with client.token_as('a'):
+            with client.token_as("a"):
                 await sleep(2)
-                assert client.token == 'a'
+                assert client.token == "a"
 
         async def do_b():
             await sleep(1)
-            client.token = 'b'
+            client.token = "b"
 
         await asyncio.gather(do_a(), do_b())
 
     @pytest.mark.asyncio
     async def test_token_set_without_context_modifies_persistent_value(self, client):
         async def do_a():
-            with client.token_as('a'):
+            with client.token_as("a"):
                 await sleep(2)
-            assert client.token == 'b'
+            assert client.token == "b"
 
         async def do_b():
             await sleep(1)
-            client.token = 'b'
+            client.token = "b"
 
         await asyncio.gather(do_a(), do_b())
 
@@ -166,18 +166,18 @@ class TestSpotifyUnits:
     def test_all_endpoints_have_scope_attributes(self, client):
         # Skip non-endpoint functions
         skips = {
-            'send',
-            'close',
-            'next',
-            'previous',
-            'all_pages',
-            'all_items',
-            'chunked',
-            'max_limits',
-            'token_as',
+            "send",
+            "close",
+            "next",
+            "previous",
+            "all_pages",
+            "all_items",
+            "chunked",
+            "max_limits",
+            "token_as",
         }
         for name, method in getmembers(client, predicate=ismethod):
-            if name.startswith('_') or name in skips:
+            if name.startswith("_") or name in skips:
                 continue
             assert isinstance(method.scope, Scope)
             assert isinstance(method.required_scope, Scope)
@@ -188,18 +188,18 @@ class TestSpotifyUnits:
         client = Spotify()
         client.close()
         with pytest.raises(RuntimeError):
-            client.track('id')
+            client.track("id")
 
     @pytest.mark.asyncio
     async def test_request_with_closed_async_client_raises(self):
         client = Spotify(asynchronous=True)
         await client.close()
         with pytest.raises(RuntimeError):
-            await client.track('id')
+            await client.track("id")
 
     def test_unauthorised_contains_missing_scopes(self, httpx_mock):
         httpx_mock.add_response(401)
-        client = Spotify('token')
+        client = Spotify("token")
         func = client.playback
         try:
             func()
@@ -212,7 +212,7 @@ class TestSpotifyUnits:
     @pytest.mark.asyncio
     async def test_async_unauthorised_contains_missing_scopes(self, httpx_mock):
         httpx_mock.add_response(401)
-        client = Spotify('token', asynchronous=True)
+        client = Spotify("token", asynchronous=True)
         func = client.playback
         try:
             await func()
@@ -226,53 +226,53 @@ class TestSpotifyUnits:
 class TestSpotifyMaxLimits:
     def test_turning_on_max_limits_returns_more(self, app_token):
         client = Spotify(app_token)
-        s1, = client.search('piano')
+        (s1,) = client.search("piano")
         with client.max_limits(True):
-            s2, = client.search('piano')
+            (s2,) = client.search("piano")
 
         assert s1.limit < s2.limit
         client.close()
 
     def test_turning_off_max_limits_returns_less(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
-        s1, = client.search('piano')
+        (s1,) = client.search("piano")
         with client.max_limits(False):
-            s2, = client.search('piano')
+            (s2,) = client.search("piano")
 
         assert s1.limit > s2.limit
         client.close()
 
     def test_specifying_limit_kwarg_overrides_max_limits(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
-        s, = client.search('piano', limit=1)
+        (s,) = client.search("piano", limit=1)
 
         assert s.limit == 1
         client.close()
 
     def test_specifying_limit_pos_arg_overrides_max_limits(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
-        s, = client.search('piano', ('track',), None, None, 1)
+        (s,) = client.search("piano", ("track",), None, None, 1)
 
         assert s.limit == 1
         client.close()
 
     def test_specifying_pos_args_until_limit(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
-        s1, = client.search('piano', ('track',), None, None)
+        (s1,) = client.search("piano", ("track",), None, None)
         with client.max_limits(False):
-            s2, = client.search('piano', ('track',), None, None)
+            (s2,) = client.search("piano", ("track",), None, None)
 
         assert s1.limit > s2.limit
         client.close()
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def track_ids(data_client):
-    tracks = data_client.playlist_items('37i9dQZF1DX5Ejj0EkURtP')
+    tracks = data_client.playlist_items("37i9dQZF1DX5Ejj0EkURtP")
     return [t.track.id for t in tracks.items]
 
 
-@pytest.mark.usefixtures('suppress_warnings')
+@pytest.mark.usefixtures("suppress_warnings")
 class TestSpotifyChunked:
     def test_too_many_tracks_raises(self, app_client, track_ids):
         with pytest.raises(BadRequest):
@@ -326,21 +326,21 @@ class TestSpotifyChunkedUnit:
     def test_chunked_return_none(self):
         func = MagicMock()
 
-        dec = chunked('a', 1, 10, return_none)(func)
+        dec = chunked("a", 1, 10, return_none)(func)
         r = dec(mock_spotify(), list(range(20)))
         assert r is None
 
     def test_chunked_return_last(self):
         func = MagicMock(side_effect=[0, 1, 2])
 
-        dec = chunked('a', 1, 10, return_last)(func)
+        dec = chunked("a", 1, 10, return_last)(func)
         r = dec(mock_spotify(), list(range(20)))
         assert r == 1
 
     def test_chunked_return_last_with_empty_input_returns_none(self):
         func = MagicMock(side_effect=[0, 1, 2])
 
-        dec = chunked('a', 1, 10, return_last)(func)
+        dec = chunked("a", 1, 10, return_last)(func)
         r = dec(mock_spotify(), [])
         assert r is None
 
@@ -348,7 +348,7 @@ class TestSpotifyChunkedUnit:
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, chain='ch', chain_pos=2)(func)
+        dec = chunked("a", 1, 10, return_last, chain="ch", chain_pos=2)(func)
         r = dec(slf, list(range(20)), None)
         func.assert_called_with(slf, list(range(10, 20)), 0)
         assert r == 1
@@ -357,7 +357,7 @@ class TestSpotifyChunkedUnit:
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, chain='ch', chain_pos=2)(func)
+        dec = chunked("a", 1, 10, return_last, chain="ch", chain_pos=2)(func)
         r = dec(slf, list(range(20)), ch=None)
         func.assert_called_with(slf, list(range(10, 20)), ch=0)
         assert r == 1
@@ -366,7 +366,7 @@ class TestSpotifyChunkedUnit:
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
+        dec = chunked("a", 1, 10, return_last, reverse="rev", reverse_pos=2)(func)
         r = dec(slf, list(range(20)), 1)
         func.assert_called_with(slf, list(range(10)), 1)
         assert r == 1
@@ -375,7 +375,7 @@ class TestSpotifyChunkedUnit:
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
+        dec = chunked("a", 1, 10, return_last, reverse="rev", reverse_pos=2)(func)
         r = dec(slf, list(range(20)), rev=1)
         func.assert_called_with(slf, list(range(10)), rev=1)
         assert r == 1
@@ -384,7 +384,7 @@ class TestSpotifyChunkedUnit:
         func = MagicMock(side_effect=[0, 1])
         slf = mock_spotify()
 
-        dec = chunked('a', 1, 10, return_last, reverse='rev', reverse_pos=2)(func)
+        dec = chunked("a", 1, 10, return_last, reverse="rev", reverse_pos=2)(func)
         r = dec(slf, list(range(20)))
         func.assert_called_with(slf, list(range(10, 20)))
         assert r == 1
@@ -392,6 +392,6 @@ class TestSpotifyChunkedUnit:
     def test_chunked_as_kwarg(self):
         func = MagicMock(side_effect=[0, 1])
 
-        dec = chunked('a', 2, 10, return_last)(func)
+        dec = chunked("a", 2, 10, return_last)(func)
         r = dec(mock_spotify(), 0, a=list(range(20)))
         assert r == 1

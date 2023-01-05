@@ -1,20 +1,21 @@
 import pytest
 
 from tekore import BadRequest
+
 from ._resources import album_id
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def tracks(data_client):
     return data_client.album_tracks(album_id, limit=1)
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def played(data_client):
     return data_client.playback_recently_played()
 
 
-@pytest.mark.usefixtures('suppress_warnings')
+@pytest.mark.usefixtures("suppress_warnings")
 class TestSpotifyPaging:
     def test_next(self, app_client, tracks):
         cat_next = app_client.next(tracks)
@@ -26,17 +27,17 @@ class TestSpotifyPaging:
         assert cat_next.total > 0
 
     def test_next_parses_item_below_top_level(self, app_client):
-        cat, = app_client.search('sheeran', limit=1)
+        (cat,) = app_client.search("sheeran", limit=1)
         cat_next = app_client.next(cat)
         assert cat_next.total > 0
 
     def test_next_beyond_limit(self, app_client):
-        tracks, = app_client.search('piano', limit=1, offset=999)
+        (tracks,) = app_client.search("piano", limit=1, offset=999)
         assert app_client.next(tracks) is None
 
     @pytest.mark.asyncio
     async def test_async_next_beyond_limit(self, app_aclient):
-        tracks, = await app_aclient.search('piano', limit=1, offset=999)
+        (tracks,) = await app_aclient.search("piano", limit=1, offset=999)
         assert await app_aclient.next(tracks) is None
 
     def test_previous_of_next(self, app_client, tracks):
@@ -89,7 +90,7 @@ class TestSpotifyPaging:
 
     @pytest.mark.asyncio
     async def test_async_all_items_from_offset_paging_share_type(
-            self, app_aclient, tracks
+        self, app_aclient, tracks
     ):
         items = [i async for i in app_aclient.all_items(tracks)]
         type_ = type(tracks.items[0])

@@ -1,34 +1,34 @@
 import json
-import pytest
-
+from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
-from dataclasses import dataclass
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from tekore._model.serialise import (
     JSONEncoder,
     Model,
-    StrEnum,
     ModelList,
+    StrEnum,
     Timestamp,
     UnknownModelAttributeWarning,
 )
 
 
 class E(StrEnum):
-    a = 'a'
-    b = 'b'
-    c = 'c'
+    a = "a"
+    b = "b"
+    c = "c"
 
 
 class TestSerialisableEnum:
     def test_enum_repr_shows_enum(self):
-        assert 'E.a' in repr(E.a)
+        assert "E.a" in repr(E.a)
 
     def test_enum_str_is_name(self):
-        e = StrEnum('e', 'a b c')
-        assert str(e.a) == 'a'
+        e = StrEnum("e", "a b c")
+        assert str(e.a) == "a"
 
     def test_enum_is_sortable(self):
         enums = list(E)[::-1]
@@ -37,18 +37,18 @@ class TestSerialisableEnum:
 
 class TestJSONEncoder:
     def test_enum_encoded_is_quoted_str(self):
-        enum = Enum('enum', 'a b c')
+        enum = Enum("enum", "a b c")
         encoded = JSONEncoder().encode(enum.a)
         assert encoded == f'"{str(enum.a)}"'
 
     def test_default_types_preserved(self):
-        d = {'items': 'in', 'this': 1}
+        d = {"items": "in", "this": 1}
         encoded = JSONEncoder().encode(d)
         default = json.dumps(d)
         assert encoded == default
 
     def test_timestamp_encoded_is_quoted_str(self):
-        t = Timestamp.from_string('2019-01-01T12:00:00Z')
+        t = Timestamp.from_string("2019-01-01T12:00:00Z")
         encoded = JSONEncoder().encode(t)
 
         assert encoded == f'"{str(t)}"'
@@ -64,22 +64,22 @@ class TestJSONEncoder:
 
 class TestTimestamp:
     def test_timestamp_initialisable_from_string(self):
-        Timestamp.from_string('2019-01-01T12:00:00Z')
+        Timestamp.from_string("2019-01-01T12:00:00Z")
 
     def test_incorrect_format_raises(self):
         with pytest.raises(ValueError):
-            Timestamp.from_string('2019-01-01')
+            Timestamp.from_string("2019-01-01")
 
     def test_timestamp_formatted_back_to_string(self):
-        time_str = '2019-01-01T12:00:00Z'
+        time_str = "2019-01-01T12:00:00Z"
         t = Timestamp.from_string(time_str)
         assert str(t) == time_str
 
     def test_initialisable_with_microsecond_precision(self):
-        Timestamp.from_string('2019-01-01T12:00:00.000000Z')
+        Timestamp.from_string("2019-01-01T12:00:00.000000Z")
 
     def test_initialisable_with_millisecond_precision(self):
-        Timestamp.from_string('2019-01-01T12:00:00.00Z')
+        Timestamp.from_string("2019-01-01T12:00:00.00Z")
 
 
 @dataclass(repr=False)
@@ -87,19 +87,19 @@ class Data(Model):
     i: int
 
 
-module = 'tekore._model.serialise'
+module = "tekore._model.serialise"
 
 
 class TestSerialisableDataclass:
     def test_json_dataclass_serialised(self):
-        dict_in = {'i': 1}
+        dict_in = {"i": 1}
         data = Data(**dict_in)
         dict_out = json.loads(data.json())
         assert dict_in == dict_out
 
     def test_repr(self):
         data = Data(i=1)
-        assert 'Data' in repr(data)
+        assert "Data" in repr(data)
 
     def test_long_repr(self):
         @dataclass(repr=False)
@@ -126,8 +126,8 @@ class TestSerialisableDataclass:
             [LongContainer() for _ in range(20)],
             list(range(10)),
             {str(k): k for k in range(20)},
-            'really long string which will most probably be cut off' * 2,
-            True
+            "really long string which will most probably be cut off" * 2,
+            True,
         )
         repr(data)
 
@@ -139,7 +139,7 @@ class TestSerialisableDataclass:
             def __post_init__(self):
                 self.d = [Data(**i) for i in self.d]
 
-        dict_in = {'d': [{'i': 1}, {'i': 2}]}
+        dict_in = {"d": [{"i": 1}, {"i": 2}]}
         data = Container(**dict_in)
         dict_out = data.asbuiltin()
         assert dict_in == dict_out
@@ -147,28 +147,24 @@ class TestSerialisableDataclass:
     def test_asbuiltin_returns_dict_representation(self):
         data = Data(i=1)
         d = data.asbuiltin()
-        assert d == {'i': 1}
+        assert d == {"i": 1}
 
     def test_pprint_called_with_dict(self):
         pprint = MagicMock()
         data = Data(i=1)
 
-        with patch(module + '.pprint', pprint):
+        with patch(module + ".pprint", pprint):
             data.pprint()
-            pprint.assert_called_with({'i': 1}, depth=None, compact=True)
+            pprint.assert_called_with({"i": 1}, depth=None, compact=True)
 
     def test_keyword_arguments_passed_to_pprint(self):
         pprint = MagicMock()
         data = Data(i=1)
-        kwargs = {
-            'compact': False,
-            'depth': None,
-            'kw': 'argument'
-        }
+        kwargs = {"compact": False, "depth": None, "kw": "argument"}
 
-        with patch(module + '.pprint', pprint):
+        with patch(module + ".pprint", pprint):
             data.pprint(**kwargs)
-            pprint.assert_called_with({'i': 1}, **kwargs)
+            pprint.assert_called_with({"i": 1}, **kwargs)
 
     def test_enum_in_dataclass(self):
         @dataclass(repr=False)
@@ -176,7 +172,7 @@ class TestSerialisableDataclass:
             v: E
 
         c = C(E.a)
-        assert isinstance(c.asbuiltin()['v'], str)
+        assert isinstance(c.asbuiltin()["v"], str)
         assert c.json() == '{"v": "a"}'
 
     def test_timestamp_in_dataclass(self):
@@ -184,29 +180,29 @@ class TestSerialisableDataclass:
         class C(Model):
             v: Timestamp
 
-        c = C(Timestamp.from_string('2019-01-01T12:00:00Z'))
-        assert isinstance(c.asbuiltin()['v'], str)
+        c = C(Timestamp.from_string("2019-01-01T12:00:00Z"))
+        assert isinstance(c.asbuiltin()["v"], str)
         assert c.json() == '{"v": "2019-01-01T12:00:00Z"}'
 
 
 class TestModel:
     def test_unknown_attribute_passed(self):
         with pytest.warns(UnknownModelAttributeWarning):
-            data = Data.from_kwargs({'i': 1, 'u': 2})
+            data = Data.from_kwargs({"i": 1, "u": 2})
 
         assert data.u == 2
-        assert 'u' not in data.json()
+        assert "u" not in data.json()
 
 
 class TestModelList:
     def test_list_of_dataclasses_serialised(self):
-        list_in = [{'i': 1}, {'i': 2}]
+        list_in = [{"i": 1}, {"i": 2}]
         data = ModelList(Data(**i) for i in list_in)
         list_out = json.loads(data.json())
         assert list_in == list_out
 
     def test_repr(self):
-        list_in = [{'i': 1}, {'i': 2}]
+        list_in = [{"i": 1}, {"i": 2}]
         data = ModelList(Data(**i) for i in list_in)
 
-        assert 'Data' in repr(data)
+        assert "Data" in repr(data)
