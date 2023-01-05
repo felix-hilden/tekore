@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock
-from tekore import Token, Credentials, RefreshingToken, RefreshingCredentials
+
+from tekore import Credentials, RefreshingCredentials, RefreshingToken, Token
 
 
 def make_token_obj(value: str, expiring: bool):
@@ -11,27 +12,27 @@ def make_token_obj(value: str, expiring: bool):
 
 class TestRefreshingToken:
     def test_repr(self):
-        low_token = make_token_obj('token', False)
+        low_token = make_token_obj("token", False)
         cred = MagicMock()
 
         auto_token = RefreshingToken(low_token, cred)
-        assert repr(auto_token).startswith('RefreshingToken(')
+        assert repr(auto_token).startswith("RefreshingToken(")
 
     def test_fresh_token_returned(self):
-        low_token = make_token_obj('token', False)
+        low_token = make_token_obj("token", False)
         cred = MagicMock()
 
         auto_token = RefreshingToken(low_token, cred)
-        assert auto_token.access_token == 'token'
+        assert auto_token.access_token == "token"
 
     def test_expiring_token_refreshed(self):
-        expiring = make_token_obj('expiring', True)
-        refreshed = make_token_obj('refreshed', False)
+        expiring = make_token_obj("expiring", True)
+        refreshed = make_token_obj("refreshed", False)
         cred = MagicMock()
         cred.refresh.return_value = refreshed
 
         auto_token = RefreshingToken(expiring, cred)
-        assert auto_token.access_token == 'refreshed'
+        assert auto_token.access_token == "refreshed"
 
     def test_refreshing_token_has_same_attributes_as_regular(self):
         token_info = MagicMock()
@@ -39,8 +40,8 @@ class TestRefreshingToken:
         token._expires_at = 3000
         auto_token = RefreshingToken(token, MagicMock())
 
-        token_attributes = [a for a in dir(token) if not a.startswith('_')]
-        auto_attributes = [a for a in dir(auto_token) if not a.startswith('_')]
+        token_attributes = [a for a in dir(token) if not a.startswith("_")]
+        auto_attributes = [a for a in dir(auto_token) if not a.startswith("_")]
 
         for attribute in token_attributes:
             auto_token.__getattribute__(attribute)
@@ -59,8 +60,8 @@ class TestRefreshingToken:
 
 class TestRefreshingCredentials:
     def test_repr(self):
-        c = RefreshingCredentials('id', 'secret')
-        assert repr(c).startswith('RefreshingCredentials(')
+        c = RefreshingCredentials("id", "secret")
+        assert repr(c).startswith("RefreshingCredentials(")
         c.credentials.close()
 
     def test_initialisable(self, app_env):

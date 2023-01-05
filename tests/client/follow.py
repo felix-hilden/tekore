@@ -1,22 +1,18 @@
 import pytest
-from ._resources import playlist_id, artist_ids, user_ids
+
+from ._resources import artist_ids, playlist_id, user_ids
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def setup(data_client, current_user_id):
     try:
         current_playlist_follow = data_client.playlist_is_following(
-            playlist_id,
-            [current_user_id]
+            playlist_id, [current_user_id]
         )[0]
-        current_artist_follows = data_client.artists_is_following(
-            artist_ids
-        )
-        current_user_follows = data_client.users_is_following(
-            user_ids
-        )
+        current_artist_follows = data_client.artists_is_following(artist_ids)
+        current_user_follows = data_client.users_is_following(user_ids)
     except Exception:
-        pytest.skip('State before tests could not be determined!')
+        pytest.skip("State before tests could not be determined!")
         return
 
     yield
@@ -26,40 +22,31 @@ def setup(data_client, current_user_id):
     else:
         data_client.playlist_unfollow(playlist_id)
 
-    artist_follows = [
-        a for i, a in enumerate(artist_ids)
-        if current_artist_follows[i]
-    ]
+    artist_follows = [a for i, a in enumerate(artist_ids) if current_artist_follows[i]]
     if artist_follows:
         data_client.artists_follow(artist_follows)
 
     artist_unfollows = [
-        a for i, a in enumerate(artist_ids)
-        if not current_artist_follows[i]
+        a for i, a in enumerate(artist_ids) if not current_artist_follows[i]
     ]
     if artist_unfollows:
         data_client.artists_unfollow(artist_unfollows)
 
-    user_follows = [
-        u for i, u in enumerate(user_ids)
-        if current_user_follows[i]
-    ]
+    user_follows = [u for i, u in enumerate(user_ids) if current_user_follows[i]]
     if user_follows:
         data_client.users_follow(user_follows)
 
-    user_unfollows = [
-        u for i, u in enumerate(user_ids)
-        if not current_user_follows[i]
-    ]
+    user_unfollows = [u for i, u in enumerate(user_ids) if not current_user_follows[i]]
     if user_unfollows:
         data_client.users_unfollow(user_unfollows)
 
 
-@pytest.mark.usefixtures('setup')
+@pytest.mark.usefixtures("setup")
 class TestSpotifyFollow:
     """
     If current user follows the tested playlist, it is set as a private follow.
     """
+
     def test_playlist_follow(self, user_client):
         user_client.playlist_follow(playlist_id)
 

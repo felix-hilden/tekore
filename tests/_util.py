@@ -3,13 +3,12 @@ Test utilities.
 """
 
 import warnings
-
 from contextlib import contextmanager
 from unittest.mock import MagicMock
 
 
 @contextmanager
-def handle_warnings(filt: str = 'ignore'):
+def handle_warnings(filt: str = "ignore"):
     warnings.simplefilter(filt)
     yield
     warnings.resetwarnings()

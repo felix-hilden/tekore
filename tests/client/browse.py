@@ -1,4 +1,5 @@
 import pytest
+
 import tekore as tk
 
 from ._resources import artist_ids, category_id, genres, track_id
@@ -6,7 +7,7 @@ from ._resources import artist_ids, category_id, genres, track_id
 
 class TestSpotifyArtist:
     def test_featured_playlists_with_country(self, app_client):
-        msg, playlists = app_client.featured_playlists(country='US')
+        msg, playlists = app_client.featured_playlists(country="US")
         assert playlists.total > 0
 
     def test_featured_playlists_no_country(self, app_client):
@@ -14,7 +15,7 @@ class TestSpotifyArtist:
         assert playlists.total > 0
 
     def test_new_releases_with_country(self, app_client):
-        albums = app_client.new_releases(country='US')
+        albums = app_client.new_releases(country="US")
         assert albums.total > 0
 
     def test_new_releases_no_country(self, app_client):
@@ -22,7 +23,7 @@ class TestSpotifyArtist:
         assert albums.total > 0
 
     def test_categories_with_country(self, app_client):
-        cat = app_client.categories(country='US')
+        cat = app_client.categories(country="US")
         assert cat.total > 0
 
     def test_categories_no_country(self, app_client):
@@ -30,7 +31,7 @@ class TestSpotifyArtist:
         assert cat.total > 0
 
     def test_category_with_country(self, app_client):
-        cat = app_client.category(category_id, country='US')
+        cat = app_client.category(category_id, country="US")
         assert cat.id == category_id
 
     def test_category_no_country(self, app_client):
@@ -38,7 +39,7 @@ class TestSpotifyArtist:
         assert cat.id == category_id
 
     def test_category_playlists_with_country(self, app_client):
-        playlists = app_client.category_playlists(category_id, country='US')
+        playlists = app_client.category_playlists(category_id, country="US")
         assert playlists.total > 0
 
     def test_category_playlists_no_country(self, app_client):
@@ -46,25 +47,16 @@ class TestSpotifyArtist:
         assert playlists.total > 0
 
     def test_recommendations_with_market(self, app_client):
-        rec = app_client.recommendations(
-            artist_ids=artist_ids,
-            market='US'
-        )
+        rec = app_client.recommendations(artist_ids=artist_ids, market="US")
         assert len(rec.tracks) > 0
 
     def test_recommendations_no_market(self, app_client):
-        rec = app_client.recommendations(
-            artist_ids=artist_ids,
-            market=None
-        )
+        rec = app_client.recommendations(artist_ids=artist_ids, market=None)
         assert len(rec.tracks) > 0
 
     def test_recommendations_all_arguments(self, app_client):
         rec = app_client.recommendations(
-            artist_ids=artist_ids,
-            genres=genres,
-            track_ids=[track_id],
-            market=None
+            artist_ids=artist_ids, genres=genres, track_ids=[track_id], market=None
         )
         assert len(rec.tracks) > 0
 
@@ -74,34 +66,22 @@ class TestSpotifyArtist:
 
     def test_recommendations_target_attribute(self, app_client):
         rec = app_client.recommendations(
-            artist_ids=artist_ids,
-            market='US',
-            target_valence=50
+            artist_ids=artist_ids, market="US", target_valence=50
         )
         assert len(rec.tracks) > 0
 
     def test_recommendations_invalid_attribute_raises(self, app_client):
         with pytest.raises(ValueError):
-            app_client.recommendations(
-                artist_ids=artist_ids,
-                market='US',
-                maxbogus=50
-            )
+            app_client.recommendations(artist_ids=artist_ids, market="US", maxbogus=50)
 
     def test_recommendations_invalid_attribute_name_raises(self, app_client):
         with pytest.raises(ValueError):
-            app_client.recommendations(
-                artist_ids=artist_ids,
-                market='US',
-                max_bogus=50
-            )
+            app_client.recommendations(artist_ids=artist_ids, market="US", max_bogus=50)
 
     def test_recommendations_invalid_attribute_prefix_raises(self, app_client):
         with pytest.raises(ValueError):
             app_client.recommendations(
-                artist_ids=artist_ids,
-                market='US',
-                bogus_valence=50
+                artist_ids=artist_ids, market="US", bogus_valence=50
             )
 
     def test_recommendation_genre_seeds(self, app_client):

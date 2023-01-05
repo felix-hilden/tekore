@@ -1,4 +1,4 @@
-from tekore._sender.error import get_error, errors, ClientError, ServerError
+from tekore._sender.error import ClientError, ServerError, errors, get_error
 
 
 class TestGetError:

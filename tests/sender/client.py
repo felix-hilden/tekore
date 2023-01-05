@@ -1,11 +1,6 @@
 import pytest
-from tekore import (
-    Client,
-    SenderConflictWarning,
-    SyncSender,
-    AsyncSender
-)
 
+from tekore import AsyncSender, Client, SenderConflictWarning, SyncSender
 from tests._util import handle_warnings
 
 
@@ -34,6 +29,6 @@ class TestClient:
         assert c.is_async is False
 
     def test_sender_conflict_issues_warning(self):
-        with handle_warnings('error'):
+        with handle_warnings("error"):
             with pytest.raises(SenderConflictWarning):
                 self._client(True, False)
