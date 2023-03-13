@@ -1,13 +1,27 @@
 import json
 from dataclasses import asdict, dataclass, fields
 from datetime import datetime
-from enum import Enum
+from enum import Enum, EnumMeta
 from pprint import pprint
 from typing import List, TypeVar, Union
 from warnings import warn
 
 
-class StrEnum(str, Enum):
+class StrEnumMeta(EnumMeta):
+
+    def __new__(metacls, cls, bases, classdict, **kwds):
+        enum_class = super().__new__(metacls, cls, bases, classdict, **kwds)
+        # Make all keys lowercase
+        for k, v in enum_class._member_map_.items():
+            enum_class._member_map_[k] = v.lower()
+        return enum_class
+
+    def __getitem__(self, name: str):
+        # Ignore case on get item
+        return super().__getitem__(name.lower())
+
+
+class StrEnum(str, Enum, metaclass=StrEnumMeta):
     """Convert enumeration members to strings using their name."""
 
     def __str__(self):
