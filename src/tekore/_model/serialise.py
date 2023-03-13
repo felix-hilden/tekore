@@ -8,6 +8,7 @@ from warnings import warn
 
 
 class StrEnumMeta(EnumMeta):
+    """Metaclass for StrEnum that provides case insensitive get. This does not change values."""
 
     def __new__(metacls, cls, bases, classdict, **kwds):
         enum_class = super().__new__(metacls, cls, bases, classdict, **kwds)
@@ -22,7 +23,7 @@ class StrEnumMeta(EnumMeta):
 
 
 class StrEnum(str, Enum, metaclass=StrEnumMeta):
-    """Convert enumeration members to strings using their name."""
+    """Convert enumeration members to strings using their name and ignore case when getting items. This does not change values."""
 
     def __str__(self):
         return self.name
