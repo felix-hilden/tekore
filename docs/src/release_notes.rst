@@ -5,7 +5,10 @@ Release notes
 =============
 Unreleased
 ----------
-- :class:`FullAlbum <models.FullAlbum>` - add undocumented "album_group"
+- :class:`FullChapter <model.FullChapter>` /
+  :class:`SimpleChapter <model.SimpleChapter>` - change "restriction" to
+  "restrictions" (:issue:`286`)
+- :class:`FullAlbum <model.FullAlbum>` - add undocumented "album_group"
   attribute (:issue:`287`)
 
 4.5.0 (2022-11-06)
@@ -25,7 +28,7 @@ Added
 Fixed
 *****
 - :ref:`models` - add missing "minute" resolution to
-  :class:`ReleaseDatePrecision <models.ReleaseDatePrecision>` (:issue:`277`)
+  :class:`ReleaseDatePrecision <model.ReleaseDatePrecision>` (:issue:`277`)
 - :ref:`models` - parse response models safely everywhere (:issue:`280`)
 - :ref:`client` - fix chunking of empty inputs (:issue:`281`)
 
