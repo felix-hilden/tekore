@@ -3,6 +3,11 @@
 
 Release notes
 =============
+Unreleased
+----------
+- :class:`FullAlbum <models.FullAlbum>` - add undocumented "album_group"
+  attribute (:issue:`287`)
+
 4.5.0 (2022-11-06)
 ------------------
 Added
