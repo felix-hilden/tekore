@@ -101,10 +101,10 @@ def field_repr(field, value) -> str:
         return _list_repr(field, value)
     elif isinstance(value, dict):
         v_fields = sorted(value.keys())
-        f_str = ", ".join([f"'{f}'" for f in v_fields])
+        f_str = ", ".join([f"{f!r}" for f in v_fields])
         return f"{{{f_str}}}"
     elif isinstance(value, str):
-        return f"'{value}'"
+        return f"{value!r}"
 
     return repr(value)
 

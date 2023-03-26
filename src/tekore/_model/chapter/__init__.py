@@ -13,12 +13,12 @@ class SimpleChapter(Chapter):
 
     available_markets: List[str] = None
     is_playable: Optional[bool] = None
-    restriction: Optional[Restrictions] = None
+    restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
         super().__post_init__()
-        if self.restriction:
-            self.restriction = Restrictions.from_kwargs(self.restriction)
+        if self.restrictions:
+            self.restrictions = Restrictions.from_kwargs(self.restrictions)
 
 
 @dataclass(repr=False)
