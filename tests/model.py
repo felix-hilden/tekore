@@ -22,6 +22,44 @@ class E(StrEnum):
     c = "c"
 
 
+class ECaps(StrEnum):
+    a = "A"
+    b = "B"
+    c = "C"
+
+
+class TestEnumCaseInsensitive:
+    def test_all_caps(self):
+        assert E["A"] == E.a
+        assert E["B"] == E.b
+        assert E["C"] == E.c
+
+    def test_all_lowercase(self):
+        assert E["a"] is E.a
+        assert E["b"] is E.b
+        assert E["c"] is E.c
+
+    def test_in_caps(self):
+        assert ECaps.a in ECaps
+        assert ECaps.b in ECaps
+        assert ECaps.c in ECaps
+
+    def test_all_caps_caps_keys(self):
+        assert ECaps["A"] == ECaps.a
+        assert ECaps["B"] == ECaps.b
+        assert ECaps["C"] == ECaps.c
+
+    def test_all_lowercase_caps_keys(self):
+        assert ECaps["a"] is ECaps.a
+        assert ECaps["b"] is ECaps.b
+        assert ECaps["c"] is ECaps.c
+
+    def test_non_destructive_iter(self):
+        # Should not change caps when iterating or accessing values in other means
+        for e in ECaps:
+            assert e.upper() == e
+
+
 class TestSerialisableEnum:
     def test_enum_repr_shows_enum(self):
         assert "E.a" in repr(E.a)

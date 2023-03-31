@@ -13,8 +13,10 @@ class StrEnumMeta(EnumMeta):
     def __new__(metacls, cls, bases, classdict, **kwds):
         enum_class = super().__new__(metacls, cls, bases, classdict, **kwds)
         # Make all keys lowercase
-        for k, v in enum_class._member_map_.items():
-            enum_class._member_map_[k] = v.lower()
+        copied_member_map = dict(enum_class._member_map_)
+        enum_class._member_map_.clear()
+        for k, v in copied_member_map.items():
+            enum_class._member_map_[k.lower()] = v
         return enum_class
 
     def __getitem__(self, name: str):
