@@ -1,6 +1,6 @@
 import pytest
 
-from tekore import InternalServerError, NotFound, from_uri
+from tekore import NotFound, from_uri
 
 from ._resources import audiobook_id, audiobook_ids
 

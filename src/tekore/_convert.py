@@ -30,7 +30,7 @@ def check_type(type_: Union[str, IdentifierType]) -> None:
         When type is invalid.
     """
     if str(type_) not in IdentifierType.__members__:
-        raise ConversionError(f'Invalid type "{type_}"!')
+        raise ConversionError(f"Invalid type {type_!r}!")
 
 
 # Match beginning, all base62 characters and end of string
@@ -49,7 +49,7 @@ def check_id(id_: str) -> None:
         When ID is invalid.
     """
     if id_ == "" or all_base62.search(id_) is None:
-        raise ConversionError(f'Invalid id: "{id_}"!')
+        raise ConversionError(f"Invalid id: {id_!r}!")
 
 
 def to_uri(type_: Union[str, IdentifierType], id_: str) -> str:
@@ -132,7 +132,7 @@ def from_uri(uri: str) -> Tuple[str, str]:
         if spotify != "spotify":
             raise ValueError()
     except ValueError as e:
-        msg = f'Invalid URI: expected format "spotify:{{type}}:{{id}}", got "{uri}"!'
+        msg = f'Invalid URI: expected format "spotify:{{type}}:{{id}}", got {uri!r}!'
         raise ConversionError(msg) from e
 
     check_type(type_)
@@ -177,7 +177,7 @@ def from_url(url: str) -> Tuple[str, str]:
             raise ValueError()
     except ValueError as e:
         valid_url = "[http[s]://]open.spotify.com/{type}/{id}"
-        msg = f'Invalid URL: expected format "{valid_url}", got "{url}"!'
+        msg = f"Invalid URL: expected format {valid_url!r}, got {url!r}!"
         raise ConversionError(msg) from e
 
     id_ = id_.split("?")[0]

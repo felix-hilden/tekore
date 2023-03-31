@@ -21,14 +21,14 @@ class TestSpotifyChapter:
             app_client.chapter(chapter_id, market="FI")
 
     @pytest.mark.xfail(reason="API inconsistencies.")
-    def test_chapters_no_market_returns_empty(self, app_client):
+    def test_chapters_no_market_returns_none(self, app_client):
         chapters = app_client.chapters(chapter_ids)
-        assert not chapters
+        assert all(c is None for c in chapters)
 
     def test_chapters_US_market_found(self, app_client):
         chapters = app_client.chapters(chapter_ids, market="US")
         assert chapter_ids == [c.id for c in chapters]
 
-    def test_chapters_non_US_market_returns_empty(self, app_client):
+    def test_chapters_non_US_market_returns_none(self, app_client):
         chapters = app_client.chapters(chapter_ids, market="FI")
-        assert not chapters
+        assert all(c is None for c in chapters)

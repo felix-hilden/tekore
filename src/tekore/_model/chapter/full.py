@@ -12,10 +12,10 @@ class FullChapter(Chapter):
 
     audiobook: FullAudiobook
     is_playable: Optional[bool] = None
-    restriction: Optional[Restrictions] = None
+    restrictions: Optional[Restrictions] = None
 
     def __post_init__(self):
         super().__post_init__()
         self.audiobook = FullAudiobook.from_kwargs(self.audiobook)
-        if self.restriction:
-            self.restriction = Restrictions.from_kwargs(self.restriction)
+        if self.restrictions:
+            self.restrictions = Restrictions.from_kwargs(self.restrictions)

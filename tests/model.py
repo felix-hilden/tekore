@@ -39,7 +39,7 @@ class TestJSONEncoder:
     def test_enum_encoded_is_quoted_str(self):
         enum = Enum("enum", "a b c")
         encoded = JSONEncoder().encode(enum.a)
-        assert encoded == f'"{str(enum.a)}"'
+        assert encoded == '"' + str(enum.a) + '"'
 
     def test_default_types_preserved(self):
         d = {"items": "in", "this": 1}
@@ -51,7 +51,7 @@ class TestJSONEncoder:
         t = Timestamp.from_string("2019-01-01T12:00:00Z")
         encoded = JSONEncoder().encode(t)
 
-        assert encoded == f'"{str(t)}"'
+        assert encoded == '"' + str(t) + '"'
 
     def test_non_serialisable_item_raises(self):
         class C:
