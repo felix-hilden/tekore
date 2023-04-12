@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.6.0 (2023-04-12)
+------------------
 Added
 *****
 - Make enumerations case insensitive (:issue:`285`)
