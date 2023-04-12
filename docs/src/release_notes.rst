@@ -8,6 +8,7 @@ Unreleased
 Added
 *****
 - Make enumerations case insensitive (:issue:`285`)
+- Support HTTPX 0.24 (:issue:`289`)
 
 Fixed
 *****
