@@ -5,6 +5,12 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Make enumerations case insensitive (:issue:`285`)
+
+Fixed
+*****
 - :class:`FullChapter <model.FullChapter>` /
   :class:`SimpleChapter <model.SimpleChapter>` - change "restriction" to
   "restrictions" (:issue:`286`)

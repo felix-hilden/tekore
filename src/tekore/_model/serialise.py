@@ -8,11 +8,15 @@ from warnings import warn
 
 
 class StrEnumMeta(EnumMeta):
-    """Metaclass for StrEnum that provides case insensitive get. This does not change values."""
+    """
+    Metaclass for StrEnum that provides case-insensitive get.
 
-    def __new__(metacls, cls, bases, classdict, **kwds):
-        enum_class = super().__new__(metacls, cls, bases, classdict, **kwds)
-        # Make all keys lowercase
+    This does not change values.
+    """
+
+    def __new__(mcs, cls, bases, classdict, **kwds):
+        """Override `__new__` to make all keys lowercase."""
+        enum_class = super().__new__(mcs, cls, bases, classdict, **kwds)
         copied_member_map = dict(enum_class._member_map_)
         enum_class._member_map_.clear()
         for k, v in copied_member_map.items():
@@ -25,7 +29,11 @@ class StrEnumMeta(EnumMeta):
 
 
 class StrEnum(str, Enum, metaclass=StrEnumMeta):
-    """Convert enumeration members to strings using their name and ignore case when getting items. This does not change values."""
+    """
+    Convert enumeration members to strings using their name.
+
+    Ignores case when getting items. This does not change values.
+    """
 
     def __str__(self):
         return self.name
