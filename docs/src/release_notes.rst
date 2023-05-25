@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+4.6.1 (2023-05-25)
+------------------
 Fixed
 *****
 - :class:`FullAlbum <model.FullAlbum>` - remove "album_group" attribute
