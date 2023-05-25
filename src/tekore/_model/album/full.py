@@ -17,10 +17,8 @@ class FullAlbum(Album):
 
     The presence of :attr:`is_playable` is undocumented
     and it appears to only be ``True`` when it is present.
-    :attr:`album_group` is undocumented too.
     """
 
-    album_group: str
     copyrights: List[Copyright]
     external_ids: dict
     genres: List[str]

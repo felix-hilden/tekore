@@ -32,8 +32,8 @@ user_ids = [user_id, "samsmithworld"]
 
 show_id = "0Lsi13D8nWRkwbEkfNeItS"
 show_ids = [show_id, "7Arl2fVUFHCGyNZwM39bJO"]
-episode_id = "40KE0vkrH0WhirGTrF4n9O"
-episode_ids = [episode_id, "4cvdWMfkjYiLISibNcvDZe"]
+episode_id = "3YPKYYsqrWZUdZTzF6dZ3F"
+episode_ids = [episode_id, "3b0ZXFhLeMqopV3rHpWZ6V"]
 
 image = (
     "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHB"
