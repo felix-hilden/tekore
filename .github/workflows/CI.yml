@@ -4,14 +4,14 @@ on:
     branches:
       - master
     tags-ignore:
-      - '*'
+      - "*"
   pull_request:
 
 jobs:
   matrix:
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10"]
     name: Python ${{matrix.python-version}}
     runs-on: ubuntu-latest
 

@@ -9,7 +9,7 @@ readme = "readme_pypi.rst"
 license = {file = "LICENSE"}
 dynamic = ["version"]
 
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     "httpx>=0.15,<0.25",
 ]
@@ -23,7 +23,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",

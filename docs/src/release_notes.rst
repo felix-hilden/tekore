@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Changed
+*******
+- Remove support for Python 3.7 (EOL) (:issue:`292`)
+
 4.6.1 (2023-05-25)
 ------------------
 Fixed
