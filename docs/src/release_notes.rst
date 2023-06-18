@@ -3,25 +3,28 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.0.0 (2023-06-18)
+------------------
+Tekore 5 comes with an overhauled response model system based on Pydantic.
+Although the underlying change is major, the primary usage of models remains
+unchanged. The new models are more robust and easier to maintain.
+However, with more careful data validation new issues may arise. Please submit
+them on `GitHub <https://github.com/felix-hilden/tekore/issues>`_.
+
 Changed
 *******
-- Use Pydantic in response models (:issue:`279`). This does not affect primary
-  usage of models, but does improve robustness and significantly reduces the
-  maintenance burden. The following changes were made:
+- Remove support for Python 3.7 (EOL) (:issue:`292`)
+- Use Pydantic in response models (:issue:`279`)
 
-  * Many type hints were fixed and improved.
-  * Instead of retaining unknown response attributes, they are now ignored.
+  * Many type hints are fixed and improved.
+  * Instead of retaining unknown response attributes, they are now discarded.
     However, the same warning message is raised.
-  * ``.json`` and ``.asbuiltin`` methods are superceded by Pydantic models'
+  * ``.json`` and ``.asbuiltin`` methods are replaced by Pydantic models'
     ``.json`` and ``.dict``.
   * Models use the builtin ``datetime`` object directly.
-  * ``.pprint`` and custom ``__repr__`` were removed in favor of using
+  * ``.pprint`` and custom ``__repr__`` are removed in favor of using
     Pydantic's own machinery.
   * The builtin list class is used everywhere instead of the old ``ModelList``.
-
-- Remove support for Python 3.7 (EOL) (:issue:`292`)
 
 4.6.1 (2023-05-25)
 ------------------
