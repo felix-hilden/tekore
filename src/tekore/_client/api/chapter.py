@@ -1,4 +1,6 @@
-from tekore.model import FullChapter, ModelList
+from typing import List
+
+from tekore.model import FullChapter
 
 from ..base import SpotifyBase
 from ..chunked import chunked, join_lists
@@ -31,7 +33,7 @@ class SpotifyChapter(SpotifyBase):
     @scopes()
     @chunked("chapter_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullChapter, "chapters"))
-    def chapters(self, chapter_ids: list, market: str = None) -> ModelList[FullChapter]:
+    def chapters(self, chapter_ids: list, market: str = None) -> List[FullChapter]:
         """
         Get information for multiple chapters.
 

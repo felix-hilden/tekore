@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Optional
 
 from .album import SimpleAlbum
@@ -6,35 +6,33 @@ from .artist import SimpleArtist
 from .base import Item
 from .member import Restrictions
 from .paging import OffsetPaging
-from .serialise import Model, ModelList, Timestamp
+from .serialise import Model
 
 
-@dataclass(repr=False)
 class TrackLink(Item):
     """Relinked track."""
 
     external_urls: dict
 
 
-@dataclass(repr=False)
 class Track(Item):
     """Track base."""
 
     artists: List[SimpleArtist]
+    available_markets: Optional[List[str]] = None
     disc_number: int
     duration_ms: int
     explicit: bool
     external_urls: dict
-    name: str
-    preview_url: str
-    track_number: int
     is_local: bool
+    is_playable: Optional[bool] = None
+    linked_from: Optional[TrackLink] = None
+    name: str
+    preview_url: Optional[str]
+    restrictions: Optional[Restrictions] = None
+    track_number: int
 
-    def __post_init__(self):
-        self.artists = ModelList(SimpleArtist.from_kwargs(a) for a in self.artists)
 
-
-@dataclass(repr=False)
 class SimpleTrack(Track):
     """
     Simplified track object.
@@ -45,22 +43,7 @@ class SimpleTrack(Track):
     the track, making it unplayable.
     """
 
-    available_markets: Optional[List[str]] = None
-    linked_from: Optional[TrackLink] = None
-    is_playable: Optional[bool] = None
-    restrictions: Optional[Restrictions] = None
 
-    def __post_init__(self):
-        super().__post_init__()
-        if self.available_markets is not None:
-            self.available_markets = ModelList(self.available_markets)
-        if self.linked_from is not None:
-            self.linked_from = TrackLink.from_kwargs(self.linked_from)
-        if self.restrictions is not None:
-            self.restrictions = Restrictions.from_kwargs(self.restrictions)
-
-
-@dataclass(repr=False)
 class FullTrack(Track):
     """
     Complete track object.
@@ -74,43 +57,20 @@ class FullTrack(Track):
     album: SimpleAlbum
     external_ids: dict
     popularity: int
-    available_markets: Optional[List[str]] = None
-    linked_from: Optional[TrackLink] = None
-    is_playable: Optional[bool] = None
-    restrictions: Optional[Restrictions] = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.album = SimpleAlbum.from_kwargs(self.album)
-        if self.available_markets is not None:
-            self.available_markets = ModelList(self.available_markets)
-        if self.linked_from is not None:
-            self.linked_from = TrackLink.from_kwargs(self.linked_from)
-        if self.restrictions is not None:
-            self.restrictions = Restrictions.from_kwargs(self.restrictions)
 
 
-@dataclass(repr=False)
 class FullTrackPaging(OffsetPaging):
     """Paging of full tracks."""
 
     items: List[FullTrack]
 
-    def __post_init__(self):
-        self.items = ModelList(FullTrack.from_kwargs(t) for t in self.items)
 
-
-@dataclass(repr=False)
 class SimpleTrackPaging(OffsetPaging):
     """Paging of simplified tracks."""
 
     items: List[SimpleTrack]
 
-    def __post_init__(self):
-        self.items = ModelList(SimpleTrack.from_kwargs(t) for t in self.items)
 
-
-@dataclass(repr=False)
 class Tracks(Model):
     """Minimal representation of playlist tracks."""
 
@@ -118,23 +78,14 @@ class Tracks(Model):
     total: int
 
 
-@dataclass(repr=False)
 class SavedTrack(Model):
     """Track saved to library."""
 
-    added_at: Timestamp
+    added_at: datetime
     track: FullTrack
 
-    def __post_init__(self):
-        self.added_at = Timestamp.from_string(self.added_at)
-        self.track = FullTrack.from_kwargs(self.track)
 
-
-@dataclass(repr=False)
 class SavedTrackPaging(OffsetPaging):
     """Paging of tracks in library."""
 
     items: List[SavedTrack]
-
-    def __post_init__(self):
-        self.items = ModelList(SavedTrack.from_kwargs(t) for t in self.items)

@@ -1,14 +1,8 @@
 from functools import wraps
-from typing import Callable, Iterable, Union
+from typing import Callable, Iterable, List, Union
 
 from tekore._auth import scope
-from tekore.model import (
-    FullPlaylist,
-    Image,
-    ModelList,
-    PlaylistTrackPaging,
-    SimplePlaylistPaging,
-)
+from tekore.model import FullPlaylist, Image, PlaylistTrackPaging, SimplePlaylistPaging
 
 from ...base import SpotifyBase
 from ...chunked import _get_arg
@@ -159,7 +153,7 @@ class SpotifyPlaylistView(SpotifyBase):
 
     @scopes()
     @send_and_process(model_list(Image))
-    def playlist_cover_image(self, playlist_id: str) -> ModelList[Image]:
+    def playlist_cover_image(self, playlist_id: str) -> List[Image]:
         """
         Get cover image of a playlist.
 

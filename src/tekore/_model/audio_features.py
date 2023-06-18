@@ -1,9 +1,6 @@
-from dataclasses import dataclass
-
 from .base import Identifiable
 
 
-@dataclass(repr=False)
 class AudioFeatures(Identifiable):
     """Features of a track."""
 

@@ -1,8 +1,6 @@
 from functools import wraps
 from typing import Callable
 
-from tekore.model import ModelList
-
 
 def _chunks(lst: list, n: int, reverse: bool) -> list:
     """
@@ -136,8 +134,8 @@ def chunked(
 
 
 def join_lists(responses):
-    """Join lists of models into ModelList."""
-    return ModelList(sum(responses, []))
+    """Join lists of models."""
+    return sum(responses, [])
 
 
 def return_none(_):

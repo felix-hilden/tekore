@@ -1,4 +1,6 @@
-from tekore.model import FullAlbum, ModelList, SimpleTrackPaging
+from typing import List
+
+from tekore.model import FullAlbum, SimpleTrackPaging
 
 from ..base import SpotifyBase
 from ..chunked import chunked, join_lists
@@ -51,7 +53,7 @@ class SpotifyAlbum(SpotifyBase):
     @scopes()
     @chunked("album_ids", 1, 20, join_lists)
     @send_and_process(model_list(FullAlbum, "albums"))
-    def albums(self, album_ids: list, market: str = None) -> ModelList[FullAlbum]:
+    def albums(self, album_ids: list, market: str = None) -> List[FullAlbum]:
         """
         Get multiple albums.
 

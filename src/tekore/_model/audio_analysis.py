@@ -1,10 +1,8 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
-from .serialise import Model, ModelList
+from .serialise import Model
 
 
-@dataclass(repr=False)
 class TimeInterval(Model):
     """
     Generic representation of an interval.
@@ -17,7 +15,6 @@ class TimeInterval(Model):
     confidence: Optional[float] = None
 
 
-@dataclass(repr=False)
 class Section(Model):
     """
     Analysis of a track's section.
@@ -39,7 +36,6 @@ class Section(Model):
     start: Optional[float] = None
 
 
-@dataclass(repr=False)
 class Segment(Model):
     """
     Analysis of a track's segment.
@@ -57,12 +53,7 @@ class Segment(Model):
     loudness_max_time: Optional[float] = None
     start: Optional[float] = None
 
-    def __post_init__(self):
-        self.pitches = ModelList(self.pitches)
-        self.timbre = ModelList(self.timbre)
 
-
-@dataclass(repr=False)
 class AudioAnalysis(Model):
     """
     Track audio analysis.
@@ -80,10 +71,3 @@ class AudioAnalysis(Model):
     tatums: List[TimeInterval]
     meta: dict
     track: dict
-
-    def __post_init__(self):
-        self.bars = ModelList(TimeInterval.from_kwargs(i) for i in self.bars)
-        self.beats = ModelList(TimeInterval.from_kwargs(i) for i in self.beats)
-        self.sections = ModelList(Section.from_kwargs(s) for s in self.sections)
-        self.segments = ModelList(Segment.from_kwargs(s) for s in self.segments)
-        self.tatums = ModelList(TimeInterval.from_kwargs(i) for i in self.tatums)

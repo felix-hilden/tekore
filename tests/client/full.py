@@ -7,7 +7,6 @@ import pytest
 
 from tekore import BadRequest, Scope, Spotify, Unauthorised
 from tekore._client.chunked import chunked, return_last, return_none
-from tekore.model import ModelList
 
 
 @pytest.fixture()
@@ -295,12 +294,6 @@ class TestSpotifyChunked:
         tracks = await client.tracks(track_ids)
         assert len(track_ids) == len(tracks)
         await client.close()
-
-    def test_returns_model_list(self, app_token, track_ids):
-        client = Spotify(app_token, chunked_on=True)
-        tracks = client.tracks(track_ids)
-        assert isinstance(tracks, ModelList)
-        client.close()
 
     def test_chunked_context_enables(self):
         client = Spotify()

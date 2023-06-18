@@ -49,7 +49,6 @@ from tekore._model import (
     LocalPlaylistTrack,
     LocalTrack,
     Model,
-    ModelList,
     Narrator,
     OffsetPaging,
     Paging,
@@ -80,7 +79,6 @@ from tekore._model import (
     SavedTrackPaging,
     Section,
     Segment,
-    Serialisable,
     Show,
     SimpleAlbum,
     SimpleAlbumPaging,
@@ -99,7 +97,6 @@ from tekore._model import (
     SimpleTrackPaging,
     StrEnum,
     TimeInterval,
-    Timestamp,
     Track,
     TrackLink,
     Tracks,
@@ -210,10 +207,7 @@ _classes = [
     PrivateUser,
     PublicUser,
     Model,
-    ModelList,
-    Serialisable,
     StrEnum,
-    Timestamp,
 ]
 
 for _cls in _classes:

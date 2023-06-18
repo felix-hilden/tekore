@@ -1,7 +1,5 @@
 import pytest
 
-from tekore import BadRequest
-
 from ._resources import album_id
 
 

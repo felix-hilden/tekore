@@ -1,9 +1,10 @@
+from typing import List
+
 from tekore._auth import scope
 from tekore.model import (
     CurrentlyPlaying,
     CurrentlyPlayingContext,
     Device,
-    ModelList,
     PlayHistoryPaging,
     Queue,
 )
@@ -107,7 +108,7 @@ class SpotifyPlayerView(SpotifyBase):
 
     @scopes([scope.user_read_playback_state])
     @send_and_process(model_list(Device, "devices"))
-    def playback_devices(self) -> ModelList[Device]:
+    def playback_devices(self) -> List[Device]:
         """Get a user's available devices."""
         return self._get("me/player/devices")
 

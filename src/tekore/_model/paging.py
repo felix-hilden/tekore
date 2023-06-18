@@ -1,20 +1,17 @@
-from dataclasses import dataclass
-from typing import Sequence
+from typing import Optional, Sequence
 
 from .serialise import Model
 
 
-@dataclass(repr=False)
 class Paging(Model):
     """Paging base."""
 
     href: str
     items: Sequence[Model]
     limit: int
-    next: str
+    next: Optional[str]
 
 
-@dataclass(repr=False)
 class OffsetPaging(Paging):
     """
     Offset paging base.
@@ -24,17 +21,15 @@ class OffsetPaging(Paging):
 
     total: int
     offset: int
-    previous: str
+    previous: Optional[str]
 
 
-@dataclass(repr=False)
 class Cursor(Model):
     """Data cursor."""
 
-    after: str
+    after: Optional[str]
 
 
-@dataclass(repr=False)
 class CursorPaging(Paging):
     """
     Cursor paging base.
@@ -43,6 +38,3 @@ class CursorPaging(Paging):
     """
 
     cursors: Cursor
-
-    def __post_init__(self):
-        self.cursors = Cursor.from_kwargs(self.cursors)

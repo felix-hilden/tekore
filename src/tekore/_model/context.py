@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from .serialise import Model, StrEnum
 
 
@@ -13,7 +11,6 @@ class ContextType(StrEnum):
     show = "show"
 
 
-@dataclass(repr=False)
 class Context(Model):
     """Context of a played track or episode."""
 
@@ -21,6 +18,3 @@ class Context(Model):
     href: str
     external_urls: dict
     uri: str
-
-    def __post_init__(self):
-        self.type = ContextType[self.type]

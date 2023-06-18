@@ -1,12 +1,9 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
 from ..base import Item
-from ..member import Image, ReleaseDatePrecision, ResumePoint
-from ..serialise import ModelList
+from ..member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
 
 
-@dataclass(repr=False)
 class Chapter(Item):
     """Audiobook chapter base."""
 
@@ -18,13 +15,10 @@ class Chapter(Item):
     external_urls: dict
     html_description: str
     images: List[Image]
+    is_playable: Optional[bool] = None
     languages: List[str]
     name: str
-    release_date: str
     release_date_precision: ReleaseDatePrecision
+    release_date: str
+    restrictions: Optional[Restrictions] = None
     resume_point: ResumePoint
-
-    def __post_init__(self):
-        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
-        self.release_date_precision = ReleaseDatePrecision[self.release_date_precision]
-        self.resume_point = ResumePoint.from_kwargs(self.resume_point)

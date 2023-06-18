@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional
 
 from .base import Identifiable
@@ -23,7 +22,6 @@ class DeviceType(StrEnum):
     Unknown = "Unknown"
 
 
-@dataclass(repr=False)
 class Device(Identifiable):
     """Playback device."""
 
@@ -33,6 +31,3 @@ class Device(Identifiable):
     name: str
     type: DeviceType
     volume_percent: Optional[int]
-
-    def __post_init__(self):
-        self.type = DeviceType[self.type]

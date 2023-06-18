@@ -1,5 +1,7 @@
+from typing import List
+
 from tekore._auth import scope
-from tekore.model import FullShow, ModelList, SimpleEpisodePaging
+from tekore.model import FullShow, SimpleEpisodePaging
 
 from ..base import SpotifyBase
 from ..chunked import chunked, join_lists
@@ -35,7 +37,7 @@ class SpotifyShow(SpotifyBase):
     @scopes(optional=[scope.user_read_playback_position])
     @chunked("show_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullShow, "shows"))
-    def shows(self, show_ids: list, market: str = None) -> ModelList[FullShow]:
+    def shows(self, show_ids: list, market: str = None) -> List[FullShow]:
         """
         Get information for multiple shows.
 

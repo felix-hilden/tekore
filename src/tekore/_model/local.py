@@ -1,10 +1,8 @@
-from dataclasses import dataclass
-from typing import List
+from typing import List, Literal
 
-from .serialise import Model, ModelList
+from .serialise import Model
 
 
-@dataclass(repr=False)
 class LocalItem(Model):
     """Base for local items."""
 
@@ -15,7 +13,6 @@ class LocalItem(Model):
     uri: None
 
 
-@dataclass(repr=False)
 class LocalAlbum(LocalItem):
     """Album of a locally saved track."""
 
@@ -28,14 +25,12 @@ class LocalAlbum(LocalItem):
     release_date_precision: None
 
 
-@dataclass(repr=False)
 class LocalArtist(LocalItem):
     """Artist of a locally saved track."""
 
     external_urls: dict
 
 
-@dataclass(repr=False)
 class LocalTrack(LocalItem):
     """
     Locally saved track.
@@ -52,12 +47,8 @@ class LocalTrack(LocalItem):
     explicit: bool
     external_ids: dict
     external_urls: dict
-    is_local: bool
+    is_local: Literal[True]
     popularity: int
     preview_url: None
     track_number: int
     uri: str
-
-    def __post_init__(self):
-        self.album = LocalAlbum.from_kwargs(self.album)
-        self.artists = ModelList(LocalArtist.from_kwargs(a) for a in self.artists)

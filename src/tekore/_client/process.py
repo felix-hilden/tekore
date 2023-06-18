@@ -1,6 +1,6 @@
 from typing import Callable
 
-from tekore.model import Model, ModelList
+from tekore.model import Model
 
 
 def nothing(json):
@@ -26,7 +26,7 @@ def single(type_: Model, from_item: str = None) -> Callable:
 
     def post_func(json: dict):
         json = json if from_item is None else json[from_item]
-        return type_.from_kwargs(json) if json is not None else None
+        return type_(**json) if json is not None else None
 
     return post_func
 
@@ -36,7 +36,7 @@ def model_list(type_: Model, from_item: str = None) -> Callable:
 
     def post_func(json: dict):
         json = json if from_item is None else json[from_item]
-        return ModelList(type_.from_kwargs(i) if i is not None else None for i in json)
+        return [type_(**i) if i is not None else None for i in json]
 
     return post_func
 

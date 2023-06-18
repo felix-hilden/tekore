@@ -1,10 +1,9 @@
-from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from ..artist import SimpleArtist
 from ..base import Item
 from ..member import Image, ReleaseDatePrecision
-from ..serialise import ModelList, StrEnum
+from ..serialise import StrEnum
 
 
 class AlbumType(StrEnum):
@@ -15,7 +14,6 @@ class AlbumType(StrEnum):
     single = "single"
 
 
-@dataclass(repr=False)
 class Album(Item):
     """Album base."""
 
@@ -27,9 +25,5 @@ class Album(Item):
     total_tracks: int
     release_date: str
     release_date_precision: ReleaseDatePrecision
-
-    def __post_init__(self):
-        self.album_type = AlbumType[self.album_type.lower()]
-        self.artists = ModelList(SimpleArtist.from_kwargs(a) for a in self.artists)
-        self.images = ModelList(Image.from_kwargs(i) for i in self.images)
-        self.release_date_precision = ReleaseDatePrecision[self.release_date_precision]
+    available_markets: Optional[List[str]] = None
+    is_playable: Optional[bool] = None

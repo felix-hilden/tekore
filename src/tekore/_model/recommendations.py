@@ -1,8 +1,7 @@
-from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from .base import Identifiable
-from .serialise import Model, ModelList, StrEnum
+from .serialise import Model, StrEnum
 from .track import FullTrack
 
 
@@ -25,24 +24,18 @@ class RecommendationAttribute(StrEnum):
     valence = "valence"
 
 
-@dataclass(repr=False)
 class RecommendationSeed(Identifiable):
     """Recommendation seeds."""
 
     afterFilteringSize: int
     afterRelinkingSize: int
-    href: str
+    href: Optional[str]
     initialPoolSize: int
     type: str
 
 
-@dataclass(repr=False)
 class Recommendations(Model):
     """Track recommendations."""
 
     seeds: List[RecommendationSeed]
     tracks: List[FullTrack]
-
-    def __post_init__(self):
-        self.seeds = ModelList(RecommendationSeed.from_kwargs(s) for s in self.seeds)
-        self.tracks = ModelList(FullTrack.from_kwargs(t) for t in self.tracks)

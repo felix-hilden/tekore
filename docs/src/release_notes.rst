@@ -7,6 +7,20 @@ Unreleased
 ----------
 Changed
 *******
+- Use Pydantic in response models (:issue:`279`). This does not affect primary
+  usage of models, but does improve robustness and significantly reduces the
+  maintenance burden. The following changes were made:
+
+  * Many type hints were fixed and improved.
+  * Instead of retaining unknown response attributes, they are now ignored.
+    However, the same warning message is raised.
+  * ``.json`` and ``.asbuiltin`` methods are superceded by Pydantic models'
+    ``.json`` and ``.dict``.
+  * Models use the builtin ``datetime`` object directly.
+  * ``.pprint`` and custom ``__repr__`` were removed in favor of using
+    Pydantic's own machinery.
+  * The builtin list class is used everywhere instead of the old ``ModelList``.
+
 - Remove support for Python 3.7 (EOL) (:issue:`292`)
 
 4.6.1 (2023-05-25)

@@ -1,11 +1,10 @@
-from dataclasses import dataclass
 from typing import List, Optional, Union
 
 from .context import Context
 from .device import Device
 from .episode import FullEpisode
 from .local import LocalTrack
-from .serialise import Model, ModelList, StrEnum
+from .serialise import Model, StrEnum
 from .track import FullTrack
 
 
@@ -26,7 +25,6 @@ class RepeatState(StrEnum):
     context = "context"
 
 
-@dataclass(repr=False)
 class Disallows(Model):
     """Disallowed player actions."""
 
@@ -42,27 +40,15 @@ class Disallows(Model):
     transferring_playback: bool = False
 
 
-@dataclass(repr=False)
 class Actions(Model):
     """Player actions."""
 
     disallows: Disallows
 
-    def __post_init__(self):
-        self.disallows = Disallows.from_kwargs(self.disallows)
+
+PlaybackItem = Union[FullTrack, LocalTrack, FullEpisode, None]
 
 
-item_type = {"track": FullTrack, "episode": FullEpisode}
-
-
-def _parse_playback_item(item: dict):
-    if item.get("is_local", False) is True:
-        return LocalTrack.from_kwargs(item)
-    else:
-        return item_type[item["type"]].from_kwargs(item)
-
-
-@dataclass(repr=False)
 class CurrentlyPlaying(Model):
     """
     Current playback.
@@ -77,19 +63,9 @@ class CurrentlyPlaying(Model):
     timestamp: int
     context: Optional[Context]
     progress_ms: Optional[int]
-    item: Union[FullTrack, LocalTrack, FullEpisode, None]
-
-    def __post_init__(self):
-        self.actions = Actions.from_kwargs(self.actions)
-        self.currently_playing_type = CurrentlyPlayingType[self.currently_playing_type]
-
-        if self.context is not None:
-            self.context = Context.from_kwargs(self.context)
-        if self.item is not None:
-            self.item = _parse_playback_item(self.item)
+    item: PlaybackItem
 
 
-@dataclass(repr=False)
 class CurrentlyPlayingContext(CurrentlyPlaying):
     """Extended current playback context."""
 
@@ -97,19 +73,9 @@ class CurrentlyPlayingContext(CurrentlyPlaying):
     repeat_state: RepeatState
     shuffle_state: bool
 
-    def __post_init__(self):
-        super().__post_init__()
-        self.device = Device.from_kwargs(self.device)
-        self.repeat_state = RepeatState[self.repeat_state]
 
-
-@dataclass(repr=False)
 class Queue(Model):
     """Playback queue."""
 
-    currently_playing: Union[FullTrack, LocalTrack, FullEpisode, None]
-    queue: List[FullTrack]
-
-    def __post_init__(self):
-        self.currently_playing = _parse_playback_item(self.currently_playing)
-        self.queue = ModelList(_parse_playback_item(i) for i in self.queue)
+    currently_playing: PlaybackItem
+    queue: List[PlaybackItem]

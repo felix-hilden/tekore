@@ -1,4 +1,6 @@
-from tekore.model import FullAudiobook, ModelList, SimpleChapterPaging
+from typing import List
+
+from tekore.model import FullAudiobook, SimpleChapterPaging
 
 from ..base import SpotifyBase
 from ..chunked import chunked, join_lists
@@ -33,7 +35,7 @@ class SpotifyAudiobook(SpotifyBase):
     @send_and_process(model_list(FullAudiobook, "audiobooks"))
     def audiobooks(
         self, audiobook_ids: list, market: str = None
-    ) -> ModelList[FullAudiobook]:
+    ) -> List[FullAudiobook]:
         """
         Get information for multiple audiobooks.
 

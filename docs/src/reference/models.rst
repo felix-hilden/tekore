@@ -5,7 +5,7 @@ Models
 ======
 Response model definitions for :ref:`client <client>`.
 
-Responses are parsed into model classes.
+Responses are parsed into `Pydantic <https://docs.pydantic.dev/latest/>`_ models.
 This allows accessing parts of the response directly as attributes.
 Further documentation on specific attribute values can be viewed in the Web API
 `reference <https://developer.spotify.com/documentation/web-api/reference/>`_.
@@ -22,26 +22,24 @@ Further documentation on specific attribute values can be viewed in the Web API
     for track in album.tracks.items:
         print(track.track_number, track.name)
 
-Response models and lists of models are made easy to work with.
-They provide a readable ``repr`` for quickly inspecting the contents of a model
-and a :meth:`pprint <Serialisable.pprint>` method to view the model in more detail.
-It is also possible to convert models to builtin and JSON representations.
-See :class:`Serialisable` for more details on all available functionality.
+Using Pydantic models means that responses are easy to work with.
+They provide a readable ``repr`` (particularly with `devtools
+<https://docs.pydantic.dev/latest/usage/devtools/>`_) for quick inspection,
+and it is also possible to convert models to builtin and JSON representations:
 
 .. code:: python
 
-    print(album)
-    album.pprint()
-    album.pprint(depth=2)
+    from pprint import pprint
 
-    album.asbuiltin()
+    print(album)
+    pprint(album, depth=2)
+
+    album.dict()
     album.json()
 
 Responses will sometimes contain unknown attributes when the API changes.
-They are parsed into the response model,
-but are not included in serialisation and other model transforms.
-An :class:`UnknownModelAttributeWarning` is issued
-when encountering an unknown attribute.
+They are ignored when parsing the response model, but a
+:class:`UnknownModelAttributeWarning` is issued when encountering one.
 Please consider upgrading Tekore if a newer version documents and handles it.
 
 Models are made available in the :mod:`tekore.models` namespace.
@@ -354,9 +352,7 @@ Model bases
 .. autosummary::
    :nosignatures:
 
-   Serialisable
    Model
-   ModelList
    UnknownModelAttributeWarning
 
    Identifiable
@@ -368,9 +364,7 @@ Model bases
 
 Functionality
 *************
-.. autoclass:: Serialisable
 .. autoclass:: Model
-.. autoclass:: ModelList
 .. autoclass:: UnknownModelAttributeWarning
 
 Models
@@ -385,4 +379,3 @@ Models
 Member types
 ------------
 .. autoclass:: StrEnum
-.. autoclass:: Timestamp

@@ -1,12 +1,10 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
 from .base import Item
 from .member import Followers, Image
-from .serialise import Model, ModelList
+from .serialise import Model
 
 
-@dataclass(repr=False)
 class ExplicitContent(Model):
     """Explicit content filter of a user."""
 
@@ -14,7 +12,6 @@ class ExplicitContent(Model):
     filter_locked: bool
 
 
-@dataclass(repr=False)
 class User(Item):
     """
     User base.
@@ -28,14 +25,7 @@ class User(Item):
     followers: Optional[Followers] = None
     images: Optional[List[Image]] = None
 
-    def __post_init__(self):
-        if self.followers is not None:
-            self.followers = Followers.from_kwargs(self.followers)
-        if self.images is not None:
-            self.images = ModelList(Image.from_kwargs(i) for i in self.images)
 
-
-@dataclass(repr=False)
 class PrivateUser(User):
     """
     User with private information.
@@ -53,12 +43,6 @@ class PrivateUser(User):
     product: Optional[str] = None
     birthday: Optional[str] = None
 
-    def __post_init__(self):
-        super().__post_init__()
-        if self.explicit_content is not None:
-            self.explicit_content = ExplicitContent.from_kwargs(self.explicit_content)
 
-
-@dataclass(repr=False)
 class PublicUser(User):
     """User as viewable by anyone."""

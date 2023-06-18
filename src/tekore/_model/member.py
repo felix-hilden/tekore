@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional
 
 from .serialise import Model, StrEnum
@@ -13,7 +12,6 @@ class ReleaseDatePrecision(StrEnum):
     minute = "minute"
 
 
-@dataclass(repr=False)
 class Copyright(Model):
     """Copyright."""
 
@@ -21,7 +19,6 @@ class Copyright(Model):
     type: str
 
 
-@dataclass(repr=False)
 class Followers(Model):
     """
     Followers.
@@ -33,7 +30,6 @@ class Followers(Model):
     total: int
 
 
-@dataclass(repr=False)
 class Image(Model):
     """
     Image link and information.
@@ -43,18 +39,16 @@ class Image(Model):
     """
 
     url: str
-    height: Optional[int] = None
-    width: Optional[int] = None
+    height: Optional[int]
+    width: Optional[int]
 
 
-@dataclass(repr=False)
 class Restrictions(Model):
     """Restrictions on relinked resource."""
 
     reason: str
 
 
-@dataclass(repr=False)
 class ResumePoint(Model):
     """Resume point."""
 
