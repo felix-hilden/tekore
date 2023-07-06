@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Add missing ``Optional`` annotations to support Pydantic 2 (:issue:`293`)
+
 5.0.0 (2023-06-18)
 ------------------
 Tekore 5 comes with an overhauled response model system based on Pydantic.

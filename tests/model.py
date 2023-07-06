@@ -68,8 +68,8 @@ class TestModel:
             v: E
 
         c = C(v=E.a)
-        assert isinstance(c.dict()["v"], str)
-        assert c.json() == '{"v": "a"}'
+        assert isinstance(c.model_dump()["v"], str)
+        assert c.model_dump_json() == '{"v":"a"}'
 
     def test_timestamps_in_model(self):
         class C(Model):
@@ -87,4 +87,4 @@ class TestModel:
 
         with pytest.raises(AttributeError):
             assert data.u
-        assert "u" not in data.json()
+        assert "u" not in data.model_dump_json()

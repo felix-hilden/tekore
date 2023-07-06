@@ -12,6 +12,7 @@ class Show(Item):
     description: str
     explicit: bool
     external_urls: dict
+    html_description: Optional[str] = None
     images: List[Image]
     is_externally_hosted: Optional[bool]
     languages: List[str]
@@ -19,4 +20,3 @@ class Show(Item):
     name: str
     publisher: str
     total_episodes: Optional[int] = None
-    html_description: str = None
