@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.0.1 (2023-07-06)
+------------------
 Fixed
 *****
 - Add missing ``Optional`` annotations to support Pydantic 2 (:issue:`293`)
