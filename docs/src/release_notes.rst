@@ -5,6 +5,10 @@ Release notes
 =============
 Unreleased
 ----------
+Added
+*****
+- Support HTTPX ``0.25`` (:issue:`294`)
+
 Fixed
 *****
 - Exclude Pydantic version ``2.4.0`` (:issue:`297`)
