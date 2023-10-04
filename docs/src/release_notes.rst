@@ -11,6 +11,7 @@ Added
 
 Fixed
 *****
+- Remove misleading documentation on models (:issue:`295`)
 - Add missing ``supports_volume`` to ``Device <model.Device>`` (:issue:`296`)
 - Exclude Pydantic version ``2.4.0`` (:issue:`297`)
 

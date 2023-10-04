@@ -44,7 +44,7 @@ class Model(BaseModel):
     """Response model base."""
 
     def __init__(self, **data):
-        """Create the Model and handle unknown data."""
+        ""
         super().__init__(**data)
         unknowns = set(data.keys()) - set(self.__dict__.keys())
         for arg in unknowns:
