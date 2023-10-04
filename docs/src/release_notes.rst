@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.1.0 (2023-10-04)
+------------------
 Added
 *****
 - Support HTTPX ``0.25`` (:issue:`294`)
