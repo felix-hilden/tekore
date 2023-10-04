@@ -31,3 +31,4 @@ class Device(Identifiable):
     name: str
     type: DeviceType
     volume_percent: Optional[int]
+    supports_volume: bool
