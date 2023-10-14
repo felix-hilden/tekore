@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.1.1 (2023-10-14)
+------------------
 Fixed
 *****
 - Make :class:`Album <model.Album>` optional (:issue:`300`)
