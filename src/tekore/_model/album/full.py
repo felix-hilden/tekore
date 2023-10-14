@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from ..album.base import Album
 from ..member import Copyright
@@ -21,7 +21,7 @@ class FullAlbum(Album):
     copyrights: List[Copyright]
     external_ids: dict
     genres: List[str]
-    label: str
+    label: Optional[str]
     popularity: int
     tracks: SimpleTrackPaging
 

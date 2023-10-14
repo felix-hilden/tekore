@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Make :class:`Album <model.Album>` optional (:issue:`300`)
+
 5.1.0 (2023-10-04)
 ------------------
 Added

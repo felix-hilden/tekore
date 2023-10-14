@@ -59,8 +59,11 @@ def setup(user_client):
     user_client.playback_volume(device.volume_percent, device.id)
 
 
+SLEEP_SECS = 5
+
+
 def currently_playing(client):
-    sleep(5)
+    sleep(SLEEP_SECS)
     return client.playback_currently_playing()
 
 
@@ -144,6 +147,7 @@ class TestSpotifyPlayerSequence:
 
         # Queue consumed on next
         user_client.playback_queue_add(to_uri("track", track_ids[0]))
+        sleep(SLEEP_SECS)
         assert len(user_client.playback_queue().queue) > 0
         user_client.playback_next()
         assert_playing(user_client, track_ids[0])
