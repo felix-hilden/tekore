@@ -6,6 +6,7 @@ from ._resources import show_id, show_ids
 
 
 class TestSpotifyShow:
+    @pytest.mark.xfail(reason="API inconsistencies")
     def test_show_not_found_without_market(self, app_client):
         with pytest.raises(HTTPError):
             app_client.show(show_id)

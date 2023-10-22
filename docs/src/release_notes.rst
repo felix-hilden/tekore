@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Add undocumented ``is_externally_hosted`` attribute to
+  :class:`Audiobook <model.Audiobook>` (:issue:`302`)
+
 5.1.1 (2023-10-14)
 ------------------
 Fixed

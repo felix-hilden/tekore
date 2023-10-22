@@ -29,6 +29,7 @@ class Audiobook(Item):
     external_urls: dict
     html_description: str
     images: List[Image]
+    is_externally_hosted: Optional[bool] = None
     languages: List[str]
     media_type: str
     name: str
