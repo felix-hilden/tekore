@@ -20,6 +20,7 @@ from .api import (
     SpotifyUser,
 )
 from .paging import SpotifyPaging
+from .short_link import SpotifyShortLink
 
 
 class Spotify(
@@ -40,6 +41,7 @@ class Spotify(
     SpotifyTrack,
     SpotifyUser,
     SpotifyPaging,
+    SpotifyShortLink,
 ):
     """
     Bases: :class:`tekore.Client`.

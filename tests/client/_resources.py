@@ -30,6 +30,8 @@ user_id = "spinninrecordsofficial"
 user_id_hash = "a#a"
 user_ids = [user_id, "samsmithworld"]
 
+short_link = "https://spotify.link/hRkBrwub9xb"
+
 show_id = "0Lsi13D8nWRkwbEkfNeItS"
 show_ids = [show_id, "7Arl2fVUFHCGyNZwM39bJO"]
 episode_id = "3YPKYYsqrWZUdZTzF6dZ3F"

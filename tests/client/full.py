@@ -174,6 +174,7 @@ class TestSpotifyUnits:
             "chunked",
             "max_limits",
             "token_as",
+            "follow_short_link",
         }
         for name, method in getmembers(client, predicate=ismethod):
             if name.startswith("_") or name in skips:

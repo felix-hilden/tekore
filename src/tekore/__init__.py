@@ -27,7 +27,7 @@ from ._auth import (
     request_client_token,
     scope,
 )
-from ._client import Spotify
+from ._client import Spotify, is_short_link
 from ._config import (
     MissingConfigurationWarning,
     config_from_environment,

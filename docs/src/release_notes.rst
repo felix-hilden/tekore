@@ -10,6 +10,11 @@ Fixed
 - Add undocumented ``is_externally_hosted`` attribute to
   :class:`Audiobook <model.Audiobook>` (:issue:`302`)
 
+Added
+*****
+- Add support for short URLs as :func:`is_short_link` and
+  :meth:`follow_short_link <Spotify.follow_short_link>` (:issue:`301`)
+
 5.1.1 (2023-10-14)
 ------------------
 Fixed
