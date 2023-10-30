@@ -11,7 +11,7 @@ from .show import SimpleShow
 class Episode(Item):
     """Episode base."""
 
-    audio_preview_url: str
+    audio_preview_url: Optional[str]
     description: str
     duration_ms: int
     explicit: bool
