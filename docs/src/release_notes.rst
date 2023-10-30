@@ -11,7 +11,7 @@ Fixed
   :class:`Audiobook <model.Audiobook>` (:issue:`302`)
 - Changed the type the of ``audio_preview_url`` attribute in the ``Episode`` base 
   class to a nullable string, complying with the `API Documentation 
-  <https://developer.spotify.com/documentation/web-api/reference/get-a-show>`_
+  <https://developer.spotify.com/documentation/web-api/reference/get-an-episode>`_
 
 5.1.1 (2023-10-14)
 ------------------
