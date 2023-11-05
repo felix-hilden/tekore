@@ -3,15 +3,14 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.2.0 (2023-11-05)
+------------------
 Fixed
 *****
 - Add undocumented ``is_externally_hosted`` attribute to
   :class:`Audiobook <model.Audiobook>` (:issue:`302`)
-- Changed the type the of ``audio_preview_url`` attribute in the ``Episode`` base 
-  class to a nullable string, complying with the `API Documentation 
-  <https://developer.spotify.com/documentation/web-api/reference/get-an-episode>`_
+- Make ``audio_preview_url`` of :class:`Episode <model.Device>` optional
+  (:issue:`305`)
 
 Added
 *****
@@ -33,7 +32,8 @@ Added
 Fixed
 *****
 - Remove misleading documentation on models (:issue:`295`)
-- Add missing ``supports_volume`` to ``Device <model.Device>`` (:issue:`296`)
+- Add missing ``supports_volume`` to :class:`Device <model.Device>`
+  (:issue:`296`)
 - Exclude Pydantic version ``2.4.0`` (:issue:`297`)
 
 5.0.1 (2023-07-06)
