@@ -85,12 +85,16 @@ Non-endpoint methods
    Spotify.chunked
    Spotify.max_limits
    Spotify.token_as
+   Spotify.follow_short_link
+   is_short_link
    Spotify.send
    Spotify.close
 
 .. automethod:: Spotify.chunked
 .. automethod:: Spotify.max_limits
 .. automethod:: Spotify.token_as
+.. automethod:: Spotify.follow_short_link
+.. autofunction:: is_short_link
 .. automethod:: Spotify.send
 .. automethod:: Spotify.close
 

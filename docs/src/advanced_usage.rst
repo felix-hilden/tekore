@@ -224,6 +224,22 @@ Combined with refreshing the token on arrival to have the full scope and
 additionally redirecting the user back after authorisation, even static
 HTML applications using a Python backend become simple to implement.
 
+Short links
+-----------
+The Spotify emits shortened URLs for e.g. playlists when sharing them
+through the mobile application. Unfortunately, they are not usable as
+they are, but they can be expanded to their full form. Tekore provides
+two utilities for processing them: :func:`is_short_link` and
+:meth:`Spotify.follow_short_link`.
+
+.. autolink-preface:: from tekore import Spotify as spotify, is_short_link, from_url
+.. code:: python
+
+    link = '...'
+    if is_short_link(link):
+        link = spotify.follow_short_link(link)
+    type, id_ = from_url(link)
+
 Localisation
 ------------
 Many API calls that retrieve track information accept a ``market`` or

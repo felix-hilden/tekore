@@ -13,6 +13,11 @@ Fixed
   class to a nullable string, complying with the `API Documentation 
   <https://developer.spotify.com/documentation/web-api/reference/get-an-episode>`_
 
+Added
+*****
+- Add support for short URLs as :func:`is_short_link` and
+  :meth:`follow_short_link <Spotify.follow_short_link>` (:issue:`301`)
+
 5.1.1 (2023-10-14)
 ------------------
 Fixed
