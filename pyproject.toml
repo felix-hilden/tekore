@@ -12,7 +12,7 @@ dynamic = ["version"]
 requires-python = ">=3.8"
 dependencies = [
     "httpx>=0.15,<0.26",
-    "pydantic>=1.8,!=2.4.0",
+    "pydantic>=1.8,!=2.4.0,!=2.5.0,!=2.5.1",
 ]
 
 keywords = ["spotify", "web", "api", "client"]
