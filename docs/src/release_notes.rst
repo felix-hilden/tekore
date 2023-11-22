@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.2.1 (2023-11-22)
+------------------
 Fixed
 *****
 - Exclude Pydantic versions ``2.5.0`` and ``2.5.1`` (:issue:`306`)
