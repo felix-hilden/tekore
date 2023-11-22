@@ -8,6 +8,7 @@ class Chapter(Item):
     """Audiobook chapter base."""
 
     audio_preview_url: Optional[str]
+    available_markets: Optional[List[str]] = None
     chapter_number: int
     description: str
     duration_ms: int

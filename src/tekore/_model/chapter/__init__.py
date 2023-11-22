@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from ..paging import OffsetPaging
 from .base import Chapter
@@ -6,8 +6,6 @@ from .base import Chapter
 
 class SimpleChapter(Chapter):
     """Simplified chapter."""
-
-    available_markets: Optional[List[str]] = None
 
 
 class SimpleChapterPaging(OffsetPaging):

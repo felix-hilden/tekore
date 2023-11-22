@@ -8,6 +8,8 @@ Unreleased
 Fixed
 *****
 - Exclude Pydantic versions ``2.5.0`` and ``2.5.1`` (:issue:`306`)
+- Add missing ``available_markets`` to :class:`FullChapter <model.FullChapter>`
+  (:issue:`308`)
 
 5.2.0 (2023-11-05)
 ------------------
