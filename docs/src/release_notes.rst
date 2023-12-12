@@ -3,6 +3,14 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Changed the type the of the ``images`` attribute in the ``Playlist`` base 
+  class to a nullable list to avoid a ValidationError in cases where the API 
+  returns ``null`` for empty playlists without a custom image.
+
 5.2.1 (2023-11-22)
 ------------------
 Fixed

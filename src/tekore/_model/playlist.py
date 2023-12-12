@@ -76,7 +76,7 @@ class Playlist(Item):
     collaborative: bool
     description: Optional[str]
     external_urls: dict
-    images: List[Image]
+    images: Optional[List[Image]]
     name: str
     owner: PublicUser
     public: Optional[bool]
