@@ -7,7 +7,8 @@ Unreleased
 ----------
 Fixed
 *****
-- Fixed a bug causing a ValidationError when requesting an empty playlist without an image. 
+- Make ``images`` optional in :class:`Playlist <model.Playlist>`
+  to fix getting empty playlists without an image (#309)
 
 5.2.1 (2023-11-22)
 ------------------
