@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Make ``images`` optional in :class:`Playlist <model.Playlist>`
+  to fix getting empty playlists without an image (#309)
+
 5.2.1 (2023-11-22)
 ------------------
 Fixed
