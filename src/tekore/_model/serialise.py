@@ -47,9 +47,10 @@ class Model(BaseModel):
         """"""
         super().__init__(**data)
         unknowns = set(data.keys()) - set(self.__dict__.keys())
+        cls_name = self.__class__.__name__
         for arg in unknowns:
             msg = (
-                f"Response contains unknown attribute: `{arg}`, which was discarded."
+                f"{cls_name} contains unknown attribute: `{arg}`, which was discarded."
                 " This warning may be safely ignored. Please consider upgrading Tekore."
             )
             warn(msg, UnknownModelAttributeWarning, stacklevel=5)

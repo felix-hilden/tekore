@@ -23,6 +23,7 @@ Fixed
 Added
 *****
 - Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` (#310)
+- Improve ``UnknownModelAttributeWarning`` to include model name (#313)
 
 5.2.1 (2023-11-22)
 ------------------
