@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.3.0 (2023-12-22)
+------------------
 Fixed
 *****
 - Make ``images`` optional in :class:`Playlist <model.Playlist>`
