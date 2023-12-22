@@ -9,6 +9,20 @@ Fixed
 *****
 - Make ``images`` optional in :class:`Playlist <model.Playlist>`
   to fix getting empty playlists without an image (#309)
+- Add undocumented ``dict`` to types of ``publisher`` in
+  :class:`Show <model.Show>` (#310)
+- Make ``is_playable`` in :class:`Episode <model.Episode>` optional
+  despite API specifications (#310)
+- Make deprecated ``language`` optional in :class:`Episode <model.Episode>`
+  pending removal (#310)
+- Add undocumented ``dict`` to types of ``duration_ms`` in
+  :class:`LocalTrack <model.LocalTrack>` (#310)
+- Add undocumented ``available_markets`` to
+  :class:`FullPlaylistEpisode <model.FullPlaylistEpisode>` (#310)
+
+Added
+*****
+- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` (#310)
 
 5.2.1 (2023-11-22)
 ------------------

@@ -30,8 +30,10 @@ class FullPlaylistEpisode(FullEpisode):
 
     Provides :attr:`episode` and :attr:`track` booleans
     to easily determine the type of playlist item.
+    :attr:`available_markets` is undocumented.
     """
 
+    available_markets: Optional[List[str]] = None
     episode: Literal[True]
     track: Literal[False]
 

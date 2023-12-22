@@ -2,14 +2,18 @@ from datetime import datetime
 from typing import List, Optional
 
 from .base import Item
-from .member import Image, ReleaseDatePrecision, ResumePoint
+from .member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
 from .paging import OffsetPaging
 from .serialise import Model
 from .show import SimpleShow
 
 
 class Episode(Item):
-    """Episode base."""
+    """
+    Episode base.
+
+    :attr:`language` is deprecated.
+    """
 
     audio_preview_url: Optional[str]
     description: str
@@ -19,25 +23,24 @@ class Episode(Item):
     html_description: str
     images: List[Image]
     is_externally_hosted: bool
-    is_playable: bool
-    language: str
+    is_playable: Optional[bool] = None
+    language: Optional[str] = None
     languages: List[str]
     name: str
     release_date: str
     release_date_precision: ReleaseDatePrecision
+    resume_point: Optional[ResumePoint] = None
 
 
 class SimpleEpisode(Episode):
     """Simplified episode object."""
 
-    resume_point: Optional[ResumePoint] = None
-
 
 class FullEpisode(Episode):
     """Complete episode object."""
 
+    restrictions: Optional[Restrictions] = None
     show: SimpleShow
-    resume_point: Optional[ResumePoint] = None
 
 
 class SimpleEpisodePaging(OffsetPaging):

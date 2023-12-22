@@ -1,11 +1,15 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from ..base import Item
 from ..member import Copyright, Image
 
 
 class Show(Item):
-    """Show base."""
+    """
+    Show base.
+
+    :attr:`publisher` being an object is undocumented.
+    """
 
     available_markets: List[str]
     copyrights: List[Copyright]
@@ -18,5 +22,5 @@ class Show(Item):
     languages: List[str]
     media_type: str
     name: str
-    publisher: str
+    publisher: Union[str, dict]
     total_episodes: Optional[int] = None

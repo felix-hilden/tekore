@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import List, Literal, Union
 
 from .serialise import Model
 
@@ -37,13 +37,14 @@ class LocalTrack(LocalItem):
 
     Locally saved track where most attributes are
     always None, empty, zero or False.
+    :attr:`duration_ms` being an object is undocumented.
     """
 
     album: LocalAlbum
     artists: List[LocalArtist]
     available_markets: List[None]
     disc_number: int
-    duration_ms: int
+    duration_ms: Union[int, dict]
     explicit: bool
     external_ids: dict
     external_urls: dict
