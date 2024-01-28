@@ -3,6 +3,14 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- :ref:`reference`: remove methods ``playlist_remove_indices`` and
+  ``playlist_remove_occurrences``, which were removed from the API
+  (:issue:`315`)
+
 5.3.0 (2023-12-22)
 ------------------
 Fixed
