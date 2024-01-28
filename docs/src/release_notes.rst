@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.3.1 (2024-10-28)
+------------------
 Fixed
 *****
 - :ref:`reference`: remove methods ``playlist_remove_indices`` and
@@ -16,23 +16,24 @@ Fixed
 Fixed
 *****
 - Make ``images`` optional in :class:`Playlist <model.Playlist>`
-  to fix getting empty playlists without an image (#309)
+  to fix getting empty playlists without an image (:issue:`309`)
 - Add undocumented ``dict`` to types of ``publisher`` in
-  :class:`Show <model.Show>` (#310)
+  :class:`Show <model.Show>` (:issue:`310`)
 - Make ``is_playable`` in :class:`Episode <model.Episode>` optional
-  despite API specifications (#310)
+  despite API specifications (:issue:`310`)
 - Make deprecated ``language`` optional in :class:`Episode <model.Episode>`
-  pending removal (#310)
+  pending removal (:issue:`310`)
 - Add undocumented ``dict`` to types of ``duration_ms`` in
-  :class:`LocalTrack <model.LocalTrack>` (#310)
+  :class:`LocalTrack <model.LocalTrack>` (:issue:`310`)
 - Add undocumented ``available_markets`` to
-  :class:`FullPlaylistEpisode <model.FullPlaylistEpisode>` (#310)
+  :class:`FullPlaylistEpisode <model.FullPlaylistEpisode>` (:issue:`310`)
 
 Added
 *****
-- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` (#310)
-- Support HTTPX ``0.26`` (#311)
-- Improve ``UnknownModelAttributeWarning`` to include model name (#313)
+- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` 
+  (:issue:`310`)
+- Support HTTPX ``0.26`` (:issue:`311`)
+- Improve ``UnknownModelAttributeWarning`` to include model name (:issue:`313`)
 
 5.2.1 (2023-11-22)
 ------------------
