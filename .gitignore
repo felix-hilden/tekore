@@ -18,6 +18,7 @@ dist/
 coverage.xml
 docs/build
 .tox/
+.pypirc
 
 # Environments
 .env

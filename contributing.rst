@@ -81,6 +81,8 @@ Before releasing, make sure the version number is incremented
 and the release notes reference the new release.
 Running tests once more is also good practice.
 Tox is used to build the appropriate distributions and publish them on PyPI.
+The publish script also reads credentials from a .pypirc file,
+so please set that up before publishing.
 
 .. code:: sh
 
