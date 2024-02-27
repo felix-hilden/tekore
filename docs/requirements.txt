@@ -1,4 +1,4 @@
-sphinx==4.5.0
-sphinx-rtd-theme==1.0.0
-sphinx-tabs==3.3.1
-sphinx-codeautolink==0.12.1
+sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+sphinx-tabs==3.4.5
+sphinx-codeautolink==0.15.0
