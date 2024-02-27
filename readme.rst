@@ -34,7 +34,7 @@ You can also ask a question on
    :target: `pypi`_
    :alt: logo
 
-.. |build| image:: https://github.com/felix-hilden/tekore/workflows/build/badge.svg
+.. |build| image:: https://github.com/felix-hilden/tekore/workflows/CI/badge.svg
    :target: https://github.com/felix-hilden/tekore/actions
    :alt: build status
 
