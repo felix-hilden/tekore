@@ -67,11 +67,16 @@ class CurrentlyPlaying(Model):
 
 
 class CurrentlyPlayingContext(CurrentlyPlaying):
-    """Extended current playback context."""
+    """
+    Extended current playback context.
+
+    ``smart_shuffle`` is not documented in the Spotify API.
+    """
 
     device: Device
     repeat_state: RepeatState
     shuffle_state: bool
+    smart_shuffle: Optional[bool]
 
 
 class Queue(Model):

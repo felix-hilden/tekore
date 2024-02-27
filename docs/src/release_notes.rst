@@ -9,6 +9,8 @@ Fixed
 *****
 - Add ``ep`` as a valid enum to :class:`AlbumType <model.AlbumType>`
   for top tracks API responses (:issue:`318`)
+- Add undocumented ``smart_shuffle`` to :class:`CurrentlyPlayingContext
+  <model.CurrentlyPlayingContext>` (:issue:`320`)
 
 Added
 *****
