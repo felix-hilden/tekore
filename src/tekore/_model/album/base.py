@@ -12,6 +12,7 @@ class AlbumType(StrEnum):
     album = "album"
     compilation = "compilation"
     single = "single"
+    ep = "ep"
 
 
 class Album(Item):
