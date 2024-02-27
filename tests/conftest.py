@@ -1,6 +1,7 @@
 """
 Fixtures for tests that require application or user credentials.
 """
+
 import os
 
 import pytest

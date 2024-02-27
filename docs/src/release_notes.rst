@@ -10,6 +10,10 @@ Fixed
 - Add ``ep`` as a valid enum to :class:`AlbumType <model.AlbumType>`
   for top tracks API responses (:issue:`318`)
 
+Added
+*****
+- Support HTTPX ``0.27`` (:issue:`317`)
+
 5.3.1 (2024-10-28)
 ------------------
 Fixed
