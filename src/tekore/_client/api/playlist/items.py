@@ -1,3 +1,5 @@
+from typing import List, Optional, Tuple
+
 from tekore._auth import scope
 
 from ...base import SpotifyBase
@@ -138,4 +140,72 @@ class SpotifyPlaylistItems(SpotifyBase):
         items = [{"uri": uri} for uri in uris]
         return self._generic_playlist_remove(
             playlist_id, {"tracks": items}, snapshot_id
+        )
+
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
+    @send_and_process(top_item("snapshot_id"))
+    def playlist_remove_occurrences(
+        self,
+        playlist_id: str,
+        refs: List[Tuple[str, int]],
+        snapshot_id: Optional[str] = None,
+    ) -> str:
+        """
+        Remove items by URI and position.
+
+        .. warning::
+
+           This feature is undocumented and may stop working at any time.
+
+        Parameters
+        ----------
+        playlist_id
+            playlist ID
+        refs
+            a list of tuples containing the URI and index of items to remove
+        snapshot_id
+            snapshot ID for the playlist
+        Returns
+        -------
+        str
+            snapshot ID for the playlist
+        """
+        gathered = {}
+        for uri, ix in refs:
+            gathered.setdefault(uri, []).append(ix)
+
+        items = [
+            {"uri": uri, "positions": ix_list} for uri, ix_list in gathered.items()
+        ]
+        return self._generic_playlist_remove(
+            playlist_id, {"tracks": items}, snapshot_id
+        )
+
+    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
+    @send_and_process(top_item("snapshot_id"))
+    def playlist_remove_indices(
+        self, playlist_id: str, indices: list, snapshot_id: str
+    ) -> str:
+        """
+        Remove items by position.
+
+        .. warning::
+
+           This feature is undocumented and may stop working at any time.
+
+        Parameters
+        ----------
+        playlist_id
+            playlist ID
+        indices
+            a list of indices of tracks to remove
+        snapshot_id
+            snapshot ID for the playlist
+        Returns
+        -------
+        str
+            snapshot ID for the playlist
+        """
+        return self._generic_playlist_remove(
+            playlist_id, {"positions": indices}, snapshot_id
         )

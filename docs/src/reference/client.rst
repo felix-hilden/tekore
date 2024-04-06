@@ -369,6 +369,8 @@ Playlist API
    Spotify.playlist_add
    Spotify.playlist_clear
    Spotify.playlist_remove
+   Spotify.playlist_remove_indices
+   Spotify.playlist_remove_occurrences
    Spotify.playlist_reorder
    Spotify.playlist_replace
 
@@ -386,6 +388,8 @@ for additional information.
 .. automethod:: Spotify.playlist_add
 .. automethod:: Spotify.playlist_clear
 .. automethod:: Spotify.playlist_remove
+.. automethod:: Spotify.playlist_remove_indices
+.. automethod:: Spotify.playlist_remove_occurrences
 .. automethod:: Spotify.playlist_reorder
 .. automethod:: Spotify.playlist_replace
 

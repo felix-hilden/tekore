@@ -193,13 +193,24 @@ class TestSpotifyPlaylistModify:
             items = user_client.playlist_items(playlist.id)
             assert items.total == 0
 
-            # Add tracks back with duplicates
+            # Add tracks back with duplicates and test removing occurrences
             new_tracks = track_uris + track_uris[::-1]
             user_client.playlist_replace(playlist.id, new_tracks)
-            user_client.playlist_remove(playlist.id, track_uris)
-            # All items removed
-            items = user_client.playlist_items(playlist.id)
-            assert items.total == 0
+            user_client.playlist_remove_occurrences(
+                playlist.id, [(uri, ix) for ix, uri in enumerate(track_uris)]
+            )
+            # Occurrences removed
+            assert_items_equal(user_client, playlist.id, track_uris[::-1])
+
+            # Add tracks back with duplicates and test removing indices
+            new_tracks = track_uris + track_uris[::-1]
+            user_client.playlist_replace(playlist.id, new_tracks)
+            playlist = user_client.playlist(playlist.id)
+            user_client.playlist_remove_indices(
+                playlist.id, list(range(len(track_uris))), playlist.snapshot_id
+            )
+            # Indices removed
+            assert_items_equal(user_client, playlist.id, track_uris[::-1])
 
             # Tracks cleared
             user_client.playlist_clear(playlist.id)
