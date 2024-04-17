@@ -1,5 +1,7 @@
 from typing import List, Literal, Union
 
+from pydantic import Field
+
 from .serialise import Model
 
 
@@ -18,7 +20,7 @@ class LocalAlbum(LocalItem):
 
     album_type: None
     artists: List[None]
-    available_markets: List[None]
+    available_markets: List[None] = Field(default_factory=list)
     external_urls: dict
     images: List[None]
     release_date: None
@@ -42,7 +44,7 @@ class LocalTrack(LocalItem):
 
     album: LocalAlbum
     artists: List[LocalArtist]
-    available_markets: List[None]
+    available_markets: List[None] = Field(default_factory=list)
     disc_number: int
     duration_ms: Union[int, dict]
     explicit: bool

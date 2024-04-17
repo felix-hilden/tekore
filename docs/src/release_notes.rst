@@ -3,6 +3,14 @@
 
 Release notes
 =============
+Unreleased
+-----------
+Fixed
+*****
+- Make ``available_markets`` of :class:`Show <model.Show>`,
+  :class:`LocalAlbum <model.LocalAlbum>` and
+  :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
+
 5.4.0 (2024-02-27)
 ------------------
 Fixed

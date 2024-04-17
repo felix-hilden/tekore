@@ -76,7 +76,7 @@ class TestSpotifyPlaylistView:
 
     def test_playlist_podcast_no_market_returns_none(self, app_client):
         playlist = app_client.playlist(playlist_special)
-        assert playlist.tracks.items[0].track is None
+        assert playlist.tracks.items[0].track.episode is True
 
     def test_playlist_podcast_with_market_returned(self, app_client):
         playlist = app_client.playlist(playlist_special, market="FI")
@@ -84,7 +84,7 @@ class TestSpotifyPlaylistView:
 
     def test_playlist_with_podcast_as_tracks_no_market_returns_object(self, app_client):
         playlist = app_client.playlist(playlist_special, as_tracks=True)
-        assert playlist["tracks"]["items"][0]["track"] is None
+        assert playlist["tracks"]["items"][0]["track"]["track"] is True
 
     def test_playlist_with_podcast_as_tracks_with_market_returns_object(
         self, app_client
@@ -100,7 +100,7 @@ class TestSpotifyPlaylistView:
 
     def test_playlist_items_podcast_no_market_returns_none(self, app_client):
         items = app_client.playlist_items(playlist_special)
-        assert items.items[0].track is None
+        assert items.items[0].track.episode is True
 
     def test_playlist_items_podcast_with_market_returned(self, app_client):
         items = app_client.playlist_items(playlist_special, market="FI")
@@ -110,7 +110,7 @@ class TestSpotifyPlaylistView:
         self, app_client
     ):
         items = app_client.playlist_items(playlist_special, as_tracks=True)
-        assert items["items"][0]["track"] is None
+        assert items["items"][0]["track"]["track"] is True
 
     def test_playlist_items_with_podcast_as_tracks_with_market_returns_object(
         self, app_client

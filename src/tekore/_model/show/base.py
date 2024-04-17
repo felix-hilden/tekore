@@ -1,5 +1,7 @@
 from typing import List, Optional, Union
 
+from pydantic import Field
+
 from ..base import Item
 from ..member import Copyright, Image
 
@@ -11,7 +13,7 @@ class Show(Item):
     :attr:`publisher` being an object is undocumented.
     """
 
-    available_markets: List[str]
+    available_markets: List[str] = Field(default_factory=list)
     copyrights: List[Copyright]
     description: str
     explicit: bool
