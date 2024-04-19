@@ -4,12 +4,18 @@
 Release notes
 =============
 Unreleased
------------
+----------
 Fixed
 *****
 - Make ``available_markets`` of :class:`Show <model.Show>`,
   :class:`LocalAlbum <model.LocalAlbum>` and
   :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
+
+Added
+*****
+- re-add :class:`SpotifyPlaylistItems` methods ``playlist_remove_indices`` and
+  ``playlist_remove_occurrences``, removed in :issue:`315`, marking them as
+  undocumented (:issue:`321`)
 
 5.4.0 (2024-02-27)
 ------------------
@@ -51,7 +57,7 @@ Fixed
 
 Added
 *****
-- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` 
+- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>`
   (:issue:`310`)
 - Support HTTPX ``0.26`` (:issue:`311`)
 - Improve ``UnknownModelAttributeWarning`` to include model name (:issue:`313`)
