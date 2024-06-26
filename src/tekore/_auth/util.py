@@ -198,7 +198,11 @@ def request_client_token(client_id: str, client_secret: str) -> RefreshingToken:
 
 
 def prompt_for_user_token(
-    client_id: str, client_secret: str, redirect_uri: str, scope=None
+    client_id: str,
+    client_secret: str,
+    redirect_uri: str,
+    scope=None,
+    open_browser: bool = True,
 ) -> RefreshingToken:
     """
     Prompt for manual authorisation.
@@ -218,6 +222,8 @@ def prompt_for_user_token(
         token privileges, accepts a :class:`Scope`, a single :class:`scope`,
         a list of :class:`scopes <scope>` and strings for :class:`Scope`,
         or a space-separated list of scopes as a string
+    open_browser
+        open a web browser with auth url, or just print it
 
     Returns
     -------
@@ -232,8 +238,11 @@ def prompt_for_user_token(
     cred = RefreshingCredentials(client_id, client_secret, redirect_uri)
     auth = UserAuth(cred, scope=scope)
 
-    print("Opening browser for Spotify login...")
-    webbrowser.open(auth.url)
+    if open_browser:
+        print("Opening browser for Spotify login...")
+        webbrowser.open(auth.url)
+    else:
+        print("Open this URL in your browser: " + auth.url)
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 
@@ -263,7 +272,7 @@ def refresh_user_token(
 
 
 def prompt_for_pkce_token(
-    client_id: str, redirect_uri: str, scope=None
+    client_id: str, redirect_uri: str, scope=None, open_browser: bool = True
 ) -> RefreshingToken:
     """
     Prompt for manual authorisation with PKCE.
@@ -281,6 +290,8 @@ def prompt_for_pkce_token(
         token privileges, accepts a :class:`Scope`, a single :class:`scope`,
         a list of :class:`scopes <scope>` and strings for :class:`Scope`,
         or a space-separated list of scopes as a string
+    open_browser
+        open a web browser with auth url, or just print it
 
     Returns
     -------
@@ -295,8 +306,11 @@ def prompt_for_pkce_token(
     cred = RefreshingCredentials(client_id, redirect_uri=redirect_uri)
     auth = UserAuth(cred, scope=scope, pkce=True)
 
-    print("Opening browser for Spotify login...")
-    webbrowser.open(auth.url)
+    if open_browser:
+        print("Opening browser for Spotify login...")
+        webbrowser.open(auth.url)
+    else:
+        print("Open this URL in your browser: " + auth.url)
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 

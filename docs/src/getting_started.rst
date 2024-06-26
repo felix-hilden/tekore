@@ -62,6 +62,8 @@ can be used with a client with no other redirect URIs whitelisted.
 Different privileges or `scopes` can be requested when authorising.
 Below we'll retrieve a token that has every possible scope.
 The script will open a web page prompting for a Spotify login.
+To only display the authorization URI, without opening it in a browser,
+set `open_browser` to `False` in `prompt_for_user_token`.
 The user is then redirected back to the whitelisted redirect URI.
 Paste the redirected URI in full to the shell to finalise token retrieval.
 
