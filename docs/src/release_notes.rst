@@ -11,6 +11,12 @@ Fixed
   :class:`LocalAlbum <model.LocalAlbum>` and
   :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
 
+Added
+*****
+- Add ``open_browser`` option to
+  :meth:`prompt_for_user_token <prompt_for_user_token>` and
+  :meth:`prompt_for_pkce_token <prompt_for_pkce_token>`
+
 5.4.0 (2024-02-27)
 ------------------
 Fixed
