@@ -3,12 +3,12 @@
 
 Release notes
 =============
-Unreleased
------------
+5.5.0 (2024-07-04)
+------------------
 Fixed
 *****
 - Add `ugc_image_upload` to required scopes of
-  :meth:`SpotifyPlaylistModify.playlist_cover_image_upload`
+  :meth:`SpotifyPlaylistModify.playlist_cover_image_upload` (:issue:`334`)
 - Make ``available_markets`` of :class:`Show <model.Show>`,
   :class:`LocalAlbum <model.LocalAlbum>` and
   :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
@@ -17,7 +17,7 @@ Added
 *****
 - Add ``open_browser`` option to
   :meth:`prompt_for_user_token <prompt_for_user_token>` and
-  :meth:`prompt_for_pkce_token <prompt_for_pkce_token>`
+  :meth:`prompt_for_pkce_token <prompt_for_pkce_token>` (:issue:`335`)
 
 5.4.0 (2024-02-27)
 ------------------
