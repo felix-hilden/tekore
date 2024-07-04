@@ -7,6 +7,8 @@ Unreleased
 -----------
 Fixed
 *****
+- Add `ugc_image_upload` to required scopes of
+  :meth:`SpotifyPlaylistModify.playlist_cover_image_upload`
 - Make ``available_markets`` of :class:`Show <model.Show>`,
   :class:`LocalAlbum <model.LocalAlbum>` and
   :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
@@ -57,7 +59,7 @@ Fixed
 
 Added
 *****
-- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>` 
+- Add ``restrictions`` to :class:`FullEpisode <model.FullEpisode>`
   (:issue:`310`)
 - Support HTTPX ``0.26`` (:issue:`311`)
 - Improve ``UnknownModelAttributeWarning`` to include model name (:issue:`313`)

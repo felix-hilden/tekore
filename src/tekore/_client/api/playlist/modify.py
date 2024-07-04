@@ -10,7 +10,10 @@ from ...process import nothing, single
 class SpotifyPlaylistModify(SpotifyBase):
     """Playlist API endpoints for modifying playlists."""
 
-    @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
+    @scopes(
+        [scope.playlist_modify_public, scope.ugc_image_upload],
+        [scope.playlist_modify_private],
+    )
     @send_and_process(nothing)
     def playlist_cover_image_upload(self, playlist_id: str, image: str) -> None:
         """
