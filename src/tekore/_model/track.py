@@ -28,7 +28,7 @@ class Track(Item):
     is_playable: Optional[bool] = None
     linked_from: Optional[TrackLink] = None
     name: str
-    preview_url: Optional[str]
+    preview_url: Optional[str] = None
     restrictions: Optional[Restrictions] = None
     track_number: int
 
