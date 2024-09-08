@@ -1,6 +1,12 @@
 .. _release-notes:
 .. currentmodule:: tekore
 
+Unreleased
+----------
+Fixed
+*****
+- Allow for missing ``preview_url`` in :class:`Track <model.Track>`
+
 Release notes
 =============
 5.5.0 (2024-07-04)
