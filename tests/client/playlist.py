@@ -148,18 +148,14 @@ class TestSpotifyPlaylistModify:
         track_uris = [to_uri("track", id_) for id_ in track_ids]
 
         try:
-            # Upload new cover, assert last to wait for server
+            # Upload new cover and change info, assert last to wait for server
             user_client.playlist_cover_image_upload(playlist.id, image)
-
             new_name = "tekore-test-modified"
             user_client.playlist_change_details(
                 playlist.id,
                 name=new_name,
                 description="Temporary test playlist for Tekore (modified)",
             )
-            playlist = user_client.playlist(playlist.id)
-            # Details changed
-            assert playlist.name == new_name
 
             # Tracks added
             user_client.playlist_add(playlist.id, track_uris[::-1])
@@ -205,9 +201,11 @@ class TestSpotifyPlaylistModify:
             user_client.playlist_clear(playlist.id)
             assert_items_equal(user_client, playlist.id, [])
 
-            # Assert cover was uploaded
+            # Assert cover was uploaded and details changed
             cover = user_client.playlist_cover_image(playlist.id)
             assert len(cover) > 0
+            playlist = user_client.playlist(playlist.id)
+            assert playlist.name == new_name
         except Exception:
             raise
         finally:
