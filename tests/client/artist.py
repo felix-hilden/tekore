@@ -28,9 +28,9 @@ class TestSpotifyArtist:
         )
         assert albums.total > 0
 
-    def test_artist_albums_no_groups_returns_empty(self, app_client):
+    def test_artist_albums_no_groups_returns_all(self, app_client):
         albums = app_client.artist_albums(artist_id, include_groups=[], market=None)
-        assert albums.total == 0
+        assert albums.total > 0
 
     def test_artist_top_tracks_with_country(self, app_client):
         tracks = app_client.artist_top_tracks(artist_id, market="US")

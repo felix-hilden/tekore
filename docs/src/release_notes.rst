@@ -1,20 +1,25 @@
 .. _release-notes:
 .. currentmodule:: tekore
 
+Release notes
+=============
 Unreleased
 ----------
 Fixed
 *****
 - Allow for missing ``preview_url`` in :class:`Track <model.Track>`
+  (:issue:`326`)
+- Add missing undocumented ``is_playable`` to
+  :class:`FullAudiobook <model.FullAudiobook>` (:issue:`327`)
+- Make ``resume_point`` of :class:`Chapter <model.Chapter>`
+  optional (:issue:`328`)
 
-Release notes
-=============
 5.5.0 (2024-07-04)
 ------------------
 Fixed
 *****
 - Add `ugc_image_upload` to required scopes of
-  :meth:`SpotifyPlaylistModify.playlist_cover_image_upload` (:issue:`334`)
+  :meth:`SpotifyPlaylistModify.playlist_cover_image_upload` (:issue:`324`)
 - Make ``available_markets`` of :class:`Show <model.Show>`,
   :class:`LocalAlbum <model.LocalAlbum>` and
   :class:`LocalTrack <model.LocalTrack>` optional (:issue:`323`)
@@ -23,7 +28,7 @@ Added
 *****
 - Add ``open_browser`` option to
   :meth:`prompt_for_user_token <prompt_for_user_token>` and
-  :meth:`prompt_for_pkce_token <prompt_for_pkce_token>` (:issue:`335`)
+  :meth:`prompt_for_pkce_token <prompt_for_pkce_token>` (:issue:`325`)
 
 5.4.0 (2024-02-27)
 ------------------

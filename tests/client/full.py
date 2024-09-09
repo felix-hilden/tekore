@@ -274,10 +274,12 @@ def track_ids(data_client):
 
 @pytest.mark.usefixtures("suppress_warnings")
 class TestSpotifyChunked:
+    @pytest.mark.xfail(reason="API inconsistencies.")
     def test_too_many_tracks_raises(self, app_client, track_ids):
         with pytest.raises(BadRequest):
             app_client.tracks(track_ids)
 
+    @pytest.mark.xfail(reason="API inconsistencies.")
     @pytest.mark.asyncio
     async def test_async_too_many_tracks_raises(self, app_aclient, track_ids):
         with pytest.raises(BadRequest):

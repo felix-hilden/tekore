@@ -22,4 +22,4 @@ class Chapter(Item):
     release_date_precision: ReleaseDatePrecision
     release_date: str
     restrictions: Optional[Restrictions] = None
-    resume_point: ResumePoint
+    resume_point: Optional[ResumePoint] = None

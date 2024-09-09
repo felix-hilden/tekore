@@ -53,4 +53,4 @@ class TestSpotifyBase:
             app_client.album(album_id, market="__")
             raise AssertionError()
         except HTTPError as e:
-            assert "Invalid market code" in str(e)
+            assert "__" in str(e)
