@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+5.5.1 (2024-09-09)
+------------------
 Fixed
 *****
 - Allow for missing ``preview_url`` in :class:`Track <model.Track>`
