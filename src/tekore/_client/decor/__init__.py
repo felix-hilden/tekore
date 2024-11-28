@@ -1,5 +1,7 @@
+from __future__ import annotations
+
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
 from tekore._auth import Scope
 from tekore._sender import send_and_process as _send_and_process
@@ -66,7 +68,7 @@ def _add_doc_section(doc: str, section: str) -> str:
     return "\n".join([empty, head, "", section, body])
 
 
-def scopes(required: list = None, optional: list = None) -> Callable:
+def scopes(required: list | None = None, optional: list | None = None) -> Callable:
     """
     List the scopes that a call uses.
 

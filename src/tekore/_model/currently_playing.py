@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from __future__ import annotations
 
 from .context import Context
 from .device import Device
@@ -46,7 +46,7 @@ class Actions(Model):
     disallows: Disallows
 
 
-PlaybackItem = Union[FullTrack, LocalTrack, FullEpisode, None]
+PlaybackItem = FullTrack | LocalTrack | FullEpisode | None
 
 
 class CurrentlyPlaying(Model):
@@ -61,8 +61,8 @@ class CurrentlyPlaying(Model):
     currently_playing_type: CurrentlyPlayingType
     is_playing: bool
     timestamp: int
-    context: Optional[Context]
-    progress_ms: Optional[int]
+    context: Context | None
+    progress_ms: int | None
     item: PlaybackItem
 
 
@@ -76,11 +76,11 @@ class CurrentlyPlayingContext(CurrentlyPlaying):
     device: Device
     repeat_state: RepeatState
     shuffle_state: bool
-    smart_shuffle: Optional[bool]
+    smart_shuffle: bool | None
 
 
 class Queue(Model):
     """Playback queue."""
 
     currently_playing: PlaybackItem
-    queue: List[PlaybackItem]
+    queue: list[PlaybackItem]

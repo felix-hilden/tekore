@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from ..artist import SimpleArtist
 from ..base import Item
@@ -19,12 +19,12 @@ class Album(Item):
     """Album base."""
 
     album_type: AlbumType
-    artists: List[SimpleArtist]
+    artists: list[SimpleArtist]
     external_urls: dict
-    images: List[Image]
+    images: list[Image]
     name: str
     total_tracks: int
     release_date: str
     release_date_precision: ReleaseDatePrecision
-    available_markets: Optional[List[str]] = None
-    is_playable: Optional[bool] = None
+    available_markets: list[str] | None = None
+    is_playable: bool | None = None

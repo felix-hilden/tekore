@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from .serialise import Model
 
@@ -11,8 +11,8 @@ class TimeInterval(Model):
     """
 
     duration: float
-    start: Optional[float] = None
-    confidence: Optional[float] = None
+    start: float | None = None
+    confidence: float | None = None
 
 
 class Section(Model):
@@ -30,10 +30,10 @@ class Section(Model):
     mode_confidence: float
     time_signature: int
     time_signature_confidence: float
-    confidence: Optional[float] = None
-    mode: Optional[int] = None
-    key: Optional[int] = None
-    start: Optional[float] = None
+    confidence: float | None = None
+    mode: int | None = None
+    key: int | None = None
+    start: float | None = None
 
 
 class Segment(Model):
@@ -46,12 +46,12 @@ class Segment(Model):
     duration: float
     loudness_start: float
     loudness_max: float
-    pitches: List[float]
-    timbre: List[float]
-    confidence: Optional[float] = None
-    loudness_end: Optional[float] = None
-    loudness_max_time: Optional[float] = None
-    start: Optional[float] = None
+    pitches: list[float]
+    timbre: list[float]
+    confidence: float | None = None
+    loudness_end: float | None = None
+    loudness_max_time: float | None = None
+    start: float | None = None
 
 
 class AudioAnalysis(Model):
@@ -64,10 +64,10 @@ class AudioAnalysis(Model):
     for more details.
     """
 
-    bars: List[TimeInterval]
-    beats: List[TimeInterval]
-    sections: List[Section]
-    segments: List[Segment]
-    tatums: List[TimeInterval]
+    bars: list[TimeInterval]
+    beats: list[TimeInterval]
+    sections: list[Section]
+    segments: list[Segment]
+    tatums: list[TimeInterval]
     meta: dict
     track: dict

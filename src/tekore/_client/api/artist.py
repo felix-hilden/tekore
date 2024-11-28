@@ -1,4 +1,4 @@
-from typing import List, Union
+from __future__ import annotations
 
 from tekore.model import AlbumGroup, FullArtist, FullTrack, SimpleAlbumPaging
 
@@ -27,7 +27,7 @@ class SpotifyArtist(SpotifyBase):
     @scopes()
     @chunked("artist_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullArtist, "artists"))
-    def artists(self, artist_ids: list) -> List[FullArtist]:
+    def artists(self, artist_ids: list) -> list[FullArtist]:
         """
         Get information for multiple artists.
 
@@ -44,8 +44,8 @@ class SpotifyArtist(SpotifyBase):
     def artist_albums(
         self,
         artist_id: str,
-        include_groups: List[Union[str, AlbumGroup]] = None,
-        market: str = None,
+        include_groups: list[str | AlbumGroup] | None = None,
+        market: str | None = None,
         limit: int = 20,
         offset: int = 0,
     ) -> SimpleAlbumPaging:
@@ -77,7 +77,7 @@ class SpotifyArtist(SpotifyBase):
 
     @scopes()
     @send_and_process(model_list(FullTrack, "tracks"))
-    def artist_top_tracks(self, artist_id: str, market: str) -> List[FullTrack]:
+    def artist_top_tracks(self, artist_id: str, market: str) -> list[FullTrack]:
         """
         Get an artist's top 10 tracks by country.
 
@@ -92,7 +92,7 @@ class SpotifyArtist(SpotifyBase):
 
     @scopes()
     @send_and_process(model_list(FullArtist, "artists"))
-    def artist_related_artists(self, artist_id: str) -> List[FullArtist]:
+    def artist_related_artists(self, artist_id: str) -> list[FullArtist]:
         """
         Get artists similar to an identified artist.
 

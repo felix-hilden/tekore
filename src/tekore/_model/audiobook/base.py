@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from ..base import Item
 from ..member import Copyright, Image
@@ -20,19 +20,19 @@ class Narrator(Model):
 class Audiobook(Item):
     """Audiobook base."""
 
-    authors: List[Author]
-    available_markets: Optional[List[str]] = None
-    copyrights: List[Copyright]
+    authors: list[Author]
+    available_markets: list[str] | None = None
+    copyrights: list[Copyright]
     description: str
-    edition: Optional[str]
+    edition: str | None
     explicit: bool
     external_urls: dict
     html_description: str
-    images: List[Image]
-    is_externally_hosted: Optional[bool] = None
-    languages: List[str]
+    images: list[Image]
+    is_externally_hosted: bool | None = None
+    languages: list[str]
     media_type: str
     name: str
-    narrators: List[Narrator]
+    narrators: list[Narrator]
     publisher: str
-    total_chapters: Optional[int]
+    total_chapters: int | None

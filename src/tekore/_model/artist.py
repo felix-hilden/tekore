@@ -1,5 +1,3 @@
-from typing import List
-
 from .base import Item
 from .member import Followers, Image
 from .paging import CursorPaging, OffsetPaging
@@ -20,19 +18,19 @@ class FullArtist(Artist):
     """Complete artist object."""
 
     followers: Followers
-    genres: List[str]
-    images: List[Image]
+    genres: list[str]
+    images: list[Image]
     popularity: int
 
 
 class FullArtistCursorPaging(CursorPaging):
     """Paging of full artists."""
 
-    items: List[FullArtist]
+    items: list[FullArtist]
     total: int
 
 
 class FullArtistOffsetPaging(OffsetPaging):
     """Paging of full artists."""
 
-    items: List[FullArtist]
+    items: list[FullArtist]

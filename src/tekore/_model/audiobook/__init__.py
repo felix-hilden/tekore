@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from ..paging import OffsetPaging
 from .base import Audiobook, Author, Narrator
@@ -11,10 +11,10 @@ class SimpleAudiobook(Audiobook):
     May contain :attr:`chapters`, but that is likely an error.
     """
 
-    chapters: Optional[dict] = None
+    chapters: dict | None = None
 
 
 class SimpleAudiobookPaging(OffsetPaging):
     """Paging of simplified audiobooks."""
 
-    items: List[SimpleAudiobook]
+    items: list[SimpleAudiobook]

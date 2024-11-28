@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import webbrowser
 from secrets import token_urlsafe
-from typing import Union
 from urllib.parse import parse_qs, urlparse
 
 from .expiring import Credentials, Token
@@ -112,7 +113,7 @@ class UserAuth:
 
     def __init__(
         self,
-        cred: Union[Credentials, RefreshingCredentials],
+        cred: Credentials | RefreshingCredentials,
         scope=None,
         pkce: bool = False,
     ):
@@ -138,8 +139,8 @@ class UserAuth:
         return type(self).__name__ + "(" + ", ".join(options) + ")"
 
     def request_token(
-        self, code: str = None, state: str = None, url: str = None
-    ) -> Union[Token, RefreshingToken]:
+        self, code: str | None = None, state: str | None = None, url: str | None = None
+    ) -> Token | RefreshingToken:
         """
         Verify state consistency and request token.
 
@@ -154,7 +155,7 @@ class UserAuth:
 
         Returns
         -------
-        Union[Token, RefreshingToken]
+        Token | RefreshingToken
             access token
 
         Raises
@@ -201,7 +202,7 @@ def prompt_for_user_token(
     client_id: str,
     client_secret: str,
     redirect_uri: str,
-    scope=None,
+    scope = None,
     open_browser: bool = True,
 ) -> RefreshingToken:
     """
@@ -272,7 +273,7 @@ def refresh_user_token(
 
 
 def prompt_for_pkce_token(
-    client_id: str, redirect_uri: str, scope=None, open_browser: bool = True
+    client_id: str, redirect_uri: str, scope = None, open_browser: bool = True
 ) -> RefreshingToken:
     """
     Prompt for manual authorisation with PKCE.

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from .base import Item
 from .member import Followers, Image
@@ -21,9 +21,9 @@ class User(Item):
     """
 
     external_urls: dict
-    display_name: Optional[str] = None
-    followers: Optional[Followers] = None
-    images: Optional[List[Image]] = None
+    display_name: str | None = None
+    followers: Followers | None = None
+    images: list[Image] | None = None
 
 
 class PrivateUser(User):
@@ -37,11 +37,11 @@ class PrivateUser(User):
     ``user-read-birthdate`` scope was granted to the token.
     """
 
-    country: Optional[str] = None
-    email: Optional[str] = None
-    explicit_content: Optional[ExplicitContent] = None
-    product: Optional[str] = None
-    birthday: Optional[str] = None
+    country: str | None = None
+    email: str | None = None
+    explicit_content: ExplicitContent | None = None
+    product: str | None = None
+    birthday: str | None = None
 
 
 class PublicUser(User):

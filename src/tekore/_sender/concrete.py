@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from httpx import AsyncClient, Client
 from httpx import Response as HTTPXResponse
@@ -6,7 +6,7 @@ from httpx import Response as HTTPXResponse
 from .base import Request, Response, Sender
 
 
-def try_parse_json(response: HTTPXResponse) -> Optional[dict]:
+def try_parse_json(response: HTTPXResponse) -> dict | None:
     """Parse json content or return None if not successful."""
     try:
         return response.json()
@@ -30,7 +30,7 @@ class SyncSender(Sender):
         :class:`httpx.Client` to use when sending requests
     """
 
-    def __init__(self, client: Client = None):
+    def __init__(self, client: Client | None = None):
         self.client = client or Client()
 
     def send(self, request: Request) -> Response:
@@ -77,7 +77,7 @@ class AsyncSender(Sender):
         :class:`httpx.AsyncClient` to use when sending requests
     """
 
-    def __init__(self, client: AsyncClient = None):
+    def __init__(self, client: AsyncClient | None = None):
         self.client = client or AsyncClient()
 
     async def send(self, request: Request) -> Response:

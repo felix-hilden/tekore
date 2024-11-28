@@ -1,4 +1,6 @@
-from typing import Callable
+from __future__ import annotations
+
+from collections.abc import Callable
 
 from tekore.model import Model
 
@@ -17,7 +19,7 @@ def top_item(item: str) -> Callable:
     return post_func
 
 
-def single(type_: Model, from_item: str = None) -> Callable:
+def single(type_: Model, from_item: str | None = None) -> Callable:
     """
     Unpack dict or items in ``from_item`` into single constructor.
 
@@ -31,7 +33,7 @@ def single(type_: Model, from_item: str = None) -> Callable:
     return post_func
 
 
-def model_list(type_: Model, from_item: str = None) -> Callable:
+def model_list(type_: Model, from_item: str | None = None) -> Callable:
     """Unpack items inside ``from_item`` of dict into constructors."""
 
     def post_func(json: dict):

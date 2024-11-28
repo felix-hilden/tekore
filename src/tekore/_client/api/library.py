@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore._auth import scope
 from tekore.model import (
@@ -21,7 +21,7 @@ class SpotifyLibrary(SpotifyBase):
     @send_and_process(single(SavedAlbumPaging))
     @maximise_limit(50)
     def saved_albums(
-        self, market: str = None, limit: int = 20, offset: int = 0
+        self, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SavedAlbumPaging:
         """
         Get the albums saved in the current user's library.
@@ -40,7 +40,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("album_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_albums_contains(self, album_ids: list) -> List[bool]:
+    def saved_albums_contains(self, album_ids: list[str]) -> list[bool]:
         """
         Check if user has saved albums.
 
@@ -51,7 +51,7 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             save statuses in the same order the album IDs were given
         """
         return self._get("me/albums/contains?ids=" + ",".join(album_ids))
@@ -59,7 +59,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("album_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_albums_add(self, album_ids: list) -> None:
+    def saved_albums_add(self, album_ids: list[str]) -> None:
         """
         Save albums for current user.
 
@@ -73,7 +73,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("album_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_albums_delete(self, album_ids: list) -> None:
+    def saved_albums_delete(self, album_ids: list[str]) -> None:
         """
         Remove albums for current user.
 
@@ -88,7 +88,7 @@ class SpotifyLibrary(SpotifyBase):
     @send_and_process(single(SavedEpisodePaging))
     @maximise_limit(50)
     def saved_episodes(
-        self, market: str = None, limit: int = 20, offset: int = 0
+        self, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SavedEpisodePaging:
         """
         Get the episodes saved in the current user's library.
@@ -107,7 +107,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("episode_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_episodes_contains(self, episode_ids: list) -> List[bool]:
+    def saved_episodes_contains(self, episode_ids: list) -> list[bool]:
         """
         Check if user has saved episodes.
 
@@ -118,7 +118,7 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             save statuses in the same order the episode IDs were given
         """
         return self._get("me/episodes/contains?ids=" + ",".join(episode_ids))
@@ -155,7 +155,7 @@ class SpotifyLibrary(SpotifyBase):
     @send_and_process(single(SavedTrackPaging))
     @maximise_limit(50)
     def saved_tracks(
-        self, market: str = None, limit: int = 20, offset: int = 0
+        self, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SavedTrackPaging:
         """
         Get the songs saved in the current user's library.
@@ -174,7 +174,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("track_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_tracks_contains(self, track_ids: list) -> List[bool]:
+    def saved_tracks_contains(self, track_ids: list) -> list[bool]:
         """
         Check if user has saved tracks.
 
@@ -185,7 +185,7 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             save statuses in the same order the track IDs were given
         """
         return self._get("me/tracks/contains?ids=" + ",".join(track_ids))
@@ -222,7 +222,7 @@ class SpotifyLibrary(SpotifyBase):
     @send_and_process(single(SavedShowPaging))
     @maximise_limit(50)
     def saved_shows(
-        self, market: str = None, limit: int = 20, offset: int = 0
+        self, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SavedShowPaging:
         """
         Get the shows saved in the current user's library.
@@ -241,7 +241,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("show_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_shows_contains(self, show_ids: list) -> List[bool]:
+    def saved_shows_contains(self, show_ids: list) -> list[bool]:
         """
         Check if user has saved shows.
 
@@ -252,7 +252,7 @@ class SpotifyLibrary(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             save statuses in the same order the show IDs were given
         """
         return self._get("me/shows/contains?ids=" + ",".join(show_ids))
@@ -274,7 +274,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_shows_delete(self, show_ids: list, market: str = None) -> None:
+    def saved_shows_delete(self, show_ids: list, market: str | None = None) -> None:
         """
         Remove shows for current user.
 

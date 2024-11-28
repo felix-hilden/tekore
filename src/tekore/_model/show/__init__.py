@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from ..paging import OffsetPaging
 from ..serialise import Model
@@ -18,7 +17,7 @@ class SimpleShow(Show):
 class SimpleShowPaging(OffsetPaging):
     """Paging of simplified shows."""
 
-    items: List[SimpleShow]
+    items: list[SimpleShow]
 
 
 class SavedShow(Model):
@@ -31,4 +30,4 @@ class SavedShow(Model):
 class SavedShowPaging(OffsetPaging):
     """Paging of shows in library."""
 
-    items: List[SavedShow]
+    items: list[SavedShow]

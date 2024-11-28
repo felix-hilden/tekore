@@ -1,4 +1,6 @@
-from typing import List, Literal, Union
+from __future__ import annotations
+
+from typing import Literal
 
 from pydantic import Field
 
@@ -12,17 +14,17 @@ class LocalItem(Model):
     href: None
     name: str
     type: str
-    uri: None
+    uri: str | None
 
 
 class LocalAlbum(LocalItem):
     """Album of a locally saved track."""
 
     album_type: None
-    artists: List[None]
-    available_markets: List[None] = Field(default_factory=list)
+    artists: list[None]
+    available_markets: list[None] = Field(default_factory=list)
     external_urls: dict
-    images: List[None]
+    images: list[None]
     release_date: None
     release_date_precision: None
 
@@ -43,10 +45,10 @@ class LocalTrack(LocalItem):
     """
 
     album: LocalAlbum
-    artists: List[LocalArtist]
-    available_markets: List[None] = Field(default_factory=list)
+    artists: list[LocalArtist]
+    available_markets: list[None] = Field(default_factory=list)
     disc_number: int
-    duration_ms: Union[int, dict]
+    duration_ms: int | dict
     explicit: bool
     external_ids: dict
     external_urls: dict
@@ -54,4 +56,4 @@ class LocalTrack(LocalItem):
     popularity: int
     preview_url: None
     track_number: int
-    uri: str
+    uri: str | None

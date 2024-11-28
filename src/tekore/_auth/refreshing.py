@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from __future__ import annotations
 
 from .._sender import Sender
 from .expiring import AccessToken, Credentials, Token
@@ -54,7 +54,7 @@ class RefreshingToken(AccessToken):
         return self._token.access_token
 
     @property
-    def refresh_token(self) -> Union[str, None]:
+    def refresh_token(self) -> str | None:
         """
         Refresh token for generating new access tokens.
 
@@ -125,9 +125,9 @@ class RefreshingCredentials:
     def __init__(
         self,
         client_id: str,
-        client_secret: str = None,
-        redirect_uri: str = None,
-        sender: Sender = None,
+        client_secret: str | None = None,
+        redirect_uri: str | None = None,
+        sender: Sender | None = None,
     ):
         self.credentials = Credentials(
             client_id, client_secret, redirect_uri, sender, asynchronous=False
@@ -155,7 +155,7 @@ class RefreshingCredentials:
         return RefreshingToken(token, self.credentials)
 
     def user_authorisation_url(
-        self, scope=None, state: str = None, show_dialog: bool = False
+        self, scope = None, state: str | None = None, show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.
@@ -221,8 +221,8 @@ class RefreshingCredentials:
         return RefreshingToken(token, self.credentials)
 
     def pkce_user_authorisation(
-        self, scope=None, state: str = None, verifier_bytes: int = 32
-    ) -> Tuple[str, str]:
+        self, scope = None, state: str | None = None, verifier_bytes: int = 32
+    ) -> tuple[str, str]:
         """
         Construct authorisation URL and verifier.
 
@@ -245,7 +245,7 @@ class RefreshingCredentials:
 
         Returns
         -------
-        Tuple[str, str]
+        tuple[str, str]
             authorisation URL and PKCE code verifier
         """
         return self.credentials.pkce_user_authorisation(scope, state, verifier_bytes)

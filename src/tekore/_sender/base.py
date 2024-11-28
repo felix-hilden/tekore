@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from collections.abc import Coroutine
 from dataclasses import dataclass
-from typing import Coroutine, Optional, Union
 
 
 @dataclass
@@ -9,11 +11,11 @@ class Request:
 
     method: str
     url: str
-    params: Optional[dict] = None
-    headers: Optional[dict] = None
-    data: Optional[dict] = None
-    json: Optional[dict] = None
-    content: Optional[str] = None
+    params: dict | None = None
+    headers: dict | None = None
+    data: dict | None = None
+    json: dict | None = None
+    content: str | None = None
 
 
 @dataclass
@@ -23,7 +25,7 @@ class Response:
     url: str
     headers: dict
     status_code: int
-    content: Optional[dict]
+    content: dict | None
 
 
 class Sender(ABC):
@@ -35,7 +37,7 @@ class Sender(ABC):
     @abstractmethod
     def send(
         self, request: Request
-    ) -> Union[Response, Coroutine[None, None, Response]]:
+    ) -> Response | Coroutine[None, None, Response]:
         """
         Send a request.
 
@@ -56,5 +58,5 @@ class Sender(ABC):
         """Sender asynchronicity mode."""
 
     @abstractmethod
-    def close(self) -> Union[None, Coroutine[None, None, None]]:
+    def close(self) -> None | Coroutine[None, None, None]:
         """Close underlying client."""

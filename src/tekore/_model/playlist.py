@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Literal, Optional, Union
+from typing import Literal
 
 from .base import Item
 from .episode import FullEpisode
@@ -33,7 +35,7 @@ class FullPlaylistEpisode(FullEpisode):
     :attr:`available_markets` is undocumented.
     """
 
-    available_markets: Optional[List[str]] = None
+    available_markets: list[str] | None = None
     episode: Literal[True]
     track: Literal[False]
 
@@ -56,16 +58,16 @@ class PlaylistTrack(Model):
     added_at: datetime
     added_by: PublicUser
     is_local: bool
-    track: Union[FullPlaylistTrack, FullPlaylistEpisode, LocalPlaylistTrack, None]
+    track: FullPlaylistTrack | FullPlaylistEpisode | LocalPlaylistTrack | None
 
-    primary_color: Optional[str]
-    video_thumbnail: Optional[dict]
+    primary_color: str | None
+    video_thumbnail: dict | None
 
 
 class PlaylistTrackPaging(OffsetPaging):
     """Paging of playlist tracks."""
 
-    items: List[PlaylistTrack]
+    items: list[PlaylistTrack]
 
 
 class Playlist(Item):
@@ -76,15 +78,15 @@ class Playlist(Item):
     """
 
     collaborative: bool
-    description: Optional[str]
+    description: str | None
     external_urls: dict
-    images: Optional[List[Image]]
+    images: list[Image] | None
     name: str
     owner: PublicUser
-    public: Optional[bool]
+    public: bool | None
     snapshot_id: str
 
-    primary_color: Optional[str]
+    primary_color: str | None
 
 
 class SimplePlaylist(Playlist):
@@ -103,4 +105,4 @@ class FullPlaylist(Playlist):
 class SimplePlaylistPaging(OffsetPaging):
     """Paging of simplified playlists."""
 
-    items: List[Optional[SimplePlaylist]]
+    items: list[SimplePlaylist | None]

@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore.model import FullEpisode
 
@@ -13,7 +13,7 @@ class SpotifyEpisode(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullEpisode))
-    def episode(self, episode_id: str, market: str = None) -> FullEpisode:
+    def episode(self, episode_id: str, market: str | None = None) -> FullEpisode:
         """
         Get information for an episode.
 
@@ -33,7 +33,7 @@ class SpotifyEpisode(SpotifyBase):
     @scopes()
     @chunked("episode_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullEpisode, "episodes"))
-    def episodes(self, episode_ids: list, market: str = None) -> List[FullEpisode]:
+    def episodes(self, episode_ids: list, market: str | None = None) -> list[FullEpisode]:
         """
         Get information for multiple episodes.
 

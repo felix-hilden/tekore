@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from .base import Identifiable
 from .serialise import Model, StrEnum
@@ -29,7 +29,7 @@ class RecommendationSeed(Identifiable):
 
     afterFilteringSize: int
     afterRelinkingSize: int
-    href: Optional[str]
+    href: str | None
     initialPoolSize: int
     type: str
 
@@ -37,5 +37,5 @@ class RecommendationSeed(Identifiable):
 class Recommendations(Model):
     """Track recommendations."""
 
-    seeds: List[RecommendationSeed]
-    tracks: List[FullTrack]
+    seeds: list[RecommendationSeed]
+    tracks: list[FullTrack]

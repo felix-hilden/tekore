@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import time
 from abc import ABC, abstractmethod
-from typing import Union
 
 from ..scope import Scope
 
@@ -60,7 +61,7 @@ class Token(AccessToken):
         return self._access_token
 
     @property
-    def refresh_token(self) -> Union[str, None]:
+    def refresh_token(self) -> str | None:
         """
         Refresh token for generating new access tokens.
 

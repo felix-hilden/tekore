@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import asyncio
 import time
 from collections import deque
-from typing import Coroutine, Optional, Union
+from collections.abc import Coroutine
 from urllib.parse import urlencode
 
 from .base import Request, Response
@@ -18,7 +20,7 @@ class ExtendingSender(Sender):
         request sender, :class:`SyncSender` if not specified
     """
 
-    def __init__(self, sender: Optional[Sender]):
+    def __init__(self, sender: Sender | None):
         self.sender = sender or SyncSender()
 
     @property
@@ -26,7 +28,7 @@ class ExtendingSender(Sender):
         """Sender asynchronicity, delegated to the underlying sender."""
         return self.sender.is_async
 
-    def close(self) -> Union[None, Coroutine[None, None, None]]:
+    def close(self) -> None | Coroutine[None, None, None]:
         """
         Close the underlying sender.
 
@@ -71,7 +73,7 @@ class RetryingSender(ExtendingSender):
         tk.RetryingSender(retries=3)
     """
 
-    def __init__(self, retries: int = 0, sender: Sender = None):
+    def __init__(self, retries: int = 0, sender: Sender | None = None):
         super().__init__(sender)
         self.retries = retries
 
@@ -81,7 +83,7 @@ class RetryingSender(ExtendingSender):
 
     def send(
         self, request: Request
-    ) -> Union[Response, Coroutine[None, None, Response]]:
+    ) -> Response | Coroutine[None, None, Response] | None:
         """Delegate request to underlying sender and retry if failed."""
         if self.is_async:
             return self._async_send(request)
@@ -101,8 +103,9 @@ class RetryingSender(ExtendingSender):
                 delay_seconds *= 2
             else:
                 return r
+        return None
 
-    async def _async_send(self, request: Request) -> Response:
+    async def _async_send(self, request: Request) -> Response | None:
         tries = self.retries + 1
         delay_seconds = 1
 
@@ -118,7 +121,7 @@ class RetryingSender(ExtendingSender):
                 delay_seconds *= 2
             else:
                 return r
-
+        return None
 
 class CachingSender(ExtendingSender):
     """
@@ -146,25 +149,25 @@ class CachingSender(ExtendingSender):
         request sender, :class:`SyncSender` if not specified
     """
 
-    def __init__(self, max_size: int = None, sender: Sender = None):
+    def __init__(self, max_size: int | None = None, sender: Sender | None = None):
         super().__init__(sender)
         self._max_size = max_size
         self._cache = {}
         self._deque = deque(maxlen=self.max_size)
-        self._lock: Optional[asyncio.Lock] = None
+        self._lock: asyncio.Lock | None = None
 
     def __repr__(self):
         contains = f"(max_size={self._max_size}, sender={self.sender!r})"
         return type(self).__name__ + contains
 
     @property
-    def max_size(self) -> Optional[int]:
+    def max_size(self) -> int | None:
         """
         Maximum amount of requests stored in the cache.
 
         Returns
         -------
-        Optional[int]
+        int | None
             maximum cache size
         """
         return self._max_size
@@ -175,7 +178,7 @@ class CachingSender(ExtendingSender):
         self._deque.clear()
 
     @staticmethod
-    def _vary_key(request: Request, vary: Optional[list]):
+    def _vary_key(request: Request, vary: list | None) -> str | None:
         if vary is not None:
             return " ".join(request.headers[k] for k in vary)
 
@@ -289,7 +292,7 @@ class CachingSender(ExtendingSender):
 
     def send(
         self, request: Request
-    ) -> Union[Response, Coroutine[None, None, Response]]:
+    ) -> Response | Coroutine[None, None, Response]:
         """Maybe load request from cache, or delegate to underlying sender."""
         if self.is_async:
             return self._async_send(request)

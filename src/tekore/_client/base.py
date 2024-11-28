@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from contextvars import ContextVar
-from typing import Coroutine, Optional, Union
+from collections.abc import Coroutine
 
 from tekore._sender import Client, Request, Response, Sender
 
@@ -13,7 +15,7 @@ def build_url(url: str) -> str:
     return url
 
 
-def parse_url_params(params: Optional[dict]) -> Optional[dict]:
+def parse_url_params(params: dict | None) -> dict | None:
     """Generate parameter dict and filter Nones."""
     params = params or {}
     return {k: v for k, v in params.items() if v is not None} or None
@@ -28,9 +30,9 @@ class SpotifyBase(Client):
 
     def __init__(
         self,
-        token=None,
-        sender: Sender = None,
-        asynchronous: bool = None,
+        token = None,
+        sender: Sender | None = None,
+        asynchronous: bool | None = None,
         max_limits_on: bool = False,
         chunked_on: bool = False,
     ):
@@ -98,8 +100,7 @@ class SpotifyBase(Client):
         }
 
     def send(
-        self, request: Request
-    ) -> Union[Response, Coroutine[None, None, Response]]:
+        self, request: Request) -> Response | Coroutine[None, None, Response]:
         """
         Build request url and headers, and send with underlying sender.
 
@@ -116,7 +117,7 @@ class SpotifyBase(Client):
         return self.sender.send(request)
 
     @staticmethod
-    def _request(method: str, url: str, payload: dict = None, params: dict = None):
+    def _request(method: str, url: str, payload: dict | None = None, params: dict | None = None):
         return (
             Request(
                 method=method, url=url, params=parse_url_params(params), json=payload
@@ -124,14 +125,14 @@ class SpotifyBase(Client):
             (),
         )
 
-    def _get(self, url: str, payload: dict = None, **params):
+    def _get(self, url: str, payload: dict | None = None, **params):
         return self._request("GET", url, payload=payload, params=params)
 
-    def _post(self, url: str, payload: dict = None, **params):
+    def _post(self, url: str, payload: dict | None = None, **params):
         return self._request("POST", url, payload=payload, params=params)
 
-    def _delete(self, url: str, payload: dict = None, **params):
+    def _delete(self, url: str, payload: dict | None = None, **params):
         return self._request("DELETE", url, payload=payload, params=params)
 
-    def _put(self, url: str, payload: dict = None, **params):
+    def _put(self, url: str, payload: dict | None = None, **params):
         return self._request("PUT", url, payload=payload, params=params)

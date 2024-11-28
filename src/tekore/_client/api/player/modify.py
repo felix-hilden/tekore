@@ -1,4 +1,4 @@
-from typing import Union
+from __future__ import annotations
 
 from tekore._auth import scope
 from tekore._convert import to_uri
@@ -9,7 +9,7 @@ from ...decor import scopes, send_and_process
 from ...process import nothing
 
 
-def offset_to_dict(offset: Union[int, str]):
+def offset_to_dict(offset: int | str):
     """
     Parse playback start offset to an appropriate payload member.
 
@@ -43,7 +43,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_resume(self, device_id: str = None) -> None:
+    def playback_resume(self, device_id: str | None = None) -> None:
         """
         Resume user's playback.
 
@@ -59,9 +59,9 @@ class SpotifyPlayerModify(SpotifyBase):
     def playback_start_tracks(
         self,
         track_ids: list,
-        offset: Union[int, str] = None,
-        position_ms: int = None,
-        device_id: str = None,
+        offset: int | str | None = None,
+        position_ms: int | None = None,
+        device_id: str | None = None,
     ) -> None:
         """
         Start playback of one or more tracks.
@@ -90,9 +90,9 @@ class SpotifyPlayerModify(SpotifyBase):
     def playback_start_context(
         self,
         context_uri: str,
-        offset: Union[int, str] = None,
-        position_ms: int = None,
-        device_id: str = None,
+        offset: int | str | None = None,
+        position_ms: int | None = None,
+        device_id: str | None = None,
     ) -> None:
         """
         Start playback of a context: an album, artist or playlist.
@@ -119,7 +119,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_queue_add(self, uri: str, device_id: str = None) -> None:
+    def playback_queue_add(self, uri: str, device_id: str | None = None) -> None:
         """
         Add a track or an episode to a user's queue.
 
@@ -134,7 +134,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_pause(self, device_id: str = None) -> None:
+    def playback_pause(self, device_id: str | None = None) -> None:
         """
         Pause a user's playback.
 
@@ -147,7 +147,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_next(self, device_id: str = None) -> None:
+    def playback_next(self, device_id: str | None = None) -> None:
         """
         Skip user's playback to next track.
 
@@ -160,7 +160,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_previous(self, device_id: str = None) -> None:
+    def playback_previous(self, device_id: str | None = None) -> None:
         """
         Skip user's playback to previous track.
 
@@ -173,7 +173,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_seek(self, position_ms: int, device_id: str = None) -> None:
+    def playback_seek(self, position_ms: int, device_id: str | None = None) -> None:
         """
         Seek to position in current playing track.
 
@@ -189,7 +189,7 @@ class SpotifyPlayerModify(SpotifyBase):
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
     def playback_repeat(
-        self, state: Union[str, RepeatState], device_id: str = None
+        self, state: str | RepeatState, device_id: str | None = None
     ) -> None:
         """
         Set repeat mode for playback.
@@ -205,7 +205,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_shuffle(self, state: bool, device_id: str = None) -> None:
+    def playback_shuffle(self, state: bool, device_id: str | None = None) -> None:
         """
         Toggle shuffle for user's playback.
 
@@ -221,7 +221,7 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_volume(self, volume_percent: int, device_id: str = None) -> None:
+    def playback_volume(self, volume_percent: int, device_id: str | None = None) -> None:
         """
         Set volume for user's playback.
 

@@ -1,5 +1,5 @@
-from typing import Optional, Sequence
-
+from __future__ import annotations
+from collections.abc import Sequence
 from .serialise import Model
 
 
@@ -9,7 +9,7 @@ class Paging(Model):
     href: str
     items: Sequence[Model]
     limit: int
-    next: Optional[str]
+    next: str | None
 
 
 class OffsetPaging(Paging):
@@ -21,13 +21,13 @@ class OffsetPaging(Paging):
 
     total: int
     offset: int
-    previous: Optional[str]
+    previous: str | None
 
 
 class Cursor(Model):
     """Data cursor."""
 
-    after: Optional[str]
+    after: str | None
 
 
 class CursorPaging(Paging):

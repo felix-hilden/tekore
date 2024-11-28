@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Optional
 
 from ..album.base import Album
 from ..member import Copyright
@@ -18,10 +19,10 @@ class FullAlbum(Album):
     and it appears to only be ``True`` when it is present.
     """
 
-    copyrights: List[Copyright]
+    copyrights: list[Copyright]
     external_ids: dict
-    genres: List[str]
-    label: Optional[str]
+    genres: list[str]
+    label: str | None
     popularity: int
     tracks: SimpleTrackPaging
 
@@ -36,4 +37,4 @@ class SavedAlbum(Model):
 class SavedAlbumPaging(OffsetPaging):
     """Paging of albums in library."""
 
-    items: List[SavedAlbum]
+    items: list[SavedAlbum]

@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore.model import FullChapter
 
@@ -13,7 +13,7 @@ class SpotifyChapter(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullChapter))
-    def chapter(self, chapter_id: str, market: str = None) -> FullChapter:
+    def chapter(self, chapter_id: str, market: str | None = None) -> FullChapter:
         """
         Get information for a chapter.
 
@@ -33,7 +33,7 @@ class SpotifyChapter(SpotifyBase):
     @scopes()
     @chunked("chapter_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullChapter, "chapters"))
-    def chapters(self, chapter_ids: list, market: str = None) -> List[FullChapter]:
+    def chapters(self, chapter_ids: list, market: str | None = None) -> list[FullChapter]:
         """
         Get information for multiple chapters.
 

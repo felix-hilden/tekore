@@ -1,5 +1,7 @@
+from __future__ import annotations
+
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
 
 def _chunks(lst: list, n: int, reverse: bool) -> list:
@@ -42,10 +44,10 @@ def chunked(
     arg_pos: int,
     chunk_size: int,
     process: Callable,
-    reverse: str = None,
-    reverse_pos: int = None,
-    chain: str = None,
-    chain_pos: int = None,
+    reverse: str | None = None,
+    reverse_pos: int | None = None,
+    chain: str | None = None,
+    chain_pos: int | None = None,
 ) -> Callable:
     """
     Decorate a function to make multiple calls splitting a list argument.

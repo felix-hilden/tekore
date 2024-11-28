@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from ..album.base import Album, AlbumType
 from ..paging import OffsetPaging
@@ -25,10 +25,10 @@ class SimpleAlbum(Album):
     and it appears to only be ``True`` when it is present.
     """
 
-    album_group: Optional[AlbumGroup] = None
+    album_group: AlbumGroup | None = None
 
 
 class SimpleAlbumPaging(OffsetPaging):
     """Paging containing simplified albums."""
 
-    items: List[SimpleAlbum]
+    items: list[SimpleAlbum]

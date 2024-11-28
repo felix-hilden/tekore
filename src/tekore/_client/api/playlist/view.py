@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from functools import wraps
-from typing import Callable, Iterable, List, Union
+from collections.abc import Callable, Iterable
 
 from tekore._auth import scope
 from tekore.model import FullPlaylist, Image, PlaylistTrackPaging, SimplePlaylistPaging
@@ -109,10 +111,10 @@ class SpotifyPlaylistView(SpotifyBase):
     def playlist(
         self,
         playlist_id: str,
-        fields: str = None,
-        market: str = None,
-        as_tracks: Union[bool, Iterable[str]] = False,
-    ) -> Union[FullPlaylist, dict]:
+        fields: str | None = None,
+        market: str | None = None,
+        as_tracks: bool | Iterable[str] = False,
+    ) -> FullPlaylist | dict:
         """
         Get playlist of a user.
 
@@ -139,7 +141,7 @@ class SpotifyPlaylistView(SpotifyBase):
 
         Returns
         -------
-        Union[FullPlaylist, dict]
+        FullPlaylist | dict
             playlist object, or raw dictionary if ``fields``
             or ``as_tracks`` was specified
         """
@@ -153,7 +155,7 @@ class SpotifyPlaylistView(SpotifyBase):
 
     @scopes()
     @send_and_process(model_list(Image))
-    def playlist_cover_image(self, playlist_id: str) -> List[Image]:
+    def playlist_cover_image(self, playlist_id: str) -> list[Image]:
         """
         Get cover image of a playlist.
 
@@ -174,12 +176,12 @@ class SpotifyPlaylistView(SpotifyBase):
     def playlist_items(
         self,
         playlist_id: str,
-        fields: str = None,
-        market: str = None,
-        as_tracks: Union[bool, Iterable[str]] = False,
+        fields: str | None = None,
+        market: str | None = None,
+        as_tracks: bool | Iterable[str] = False,
         limit: int = 100,
         offset: int = 0,
-    ) -> Union[PlaylistTrackPaging, dict]:
+    ) -> PlaylistTrackPaging | dict:
         """
         Full details of items on a playlist.
 
@@ -210,7 +212,7 @@ class SpotifyPlaylistView(SpotifyBase):
 
         Returns
         -------
-        Union[PlaylistTrackPaging, dict]
+        PlaylistTrackPaging | dict
             paging object containing playlist items, or raw dictionary
             if ``fields`` or ``as_tracks`` was specified
         """
