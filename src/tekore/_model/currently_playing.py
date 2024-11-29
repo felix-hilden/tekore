@@ -6,7 +6,7 @@ from .episode import FullEpisode
 from .local import LocalTrack
 from .serialise import Model, StrEnum
 from .track import FullTrack
-
+from typing import Union
 
 class CurrentlyPlayingType(StrEnum):
     """Type of currently playing item."""
@@ -46,7 +46,7 @@ class Actions(Model):
     disallows: Disallows
 
 
-PlaybackItem = FullTrack | LocalTrack | FullEpisode | None
+PlaybackItem = Union[FullTrack, LocalTrack, FullEpisode, None]
 
 
 class CurrentlyPlaying(Model):
