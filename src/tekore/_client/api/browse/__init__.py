@@ -91,7 +91,11 @@ class SpotifyBrowse(SpotifyBase):
     @send_and_process(single(CategoryPaging, from_item="categories"))
     @maximise_limit(50)
     def categories(
-        self, country: str | None = None, locale: str | None = None, limit: int = 20, offset: int = 0
+        self,
+        country: str | None = None,
+        locale: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> CategoryPaging:
         """
         Get a list of categories used to tag items in Spotify.
@@ -142,7 +146,11 @@ class SpotifyBrowse(SpotifyBase):
     @send_and_process(single(SimplePlaylistPaging, from_item="playlists"))
     @maximise_limit(50)
     def category_playlists(
-        self, category_id: str, country: str | None = None, limit: int = 20, offset: int = 0
+        self,
+        category_id: str,
+        country: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> SimplePlaylistPaging:
         """
         Get a list of Spotify playlists tagged with a particular category.

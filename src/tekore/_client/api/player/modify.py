@@ -221,7 +221,9 @@ class SpotifyPlayerModify(SpotifyBase):
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)
-    def playback_volume(self, volume_percent: int, device_id: str | None = None) -> None:
+    def playback_volume(
+        self, volume_percent: int, device_id: str | None = None
+    ) -> None:
         """
         Set volume for user's playback.
 

@@ -43,9 +43,7 @@ class Client(ExtendingSender):
             )
             warn(msg, SenderConflictWarning, stacklevel=3)
 
-    def send(
-        self, request: Request
-    ) -> Response | Coroutine[None, None, Response]:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """Send request with underlying sender."""
         return self.sender.send(request)
 

@@ -155,7 +155,7 @@ class RefreshingCredentials:
         return RefreshingToken(token, self.credentials)
 
     def user_authorisation_url(
-        self, scope = None, state: str | None = None, show_dialog: bool = False
+        self, scope=None, state: str | None = None, show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.
@@ -221,7 +221,7 @@ class RefreshingCredentials:
         return RefreshingToken(token, self.credentials)
 
     def pkce_user_authorisation(
-        self, scope = None, state: str | None = None, verifier_bytes: int = 32
+        self, scope=None, state: str | None = None, verifier_bytes: int = 32
     ) -> tuple[str, str]:
         """
         Construct authorisation URL and verifier.

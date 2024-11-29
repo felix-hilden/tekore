@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from contextvars import ContextVar
 from collections.abc import Coroutine
+from contextvars import ContextVar
 
 from tekore._sender import Client, Request, Response, Sender
 
@@ -30,7 +30,7 @@ class SpotifyBase(Client):
 
     def __init__(
         self,
-        token = None,
+        token=None,
         sender: Sender | None = None,
         asynchronous: bool | None = None,
         max_limits_on: bool = False,
@@ -99,8 +99,7 @@ class SpotifyBase(Client):
             "Content-Type": content_type,
         }
 
-    def send(
-        self, request: Request) -> Response | Coroutine[None, None, Response]:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """
         Build request url and headers, and send with underlying sender.
 
@@ -117,7 +116,9 @@ class SpotifyBase(Client):
         return self.sender.send(request)
 
     @staticmethod
-    def _request(method: str, url: str, payload: dict | None = None, params: dict | None = None):
+    def _request(
+        method: str, url: str, payload: dict | None = None, params: dict | None = None
+    ):
         return (
             Request(
                 method=method, url=url, params=parse_url_params(params), json=payload

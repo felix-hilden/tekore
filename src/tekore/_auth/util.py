@@ -112,10 +112,7 @@ class UserAuth:
     """
 
     def __init__(
-        self,
-        cred: Credentials | RefreshingCredentials,
-        scope=None,
-        pkce: bool = False,
+        self, cred: Credentials | RefreshingCredentials, scope=None, pkce: bool = False
     ):
         self._cred = cred
         self.state = gen_state()
@@ -202,7 +199,7 @@ def prompt_for_user_token(
     client_id: str,
     client_secret: str,
     redirect_uri: str,
-    scope = None,
+    scope=None,
     open_browser: bool = True,
 ) -> RefreshingToken:
     """
@@ -273,7 +270,7 @@ def refresh_user_token(
 
 
 def prompt_for_pkce_token(
-    client_id: str, redirect_uri: str, scope = None, open_browser: bool = True
+    client_id: str, redirect_uri: str, scope=None, open_browser: bool = True
 ) -> RefreshingToken:
     """
     Prompt for manual authorisation with PKCE.

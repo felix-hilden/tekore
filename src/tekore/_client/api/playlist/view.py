@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from functools import wraps
 from collections.abc import Callable, Iterable
+from functools import wraps
 
 from tekore._auth import scope
 from tekore.model import FullPlaylist, Image, PlaylistTrackPaging, SimplePlaylistPaging

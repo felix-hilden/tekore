@@ -35,9 +35,7 @@ class Sender(ABC):
         return type(self).__name__ + "()"
 
     @abstractmethod
-    def send(
-        self, request: Request
-    ) -> Response | Coroutine[None, None, Response]:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """
         Send a request.
 

@@ -181,7 +181,7 @@ class Credentials(Client):
         return self._token_request(payload, auth=True), (refresh_token,)
 
     def pkce_user_authorisation(
-        self, scope = None, state: str | None = None, verifier_bytes: int = 32
+        self, scope=None, state: str | None = None, verifier_bytes: int = 32
     ) -> tuple[str, str]:
         """
         Construct authorisation URL and verifier.

@@ -56,7 +56,11 @@ class SpotifyAudiobook(SpotifyBase):
     @send_and_process(single(SimpleChapterPaging))
     @maximise_limit(50)
     def audiobook_chapters(
-        self, audiobook_id: str, market: str | None = None, limit: int = 20, offset: int = 0
+        self,
+        audiobook_id: str,
+        market: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> SimpleChapterPaging:
         """
         Get chapters of an audiobook.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Generator
+
 from tekore._sender import BadRequest
 from tekore.model import Model, OffsetPaging, Paging
 

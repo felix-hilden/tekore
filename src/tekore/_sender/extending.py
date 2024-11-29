@@ -123,6 +123,7 @@ class RetryingSender(ExtendingSender):
                 return r
         return None
 
+
 class CachingSender(ExtendingSender):
     """
     Cache successful GET requests.
@@ -290,9 +291,7 @@ class CachingSender(ExtendingSender):
             self._maybe_save(request, fresh)
             return fresh
 
-    def send(
-        self, request: Request
-    ) -> Response | Coroutine[None, None, Response]:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """Maybe load request from cache, or delegate to underlying sender."""
         if self.is_async:
             return self._async_send(request)
