@@ -9,6 +9,7 @@ readme = "readme_pypi.rst"
 license = {file = "LICENSE"}
 dynamic = ["version"]
 
+# Bump Pyright below too when changing the minimum version
 requires-python = ">=3.9"
 dependencies = [
     "httpx>=0.15,<0.28",
@@ -69,6 +70,10 @@ skip_covered = true
 
 [tool.pydocstyle]
 ignore = "D100,D104,D105,D107,D203,D212,D213,D413,D415,D416,D419"
+
+[tool.pyright]
+# https://github.com/microsoft/pyright/issues/7561
+pythonVersion = "3.9"
 
 [tool.black]
 skip-magic-trailing-comma = true
