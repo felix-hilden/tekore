@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from tekore._auth import scope
 from tekore._sender import Request
 from tekore.model import FullPlaylist
