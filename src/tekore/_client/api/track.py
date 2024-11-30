@@ -13,7 +13,7 @@ class SpotifyTrack(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullTrack))
-    def track(self, track_id: str, market: str = None) -> FullTrack:
+    def track(self, track_id: str, market: str | None = None) -> FullTrack:
         """
         Get information for a track.
 
