@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Avoid constructing query params manually (:issue:`332`)
+
 5.5.1 (2024-09-09)
 ------------------
 Fixed

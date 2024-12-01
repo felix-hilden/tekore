@@ -55,7 +55,7 @@ class SpotifyShow(SpotifyBase):
             If an application token is used and no market is specified,
             the show is considered unavailable.
         """
-        return self._get("shows/?ids=" + ",".join(show_ids), market=market)
+        return self._get("shows", ids=",".join(show_ids), market=market)
 
     @scopes()
     @send_and_process(single(SimpleEpisodePaging))

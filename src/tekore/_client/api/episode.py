@@ -48,4 +48,4 @@ class SpotifyEpisode(SpotifyBase):
             If an application token is used and no market is specified,
             the episode is considered unavailable.
         """
-        return self._get("episodes/?ids=" + ",".join(episode_ids), market=market)
+        return self._get("episodes", ids=",".join(episode_ids), market=market)

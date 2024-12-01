@@ -48,4 +48,4 @@ class SpotifyChapter(SpotifyBase):
             If an application token is used and no market is specified,
             the episode is considered unavailable.
         """
-        return self._get("chapters/?ids=" + ",".join(chapter_ids), market=market)
+        return self._get("chapters", ids=",".join(chapter_ids), market=market)
