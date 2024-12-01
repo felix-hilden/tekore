@@ -54,7 +54,7 @@ class SpotifyLibrary(SpotifyBase):
         list[bool]
             save statuses in the same order the album IDs were given
         """
-        return self._get("me/albums/contains?ids=" + ",".join(album_ids))
+        return self._get("me/albums/contains", ids=",".join(album_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("album_ids", 1, 50, return_none)
@@ -68,7 +68,7 @@ class SpotifyLibrary(SpotifyBase):
         album_ids
             list of album IDs, max 50 without chunking
         """
-        return self._put("me/albums?ids=" + ",".join(album_ids))
+        return self._put("me/albums", ids=",".join(album_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("album_ids", 1, 50, return_none)
@@ -82,7 +82,7 @@ class SpotifyLibrary(SpotifyBase):
         album_ids
             list of album IDs, max 50 without chunking
         """
-        return self._delete("me/albums?ids=" + ",".join(album_ids))
+        return self._delete("me/albums", ids=",".join(album_ids))
 
     @scopes([scope.user_library_read])
     @send_and_process(single(SavedEpisodePaging))
@@ -121,7 +121,7 @@ class SpotifyLibrary(SpotifyBase):
         list[bool]
             save statuses in the same order the episode IDs were given
         """
-        return self._get("me/episodes/contains?ids=" + ",".join(episode_ids))
+        return self._get("me/episodes/contains", ids=",".join(episode_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("episode_ids", 1, 50, return_none)
@@ -135,7 +135,7 @@ class SpotifyLibrary(SpotifyBase):
         episode_ids
             list of episode IDs, max 50 without chunking
         """
-        return self._put("me/episodes?ids=" + ",".join(episode_ids))
+        return self._put("me/episodes", ids=",".join(episode_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("episode_ids", 1, 50, return_none)
@@ -149,7 +149,7 @@ class SpotifyLibrary(SpotifyBase):
         episode_ids
             list of episode IDs, max 50 without chunking
         """
-        return self._delete("me/episodes?ids=" + ",".join(episode_ids))
+        return self._delete("me/episodes", ids=",".join(episode_ids))
 
     @scopes([scope.user_library_read])
     @send_and_process(single(SavedTrackPaging))
@@ -188,7 +188,7 @@ class SpotifyLibrary(SpotifyBase):
         list[bool]
             save statuses in the same order the track IDs were given
         """
-        return self._get("me/tracks/contains?ids=" + ",".join(track_ids))
+        return self._get("me/tracks/contains", ids=",".join(track_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("track_ids", 1, 50, return_none)
@@ -202,7 +202,7 @@ class SpotifyLibrary(SpotifyBase):
         track_ids
             list of track IDs, max 50 without chunking
         """
-        return self._put("me/tracks/?ids=" + ",".join(track_ids))
+        return self._put("me/tracks", ids=",".join(track_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("track_ids", 1, 50, return_none)
@@ -216,7 +216,7 @@ class SpotifyLibrary(SpotifyBase):
         track_ids
             list of track IDs, max 50 without chunking
         """
-        return self._delete("me/tracks/?ids=" + ",".join(track_ids))
+        return self._delete("me/tracks", ids=",".join(track_ids))
 
     @scopes([scope.user_library_read])
     @send_and_process(single(SavedShowPaging))
@@ -255,7 +255,7 @@ class SpotifyLibrary(SpotifyBase):
         list[bool]
             save statuses in the same order the show IDs were given
         """
-        return self._get("me/shows/contains?ids=" + ",".join(show_ids))
+        return self._get("me/shows/contains", ids=",".join(show_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
@@ -269,7 +269,7 @@ class SpotifyLibrary(SpotifyBase):
         show_ids
             list of show IDs, max 50 without chunking
         """
-        return self._put("me/shows/?ids=" + ",".join(show_ids))
+        return self._put("me/shows", ids=",".join(show_ids))
 
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
@@ -288,4 +288,4 @@ class SpotifyLibrary(SpotifyBase):
             an ISO 3166-1 alpha-2 country code, only remove shows that are
             available in the specified market, overrided by token's country
         """
-        return self._delete("me/shows/?ids=" + ",".join(show_ids), market=market)
+        return self._delete("me/shows", ids=",".join(show_ids), market=market)

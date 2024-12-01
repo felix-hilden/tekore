@@ -36,7 +36,7 @@ class SpotifyArtist(SpotifyBase):
         artist_ids
             list of artist IDs, max 50 without chunking
         """
-        return self._get("artists/?ids=" + ",".join(artist_ids))
+        return self._get("artists", ids=",".join(artist_ids))
 
     @scopes()
     @send_and_process(single(SimpleAlbumPaging))

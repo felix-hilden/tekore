@@ -42,7 +42,7 @@ class SpotifyTrack(SpotifyBase):
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
         """
-        return self._get("tracks/?ids=" + ",".join(track_ids), market=market)
+        return self._get("tracks", ids=",".join(track_ids), market=market)
 
     @scopes()
     @send_and_process(single(AudioAnalysis))
@@ -75,4 +75,4 @@ class SpotifyTrack(SpotifyBase):
         track_ids
             track IDs, max 100 without chunking
         """
-        return self._get("audio-features?ids=" + ",".join(track_ids))
+        return self._get("audio-features", ids=",".join(track_ids))

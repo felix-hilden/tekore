@@ -66,4 +66,4 @@ class SpotifyAlbum(SpotifyBase):
         market
             an ISO 3166-1 alpha-2 country code or 'from_token'
         """
-        return self._get("albums/?ids=" + ",".join(album_ids), market=market)
+        return self._get("albums", ids=",".join(album_ids), market=market)

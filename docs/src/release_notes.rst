@@ -14,6 +14,10 @@ Added
 - Add missing typing for lists and dicts, modernise typing (:issue:`330`)
 - Explicitly support and test Python 3.13 (:issue:`329`)
 
+Fixed
+*****
+- Avoid constructing query params manually (:issue:`332`)
+
 5.5.1 (2024-09-09)
 ------------------
 Fixed
