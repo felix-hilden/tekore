@@ -34,7 +34,7 @@ class SpotifyChapter(SpotifyBase):
     @chunked("chapter_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullChapter, "chapters"))
     def chapters(
-        self, chapter_ids: list, market: str | None = None
+        self, chapter_ids: list[str], market: str | None = None
     ) -> list[FullChapter]:
         """
         Get information for multiple chapters.

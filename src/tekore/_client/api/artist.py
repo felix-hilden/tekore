@@ -27,7 +27,7 @@ class SpotifyArtist(SpotifyBase):
     @scopes()
     @chunked("artist_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullArtist, "artists"))
-    def artists(self, artist_ids: list) -> list[FullArtist]:
+    def artists(self, artist_ids: list[str]) -> list[FullArtist]:
         """
         Get information for multiple artists.
 

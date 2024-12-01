@@ -107,7 +107,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("episode_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_episodes_contains(self, episode_ids: list) -> list[bool]:
+    def saved_episodes_contains(self, episode_ids: list[str]) -> list[bool]:
         """
         Check if user has saved episodes.
 
@@ -126,7 +126,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("episode_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_episodes_add(self, episode_ids: list) -> None:
+    def saved_episodes_add(self, episode_ids: list[str]) -> None:
         """
         Save episodes for current user.
 
@@ -140,7 +140,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("episode_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_episodes_delete(self, episode_ids: list) -> None:
+    def saved_episodes_delete(self, episode_ids: list[str]) -> None:
         """
         Remove episodes for current user.
 
@@ -174,7 +174,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("track_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_tracks_contains(self, track_ids: list) -> list[bool]:
+    def saved_tracks_contains(self, track_ids: list[str]) -> list[bool]:
         """
         Check if user has saved tracks.
 
@@ -193,7 +193,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("track_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_tracks_add(self, track_ids: list) -> None:
+    def saved_tracks_add(self, track_ids: list[str]) -> None:
         """
         Save tracks for current user.
 
@@ -207,7 +207,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("track_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_tracks_delete(self, track_ids: list) -> None:
+    def saved_tracks_delete(self, track_ids: list[str]) -> None:
         """
         Remove tracks for current user.
 
@@ -241,7 +241,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_read])
     @chunked("show_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def saved_shows_contains(self, show_ids: list) -> list[bool]:
+    def saved_shows_contains(self, show_ids: list[str]) -> list[bool]:
         """
         Check if user has saved shows.
 
@@ -260,7 +260,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_shows_add(self, show_ids: list) -> None:
+    def saved_shows_add(self, show_ids: list[str]) -> None:
         """
         Save shows for current user.
 
@@ -274,7 +274,7 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_shows_delete(self, show_ids: list, market: str | None = None) -> None:
+    def saved_shows_delete(self, show_ids: list[str], market: str | None = None) -> None:
         """
         Remove shows for current user.
 

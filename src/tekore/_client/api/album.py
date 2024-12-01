@@ -53,7 +53,7 @@ class SpotifyAlbum(SpotifyBase):
     @scopes()
     @chunked("album_ids", 1, 20, join_lists)
     @send_and_process(model_list(FullAlbum, "albums"))
-    def albums(self, album_ids: list, market: str | None = None) -> list[FullAlbum]:
+    def albums(self, album_ids: list[str], market: str | None = None) -> list[FullAlbum]:
         """
         Get multiple albums.
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from functools import wraps
 
 
-def _chunks(lst: list, n: int, reverse: bool) -> list:
+def _chunks(lst: list, n: int, reverse: bool) -> Generator[list]:
     """
     Chunk list into length 'n' sublists.
 

@@ -58,7 +58,7 @@ class SpotifyPlayerModify(SpotifyBase):
     @send_and_process(nothing)
     def playback_start_tracks(
         self,
-        track_ids: list,
+        track_ids: list[str],
         offset: int | str | None = None,
         position_ms: int | None = None,
         device_id: str | None = None,

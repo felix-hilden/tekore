@@ -15,7 +15,7 @@ class SpotifyPlaylistItems(SpotifyBase):
     @chunked("uris", 2, 100, return_last, reverse="position", reverse_pos=3)
     @send_and_process(top_item("snapshot_id"))
     def playlist_add(
-        self, playlist_id: str, uris: list, position: int | None = None
+        self, playlist_id: str, uris: list[str], position: int | None = None
     ) -> str:
         """
         Add items.
@@ -53,7 +53,7 @@ class SpotifyPlaylistItems(SpotifyBase):
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
-    def playlist_replace(self, playlist_id: str, uris: list) -> None:
+    def playlist_replace(self, playlist_id: str, uris: list[str]) -> None:
         """
         Replace all items.
 
@@ -117,7 +117,7 @@ class SpotifyPlaylistItems(SpotifyBase):
     @chunked("uris", 2, 100, return_last, chain="snapshot_id", chain_pos=3)
     @send_and_process(top_item("snapshot_id"))
     def playlist_remove(
-        self, playlist_id: str, uris: list, snapshot_id: str | None = None
+        self, playlist_id: str, uris: list[str], snapshot_id: str | None = None
     ) -> str:
         """
         Remove items by URI.

@@ -34,7 +34,7 @@ class SpotifyAudiobook(SpotifyBase):
     @chunked("audiobook_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullAudiobook, "audiobooks"))
     def audiobooks(
-        self, audiobook_ids: list, market: str | None = None
+        self, audiobook_ids: list[str], market: str | None = None
     ) -> list[FullAudiobook]:
         """
         Get information for multiple audiobooks.

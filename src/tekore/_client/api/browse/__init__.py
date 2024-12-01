@@ -178,9 +178,9 @@ class SpotifyBrowse(SpotifyBase):
     @maximise_limit(100)
     def recommendations(
         self,
-        artist_ids: list | None = None,
-        genres: list | None = None,
-        track_ids: list | None = None,
+        artist_ids: list[str] | None = None,
+        genres: list[str] | None = None,
+        track_ids: list[str] | None = None,
         limit: int = 20,
         market: str | None = None,
         **attributes,

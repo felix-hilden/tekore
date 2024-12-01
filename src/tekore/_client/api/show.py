@@ -37,7 +37,7 @@ class SpotifyShow(SpotifyBase):
     @scopes(optional=[scope.user_read_playback_position])
     @chunked("show_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullShow, "shows"))
-    def shows(self, show_ids: list, market: str | None = None) -> list[FullShow]:
+    def shows(self, show_ids: list[str], market: str | None = None) -> list[FullShow]:
         """
         Get information for multiple shows.
 
