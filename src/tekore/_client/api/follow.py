@@ -15,7 +15,9 @@ class SpotifyFollow(SpotifyBase):
     @scopes(optional=[scope.playlist_read_private])
     @chunked("user_ids", 2, 5, join_lists)
     @send_and_process(nothing)
-    def playlist_is_following(self, playlist_id: str, user_ids: list[str]) -> list[bool]:
+    def playlist_is_following(
+        self, playlist_id: str, user_ids: list[str]
+    ) -> list[bool]:
         """
         Check if users are following a playlist.
 

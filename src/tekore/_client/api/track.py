@@ -29,7 +29,9 @@ class SpotifyTrack(SpotifyBase):
     @scopes()
     @chunked("track_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullTrack, "tracks"))
-    def tracks(self, track_ids: list[str], market: str | None = None) -> list[FullTrack]:
+    def tracks(
+        self, track_ids: list[str], market: str | None = None
+    ) -> list[FullTrack]:
         """
         Get information for multiple tracks.
 

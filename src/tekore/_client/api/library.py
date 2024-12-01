@@ -274,7 +274,9 @@ class SpotifyLibrary(SpotifyBase):
     @scopes([scope.user_library_modify])
     @chunked("show_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def saved_shows_delete(self, show_ids: list[str], market: str | None = None) -> None:
+    def saved_shows_delete(
+        self, show_ids: list[str], market: str | None = None
+    ) -> None:
         """
         Remove shows for current user.
 
