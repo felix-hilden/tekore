@@ -14,7 +14,9 @@ class SpotifyPlaylistItems(SpotifyBase):
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @chunked("uris", 2, 100, return_last, reverse="position", reverse_pos=3)
     @send_and_process(top_item("snapshot_id"))
-    def playlist_add(self, playlist_id: str, uris: list, position: int | None = None) -> str:
+    def playlist_add(
+        self, playlist_id: str, uris: list, position: int | None = None
+    ) -> str:
         """
         Add items.
 

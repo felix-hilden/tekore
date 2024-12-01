@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+from typing import Union
+
 from .context import Context
 from .device import Device
 from .episode import FullEpisode
 from .local import LocalTrack
 from .serialise import Model, StrEnum
 from .track import FullTrack
-from typing import Union
+
 
 class CurrentlyPlayingType(StrEnum):
     """Type of currently playing item."""
