@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from ..episode import SimpleEpisodePaging
 from ..show import Show
@@ -12,4 +12,4 @@ class FullShow(Show):
     so it might be missing or removed in a future version.
     """
 
-    episodes: Optional[SimpleEpisodePaging] = None
+    episodes: SimpleEpisodePaging | None = None

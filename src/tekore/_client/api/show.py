@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore._auth import scope
 from tekore.model import FullShow, SimpleEpisodePaging
@@ -14,7 +14,7 @@ class SpotifyShow(SpotifyBase):
 
     @scopes(optional=[scope.user_read_playback_position])
     @send_and_process(single(FullShow))
-    def show(self, show_id: str, market: str = None) -> FullShow:
+    def show(self, show_id: str, market: str | None = None) -> FullShow:
         """
         Get information for a show.
 
@@ -37,7 +37,7 @@ class SpotifyShow(SpotifyBase):
     @scopes(optional=[scope.user_read_playback_position])
     @chunked("show_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullShow, "shows"))
-    def shows(self, show_ids: list, market: str = None) -> List[FullShow]:
+    def shows(self, show_ids: list[str], market: str | None = None) -> list[FullShow]:
         """
         Get information for multiple shows.
 
@@ -61,7 +61,7 @@ class SpotifyShow(SpotifyBase):
     @send_and_process(single(SimpleEpisodePaging))
     @maximise_limit(50)
     def show_episodes(
-        self, show_id: str, market: str = None, limit: int = 20, offset: int = 0
+        self, show_id: str, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SimpleEpisodePaging:
         """
         Get episodes of a show.

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
+from collections.abc import Iterable
 from configparser import ConfigParser
 from os import environ
-from typing import Iterable, Union
 from warnings import warn
 
 
@@ -148,7 +150,7 @@ def config_from_file(
 
 
 def config_to_file(
-    file_path: str, values: Union[Iterable, dict], section: str = "DEFAULT"
+    file_path: str, values: Iterable | dict, section: str = "DEFAULT"
 ) -> None:
     """
     Write configuration to a config file.

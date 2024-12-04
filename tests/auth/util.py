@@ -83,12 +83,12 @@ class TestTokenUtilityFunctions:
         input_ = MagicMock(return_value="http://example.com?code=1&state=s")
         state = MagicMock(return_value="s")
         util_mod = "tekore._auth.util"
-        with patch("tekore._auth.refreshing.Credentials", cred), patch(
-            util_mod + ".webbrowser", MagicMock()
-        ), patch(util_mod + ".input", input_), patch(
-            util_mod + ".print", MagicMock()
-        ), patch(
-            util_mod + ".gen_state", state
+        with (
+            patch("tekore._auth.refreshing.Credentials", cred),
+            patch(util_mod + ".webbrowser", MagicMock()),
+            patch(util_mod + ".input", input_),
+            patch(util_mod + ".print", MagicMock()),
+            patch(util_mod + ".gen_state", state),
         ):
             prompt_for_user_token("", "", "")
 
@@ -127,12 +127,12 @@ class TestTokenUtilityFunctions:
         input_ = MagicMock(return_value="http://example.com?code=1&state=s")
         state = MagicMock(return_value="s")
         util_mod = "tekore._auth.util"
-        with patch("tekore._auth.refreshing.Credentials", cred_factory), patch(
-            util_mod + ".webbrowser", MagicMock()
-        ), patch(util_mod + ".input", input_), patch(
-            util_mod + ".print", MagicMock()
-        ), patch(
-            util_mod + ".gen_state", state
+        with (
+            patch("tekore._auth.refreshing.Credentials", cred_factory),
+            patch(util_mod + ".webbrowser", MagicMock()),
+            patch(util_mod + ".input", input_),
+            patch(util_mod + ".print", MagicMock()),
+            patch(util_mod + ".gen_state", state),
         ):
             prompt_for_pkce_token("", "")
 

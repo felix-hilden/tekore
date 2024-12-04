@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
@@ -37,8 +39,8 @@ class SpotifySearch(SpotifyBase):
         self,
         query: str,
         types: tuple = ("track",),
-        market: str = None,
-        include_external: str = None,
+        market: str | None = None,
+        include_external: str | None = None,
         limit: int = 20,
         offset: int = 0,
     ) -> tuple:

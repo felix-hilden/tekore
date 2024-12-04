@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from ..base import Item
 from ..member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
@@ -7,19 +7,19 @@ from ..member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
 class Chapter(Item):
     """Audiobook chapter base."""
 
-    audio_preview_url: Optional[str]
-    available_markets: Optional[List[str]] = None
+    audio_preview_url: str | None
+    available_markets: list[str] | None = None
     chapter_number: int
     description: str
     duration_ms: int
     explicit: bool
     external_urls: dict
     html_description: str
-    images: List[Image]
-    is_playable: Optional[bool] = None
-    languages: List[str]
+    images: list[Image]
+    is_playable: bool | None = None
+    languages: list[str]
     name: str
     release_date_precision: ReleaseDatePrecision
     release_date: str
-    restrictions: Optional[Restrictions] = None
-    resume_point: Optional[ResumePoint] = None
+    restrictions: Restrictions | None = None
+    resume_point: ResumePoint | None = None

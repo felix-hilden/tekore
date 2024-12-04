@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import re
-from typing import Tuple, Union
 
 from tekore.model import StrEnum
 
@@ -20,7 +21,7 @@ class IdentifierType(StrEnum):
     user = "user"
 
 
-def check_type(type_: Union[str, IdentifierType]) -> None:
+def check_type(type_: str | IdentifierType) -> None:
     """
     Validate type of an ID.
 
@@ -52,7 +53,7 @@ def check_id(id_: str) -> None:
         raise ConversionError(f"Invalid id: {id_!r}!")
 
 
-def to_uri(type_: Union[str, IdentifierType], id_: str) -> str:
+def to_uri(type_: str | IdentifierType, id_: str) -> str:
     """
     Convert an ID to an URI of the appropriate type.
 
@@ -79,7 +80,7 @@ def to_uri(type_: Union[str, IdentifierType], id_: str) -> str:
     return f"spotify:{type_}:{id_}"
 
 
-def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
+def to_url(type_: str | IdentifierType, id_: str) -> str:
     """
     Convert an ID to an URL of the appropriate type.
 
@@ -108,7 +109,7 @@ def to_url(type_: Union[str, IdentifierType], id_: str) -> str:
     return f"https://open.spotify.com/{type_}/{id_}"
 
 
-def from_uri(uri: str) -> Tuple[str, str]:
+def from_uri(uri: str) -> tuple[str, str]:
     """
     Parse type and ID from an URI.
 
@@ -119,7 +120,7 @@ def from_uri(uri: str) -> Tuple[str, str]:
 
     Returns
     -------
-    Tuple[str, str]
+    tuple[str, str]
         type and ID parsed from the URI
 
     Raises
@@ -149,7 +150,7 @@ _url_prefixes = (
 )
 
 
-def from_url(url: str) -> Tuple[str, str]:
+def from_url(url: str) -> tuple[str, str]:
     """
     Parse type and ID from an URL.
 
@@ -162,7 +163,7 @@ def from_url(url: str) -> Tuple[str, str]:
 
     Returns
     -------
-    Tuple[str, str]
+    tuple[str, str]
         type and ID parsed from the URL
 
     Raises

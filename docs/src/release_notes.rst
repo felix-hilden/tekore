@@ -5,6 +5,15 @@ Release notes
 =============
 Unreleased
 ----------
+Changed
+*******
+- Remove support for Python 3.8 (:issue:`329`)
+
+Added
+*****
+- Add missing typing for lists and dicts, modernise typing (:issue:`330`)
+- Explicitly support and test Python 3.13 (:issue:`329`)
+
 Fixed
 *****
 - Avoid constructing query params manually (:issue:`332`)

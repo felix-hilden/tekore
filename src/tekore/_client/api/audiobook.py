@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore.model import FullAudiobook, SimpleChapterPaging
 
@@ -13,7 +13,7 @@ class SpotifyAudiobook(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullAudiobook))
-    def audiobook(self, audiobook_id: str, market: str = None) -> FullAudiobook:
+    def audiobook(self, audiobook_id: str, market: str | None = None) -> FullAudiobook:
         """
         Get information for an audiobook.
 
@@ -34,8 +34,8 @@ class SpotifyAudiobook(SpotifyBase):
     @chunked("audiobook_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullAudiobook, "audiobooks"))
     def audiobooks(
-        self, audiobook_ids: list, market: str = None
-    ) -> List[FullAudiobook]:
+        self, audiobook_ids: list[str], market: str | None = None
+    ) -> list[FullAudiobook]:
         """
         Get information for multiple audiobooks.
 
@@ -56,7 +56,11 @@ class SpotifyAudiobook(SpotifyBase):
     @send_and_process(single(SimpleChapterPaging))
     @maximise_limit(50)
     def audiobook_chapters(
-        self, audiobook_id: str, market: str = None, limit: int = 20, offset: int = 0
+        self,
+        audiobook_id: str,
+        market: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> SimpleChapterPaging:
         """
         Get chapters of an audiobook.

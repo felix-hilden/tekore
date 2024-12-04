@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Optional
 
 from .context import Context
 from .paging import Cursor, CursorPaging
@@ -16,7 +17,7 @@ class PlayHistory(Model):
 
     track: FullTrack
     played_at: datetime
-    context: Optional[Context]
+    context: Context | None
 
 
 class PlayHistoryCursor(Cursor):
@@ -32,5 +33,5 @@ class PlayHistoryPaging(CursorPaging):
     Cursors are not available when paging is exhausted.
     """
 
-    items: List[PlayHistory]
-    cursors: Optional[PlayHistoryCursor]
+    items: list[PlayHistory]
+    cursors: PlayHistoryCursor | None

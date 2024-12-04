@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from tekore._auth import scope
 from tekore._sender import Request
 from tekore.model import FullPlaylist
@@ -63,10 +65,10 @@ class SpotifyPlaylistModify(SpotifyBase):
     def playlist_change_details(
         self,
         playlist_id: str,
-        name: str = None,
-        public: bool = None,
-        collaborative: bool = None,
-        description: str = None,
+        name: str | None = None,
+        public: bool | None = None,
+        collaborative: bool | None = None,
+        description: str | None = None,
     ) -> None:
         """
         Change a playlist's details.

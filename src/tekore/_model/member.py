@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from .serialise import Model, StrEnum
 
@@ -39,8 +39,8 @@ class Image(Model):
     """
 
     url: str
-    height: Optional[int]
-    width: Optional[int]
+    height: int | None
+    width: int | None
 
 
 class Restrictions(Model):

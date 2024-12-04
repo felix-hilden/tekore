@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore.model import AudioAnalysis, AudioFeatures, FullTrack
 
@@ -13,7 +13,7 @@ class SpotifyTrack(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullTrack))
-    def track(self, track_id: str, market: str = None) -> FullTrack:
+    def track(self, track_id: str, market: str | None = None) -> FullTrack:
         """
         Get information for a track.
 
@@ -29,7 +29,9 @@ class SpotifyTrack(SpotifyBase):
     @scopes()
     @chunked("track_ids", 1, 50, join_lists)
     @send_and_process(model_list(FullTrack, "tracks"))
-    def tracks(self, track_ids: list, market: str = None) -> List[FullTrack]:
+    def tracks(
+        self, track_ids: list[str], market: str | None = None
+    ) -> list[FullTrack]:
         """
         Get information for multiple tracks.
 
@@ -62,7 +64,7 @@ class SpotifyTrack(SpotifyBase):
     @scopes()
     @chunked("track_ids", 1, 100, join_lists)
     @send_and_process(model_list(AudioFeatures, "audio_features"))
-    def tracks_audio_features(self, track_ids: list) -> List[AudioFeatures]:
+    def tracks_audio_features(self, track_ids: list[str]) -> list[AudioFeatures]:
         """
         Get audio feature information for multiple tracks.
 

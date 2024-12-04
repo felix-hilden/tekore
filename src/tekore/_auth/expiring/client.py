@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 from base64 import b64encode as _b64encode
 from hashlib import sha256
 from secrets import token_urlsafe
-from typing import Tuple
 from urllib.parse import urlencode
 
 from ..._sender import Client, Request, Sender, send_and_process
@@ -46,10 +47,10 @@ class Credentials(Client):
     def __init__(
         self,
         client_id: str,
-        client_secret: str = None,
-        redirect_uri: str = None,
-        sender: Sender = None,
-        asynchronous: bool = None,
+        client_secret: str | None = None,
+        redirect_uri: str | None = None,
+        sender: Sender | None = None,
+        asynchronous: bool | None = None,
     ):
         super().__init__(sender, asynchronous)
         self.client_id = client_id
@@ -106,7 +107,7 @@ class Credentials(Client):
         return payload
 
     def user_authorisation_url(
-        self, scope=None, state: str = None, show_dialog: bool = False
+        self, scope=None, state: str | None = None, show_dialog: bool = False
     ) -> str:
         """
         Construct an authorisation URL.
@@ -180,8 +181,8 @@ class Credentials(Client):
         return self._token_request(payload, auth=True), (refresh_token,)
 
     def pkce_user_authorisation(
-        self, scope=None, state: str = None, verifier_bytes: int = 32
-    ) -> Tuple[str, str]:
+        self, scope=None, state: str | None = None, verifier_bytes: int = 32
+    ) -> tuple[str, str]:
         """
         Construct authorisation URL and verifier.
 
@@ -204,7 +205,7 @@ class Credentials(Client):
 
         Returns
         -------
-        Tuple[str, str]
+        tuple[str, str]
             authorisation URL and PKCE code verifier
         """
         assert 32 <= verifier_bytes <= 96, "Invalid number of verifier bytes!"

@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import webbrowser
 from secrets import token_urlsafe
-from typing import Union
 from urllib.parse import parse_qs, urlparse
 
 from .expiring import Credentials, Token
@@ -111,10 +112,7 @@ class UserAuth:
     """
 
     def __init__(
-        self,
-        cred: Union[Credentials, RefreshingCredentials],
-        scope=None,
-        pkce: bool = False,
+        self, cred: Credentials | RefreshingCredentials, scope=None, pkce: bool = False
     ):
         self._cred = cred
         self.state = gen_state()
@@ -138,8 +136,8 @@ class UserAuth:
         return type(self).__name__ + "(" + ", ".join(options) + ")"
 
     def request_token(
-        self, code: str = None, state: str = None, url: str = None
-    ) -> Union[Token, RefreshingToken]:
+        self, code: str | None = None, state: str | None = None, url: str | None = None
+    ) -> Token | RefreshingToken:
         """
         Verify state consistency and request token.
 
@@ -154,7 +152,7 @@ class UserAuth:
 
         Returns
         -------
-        Union[Token, RefreshingToken]
+        Token | RefreshingToken
             access token
 
         Raises

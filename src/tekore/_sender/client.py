@@ -1,5 +1,7 @@
+from __future__ import annotations
+
+from collections.abc import Callable, Coroutine
 from functools import wraps
-from typing import Callable, Coroutine, Optional, Union
 from warnings import warn
 
 from .base import Request, Response
@@ -25,7 +27,7 @@ class Client(ExtendingSender):
         if they are in conflict and instantiates a sender of the requested type
     """
 
-    def __init__(self, sender: Optional[Sender], asynchronous: bool = None):
+    def __init__(self, sender: Sender | None, asynchronous: bool | None = None):
         super().__init__(sender)
 
         if self.sender.is_async and asynchronous is False:
@@ -41,9 +43,7 @@ class Client(ExtendingSender):
             )
             warn(msg, SenderConflictWarning, stacklevel=3)
 
-    def send(
-        self, request: Request
-    ) -> Union[Response, Coroutine[None, None, Response]]:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """Send request with underlying sender."""
         return self.sender.send(request)
 

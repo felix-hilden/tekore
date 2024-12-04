@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Optional
 
 from .base import Item
 from .member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
@@ -15,21 +16,21 @@ class Episode(Item):
     :attr:`language` is deprecated.
     """
 
-    audio_preview_url: Optional[str]
+    audio_preview_url: str | None
     description: str
     duration_ms: int
     explicit: bool
     external_urls: dict
     html_description: str
-    images: List[Image]
+    images: list[Image]
     is_externally_hosted: bool
-    is_playable: Optional[bool] = None
-    language: Optional[str] = None
-    languages: List[str]
+    is_playable: bool | None = None
+    language: str | None = None
+    languages: list[str]
     name: str
     release_date: str
     release_date_precision: ReleaseDatePrecision
-    resume_point: Optional[ResumePoint] = None
+    resume_point: ResumePoint | None = None
 
 
 class SimpleEpisode(Episode):
@@ -39,14 +40,14 @@ class SimpleEpisode(Episode):
 class FullEpisode(Episode):
     """Complete episode object."""
 
-    restrictions: Optional[Restrictions] = None
+    restrictions: Restrictions | None = None
     show: SimpleShow
 
 
 class SimpleEpisodePaging(OffsetPaging):
     """Paging of simplified episodes."""
 
-    items: List[SimpleEpisode]
+    items: list[SimpleEpisode]
 
 
 class SavedEpisode(Model):
@@ -59,4 +60,4 @@ class SavedEpisode(Model):
 class SavedEpisodePaging(OffsetPaging):
     """Paging of episodes in library."""
 
-    items: List[SavedEpisode]
+    items: list[SavedEpisode]

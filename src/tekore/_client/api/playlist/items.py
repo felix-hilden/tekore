@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from tekore._auth import scope
 
 from ...base import SpotifyBase
@@ -12,7 +14,9 @@ class SpotifyPlaylistItems(SpotifyBase):
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @chunked("uris", 2, 100, return_last, reverse="position", reverse_pos=3)
     @send_and_process(top_item("snapshot_id"))
-    def playlist_add(self, playlist_id: str, uris: list, position: int = None) -> str:
+    def playlist_add(
+        self, playlist_id: str, uris: list[str], position: int | None = None
+    ) -> str:
         """
         Add items.
 
@@ -49,7 +53,7 @@ class SpotifyPlaylistItems(SpotifyBase):
 
     @scopes([scope.playlist_modify_public], [scope.playlist_modify_private])
     @send_and_process(nothing)
-    def playlist_replace(self, playlist_id: str, uris: list) -> None:
+    def playlist_replace(self, playlist_id: str, uris: list[str]) -> None:
         """
         Replace all items.
 
@@ -70,7 +74,7 @@ class SpotifyPlaylistItems(SpotifyBase):
         range_start: int,
         insert_before: int,
         range_length: int = 1,
-        snapshot_id: str = None,
+        snapshot_id: str | None = None,
     ) -> str:
         """
         Reorder items.
@@ -103,7 +107,7 @@ class SpotifyPlaylistItems(SpotifyBase):
         return self._put(f"playlists/{playlist_id}/tracks", payload=payload)
 
     def _generic_playlist_remove(
-        self, playlist_id: str, payload: dict, snapshot_id: str = None
+        self, playlist_id: str, payload: dict, snapshot_id: str | None = None
     ) -> str:
         if snapshot_id:
             payload["snapshot_id"] = snapshot_id
@@ -113,7 +117,7 @@ class SpotifyPlaylistItems(SpotifyBase):
     @chunked("uris", 2, 100, return_last, chain="snapshot_id", chain_pos=3)
     @send_and_process(top_item("snapshot_id"))
     def playlist_remove(
-        self, playlist_id: str, uris: list, snapshot_id: str = None
+        self, playlist_id: str, uris: list[str], snapshot_id: str | None = None
     ) -> str:
         """
         Remove items by URI.

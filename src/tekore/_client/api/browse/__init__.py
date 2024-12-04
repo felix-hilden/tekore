@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from __future__ import annotations
 
 from tekore.model import (
     Category,
@@ -26,12 +26,12 @@ class SpotifyBrowse(SpotifyBase):
     @maximise_limit(50)
     def featured_playlists(
         self,
-        country: str = None,
-        locale: str = None,
-        timestamp: str = None,
+        country: str | None = None,
+        locale: str | None = None,
+        timestamp: str | None = None,
         limit: int = 20,
         offset: int = 0,
-    ) -> Tuple[str, SimplePlaylistPaging]:
+    ) -> tuple[str, SimplePlaylistPaging]:
         """
         Get a list of Spotify featured playlists.
 
@@ -53,7 +53,7 @@ class SpotifyBrowse(SpotifyBase):
 
         Returns
         -------
-        Tuple[str, SimplePlaylistPaging]
+        tuple[str, SimplePlaylistPaging]
             message and playlists
         """
         return self._get(
@@ -69,7 +69,7 @@ class SpotifyBrowse(SpotifyBase):
     @send_and_process(single(SimpleAlbumPaging, from_item="albums"))
     @maximise_limit(50)
     def new_releases(
-        self, country: str = None, limit: int = 20, offset: int = 0
+        self, country: str | None = None, limit: int = 20, offset: int = 0
     ) -> SimpleAlbumPaging:
         """
         Get a list of new album releases featured in Spotify.
@@ -91,7 +91,11 @@ class SpotifyBrowse(SpotifyBase):
     @send_and_process(single(CategoryPaging, from_item="categories"))
     @maximise_limit(50)
     def categories(
-        self, country: str = None, locale: str = None, limit: int = 20, offset: int = 0
+        self,
+        country: str | None = None,
+        locale: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> CategoryPaging:
         """
         Get a list of categories used to tag items in Spotify.
@@ -119,7 +123,7 @@ class SpotifyBrowse(SpotifyBase):
     @scopes()
     @send_and_process(single(Category))
     def category(
-        self, category_id: str, country: str = None, locale: str = None
+        self, category_id: str, country: str | None = None, locale: str | None = None
     ) -> Category:
         """
         Get a single category used to tag items in Spotify.
@@ -142,7 +146,11 @@ class SpotifyBrowse(SpotifyBase):
     @send_and_process(single(SimplePlaylistPaging, from_item="playlists"))
     @maximise_limit(50)
     def category_playlists(
-        self, category_id: str, country: str = None, limit: int = 20, offset: int = 0
+        self,
+        category_id: str,
+        country: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
     ) -> SimplePlaylistPaging:
         """
         Get a list of Spotify playlists tagged with a particular category.
@@ -170,11 +178,11 @@ class SpotifyBrowse(SpotifyBase):
     @maximise_limit(100)
     def recommendations(
         self,
-        artist_ids: list = None,
-        genres: list = None,
-        track_ids: list = None,
+        artist_ids: list[str] | None = None,
+        genres: list[str] | None = None,
+        track_ids: list[str] | None = None,
         limit: int = 20,
-        market: str = None,
+        market: str | None = None,
         **attributes,
     ) -> Recommendations:
         """
@@ -223,6 +231,6 @@ class SpotifyBrowse(SpotifyBase):
 
     @scopes()
     @send_and_process(top_item("genres"))
-    def recommendation_genre_seeds(self) -> List[str]:
+    def recommendation_genre_seeds(self) -> list[str]:
         """Get a list of available genre seeds."""
         return self._get("recommendations/available-genre-seeds")

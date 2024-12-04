@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 from ..._sender import Request, Response
 from ..._sender.error import get_error

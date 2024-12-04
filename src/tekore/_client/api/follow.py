@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore._auth import scope
 from tekore.model import FullArtistCursorPaging
@@ -15,7 +15,9 @@ class SpotifyFollow(SpotifyBase):
     @scopes(optional=[scope.playlist_read_private])
     @chunked("user_ids", 2, 5, join_lists)
     @send_and_process(nothing)
-    def playlist_is_following(self, playlist_id: str, user_ids: list) -> List[bool]:
+    def playlist_is_following(
+        self, playlist_id: str, user_ids: list[str]
+    ) -> list[bool]:
         """
         Check if users are following a playlist.
 
@@ -28,7 +30,7 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             follow statuses in the same order that the user IDs were given
         """
         return self._get(
@@ -68,7 +70,7 @@ class SpotifyFollow(SpotifyBase):
     @send_and_process(single(FullArtistCursorPaging, from_item="artists"))
     @maximise_limit(50)
     def followed_artists(
-        self, limit: int = 20, after: str = None
+        self, limit: int = 20, after: str | None = None
     ) -> FullArtistCursorPaging:
         """
         Get artists followed by the current user.
@@ -85,7 +87,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_read])
     @chunked("artist_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def artists_is_following(self, artist_ids: list) -> List[bool]:
+    def artists_is_following(self, artist_ids: list[str]) -> list[bool]:
         """
         Check if current user follows artists.
 
@@ -96,7 +98,7 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             follow statuses in the same order that the artist IDs were given
         """
         return self._get(
@@ -106,7 +108,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_modify])
     @chunked("artist_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def artists_follow(self, artist_ids: list) -> None:
+    def artists_follow(self, artist_ids: list[str]) -> None:
         """
         Follow artists as current user.
 
@@ -120,7 +122,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_modify])
     @chunked("artist_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def artists_unfollow(self, artist_ids: list) -> None:
+    def artists_unfollow(self, artist_ids: list[str]) -> None:
         """
         Unfollow artists as current user.
 
@@ -134,7 +136,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_read])
     @chunked("user_ids", 1, 50, join_lists)
     @send_and_process(nothing)
-    def users_is_following(self, user_ids: list) -> List[bool]:
+    def users_is_following(self, user_ids: list[str]) -> list[bool]:
         """
         Check if current user follows users.
 
@@ -145,7 +147,7 @@ class SpotifyFollow(SpotifyBase):
 
         Returns
         -------
-        List[bool]
+        list[bool]
             follow statuses in the same order that the user IDs were given
         """
         return self._get("me/following/contains", type="user", ids=",".join(user_ids))
@@ -153,7 +155,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_modify])
     @chunked("user_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def users_follow(self, user_ids: list) -> None:
+    def users_follow(self, user_ids: list[str]) -> None:
         """
         Follow users as current user.
 
@@ -167,7 +169,7 @@ class SpotifyFollow(SpotifyBase):
     @scopes([scope.user_follow_modify])
     @chunked("user_ids", 1, 50, return_none)
     @send_and_process(nothing)
-    def users_unfollow(self, user_ids: list) -> None:
+    def users_unfollow(self, user_ids: list[str]) -> None:
         """
         Unfollow users as current user.
 

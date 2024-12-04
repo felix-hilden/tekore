@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from __future__ import annotations
 
 from pydantic import Field
 
@@ -13,16 +13,16 @@ class Show(Item):
     :attr:`publisher` being an object is undocumented.
     """
 
-    available_markets: List[str] = Field(default_factory=list)
-    copyrights: List[Copyright]
+    available_markets: list[str] = Field(default_factory=list)
+    copyrights: list[Copyright]
     description: str
     explicit: bool
     external_urls: dict
-    html_description: Optional[str] = None
-    images: List[Image]
-    is_externally_hosted: Optional[bool]
-    languages: List[str]
+    html_description: str | None = None
+    images: list[Image]
+    is_externally_hosted: bool | None
+    languages: list[str]
     media_type: str
     name: str
-    publisher: Union[str, dict]
-    total_episodes: Optional[int] = None
+    publisher: str | dict
+    total_episodes: int | None = None

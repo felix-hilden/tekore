@@ -1,4 +1,6 @@
-from typing import Generator, Optional
+from __future__ import annotations
+
+from collections.abc import Generator
 
 from tekore._sender import BadRequest
 from tekore.model import Model, OffsetPaging, Paging
@@ -24,7 +26,7 @@ class SpotifyPaging(SpotifyBase):
     def _get_paging_result(self, address: str):
         return self._get(address)
 
-    def next(self, page: Paging) -> Optional[Paging]:
+    def next(self, page: Paging) -> Paging | None:
         """
         Retrieve the next result set of a paging object.
 
@@ -50,7 +52,7 @@ class SpotifyPaging(SpotifyBase):
         except BadRequest:
             return
 
-    async def _async_next(self, page: Paging) -> Optional[Paging]:
+    async def _async_next(self, page: Paging) -> Paging | None:
         if page.next is None:
             return
 
@@ -60,7 +62,7 @@ class SpotifyPaging(SpotifyBase):
         except BadRequest:
             return
 
-    def previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
+    def previous(self, page: OffsetPaging) -> OffsetPaging | None:
         """
         Retrieve the previous result set of a paging object.
 
@@ -83,7 +85,7 @@ class SpotifyPaging(SpotifyBase):
         previous_set = self._get_paging_result(page.previous)
         return type(page)(**previous_set)
 
-    async def _async_previous(self, page: OffsetPaging) -> Optional[OffsetPaging]:
+    async def _async_previous(self, page: OffsetPaging) -> OffsetPaging | None:
         if page.previous is None:
             return
 

@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from .base import Identifiable
 from .serialise import StrEnum
@@ -30,5 +30,5 @@ class Device(Identifiable):
     is_restricted: bool
     name: str
     type: DeviceType
-    volume_percent: Optional[int]
+    volume_percent: int | None
     supports_volume: bool

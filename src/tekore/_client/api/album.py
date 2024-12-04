@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore.model import FullAlbum, SimpleTrackPaging
 
@@ -13,7 +13,7 @@ class SpotifyAlbum(SpotifyBase):
 
     @scopes()
     @send_and_process(single(FullAlbum))
-    def album(self, album_id: str, market: str = None) -> FullAlbum:
+    def album(self, album_id: str, market: str | None = None) -> FullAlbum:
         """
         Get an album.
 
@@ -30,7 +30,7 @@ class SpotifyAlbum(SpotifyBase):
     @send_and_process(single(SimpleTrackPaging))
     @maximise_limit(50)
     def album_tracks(
-        self, album_id: str, market: str = None, limit: int = 20, offset: int = 0
+        self, album_id: str, market: str | None = None, limit: int = 20, offset: int = 0
     ) -> SimpleTrackPaging:
         """
         Get tracks on album.
@@ -53,7 +53,9 @@ class SpotifyAlbum(SpotifyBase):
     @scopes()
     @chunked("album_ids", 1, 20, join_lists)
     @send_and_process(model_list(FullAlbum, "albums"))
-    def albums(self, album_ids: list, market: str = None) -> List[FullAlbum]:
+    def albums(
+        self, album_ids: list[str], market: str | None = None
+    ) -> list[FullAlbum]:
         """
         Get multiple albums.
 

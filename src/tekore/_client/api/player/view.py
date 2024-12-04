@@ -1,4 +1,4 @@
-from typing import List
+from __future__ import annotations
 
 from tekore._auth import scope
 from tekore.model import (
@@ -20,7 +20,7 @@ class SpotifyPlayerView(SpotifyBase):
     @scopes([scope.user_read_playback_state])
     @send_and_process(single(CurrentlyPlayingContext))
     def playback(
-        self, market: str = None, tracks_only: bool = False
+        self, market: str | None = None, tracks_only: bool = False
     ) -> CurrentlyPlayingContext:
         """
         Get information about user's current playback.
@@ -51,7 +51,7 @@ class SpotifyPlayerView(SpotifyBase):
     )
     @send_and_process(single(CurrentlyPlaying))
     def playback_currently_playing(
-        self, market: str = None, tracks_only: bool = False
+        self, market: str | None = None, tracks_only: bool = False
     ) -> CurrentlyPlaying:
         """
         Get user's currently playing track.
@@ -86,7 +86,7 @@ class SpotifyPlayerView(SpotifyBase):
     @send_and_process(single(PlayHistoryPaging))
     @maximise_limit(50)
     def playback_recently_played(
-        self, limit: int = 20, after: int = None, before: int = None
+        self, limit: int = 20, after: int | None = None, before: int | None = None
     ) -> PlayHistoryPaging:
         """
         Get tracks from the current user's recently played tracks.
@@ -108,7 +108,7 @@ class SpotifyPlayerView(SpotifyBase):
 
     @scopes([scope.user_read_playback_state])
     @send_and_process(model_list(Device, "devices"))
-    def playback_devices(self) -> List[Device]:
+    def playback_devices(self) -> list[Device]:
         """Get a user's available devices."""
         return self._get("me/player/devices")
 

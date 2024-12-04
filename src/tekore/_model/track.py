@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Optional
 
 from .album import SimpleAlbum
 from .artist import SimpleArtist
@@ -18,18 +19,18 @@ class TrackLink(Item):
 class Track(Item):
     """Track base."""
 
-    artists: List[SimpleArtist]
-    available_markets: Optional[List[str]] = None
+    artists: list[SimpleArtist]
+    available_markets: list[str] | None = None
     disc_number: int
     duration_ms: int
     explicit: bool
     external_urls: dict
     is_local: bool
-    is_playable: Optional[bool] = None
-    linked_from: Optional[TrackLink] = None
+    is_playable: bool | None = None
+    linked_from: TrackLink | None = None
     name: str
-    preview_url: Optional[str] = None
-    restrictions: Optional[Restrictions] = None
+    preview_url: str | None = None
+    restrictions: Restrictions | None = None
     track_number: int
 
 
@@ -62,13 +63,13 @@ class FullTrack(Track):
 class FullTrackPaging(OffsetPaging):
     """Paging of full tracks."""
 
-    items: List[FullTrack]
+    items: list[FullTrack]
 
 
 class SimpleTrackPaging(OffsetPaging):
     """Paging of simplified tracks."""
 
-    items: List[SimpleTrack]
+    items: list[SimpleTrack]
 
 
 class Tracks(Model):
@@ -88,4 +89,4 @@ class SavedTrack(Model):
 class SavedTrackPaging(OffsetPaging):
     """Paging of tracks in library."""
 
-    items: List[SavedTrack]
+    items: list[SavedTrack]
