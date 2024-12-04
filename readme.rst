@@ -42,9 +42,5 @@ You can also ask a question on
    :target: https://tekore.readthedocs.io/en/latest
    :alt: documentation status
 
-.. |coverage| image:: https://api.codeclimate.com/v1/badges/627ab5f90253b59d4c8f/test_coverage
-   :target: https://codeclimate.com/github/felix-hilden/tekore/test_coverage
-   :alt: test coverage
-
 .. _pypi: https://pypi.org/project/tekore
 .. _read the docs: https://tekore.readthedocs.io

@@ -51,18 +51,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements/dev
           pip install .
-      - name: Initialise coverage reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
       - name: Run tox
-        run: |
-          tox
-          echo "TEST_RESULT=$?" >> $GITHUB_ENV
-      - name: Post coverage
-        run: |
-          export GIT_COMMIT_SHA=$GITHUB_SHA
-          export GIT_BRANCH=${GITHUB_HEAD_REF#refs/heads/}
-          coverage xml
-          ./cc-test-reporter after-build --exit-code $TEST_RESULT
+        run: tox
