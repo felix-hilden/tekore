@@ -14,7 +14,6 @@ class LocalItem(Model):
     href: None
     name: str
     type: str
-    uri: str | None
 
 
 class LocalAlbum(LocalItem):
@@ -27,12 +26,14 @@ class LocalAlbum(LocalItem):
     images: list[None]
     release_date: None
     release_date_precision: None
+    uri: None
 
 
 class LocalArtist(LocalItem):
     """Artist of a locally saved track."""
 
     external_urls: dict
+    uri: None
 
 
 class LocalTrack(LocalItem):
@@ -56,4 +57,4 @@ class LocalTrack(LocalItem):
     popularity: int
     preview_url: None
     track_number: int
-    uri: str | None
+    uri: str
