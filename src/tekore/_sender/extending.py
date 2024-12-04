@@ -81,47 +81,45 @@ class RetryingSender(ExtendingSender):
         contains = f"(retries={self.retries}, sender={self.sender!r})"
         return type(self).__name__ + contains
 
-    def send(
-        self, request: Request
-    ) -> Response | Coroutine[None, None, Response] | None:
+    def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """Delegate request to underlying sender and retry if failed."""
         if self.is_async:
             return self._async_send(request)
 
-        tries = self.retries + 1
+        retries = max(self.retries, 0)
         delay_seconds = 1
 
-        while tries > 0:
+        while True:
             r = self.sender.send(request)
 
             if r.status_code == 429:
                 seconds = r.headers.get("Retry-After", 1)
                 time.sleep(int(seconds) + 1)
-            elif r.status_code >= 500 and tries > 1:
-                tries -= 1
+            elif r.status_code >= 500 and retries > 0:
+                retries -= 1
                 time.sleep(delay_seconds)
                 delay_seconds *= 2
             else:
-                return r
-        return None
+                break
+        return r
 
-    async def _async_send(self, request: Request) -> Response | None:
-        tries = self.retries + 1
+    async def _async_send(self, request: Request) -> Response:
+        retries = max(self.retries, 0)
         delay_seconds = 1
 
-        while tries > 0:
+        while True:
             r = await self.sender.send(request)
 
             if r.status_code == 429:
                 seconds = r.headers.get("Retry-After", 1)
                 await asyncio.sleep(int(seconds) + 1)
-            elif r.status_code >= 500 and tries > 1:
-                tries -= 1
+            elif r.status_code >= 500 and retries > 0:
+                retries -= 1
                 await asyncio.sleep(delay_seconds)
                 delay_seconds *= 2
             else:
-                return r
-        return None
+                break
+        return r
 
 
 class CachingSender(ExtendingSender):

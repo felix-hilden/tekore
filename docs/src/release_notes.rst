@@ -17,6 +17,8 @@ Added
 Fixed
 *****
 - Avoid constructing query params manually (:issue:`332`)
+- Fix :class:`RetryingSender` to not return ``None``` in
+  complex retry scenarios (:issue:`333`)
 
 5.5.1 (2024-09-09)
 ------------------
