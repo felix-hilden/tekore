@@ -1,7 +1,7 @@
 ======
 |logo|
 ======
-|build| |documentation| |coverage|
+|build| |documentation|
 
 Welcome to the GitHub repository of Tekore!
 We provide a client for the Spotify Web API for Python,
