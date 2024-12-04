@@ -35,6 +35,10 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of Spotify featured playlists.
 
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
+
         Parameters
         ----------
         country
@@ -155,6 +159,10 @@ class SpotifyBrowse(SpotifyBase):
         """
         Get a list of Spotify playlists tagged with a particular category.
 
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
+
         Parameters
         ----------
         category_id
@@ -187,6 +195,10 @@ class SpotifyBrowse(SpotifyBase):
     ) -> Recommendations:
         """
         Get a list of recommended tracks for seeds.
+
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
 
         .. warning::
             The total number of seeds provided in ``artist_ids``, ``genres``

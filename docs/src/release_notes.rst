@@ -8,6 +8,7 @@ Unreleased
 Changed
 *******
 - Remove support for Python 3.8 (:issue:`329`)
+- Document newly restricted endpoints (:issue:`331`)
 
 Added
 *****

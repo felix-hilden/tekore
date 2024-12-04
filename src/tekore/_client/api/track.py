@@ -50,6 +50,10 @@ class SpotifyTrack(SpotifyBase):
         """
         Get a detailed audio analysis for a track.
 
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
+
         The analysis describes the track's structure and musical content,
         including rythm, pitch and timbre.
         """
@@ -58,7 +62,13 @@ class SpotifyTrack(SpotifyBase):
     @scopes()
     @send_and_process(single(AudioFeatures))
     def track_audio_features(self, track_id: str) -> AudioFeatures:
-        """Get audio feature information for a track."""
+        """
+        Get audio feature information for a track.
+
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
+        """
         return self._get("audio-features/" + track_id)
 
     @scopes()
@@ -67,6 +77,10 @@ class SpotifyTrack(SpotifyBase):
     def tracks_audio_features(self, track_ids: list[str]) -> list[AudioFeatures]:
         """
         Get audio feature information for multiple tracks.
+
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
 
         Feature information for a track may be ``None`` if not available.
 

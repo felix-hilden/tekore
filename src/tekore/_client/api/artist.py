@@ -96,6 +96,10 @@ class SpotifyArtist(SpotifyBase):
         """
         Get artists similar to an identified artist.
 
+        .. warning::
+
+            This endpoint is unavailable to new third-party applications (:issue:`331`)
+
         Similarity is based on analysis of
         the Spotify community's listening history.
 
