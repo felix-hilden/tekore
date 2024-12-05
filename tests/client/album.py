@@ -3,6 +3,7 @@ import pytest
 from ._resources import album_id, album_ids, album_relinked, album_restricted
 
 
+@pytest.mark.api
 class TestSpotifyAlbum:
     def test_album_with_market(self, app_client):
         album = app_client.album(album_id, market="US")

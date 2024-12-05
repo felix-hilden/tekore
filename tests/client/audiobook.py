@@ -5,6 +5,7 @@ from tekore import NotFound, from_uri
 from ._resources import audiobook_id, audiobook_ids
 
 
+@pytest.mark.api
 class TestSpotifyAudiobook:
     @pytest.mark.xfail(reason="API inconsistencies.")
     def test_audiobook_without_market_raises(self, app_client):

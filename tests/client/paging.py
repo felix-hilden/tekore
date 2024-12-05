@@ -13,6 +13,7 @@ def played(data_client):
     return data_client.playback_recently_played()
 
 
+@pytest.mark.api
 @pytest.mark.usefixtures("suppress_warnings")
 class TestSpotifyPaging:
     def test_next(self, app_client, tracks):

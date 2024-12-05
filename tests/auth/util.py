@@ -94,6 +94,7 @@ class TestTokenUtilityFunctions:
 
         input_.assert_called_once()
 
+    @pytest.mark.api
     def test_request_refreshed_token_returns_refreshing_token(
         self, app_env, user_refresh
     ):
@@ -101,6 +102,7 @@ class TestTokenUtilityFunctions:
         assert isinstance(token, RefreshingToken)
         token.credentials.close()
 
+    @pytest.mark.api
     def test_expiring_user_token_refreshed(self, app_env, user_refresh):
         token = refresh_user_token(app_env[0], app_env[1], user_refresh)
         old_token = str(token)
@@ -108,11 +110,13 @@ class TestTokenUtilityFunctions:
         assert old_token != str(token)
         token.credentials.close()
 
+    @pytest.mark.api
     def test_request_client_token_returns_refreshing_token(self, app_env):
         token = request_client_token(app_env[0], app_env[1])
         assert isinstance(token, RefreshingToken)
         token.credentials.close()
 
+    @pytest.mark.api
     def test_expiring_client_token_refreshed(self, app_env):
         token = request_client_token(app_env[0], app_env[1])
         old_token = str(token)

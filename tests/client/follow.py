@@ -42,6 +42,7 @@ def setup(data_client, current_user_id):
         data_client.users_unfollow(user_unfollows)
 
 
+@pytest.mark.api
 @pytest.mark.usefixtures("setup")
 class TestSpotifyFollow:
     """

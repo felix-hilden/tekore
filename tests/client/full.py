@@ -211,6 +211,7 @@ class TestSpotifyUnits:
         assert e.value.scope == func.scope
 
 
+@pytest.mark.api
 class TestSpotifyMaxLimits:
     def test_turning_on_max_limits_returns_more(self, app_token):
         client = Spotify(app_token)
@@ -260,6 +261,7 @@ def track_ids(data_client):
     return [t.track.id for t in tracks.items]
 
 
+@pytest.mark.api
 @pytest.mark.usefixtures("suppress_warnings")
 class TestSpotifyChunked:
     @pytest.mark.xfail(reason="API inconsistencies.")

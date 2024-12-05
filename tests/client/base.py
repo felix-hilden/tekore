@@ -44,6 +44,7 @@ class TestSpotifyBaseUnits:
             client.album("not-an-id")
 
 
+@pytest.mark.api
 class TestSpotifyBase:
     def test_album_nonexistent_market_error_message_parsed(self, app_client):
         with pytest.raises(HTTPError, match="__"):

@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock
 
+import pytest
+
 from tekore import Credentials, RefreshingCredentials, RefreshingToken, Token
 
 
@@ -67,12 +69,14 @@ class TestRefreshingCredentials:
     def test_initialisable(self, app_env):
         RefreshingCredentials(*app_env).credentials.close()
 
+    @pytest.mark.api
     def test_request_client_token_returns_refreshing_token(self, app_env):
         cred = RefreshingCredentials(*app_env)
         token = cred.request_client_token()
         assert isinstance(token, RefreshingToken)
         token.credentials.close()
 
+    @pytest.mark.api
     def test_user_authorisation_url_equal_to_expiring(self, app_env):
         auth = Credentials(*app_env)
         util = RefreshingCredentials(*app_env)

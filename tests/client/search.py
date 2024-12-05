@@ -3,6 +3,7 @@ import pytest
 from tekore import HTTPError
 
 
+@pytest.mark.api
 class TestSpotifySearch:
     def test_search(self, app_client):
         (tracks,) = app_client.search("sheeran")
