@@ -11,7 +11,7 @@ class MissingConfigurationWarning(RuntimeWarning):
     """Missing value read from configuration."""
 
 
-def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
+def _read_configuration(conf: dict, *, return_refresh: bool = False) -> tuple:
     """
     Read variables from dictionary.
 
@@ -82,10 +82,10 @@ def config_from_environment(return_refresh: bool = False) -> tuple:
         conf = tk.config_from_environment(return_refresh=True)
         client_id, client_secret, redirect_uri, user_refresh = conf
     """
-    return _read_configuration(environ, return_refresh)
+    return _read_configuration(environ, return_refresh=return_refresh)
 
 
-def _read_configfile(file_path: str, force: bool = True) -> ConfigParser:
+def _read_configfile(file_path: str, *, force: bool = True) -> ConfigParser:
     """
     Read configuration from INI file.
 
@@ -147,7 +147,7 @@ def config_from_file(
         client_id, client_secret, redirect_uri, user_refresh = conf
     """
     c = _read_configfile(file_path)
-    return _read_configuration(c[section], return_refresh)
+    return _read_configuration(c[section], return_refresh=return_refresh)
 
 
 def config_to_file(
