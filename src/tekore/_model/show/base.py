@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pydantic import Field
 
-from ..base import Item
-from ..member import Copyright, Image
+from tekore._model.base import Item
+from tekore._model.member import Copyright, Image
 
 
 class Show(Item):

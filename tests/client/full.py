@@ -1,5 +1,4 @@
 import asyncio
-import sys
 from inspect import getmembers, ismethod
 from unittest.mock import MagicMock
 
@@ -9,18 +8,13 @@ from tekore import BadRequest, Scope, Spotify, Unauthorised
 from tekore._client.chunked import chunked, return_last, return_none
 
 
-@pytest.fixture()
+@pytest.fixture
 def client():
     return Spotify("token")
 
 
 async def sleep(k):
     return await asyncio.sleep(k * 0.01)
-
-
-contextvars_fail_reason = (
-    "Missing async implementation in" "contextvars backport for Python 3.6!"
-)
 
 
 class TestSpotifyUnits:
@@ -52,21 +46,21 @@ class TestSpotifyUnits:
         assert client.max_limits_on is True
 
     def test_new_max_limits_used_in_context(self, client):
-        with client.max_limits(True):
+        with client.max_limits(on=True):
             assert client.max_limits_on is True
 
     def test_old_max_limits_restored_after_context(self, client):
-        with client.max_limits(True):
+        with client.max_limits(on=True):
             pass
         assert client.max_limits_on is False
 
     def test_setting_max_limits_in_context_returns_set(self, client):
-        with client.max_limits(True):
+        with client.max_limits(on=True):
             client.max_limits_on = False
             assert client.max_limits_on is False
 
     def test_setting_max_limits_in_context_reset_after_context(self, client):
-        with client.max_limits(True):
+        with client.max_limits(on=True):
             client.max_limits_on = True
         assert client.max_limits_on is False
 
@@ -75,25 +69,24 @@ class TestSpotifyUnits:
         assert client.chunked_on is True
 
     def test_new_chunked_used_in_context(self, client):
-        with client.chunked(True):
+        with client.chunked(on=True):
             assert client.chunked_on is True
 
     def test_old_chunked_restored_after_context(self, client):
-        with client.chunked(True):
+        with client.chunked(on=True):
             pass
         assert client.chunked_on is False
 
     def test_setting_chunked_in_context_returns_set(self, client):
-        with client.chunked(True):
+        with client.chunked(on=True):
             client.chunked_on = False
             assert client.chunked_on is False
 
     def test_setting_chunked_in_context_reset_after_context(self, client):
-        with client.chunked(True):
+        with client.chunked(on=True):
             client.chunked_on = True
         assert client.chunked_on is False
 
-    @pytest.mark.xfail(sys.version_info < (3, 7), reason=contextvars_fail_reason)
     @pytest.mark.asyncio
     async def test_token_async_interrupt_preserves_context(self, client):
         async def do_a():
@@ -121,7 +114,6 @@ class TestSpotifyUnits:
 
         await asyncio.gather(do_a(), do_b())
 
-    @pytest.mark.xfail(sys.version_info < (3, 7), reason=contextvars_fail_reason)
     @pytest.mark.asyncio
     async def test_token_context_unaffected_by_set_in_another_task(self, client):
         async def do_a():
@@ -201,33 +193,29 @@ class TestSpotifyUnits:
         httpx_mock.add_response(401)
         client = Spotify("token")
         func = client.playback
-        try:
+        with pytest.raises(Unauthorised) as e:
             func()
-            raise AssertionError()
-        except Unauthorised as e:
-            assert e.required_scope == func.required_scope
-            assert e.optional_scope == func.optional_scope
-            assert e.scope == func.scope
+        assert e.value.required_scope == func.required_scope
+        assert e.value.optional_scope == func.optional_scope
+        assert e.value.scope == func.scope
 
     @pytest.mark.asyncio
     async def test_async_unauthorised_contains_missing_scopes(self, httpx_mock):
         httpx_mock.add_response(401)
         client = Spotify("token", asynchronous=True)
         func = client.playback
-        try:
+        with pytest.raises(Unauthorised) as e:
             await func()
-            raise AssertionError()
-        except Unauthorised as e:
-            assert e.required_scope == func.required_scope
-            assert e.optional_scope == func.optional_scope
-            assert e.scope == func.scope
+        assert e.value.required_scope == func.required_scope
+        assert e.value.optional_scope == func.optional_scope
+        assert e.value.scope == func.scope
 
 
 class TestSpotifyMaxLimits:
     def test_turning_on_max_limits_returns_more(self, app_token):
         client = Spotify(app_token)
         (s1,) = client.search("piano")
-        with client.max_limits(True):
+        with client.max_limits(on=True):
             (s2,) = client.search("piano")
 
         assert s1.limit < s2.limit
@@ -236,7 +224,7 @@ class TestSpotifyMaxLimits:
     def test_turning_off_max_limits_returns_less(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
         (s1,) = client.search("piano")
-        with client.max_limits(False):
+        with client.max_limits(on=False):
             (s2,) = client.search("piano")
 
         assert s1.limit > s2.limit
@@ -259,7 +247,7 @@ class TestSpotifyMaxLimits:
     def test_specifying_pos_args_until_limit(self, app_token):
         client = Spotify(app_token, max_limits_on=True)
         (s1,) = client.search("piano", ("track",), None, None)
-        with client.max_limits(False):
+        with client.max_limits(on=False):
             (s2,) = client.search("piano", ("track",), None, None)
 
         assert s1.limit > s2.limit
@@ -300,13 +288,13 @@ class TestSpotifyChunked:
 
     def test_chunked_context_enables(self):
         client = Spotify()
-        with client.chunked(True):
+        with client.chunked(on=True):
             assert client.chunked_on is True
         client.close()
 
     def test_chunked_context_disables(self):
         client = Spotify(chunked_on=True)
-        with client.chunked(False):
+        with client.chunked(on=False):
             assert client.chunked_on is False
         client.close()
 

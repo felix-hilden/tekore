@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from ..album.base import Album
-from ..member import Copyright
-from ..paging import OffsetPaging
-from ..serialise import Model
-from ..track import SimpleTrackPaging
+from tekore._model.album.base import Album
+from tekore._model.member import Copyright
+from tekore._model.paging import OffsetPaging
+from tekore._model.serialise import Model
+from tekore._model.track import SimpleTrackPaging
 
 
 class FullAlbum(Album):

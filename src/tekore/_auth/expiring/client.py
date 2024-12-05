@@ -5,8 +5,9 @@ from hashlib import sha256
 from secrets import token_urlsafe
 from urllib.parse import urlencode
 
-from ..._sender import Client, Request, Sender, send_and_process
-from ..scope import Scope
+from tekore._auth.scope import Scope
+from tekore._sender import Client, Request, Sender, send_and_process
+
 from .decor import parse_refreshed_token, parse_token
 from .token import Token
 
@@ -51,13 +52,13 @@ class Credentials(Client):
         redirect_uri: str | None = None,
         sender: Sender | None = None,
         asynchronous: bool | None = None,
-    ):
+    ) -> None:
         super().__init__(sender, asynchronous)
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"client_id={self.client_id!r}",
             f"client_secret={self.client_secret!r}",
@@ -69,9 +70,8 @@ class Credentials(Client):
     def _token_request(self, payload: dict, auth: bool) -> Request:
         if auth:
             if self.client_secret is None:
-                raise ValueError(
-                    f"A client secret is required! Got `{self.client_secret}`."
-                )
+                msg = f"A client secret is required! Got `{self.client_secret}`."
+                raise ValueError(msg)
             token = b64encode(self.client_id + ":" + self.client_secret)
             headers = {"Authorization": f"Basic {token}"}
         else:
@@ -208,7 +208,9 @@ class Credentials(Client):
         tuple[str, str]
             authorisation URL and PKCE code verifier
         """
-        assert 32 <= verifier_bytes <= 96, "Invalid number of verifier bytes!"
+        if not (32 <= verifier_bytes <= 96):
+            msg = "Invalid number of verifier bytes!"
+            raise AssertionError(msg)
         verifier = token_urlsafe(verifier_bytes)
 
         sha = sha256(verifier.encode())
@@ -294,7 +296,6 @@ class Credentials(Client):
         """
         if token.refresh_token is None:
             return self.request_client_token()
-        elif token.uses_pkce:
+        if token.uses_pkce:
             return self.refresh_pkce_token(token.refresh_token)
-        else:
-            return self.refresh_user_token(token.refresh_token)
+        return self.refresh_user_token(token.refresh_token)

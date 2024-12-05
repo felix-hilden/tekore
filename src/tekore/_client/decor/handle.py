@@ -1,3 +1,5 @@
+from httpx import codes
+
 from tekore._sender import Request, Response
 from tekore._sender.error import get_error
 from tekore.model import PlayerErrorReason
@@ -23,7 +25,7 @@ def parse_error_reason(response: Response) -> str:
 
 def handle_errors(request: Request, response: Response) -> None:
     """Examine response and raise errors accordingly."""
-    if response.status_code >= 400:
+    if codes.is_error(response.status_code):
         error_str = error_format.format(
             url=response.url,
             code=response.status_code,

@@ -19,7 +19,7 @@ def top_item(item: str) -> Callable:
     return post_func
 
 
-def single(type_: Model, from_item: str | None = None) -> Callable:
+def single(type_: type[Model], from_item: str | None = None) -> Callable:
     """
     Unpack dict or items in ``from_item`` into single constructor.
 
@@ -33,7 +33,7 @@ def single(type_: Model, from_item: str | None = None) -> Callable:
     return post_func
 
 
-def model_list(type_: Model, from_item: str | None = None) -> Callable:
+def model_list(type_: type[Model], from_item: str | None = None) -> Callable:
     """Unpack items inside ``from_item`` of dict into constructors."""
 
     def post_func(json: dict):

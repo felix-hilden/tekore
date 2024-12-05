@@ -20,7 +20,7 @@ class StrEnumMeta(EnumMeta):
             enum_class._member_map_[k.lower()] = v
         return enum_class
 
-    def __getitem__(self, name: str):
+    def __getitem__(cls, name: str):
         # Ignore case on get item
         return super().__getitem__(name.lower())
 
@@ -36,14 +36,14 @@ class StrEnum(str, Enum, metaclass=StrEnumMeta):
     def _missing_(cls, value):
         return cls[value.lower()]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
 class Model(BaseModel):
     """Response model base."""
 
-    def __init__(self, **data):
+    def __init__(self, **data) -> None:
         """"""
         super().__init__(**data)
         unknowns = set(data.keys()) - set(self.__dict__.keys())

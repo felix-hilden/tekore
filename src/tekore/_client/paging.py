@@ -13,7 +13,7 @@ def parse_paging_result(result):
     """Parse through the varying paging layouts."""
     # If only one top-level key, the paging object is one level deeper
     if len(result) == 1:
-        key = list(result.keys())[0]
+        key = next(iter(result.keys()))
         result = result[key]
 
     return result
@@ -44,23 +44,23 @@ class SpotifyPaging(SpotifyBase):
             return self._async_next(page)
 
         if page.next is None:
-            return
+            return None
 
         try:
             next_set = self._get_paging_result(page.next)
             return type(page)(**next_set)
         except BadRequest:
-            return
+            return None
 
     async def _async_next(self, page: Paging) -> Paging | None:
         if page.next is None:
-            return
+            return None
 
         try:
             next_set = await self._get_paging_result(page.next)
             return type(page)(**next_set)
         except BadRequest:
-            return
+            return None
 
     def previous(self, page: OffsetPaging) -> OffsetPaging | None:
         """
@@ -80,14 +80,14 @@ class SpotifyPaging(SpotifyBase):
             return self._async_previous(page)
 
         if page.previous is None:
-            return
+            return None
 
         previous_set = self._get_paging_result(page.previous)
         return type(page)(**previous_set)
 
     async def _async_previous(self, page: OffsetPaging) -> OffsetPaging | None:
         if page.previous is None:
-            return
+            return None
 
         previous_set = await self._get_paging_result(page.previous)
         return type(page)(**previous_set)
@@ -111,18 +111,19 @@ class SpotifyPaging(SpotifyBase):
         """
         if self.is_async:
             return self._async_all_pages(page)
-        else:
-            return self._sync_all_pages(page)
+        return self._sync_all_pages(page)
 
     def _sync_all_pages(self, page: Paging):
-        while page is not None:
-            yield page
-            page = self.next(page)
+        current: Paging | None = page
+        while current is not None:
+            yield current
+            current = self.next(current)
 
     async def _async_all_pages(self, page: Paging):
-        while page is not None:
-            yield page
-            page = await self._async_next(page)
+        current: Paging | None = page
+        while current is not None:
+            yield current
+            current = await self._async_next(current)
 
     def all_items(self, page: Paging) -> Generator[Model, None, None]:
         """
@@ -143,14 +144,13 @@ class SpotifyPaging(SpotifyBase):
         """
         if self.is_async:
             return self._async_all_items(page)
-        else:
-            return self._sync_all_items(page)
+        return self._sync_all_items(page)
 
-    def _sync_all_items(self, page: Paging):
-        for p in self.all_pages(page):
-            yield from p.items
+    def _sync_all_items(self, paging: Paging):
+        for page in self.all_pages(paging):
+            yield from page.items
 
-    async def _async_all_items(self, page: Paging):
-        async for page in self._async_all_pages(page):
+    async def _async_all_items(self, paging: Paging):
+        async for page in self._async_all_pages(paging):
             for item in page.items:
                 yield item

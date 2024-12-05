@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ..base import Item
-from ..member import Copyright, Image
-from ..serialise import Model
+from tekore._model.base import Item
+from tekore._model.member import Copyright, Image
+from tekore._model.serialise import Model
 
 
 class Author(Model):

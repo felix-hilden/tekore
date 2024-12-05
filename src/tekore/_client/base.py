@@ -35,7 +35,7 @@ class SpotifyBase(Client):
         asynchronous: bool | None = None,
         max_limits_on: bool = False,
         chunked_on: bool = False,
-    ):
+    ) -> None:
         # Docstring in the main client
         super().__init__(sender, asynchronous)
         self._token = token
@@ -48,7 +48,7 @@ class SpotifyBase(Client):
         return self._token_cv.get(self._token)
 
     @token.setter
-    def token(self, value):
+    def token(self, value) -> None:
         try:
             self._token_cv.get()
         except LookupError:
@@ -62,7 +62,7 @@ class SpotifyBase(Client):
         return self._max_limits_on_cv.get(self._max_limits_on)
 
     @max_limits_on.setter
-    def max_limits_on(self, value):
+    def max_limits_on(self, value) -> None:
         try:
             self._max_limits_on_cv.get()
         except LookupError:
@@ -76,7 +76,7 @@ class SpotifyBase(Client):
         return self._chunked_on_cv.get(self._chunked_on)
 
     @chunked_on.setter
-    def chunked_on(self, value):
+    def chunked_on(self, value) -> None:
         try:
             self._chunked_on_cv.get()
         except LookupError:
@@ -84,7 +84,7 @@ class SpotifyBase(Client):
         else:
             self._chunked_on_cv.set(value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"token={self.token!r}",
             f"max_limits_on={self.max_limits_on}",
@@ -94,10 +94,7 @@ class SpotifyBase(Client):
         return type(self).__name__ + "(" + ", ".join(options) + ")"
 
     def _create_headers(self, content_type: str = "application/json"):
-        return {
-            "Authorization": f"Bearer {str(self.token)}",
-            "Content-Type": content_type,
-        }
+        return {"Authorization": f"Bearer {self.token!s}", "Content-Type": content_type}
 
     def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """

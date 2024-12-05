@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from ..episode import SimpleEpisodePaging
-from ..show import Show
+from tekore._model.episode import SimpleEpisodePaging
+from tekore._model.show import Show
 
 
 class FullShow(Show):

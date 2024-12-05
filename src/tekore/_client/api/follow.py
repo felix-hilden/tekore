@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.chunked import chunked, join_lists, return_none
+from tekore._client.decor import maximise_limit, scopes, send_and_process
+from tekore._client.process import nothing, single
 from tekore.model import FullArtistCursorPaging
-
-from ..base import SpotifyBase
-from ..chunked import chunked, join_lists, return_none
-from ..decor import maximise_limit, scopes, send_and_process
-from ..process import nothing, single
 
 
 class SpotifyFollow(SpotifyBase):

@@ -2,6 +2,8 @@
 Fixtures for tests that require application or user credentials.
 """
 
+from __future__ import annotations
+
 import os
 
 import pytest
@@ -12,17 +14,16 @@ from tests._util import handle_warnings
 skip_is_fail = os.getenv("TEKORE_TEST_SKIP_IS_FAIL", None)
 
 
-def skip_or_fail(ex_type: type, msg: str, ex: Exception = None):
+def skip_or_fail(ex_type: type, msg: str, ex: Exception | None = None):
     """
     Skip or fail test execution based on environment.
     """
-    if skip_is_fail is not None:
-        if ex is None:
-            raise ex_type(msg)
-        else:
-            raise ex_type(msg) from ex
-    else:
+    if skip_is_fail is None:
         pytest.skip(msg)
+
+    if ex is None:
+        raise ex_type(msg)
+    raise ex_type(msg) from ex
 
 
 @pytest.fixture(scope="session")
@@ -77,7 +78,7 @@ def user_token(app_env, user_refresh):
     cred.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def app_client(app_token):
     """
     Provides a client with an application token.
@@ -87,7 +88,7 @@ def app_client(app_token):
     sender.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def user_client(user_token):
     """
     Provides a client with a user token.
@@ -107,7 +108,7 @@ def data_client(user_token):
     sender.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 async def app_aclient(app_token):
     """
     Provides an asynchronous client with an application token.
@@ -117,7 +118,7 @@ async def app_aclient(app_token):
     await sender.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 async def user_aclient(user_token):
     """
     Provides an asynchronous client with a user token.

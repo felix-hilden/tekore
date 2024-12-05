@@ -209,8 +209,6 @@ class TestSpotifyPlaylistModify:
             # failure in CI although the call works. Disabling test
             # to not cause noise.
             # assert playlist.name == new_name
-        except Exception:
-            raise
         finally:
             # Unfollow (delete) playlist to tear down
             user_client.playlist_unfollow(playlist.id)

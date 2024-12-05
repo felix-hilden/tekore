@@ -1,5 +1,8 @@
-from .._sender import Request, Response, send_and_process
-from .._sender.base import Sender
+from httpx import codes
+
+from tekore._sender import Request, Response, send_and_process
+from tekore._sender.base import Sender
+
 from .base import SpotifyBase
 
 
@@ -9,14 +12,13 @@ def is_short_link(url: str) -> bool:
 
 
 def _process_short_link(request: Request, response: Response) -> str:
-    if response.status_code == 307:
+    if response.status_code == codes.TEMPORARY_REDIRECT:
         return response.headers["location"]
-    else:
-        return request.url
+    return request.url
 
 
 @send_and_process(_process_short_link)
-def _send_short_link(self: Sender, request: Request):
+def _send_short_link(_: Sender, request: Request):
     return request
 
 

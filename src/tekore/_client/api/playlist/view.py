@@ -4,12 +4,11 @@ from collections.abc import Callable, Iterable
 from functools import wraps
 
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.chunked import _get_arg
+from tekore._client.decor import maximise_limit, scopes, send_and_process
+from tekore._client.process import model_list, nothing, single
 from tekore.model import FullPlaylist, Image, PlaylistTrackPaging, SimplePlaylistPaging
-
-from ...base import SpotifyBase
-from ...chunked import _get_arg
-from ...decor import maximise_limit, scopes, send_and_process
-from ...process import model_list, nothing, single
 
 
 def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
