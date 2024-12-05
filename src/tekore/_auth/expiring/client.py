@@ -67,7 +67,7 @@ class Credentials(Client):
         ]
         return type(self).__name__ + "(" + ", ".join(options) + ")"
 
-    def _token_request(self, payload: dict, auth: bool) -> Request:
+    def _token_request(self, payload: dict, *, auth: bool) -> Request:
         if auth:
             if self.client_secret is None:
                 msg = f"A client secret is required! Got `{self.client_secret}`."

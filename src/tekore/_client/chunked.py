@@ -5,7 +5,7 @@ from collections.abc import Callable, Generator
 from functools import reduce, wraps
 
 
-def _chunks(lst: list, n: int, reverse: bool) -> Generator[list]:
+def _chunks(lst: list, n: int, *, reverse: bool) -> Generator[list]:
     """
     Chunk list into length 'n' sublists.
 
@@ -118,7 +118,7 @@ def chunked(
             else:
                 reverse_bool = False
 
-            chunks = _chunks(arg_val, chunk_size, reverse_bool)
+            chunks = _chunks(arg_val, chunk_size, reverse=reverse_bool)
 
             if self.is_async:
                 return async_wrapper(self, chunks, chain_val, args, kwargs)
