@@ -95,6 +95,7 @@ def mock_response(code: int = 200, content: dict | None = None) -> Response:
     return Response("https://url.com", {}, code, content or token_dict())
 
 
+@pytest.mark.api
 class TestCredentialsOnline:
     def test_request_client_token(self, app_env):
         c = Credentials(app_env[0], app_env[1])

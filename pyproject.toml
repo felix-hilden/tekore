@@ -47,6 +47,7 @@ version = {attr = "tekore.__version__"}
 [tool.pytest.ini_options]
 python_files = "*.py"
 testpaths = ["tests"]
+markers = ["api: tests that connect to the real Spotify Web API"]
 asyncio_mode = "auto"
 filterwarnings = [
     "error",

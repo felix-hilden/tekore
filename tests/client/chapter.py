@@ -5,6 +5,7 @@ from tekore import NotFound, from_uri
 from ._resources import chapter_id, chapter_ids
 
 
+@pytest.mark.api
 class TestSpotifyChapter:
     @pytest.mark.xfail(reason="API inconsistencies.")
     def test_chapter_no_market_not_found(self, app_client):

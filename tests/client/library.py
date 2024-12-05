@@ -73,6 +73,7 @@ def assert_not_contains(client, type_: str, ids: list):
     assert not any(call(client, type_, ids))
 
 
+@pytest.mark.api
 @pytest.mark.usefixtures("setup")
 class TestSpotifyFollow:
     """

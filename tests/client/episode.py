@@ -5,6 +5,7 @@ from tekore import HTTPError
 from ._resources import episode_id, episode_ids
 
 
+@pytest.mark.api
 class TestSpotifyEpisode:
     @pytest.mark.xfail(reason="API inconsistencies.")
     def test_episode_not_found_without_market(self, app_client):

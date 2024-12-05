@@ -5,6 +5,7 @@ import tekore as tk
 from ._resources import artist_ids, category_id, genres, track_id
 
 
+@pytest.mark.api
 class TestSpotifyBrowse:
     def test_featured_playlists_with_country(self, app_client):
         msg, playlists = app_client.featured_playlists(country="US")
