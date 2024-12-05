@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from tekore import HTTPError, Spotify
+from tekore import HTTPError, Response, Spotify
 from tekore.model import PlayerErrorReason
 
 from ._resources import album_id
@@ -28,29 +28,23 @@ class TestSpotifyBaseUnits:
         assert client.token == "new"
 
     def test_bad_request_is_parsed_for_error_reason(self, client):
-        error = list(PlayerErrorReason)[0]
-
-        class BadResponse:
-            status_code = 404
-            url = "example.com"
-            content = {"error": {"message": "Error message", "reason": error.name}}
-
+        error = next(iter(PlayerErrorReason))
+        response = Response(
+            url="example.com",
+            headers={},
+            status_code=404,
+            content={"error": {"message": "Error message", "reason": error.name}},
+        )
         sender = MagicMock()
-        sender.send.return_value = BadResponse()
+        sender.send.return_value = response
         sender.is_async = False
         client.sender = sender
 
-        try:
+        with pytest.raises(HTTPError, match=error.value):
             client.album("not-an-id")
-            raise AssertionError()
-        except HTTPError as e:
-            assert error.value in str(e)
 
 
 class TestSpotifyBase:
     def test_album_nonexistent_market_error_message_parsed(self, app_client):
-        try:
+        with pytest.raises(HTTPError, match="__"):
             app_client.album(album_id, market="__")
-            raise AssertionError()
-        except HTTPError as e:
-            assert "__" in str(e)

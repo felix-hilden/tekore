@@ -1,4 +1,5 @@
-from ..audiobook import SimpleAudiobook
+from tekore._model.audiobook import SimpleAudiobook
+
 from .base import Chapter
 
 

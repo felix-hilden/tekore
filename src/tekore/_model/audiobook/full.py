@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from ..chapter import SimpleChapterPaging
+from tekore._model.chapter import SimpleChapterPaging
+
 from .base import Audiobook
 
 

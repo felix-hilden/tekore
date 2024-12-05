@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from configparser import ConfigParser
 from os import environ
+from pathlib import Path
 from warnings import warn
 
 
@@ -34,12 +35,12 @@ def _read_configuration(conf: dict, return_refresh: bool = False) -> tuple:
         user_refresh_var,
     )
 
-    variables = (client_id_var, client_secret_var, redirect_uri_var)
+    variables = [client_id_var, client_secret_var, redirect_uri_var]
 
     if return_refresh:
-        variables += (user_refresh_var,)
+        variables.append(user_refresh_var)
 
-    values = tuple(conf.get(var, None) for var in variables)
+    values = tuple(conf.get(var) for var in variables)
 
     for var, val in zip(variables, values):
         if val is None:
@@ -99,7 +100,7 @@ def _read_configfile(file_path: str, force: bool = True) -> ConfigParser:
     c.optionxform = str
 
     if force:
-        with open(file_path, "r") as f:
+        with Path(file_path).open() as f:
             c.read_file(f)
     else:
         c.read(file_path)
@@ -219,5 +220,5 @@ def config_to_file(
 
     c[section].update(val_dict)
 
-    with open(file_path, "w") as f:
+    with Path(file_path).open("w") as f:
         c.write(f)

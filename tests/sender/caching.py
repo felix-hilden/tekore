@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 
@@ -37,22 +38,19 @@ def response(code, url, params, cc=None, etag=None, vary=None) -> Response:
 
 def pair(code, url, params=None, cc=None, etag=None, vary_h=None) -> tuple:
     req = request(url, params or {}, vary_h or {})
-    if vary_h is not None:
-        vary = ", ".join([k for k in vary_h])
-    else:
-        vary = None
+    vary = ", ".join(list(vary_h)) if vary_h is not None else None
     res = response(code, url, params or {}, cc, etag, vary)
     return req, res
 
 
-def multiple(func: callable, n: int, *args, **kwargs):
+def multiple(func: Callable, n: int, *args, **kwargs):
     return [func(*args, **kwargs) for _ in range(n)]
 
 
 module = "tekore._sender.extending"
 
 
-@pytest.fixture()
+@pytest.fixture
 def sender():
     return CachingSender()
 
@@ -68,7 +66,7 @@ class TestCachingSender:
         s = CachingSender()
         assert repr(s).startswith("CachingSender(")
 
-    def test_other_methods_than_GET_not_cached(self, sender):
+    def test_other_methods_than_get_not_cached(self, sender):
         methods = ("PUT", "POST", "DELETE")
 
         for meth in methods:

@@ -1,4 +1,5 @@
-from ..paging import OffsetPaging
+from tekore._model.paging import OffsetPaging
+
 from .base import Chapter
 
 

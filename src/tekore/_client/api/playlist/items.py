@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from tekore._auth import scope
-
-from ...base import SpotifyBase
-from ...chunked import chunked, return_last
-from ...decor import scopes, send_and_process
-from ...process import nothing, top_item
+from tekore._client.base import SpotifyBase
+from tekore._client.chunked import chunked, return_last
+from tekore._client.decor import scopes, send_and_process
+from tekore._client.process import nothing, top_item
 
 
 class SpotifyPlaylistItems(SpotifyBase):
@@ -97,7 +96,7 @@ class SpotifyPlaylistItems(SpotifyBase):
         str
             snapshot ID for the playlist
         """
-        payload = {
+        payload: dict[str, int | str] = {
             "range_start": range_start,
             "range_length": range_length,
             "insert_before": insert_before,

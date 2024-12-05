@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from ..paging import OffsetPaging
+from tekore._model.paging import OffsetPaging
+
 from .base import Audiobook, Author, Narrator
 
 

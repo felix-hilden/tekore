@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import maximise_limit, scopes, send_and_process
+from tekore._client.process import multiple, single, top_item
 from tekore.model import (
     Category,
     CategoryPaging,
@@ -8,9 +11,6 @@ from tekore.model import (
     SimplePlaylistPaging,
 )
 
-from ...base import SpotifyBase
-from ...decor import maximise_limit, scopes, send_and_process
-from ...process import multiple, single, top_item
 from .validate import validate_attributes
 
 
@@ -226,7 +226,7 @@ class SpotifyBrowse(SpotifyBase):
         ValueError
             if any attribute is not allowed
         """
-        params = dict(limit=limit)
+        params: dict[str, int | str] = {"limit": limit}
         if artist_ids is not None:
             params["seed_artists"] = ",".join(artist_ids)
         if genres is not None:

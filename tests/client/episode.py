@@ -9,7 +9,7 @@ class TestSpotifyEpisode:
     @pytest.mark.xfail(reason="API inconsistencies.")
     def test_episode_not_found_without_market(self, app_client):
         with pytest.raises(HTTPError):
-            print(app_client.episode(episode_id))
+            app_client.episode(episode_id)
 
     def test_episode_found_with_market(self, app_client):
         episode = app_client.episode(episode_id, market="FI")

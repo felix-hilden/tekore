@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from ..paging import OffsetPaging
-from ..serialise import Model
-from ..show.base import Show
+from tekore._model.paging import OffsetPaging
+from tekore._model.serialise import Model
+from tekore._model.show.base import Show
 
 
 class SimpleShow(Show):

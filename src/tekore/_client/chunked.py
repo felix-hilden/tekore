@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import operator
 from collections.abc import Callable, Generator
-from functools import wraps
+from functools import reduce, wraps
 
 
 def _chunks(lst: list, n: int, reverse: bool) -> Generator[list]:
@@ -137,12 +138,12 @@ def chunked(
 
 def join_lists(responses):
     """Join lists of models."""
-    return sum(responses, [])
+    return reduce(operator.iadd, responses, [])
 
 
-def return_none(_):
+def return_none(_) -> None:
     """Return None always."""
-    return None
+    return
 
 
 def return_last(responses):

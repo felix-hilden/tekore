@@ -8,7 +8,7 @@ from tests.conftest import skip_or_fail
 from ._resources import album_id, episode_id, track_ids
 
 
-@pytest.fixture()
+@pytest.fixture
 def setup(user_client):
     try:
         devices = user_client.playback_devices()
@@ -140,7 +140,7 @@ class TestSpotifyPlayerSequence:
 
         # Playback repeat / shuffle
         user_client.playback_repeat("off")
-        user_client.playback_shuffle(False)
+        user_client.playback_shuffle(state=False)
 
         # Playback start context
         user_client.playback_start_context(to_uri("album", album_id))

@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import scopes, send_and_process
+from tekore._client.process import nothing
 from tekore._convert import to_uri
 from tekore.model import RepeatState
 
-from ...base import SpotifyBase
-from ...decor import scopes, send_and_process
-from ...process import nothing
 
-
-def offset_to_dict(offset: int | str):
+def offset_to_dict(offset: int | str | None):
     """
     Parse playback start offset to an appropriate payload member.
 
@@ -18,8 +17,9 @@ def offset_to_dict(offset: int | str):
     """
     if isinstance(offset, int):
         return {"position": offset}
-    elif isinstance(offset, str):
+    if isinstance(offset, str):
         return {"uri": to_uri("track", offset)}
+    return None
 
 
 class SpotifyPlayerModify(SpotifyBase):
@@ -216,8 +216,8 @@ class SpotifyPlayerModify(SpotifyBase):
         device_id
             device to toggle shuffle on
         """
-        state = "true" if state else "false"
-        return self._put("me/player/shuffle", state=state, device_id=device_id)
+        state_arg = "true" if state else "false"
+        return self._put("me/player/shuffle", state=state_arg, device_id=device_id)
 
     @scopes([scope.user_modify_playback_state])
     @send_and_process(nothing)

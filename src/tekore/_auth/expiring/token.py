@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 from abc import ABC, abstractmethod
 
-from ..scope import Scope
+from tekore._auth.scope import Scope
 
 
 class AccessToken(ABC):
@@ -19,7 +19,7 @@ class AccessToken(ABC):
         """
         raise NotImplementedError
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Bearer token value."""
         return self.access_token
 
@@ -32,7 +32,7 @@ class Token(AccessToken):
     The refresh token of a client token is ``None``.
     """
 
-    def __init__(self, token_info: dict, uses_pkce: bool):
+    def __init__(self, token_info: dict, uses_pkce: bool) -> None:
         self._access_token = token_info["access_token"]
         self._token_type = token_info["token_type"]
 
@@ -42,11 +42,11 @@ class Token(AccessToken):
             components = []
         self._scope = Scope(*components)
 
-        self._refresh_token = token_info.get("refresh_token", None)
+        self._refresh_token = token_info.get("refresh_token")
         self._expires_at = int(time.time()) + token_info["expires_in"]
         self._uses_pkce = uses_pkce
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"access_token={self.access_token!r}",
             f"refresh_token={self.refresh_token!r}",

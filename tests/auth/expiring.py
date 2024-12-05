@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -30,7 +32,7 @@ def token_dict():
     }
 
 
-def make_token(attrs: dict = None, uses_pkce: bool = False):
+def make_token(attrs: dict | None = None, *, uses_pkce: bool = False):
     a = token_dict()
     a.update(attrs or {})
     return Token(a, uses_pkce)
@@ -89,7 +91,7 @@ class TestToken:
         assert len(t.scope) == 0
 
 
-def mock_response(code: int = 200, content: dict = None) -> MagicMock:
+def mock_response(code: int = 200, content: dict | None = None) -> Response:
     return Response("https://url.com", {}, code, content or token_dict())
 
 
@@ -142,14 +144,14 @@ class TestCredentialsOffline:
         c.close()
 
     def test_credentials_initialisation(self):
-        Credentials(client_id="id", client_secret="secret", redirect_uri="uri").close()
+        Credentials(client_id="id", client_secret="secret", redirect_uri="uri").close()  # noqa: S106
 
     def test_credentials_only_client_id_mandatory(self):
         Credentials("id").close()
 
     def test_basic_token_with_no_secret_raises(self):
         c = Credentials("id")
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="client secret is required"):
             c.request_client_token()
         c.close()
 

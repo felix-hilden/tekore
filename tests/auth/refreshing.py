@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from tekore import Credentials, RefreshingCredentials, RefreshingToken, Token
 
 
-def make_token_obj(value: str, expiring: bool):
+def make_token_obj(value: str, *, expiring: bool):
     token = MagicMock()
     token.is_expiring = expiring
     token.access_token = value
@@ -12,22 +12,22 @@ def make_token_obj(value: str, expiring: bool):
 
 class TestRefreshingToken:
     def test_repr(self):
-        low_token = make_token_obj("token", False)
+        low_token = make_token_obj("token", expiring=False)
         cred = MagicMock()
 
         auto_token = RefreshingToken(low_token, cred)
         assert repr(auto_token).startswith("RefreshingToken(")
 
     def test_fresh_token_returned(self):
-        low_token = make_token_obj("token", False)
+        low_token = make_token_obj("token", expiring=False)
         cred = MagicMock()
 
         auto_token = RefreshingToken(low_token, cred)
         assert auto_token.access_token == "token"
 
     def test_expiring_token_refreshed(self):
-        expiring = make_token_obj("expiring", True)
-        refreshed = make_token_obj("refreshed", False)
+        expiring = make_token_obj("expiring", expiring=True)
+        refreshed = make_token_obj("refreshed", expiring=False)
         cred = MagicMock()
         cred.refresh.return_value = refreshed
 

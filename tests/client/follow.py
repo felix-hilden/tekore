@@ -1,5 +1,7 @@
 import pytest
 
+from tekore import HTTPError
+
 from ._resources import artist_ids, playlist_id, user_ids
 
 
@@ -11,9 +13,8 @@ def setup(data_client, current_user_id):
         )[0]
         current_artist_follows = data_client.artists_is_following(artist_ids)
         current_user_follows = data_client.users_is_following(user_ids)
-    except Exception:
+    except HTTPError:
         pytest.skip("State before tests could not be determined!")
-        return
 
     yield
 
