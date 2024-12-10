@@ -14,6 +14,7 @@ Added
 *****
 - Add missing typing for lists and dicts, modernise typing (:issue:`330`)
 - Explicitly support and test Python 3.13 (:issue:`329`)
+- Add support for HTTPX ``0.28`` (:issue:`336`)
 
 Fixed
 *****
