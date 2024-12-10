@@ -5,6 +5,7 @@ from tekore.model import AlbumGroup
 from ._resources import artist_id, artist_ids
 
 
+@pytest.mark.api
 class TestSpotifyArtist:
     def test_artist(self, app_client):
         artist = app_client.artist(artist_id)

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import maximise_limit, scopes, send_and_process
+from tekore._client.process import model_list, single
 from tekore.model import (
     CurrentlyPlaying,
     CurrentlyPlayingContext,
@@ -8,10 +11,6 @@ from tekore.model import (
     PlayHistoryPaging,
     Queue,
 )
-
-from ...base import SpotifyBase
-from ...decor import maximise_limit, scopes, send_and_process
-from ...process import model_list, single
 
 
 class SpotifyPlayerView(SpotifyBase):
@@ -38,10 +37,7 @@ class SpotifyPlayerView(SpotifyBase):
         CurrentlyPlayingContext
             information about current playback
         """
-        if tracks_only is True:
-            additional_types = None
-        else:
-            additional_types = "episode"
+        additional_types = None if tracks_only else "episode"
 
         return self._get("me/player", market=market, additional_types=additional_types)
 
@@ -71,10 +67,7 @@ class SpotifyPlayerView(SpotifyBase):
         CurrentlyPlaying
             information about the current track playing
         """
-        if tracks_only is True:
-            additional_types = None
-        else:
-            additional_types = "episode"
+        additional_types = None if tracks_only else "episode"
 
         return self._get(
             "me/player/currently-playing",

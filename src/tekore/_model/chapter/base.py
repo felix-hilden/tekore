@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from ..base import Item
-from ..member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
+from tekore._model.base import Item
+from tekore._model.member import Image, ReleaseDatePrecision, Restrictions, ResumePoint
 
 
 class Chapter(Item):

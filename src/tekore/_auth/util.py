@@ -23,9 +23,11 @@ def _parse_url_param(url: str, param: str) -> str:
     code = parse_qs(query).get(param, None)
 
     if code is None:
-        raise KeyError(f"Passed URL contains no parameter `{param}`!")
-    elif len(code) > 1:
-        raise KeyError(f"Passed URL contains multiple values for `{param}`!")
+        msg = f"Passed URL contains no parameter `{param}`!"
+        raise KeyError(msg)
+    if len(code) > 1:
+        msg = f"Passed URL contains multiple values for `{param}`!"
+        raise KeyError(msg)
 
     return code[0]
 
@@ -113,7 +115,7 @@ class UserAuth:
 
     def __init__(
         self, cred: Credentials | RefreshingCredentials, scope=None, pkce: bool = False
-    ):
+    ) -> None:
         self._cred = cred
         self.state = gen_state()
         self.verifier = None
@@ -126,7 +128,7 @@ class UserAuth:
                 scope, self.state, show_dialog=True
             )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"cred={self._cred!r}",
             f"url={self.url!r}",
@@ -165,14 +167,12 @@ class UserAuth:
             state = parse_state_from_url(url)
 
         if self.state != state:
-            raise AssertionError(
-                f"Inconsistent state! Expected `{self.state}`, got `{state}`."
-            )
+            msg = f"Inconsistent state! Expected `{self.state}`, got `{state}`."
+            raise AssertionError(msg)
 
         if self.verifier is not None:
             return self._cred.request_pkce_token(code, self.verifier)
-        else:
-            return self._cred.request_user_token(code)
+        return self._cred.request_user_token(code)
 
 
 def request_client_token(client_id: str, client_secret: str) -> RefreshingToken:
@@ -237,10 +237,10 @@ def prompt_for_user_token(
     auth = UserAuth(cred, scope=scope)
 
     if open_browser:
-        print("Opening browser for Spotify login...")
+        print("Opening browser for Spotify login...")  # noqa: T201
         webbrowser.open(auth.url)
     else:
-        print("Open this URL in your browser: " + auth.url)
+        print("Open this URL in your browser: " + auth.url)  # noqa: T201
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 
@@ -305,10 +305,10 @@ def prompt_for_pkce_token(
     auth = UserAuth(cred, scope=scope, pkce=True)
 
     if open_browser:
-        print("Opening browser for Spotify login...")
+        print("Opening browser for Spotify login...")  # noqa: T201
         webbrowser.open(auth.url)
     else:
-        print("Open this URL in your browser: " + auth.url)
+        print("Open this URL in your browser: " + auth.url)  # noqa: T201
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 

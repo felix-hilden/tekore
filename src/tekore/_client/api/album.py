@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+from tekore._client.base import SpotifyBase
+from tekore._client.chunked import chunked, join_lists
+from tekore._client.decor import maximise_limit, scopes, send_and_process
+from tekore._client.process import model_list, single
 from tekore.model import FullAlbum, SimpleTrackPaging
-
-from ..base import SpotifyBase
-from ..chunked import chunked, join_lists
-from ..decor import maximise_limit, scopes, send_and_process
-from ..process import model_list, single
 
 
 class SpotifyAlbum(SpotifyBase):

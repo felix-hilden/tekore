@@ -1,3 +1,5 @@
+from httpx import codes
+
 from .base import Request, Response
 
 
@@ -13,8 +15,8 @@ class HTTPError(Exception):
         response from the web server
     """
 
-    def __init__(self, message: str, request: Request, response: Response):
-        super(HTTPError, self).__init__(message)
+    def __init__(self, message: str, request: Request, response: Response) -> None:
+        super().__init__(message)
         self.request = request
         self.response = response
 
@@ -117,12 +119,9 @@ errors = {
 }
 
 
-def get_error(code):
+def get_error(code: int) -> type[HTTPError]:
     """Get error based on status code or default error."""
-    cls = errors.get(code, None)
+    cls = errors.get(code)
     if cls is None:
-        if code < 500:
-            cls = ClientError
-        else:
-            cls = ServerError
+        cls = ClientError if codes.is_client_error(code) else ServerError
     return cls

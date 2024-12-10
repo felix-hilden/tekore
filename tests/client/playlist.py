@@ -12,6 +12,7 @@ from ._resources import (
 )
 
 
+@pytest.mark.api
 class TestSpotifyPlaylistView:
     def test_playlists(self, app_client):
         app_client.playlists(user_id)
@@ -131,6 +132,7 @@ def assert_items_equal(client, playlist: str, items: list):
     assert [t.track.uri for t in observed.items] == items
 
 
+@pytest.mark.api
 class TestSpotifyPlaylistModify:
     """
     Ordered test set to test playlist creation and modification.
@@ -208,9 +210,7 @@ class TestSpotifyPlaylistModify:
             # For some reason the name not being reflected is a common
             # failure in CI although the call works. Disabling test
             # to not cause noise.
-            # assert playlist.name == new_name
-        except Exception:
-            raise
+            # assert playlist.name == new_name  # noqa: ERA001
         finally:
             # Unfollow (delete) playlist to tear down
             user_client.playlist_unfollow(playlist.id)

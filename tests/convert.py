@@ -67,7 +67,8 @@ class TestToURL:
 class TestFromURI:
     def test_valid(self):
         t, i = from_uri("spotify:track:b62")
-        assert t == "track" and i == "b62"
+        assert t == "track"
+        assert i == "b62"
 
     def test_invalid_id(self):
         with pytest.raises(ConversionError):
@@ -87,7 +88,8 @@ class TestFromURI:
 
     def test_user_non_b62(self):
         t, i = from_uri("spotify:user:a#a")
-        assert t == "user" and i == "a#a"
+        assert t == "user"
+        assert i == "a#a"
 
 
 class TestFromURL:

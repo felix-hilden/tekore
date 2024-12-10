@@ -20,7 +20,7 @@ def config_names_set(id_, secret, uri, refresh):
     tk.user_refresh_var = refresh
 
 
-@pytest.fixture()
+@pytest.fixture
 def conf_vars():
     import tekore as tk
 
@@ -39,7 +39,7 @@ def conf_path():
     return "test_config.ini"
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def write_conf(conf_path):
     test_config = """
 [DEFAULT]
@@ -56,14 +56,10 @@ REDIRECT_URI = an_uri
 [MISSING]
 WHATEVER = something
 """
-    with open(conf_path, "w") as f:
-        f.write(test_config)
-
+    file = Path(conf_path)
+    file.write_text(test_config)
     yield
-
-    import os
-
-    os.remove(conf_path)
+    file.unlink()
 
 
 @pytest.mark.usefixtures("conf_vars", "write_conf")
@@ -129,12 +125,11 @@ class TestReadConfig:
 
     def test_missing_variables_warned(self, conf_path):
         config_names_set("CLIENT_ID", "CLIENT_SECRET", "REDIRECT_URI", "_")
-        with handle_warnings("error"):
-            with pytest.raises(MissingConfigurationWarning):
-                config_from_file(conf_path, "MISSING")
+        with handle_warnings("error"), pytest.raises(MissingConfigurationWarning):
+            config_from_file(conf_path, "MISSING")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def remove_conf(conf_path):
     yield
     path = Path(conf_path)
@@ -162,7 +157,7 @@ class TestConfigToFile:
         config_to_file(conf_path, written)
         with handle_warnings("ignore"):
             loaded = config_from_file(conf_path)
-        assert (None, "secret", None) == loaded
+        assert loaded == (None, "secret", None)
 
     def test_config_write_to_section(self, conf_path):
         written = ("id", "secret", "uri")
@@ -184,7 +179,7 @@ class TestConfigToFile:
         config_to_file(conf_path, written)
 
         loaded = config_from_file(conf_path)
-        assert ("id", "another", "uri") == loaded
+        assert loaded == ("id", "another", "uri")
 
     def test_existing_configuration_preserved(self, conf_path):
         test_config = """
@@ -203,4 +198,4 @@ WHATEVER = something
         config_to_file(path, ("a", "b", "c"))
         text = path.read_text()
         conf = tuple(i in text for i in ("SOMETHING", "WHATEVER", "SECTION"))
-        assert (True, True, True) == conf
+        assert conf == (True, True, True)

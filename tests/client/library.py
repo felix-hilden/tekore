@@ -1,5 +1,7 @@
 import pytest
 
+from tekore import HTTPError
+
 from ._resources import album_ids, episode_ids, show_ids, track_ids
 
 
@@ -20,9 +22,8 @@ def setup(data_client):
         current_episodes = data_client.saved_episodes_contains(episode_ids)
         current_tracks = data_client.saved_tracks_contains(track_ids)
         current_shows = data_client.saved_shows_contains(show_ids)
-    except Exception:
+    except HTTPError:
         pytest.skip("State before tests could not be determined!")
-        return
 
     yield
 
@@ -72,6 +73,7 @@ def assert_not_contains(client, type_: str, ids: list):
     assert not any(call(client, type_, ids))
 
 
+@pytest.mark.api
 @pytest.mark.usefixtures("setup")
 class TestSpotifyFollow:
     """

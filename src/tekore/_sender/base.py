@@ -31,7 +31,7 @@ class Response:
 class Sender(ABC):
     """Sender interface for requests."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return type(self).__name__ + "()"
 
     @abstractmethod

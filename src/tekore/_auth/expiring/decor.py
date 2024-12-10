@@ -1,16 +1,19 @@
 from collections.abc import Callable
 
-from ..._sender import Request, Response
-from ..._sender.error import get_error
+from httpx import codes
+
+from tekore._sender import Request, Response
+from tekore._sender.error import get_error
+
 from .token import Token
 
 
 def handle_errors(request: Request, response: Response) -> None:
     """Examine response and raise errors accordingly."""
-    if response.status_code < 400:
+    if not codes.is_error(response.status_code):
         return
 
-    if response.status_code < 500:
+    if codes.is_client_error(response.status_code):
         error_str = f"{response.status_code} {response.content['error']}"
         description = response.content.get("error_description", None)
         if description is not None:

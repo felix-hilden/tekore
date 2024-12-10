@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from .._sender import Sender
+from tekore._sender import Sender
+
 from .expiring import AccessToken, Credentials, Token
 from .scope import Scope
 
@@ -33,11 +34,11 @@ class RefreshingToken(AccessToken):
         credentials manager for token refreshing
     """
 
-    def __init__(self, token: Token, credentials: Credentials):
+    def __init__(self, token: Token, credentials: Credentials) -> None:
         self._token = token
         self.credentials = credentials
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"access_token={self.access_token!r}",
             f"refresh_token={self.refresh_token!r}",
@@ -128,12 +129,12 @@ class RefreshingCredentials:
         client_secret: str | None = None,
         redirect_uri: str | None = None,
         sender: Sender | None = None,
-    ):
+    ) -> None:
         self.credentials = Credentials(
             client_id, client_secret, redirect_uri, sender, asynchronous=False
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         options = [
             f"client_id={self.credentials.client_id!r}",
             f"client_secret={self.credentials.client_secret!r}",

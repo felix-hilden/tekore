@@ -65,7 +65,7 @@ def _add_doc_section(doc: str, section: str) -> str:
     indent = (len(head) - len(head.lstrip(" "))) * " "
 
     section = indent + section.replace("\n", "\n" + indent)
-    return "\n".join([empty, head, "", section, body])
+    return f"{empty}\n{head}\n\n{section}\n{body}"
 
 
 def scopes(required: list | None = None, optional: list | None = None) -> Callable:

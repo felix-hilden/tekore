@@ -30,7 +30,7 @@ class SyncSender(Sender):
         :class:`httpx.Client` to use when sending requests
     """
 
-    def __init__(self, client: Client | None = None):
+    def __init__(self, client: Client | None = None) -> None:
         self.client = client or Client()
 
     def send(self, request: Request) -> Response:
@@ -77,7 +77,7 @@ class AsyncSender(Sender):
         :class:`httpx.AsyncClient` to use when sending requests
     """
 
-    def __init__(self, client: AsyncClient | None = None):
+    def __init__(self, client: AsyncClient | None = None) -> None:
         self.client = client or AsyncClient()
 
     async def send(self, request: Request) -> Response:

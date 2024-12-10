@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from ..album.base import Album, AlbumType
-from ..paging import OffsetPaging
-from ..serialise import StrEnum
+from tekore._model.album.base import Album, AlbumType
+from tekore._model.paging import OffsetPaging
+from tekore._model.serialise import StrEnum
 
 
 class AlbumGroup(StrEnum):

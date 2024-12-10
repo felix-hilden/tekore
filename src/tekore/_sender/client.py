@@ -27,7 +27,7 @@ class Client(ExtendingSender):
         if they are in conflict and instantiates a sender of the requested type
     """
 
-    def __init__(self, sender: Sender | None, asynchronous: bool | None = None):
+    def __init__(self, sender: Sender | None, asynchronous: bool | None = None) -> None:
         super().__init__(sender)
 
         if self.sender.is_async and asynchronous is False:

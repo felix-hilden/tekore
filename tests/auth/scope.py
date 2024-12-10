@@ -67,7 +67,7 @@ class TestScopeOperations:
         with pytest.raises(NotImplementedError):
             1 + scope.user_top_read
 
-    def test_add_invalid_Scope(self):
+    def test_add_invalid_scopeset(self):
         with pytest.raises(NotImplementedError):
             1 + Scope("a")
 
@@ -75,7 +75,7 @@ class TestScopeOperations:
         s = "a" + scope.user_top_read
         assert str(s) == "a user-top-read"
 
-    def test_add_str_Scope(self):
+    def test_add_str_scopeset(self):
         s = "a" + Scope("b")
         assert str(s) == "a b"
 
@@ -87,7 +87,7 @@ class TestScopeOperations:
         s = scope.user_follow_read + scope.user_top_read
         assert str(s) == "user-follow-read user-top-read"
 
-    def test_add_scope_Scope(self):
+    def test_add_scope_scopeset(self):
         s = scope.user_top_read + Scope("a")
         assert str(s) == "a user-top-read"
 
@@ -95,19 +95,19 @@ class TestScopeOperations:
         with pytest.raises(NotImplementedError):
             scope.user_top_read + 1
 
-    def test_add_Scope_str(self):
+    def test_add_scopeset_str(self):
         s = Scope("a") + "b"
         assert str(s) == "a b"
 
-    def test_add_Scope_scope(self):
+    def test_add_scopeset_scope(self):
         s = Scope("a") + scope.user_top_read
         assert str(s) == "a user-top-read"
 
-    def test_add_Scope_Scope(self):
+    def test_add_scopeset_scopeset(self):
         s = Scope("a") + Scope("b")
         assert str(s) == "a b"
 
-    def test_add_Scope_invalid_raises(self):
+    def test_add_scopeset_invalid_raises(self):
         with pytest.raises(NotImplementedError):
             Scope("a") + 1
 
@@ -115,7 +115,7 @@ class TestScopeOperations:
         with pytest.raises(NotImplementedError):
             1 - scope.user_top_read
 
-    def test_sub_invalid_Scope(self):
+    def test_sub_invalid_scopeset(self):
         with pytest.raises(NotImplementedError):
             1 - Scope("a")
 
@@ -127,11 +127,11 @@ class TestScopeOperations:
         s = "user-top-read" - scope.user_top_read
         assert str(s) == ""
 
-    def test_sub_str_Scope_different(self):
+    def test_sub_str_scopeset_different(self):
         s = "a" - Scope("b")
         assert str(s) == "a"
 
-    def test_sub_str_Scope_same(self):
+    def test_sub_str_scopeset_same(self):
         s = "a" - Scope("a")
         assert str(s) == ""
 
@@ -151,11 +151,11 @@ class TestScopeOperations:
         s = scope.user_top_read - scope.user_top_read
         assert str(s) == ""
 
-    def test_sub_scope_Scope_different(self):
+    def test_sub_scope_scopeset_different(self):
         s = scope.user_top_read - Scope("a")
         assert str(s) == "user-top-read"
 
-    def test_sub_scope_Scope_same(self):
+    def test_sub_scope_scopeset_same(self):
         s = scope.user_top_read - Scope("user-top-read")
         assert str(s) == ""
 
@@ -163,30 +163,30 @@ class TestScopeOperations:
         with pytest.raises(NotImplementedError):
             scope.user_top_read - 1
 
-    def test_sub_Scope_str_different(self):
+    def test_sub_scopeset_str_different(self):
         s = Scope("a") - "b"
         assert str(s) == "a"
 
-    def test_sub_Scope_str_same(self):
+    def test_sub_scopeset_str_same(self):
         s = Scope("a") - "a"
         assert str(s) == ""
 
-    def test_sub_Scope_scope_different(self):
+    def test_sub_scopeset_scope_different(self):
         s = Scope("a") - scope.user_top_read
         assert str(s) == "a"
 
-    def test_sub_Scope_scope_same(self):
+    def test_sub_scopeset_scope_same(self):
         s = Scope("user-top-read") - scope.user_top_read
         assert str(s) == ""
 
-    def test_sub_Scope_Scope_different(self):
+    def test_sub_scopeset_scopeset_different(self):
         s = Scope("a") - Scope("b")
         assert str(s) == "a"
 
-    def test_sub_Scope_Scope_same(self):
+    def test_sub_scopeset_scopeset_same(self):
         s = Scope("a") - Scope("a")
         assert str(s) == ""
 
-    def test_sub_Scope_invalid_raises(self):
+    def test_sub_scopeset_invalid_raises(self):
         with pytest.raises(NotImplementedError):
             Scope("a") - 1

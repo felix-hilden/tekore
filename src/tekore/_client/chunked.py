@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import operator
 from collections.abc import Callable, Generator
-from functools import wraps
+from functools import reduce, wraps
 
 
-def _chunks(lst: list, n: int, reverse: bool) -> Generator[list]:
+def _chunks(lst: list, n: int, *, reverse: bool) -> Generator[list]:
     """
     Chunk list into length 'n' sublists.
 
@@ -39,7 +40,7 @@ def _replace_arg(position, name, value, args, kwargs):
     return args, kwargs
 
 
-def chunked(
+def chunked(  # noqa: C901
     arg_name: str,
     arg_pos: int,
     chunk_size: int,
@@ -75,7 +76,7 @@ def chunked(
         position of the chain argument
     """
 
-    def decorator(function: Callable) -> Callable:
+    def decorator(function: Callable) -> Callable:  # noqa: C901
         nonlocal arg_pos, reverse_pos, chain_pos
         arg_pos -= 1
         if reverse_pos is not None:
@@ -117,7 +118,7 @@ def chunked(
             else:
                 reverse_bool = False
 
-            chunks = _chunks(arg_val, chunk_size, reverse_bool)
+            chunks = _chunks(arg_val, chunk_size, reverse=reverse_bool)
 
             if self.is_async:
                 return async_wrapper(self, chunks, chain_val, args, kwargs)
@@ -137,12 +138,12 @@ def chunked(
 
 def join_lists(responses):
     """Join lists of models."""
-    return sum(responses, [])
+    return reduce(operator.iadd, responses, [])
 
 
-def return_none(_):
+def return_none(_) -> None:
     """Return None always."""
-    return None
+    return
 
 
 def return_last(responses):

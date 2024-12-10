@@ -5,6 +5,7 @@ import tekore as tk
 from ._resources import artist_ids, category_id, genres, track_id
 
 
+@pytest.mark.api
 class TestSpotifyBrowse:
     def test_featured_playlists_with_country(self, app_client):
         msg, playlists = app_client.featured_playlists(country="US")
@@ -71,15 +72,15 @@ class TestSpotifyBrowse:
         assert len(rec.tracks) > 0
 
     def test_recommendations_invalid_attribute_raises(self, app_client):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid attribute"):
             app_client.recommendations(artist_ids=artist_ids, market="US", maxbogus=50)
 
     def test_recommendations_invalid_attribute_name_raises(self, app_client):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid attribute"):
             app_client.recommendations(artist_ids=artist_ids, market="US", max_bogus=50)
 
     def test_recommendations_invalid_attribute_prefix_raises(self, app_client):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid attribute"):
             app_client.recommendations(
                 artist_ids=artist_ids, market="US", bogus_valence=50
             )

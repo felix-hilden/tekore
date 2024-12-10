@@ -1,6 +1,9 @@
+import pytest
+
 from ._resources import user_id, user_id_hash
 
 
+@pytest.mark.api
 class TestSpotifyUser:
     def test_user(self, app_client):
         user = app_client.user(user_id)

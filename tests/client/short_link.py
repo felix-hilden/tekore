@@ -18,6 +18,9 @@ class TestSpotifyShortLink:
     def test_short_link_does_not_need_https(self):
         assert is_short_link("spotify.link/resource")
 
+
+@pytest.mark.api
+class TestSpotifyShortLinkOnline:
     def test_follow_short_link(self, app_client):
         resolved = app_client.follow_short_link(short_link)
         assert short_link != resolved

@@ -31,7 +31,8 @@ def check_type(type_: str | IdentifierType) -> None:
         When type is invalid.
     """
     if str(type_) not in IdentifierType.__members__:
-        raise ConversionError(f"Invalid type {type_!r}!")
+        msg = f"Invalid type {type_!r}!"
+        raise ConversionError(msg)
 
 
 # Match beginning, all base62 characters and end of string
@@ -50,7 +51,8 @@ def check_id(id_: str) -> None:
         When ID is invalid.
     """
     if id_ == "" or all_base62.search(id_) is None:
-        raise ConversionError(f"Invalid id: {id_!r}!")
+        msg = f"Invalid id: {id_!r}!"
+        raise ConversionError(msg)
 
 
 def to_uri(type_: str | IdentifierType, id_: str) -> str:
@@ -129,9 +131,7 @@ def from_uri(uri: str) -> tuple[str, str]:
         On invalid format, prefix, type or ID.
     """
     try:
-        spotify, type_, id_ = uri.split(":")
-        if spotify != "spotify":
-            raise ValueError()
+        type_, id_ = _parse_uri(uri)
     except ValueError as e:
         msg = f'Invalid URI: expected format "spotify:{{type}}:{{id}}", got {uri!r}!'
         raise ConversionError(msg) from e
@@ -140,6 +140,13 @@ def from_uri(uri: str) -> tuple[str, str]:
     if type_ != IdentifierType.user:
         check_id(id_)
 
+    return type_, id_
+
+
+def _parse_uri(uri: str) -> tuple[str, str]:
+    spotify, type_, id_ = uri.split(":")
+    if spotify != "spotify":
+        raise ValueError
     return type_, id_
 
 
@@ -172,10 +179,7 @@ def from_url(url: str) -> tuple[str, str]:
         On invalid format, prefix, type or ID.
     """
     try:
-        *prefixes, type_, id_ = url.split("/")
-        prefix = "/".join(prefixes)
-        if prefix not in _url_prefixes:
-            raise ValueError()
+        type_, id_ = _parse_url(url)
     except ValueError as e:
         valid_url = "[http[s]://]open.spotify.com/{type}/{id}"
         msg = f"Invalid URL: expected format {valid_url!r}, got {url!r}!"
@@ -186,4 +190,12 @@ def from_url(url: str) -> tuple[str, str]:
     if type_ != IdentifierType.user:
         check_id(id_)
 
+    return type_, id_
+
+
+def _parse_url(url: str) -> tuple[str, str]:
+    *prefixes, type_, id_ = url.split("/")
+    prefix = "/".join(prefixes)
+    if prefix not in _url_prefixes:
+        raise ValueError
     return type_, id_

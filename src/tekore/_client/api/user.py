@@ -1,9 +1,8 @@
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import scopes, send_and_process
+from tekore._client.process import single
 from tekore.model import PrivateUser, PublicUser
-
-from ..base import SpotifyBase
-from ..decor import scopes, send_and_process
-from ..process import single
 
 
 class SpotifyUser(SpotifyBase):

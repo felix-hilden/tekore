@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from ..artist import SimpleArtist
-from ..base import Item
-from ..member import Image, ReleaseDatePrecision
-from ..serialise import StrEnum
+from tekore._model.artist import SimpleArtist
+from tekore._model.base import Item
+from tekore._model.member import Image, ReleaseDatePrecision
+from tekore._model.serialise import StrEnum
 
 
 class AlbumType(StrEnum):

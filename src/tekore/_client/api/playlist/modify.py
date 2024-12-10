@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from tekore._auth import scope
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import scopes, send_and_process
+from tekore._client.process import nothing, single
 from tekore._sender import Request
 from tekore.model import FullPlaylist
-
-from ...base import SpotifyBase
-from ...decor import scopes, send_and_process
-from ...process import nothing, single
 
 
 class SpotifyPlaylistModify(SpotifyBase):

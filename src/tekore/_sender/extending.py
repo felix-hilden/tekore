@@ -6,6 +6,8 @@ from collections import deque
 from collections.abc import Coroutine
 from urllib.parse import urlencode
 
+from httpx import codes
+
 from .base import Request, Response
 from .concrete import Sender, SyncSender
 
@@ -20,7 +22,7 @@ class ExtendingSender(Sender):
         request sender, :class:`SyncSender` if not specified
     """
 
-    def __init__(self, sender: Sender | None):
+    def __init__(self, sender: Sender | None) -> None:
         self.sender = sender or SyncSender()
 
     @property
@@ -73,11 +75,11 @@ class RetryingSender(ExtendingSender):
         tk.RetryingSender(retries=3)
     """
 
-    def __init__(self, retries: int = 0, sender: Sender | None = None):
+    def __init__(self, retries: int = 0, sender: Sender | None = None) -> None:
         super().__init__(sender)
         self.retries = retries
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         contains = f"(retries={self.retries}, sender={self.sender!r})"
         return type(self).__name__ + contains
 
@@ -92,10 +94,10 @@ class RetryingSender(ExtendingSender):
         while True:
             r = self.sender.send(request)
 
-            if r.status_code == 429:
+            if r.status_code == codes.TOO_MANY_REQUESTS:
                 seconds = r.headers.get("Retry-After", 1)
                 time.sleep(int(seconds) + 1)
-            elif r.status_code >= 500 and retries > 0:
+            elif codes.is_server_error(r.status_code) and retries > 0:
                 retries -= 1
                 time.sleep(delay_seconds)
                 delay_seconds *= 2
@@ -110,10 +112,10 @@ class RetryingSender(ExtendingSender):
         while True:
             r = await self.sender.send(request)
 
-            if r.status_code == 429:
+            if r.status_code == codes.TOO_MANY_REQUESTS:
                 seconds = r.headers.get("Retry-After", 1)
                 await asyncio.sleep(int(seconds) + 1)
-            elif r.status_code >= 500 and retries > 0:
+            elif codes.is_server_error(r.status_code) and retries > 0:
                 retries -= 1
                 await asyncio.sleep(delay_seconds)
                 delay_seconds *= 2
@@ -148,14 +150,16 @@ class CachingSender(ExtendingSender):
         request sender, :class:`SyncSender` if not specified
     """
 
-    def __init__(self, max_size: int | None = None, sender: Sender | None = None):
+    def __init__(
+        self, max_size: int | None = None, sender: Sender | None = None
+    ) -> None:
         super().__init__(sender)
         self._max_size = max_size
         self._cache = {}
         self._deque = deque(maxlen=self.max_size)
         self._lock: asyncio.Lock | None = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         contains = f"(max_size={self._max_size}, sender={self.sender!r})"
         return type(self).__name__ + contains
 
@@ -180,6 +184,7 @@ class CachingSender(ExtendingSender):
     def _vary_key(request: Request, vary: list | None) -> str | None:
         if vary is not None:
             return " ".join(request.headers[k] for k in vary)
+        return None
 
     @staticmethod
     def _cc_fresh(item: dict) -> bool:
@@ -189,17 +194,17 @@ class CachingSender(ExtendingSender):
     def _has_etag(item: dict) -> bool:
         return item["etag"] is not None
 
-    def _is_fresh(self, url, vary_key) -> bool:
+    def _is_fresh(self, url: str, vary_key: str) -> bool:
         item = self._cache[url][1][vary_key]
         return self._cc_fresh(item) or self._has_etag(item)
 
-    def _delete(self, url, vary_key) -> None:
+    def _delete(self, url: str, vary_key: str) -> None:
         item = self._cache[url]
         del item[1][vary_key]
         if not item[1]:
             del item
 
-    def _remove_stale_items(self):
+    def _remove_stale_items(self) -> None:
         if len(self._deque) == self._deque.maxlen:
             deque_items = list(self._deque)
             self._deque.clear()
@@ -212,7 +217,7 @@ class CachingSender(ExtendingSender):
                 else:
                     self._delete(*item)
 
-    def _append_item(self, item):
+    def _append_item(self, item: tuple[str, str | None]) -> None:
         # Remove LRU item
         if len(self._deque) == self._deque.maxlen:
             d_url, d_vary_key = self._deque.popleft()
@@ -223,7 +228,7 @@ class CachingSender(ExtendingSender):
     def _maybe_save(self, request: Request, response: Response) -> None:
         cc = response.headers.get("Cache-Control", "private, max-age=0")
 
-        if response.status_code >= 400 or "private" in cc:
+        if codes.is_error(response.status_code) or "private" in cc:
             return
 
         age = int(cc.split("max-age=")[1].split(",")[0])
@@ -250,7 +255,7 @@ class CachingSender(ExtendingSender):
         self._remove_stale_items()
         self._append_item((response.url, vary_key))
 
-    def _update_usage(self, item) -> None:
+    def _update_usage(self, item: tuple[str, str | None]) -> None:
         if self.max_size is None:
             return
 
@@ -274,20 +279,21 @@ class CachingSender(ExtendingSender):
             if self._cc_fresh(cached):
                 self._update_usage(deque_item)
                 return response, None
-            elif self._has_etag(cached):
+            if self._has_etag(cached):
                 self._update_usage(deque_item)
                 return response, cached["etag"]
-            elif self.max_size is not None:
+            if self.max_size is not None:
                 self._deque.remove(deque_item)
 
         return None, None
 
-    def _handle_fresh(self, request, fresh: Response, cached: Response):
-        if fresh.status_code == 304:
+    def _handle_fresh(
+        self, request: Request, fresh: Response, cached: Response
+    ) -> Response:
+        if fresh.status_code == codes.NOT_MODIFIED:
             return cached
-        else:
-            self._maybe_save(request, fresh)
-            return fresh
+        self._maybe_save(request, fresh)
+        return fresh
 
     def send(self, request: Request) -> Response | Coroutine[None, None, Response]:
         """Maybe load request from cache, or delegate to underlying sender."""
@@ -300,13 +306,13 @@ class CachingSender(ExtendingSender):
         cached, etag = self._load(request)
         if cached is not None and etag is None:
             return cached
-        elif etag is not None:
+        if etag is not None:
             request.headers.update(ETag=etag)
 
         fresh = self.sender.send(request)
         return self._handle_fresh(request, fresh, cached)
 
-    async def _async_send(self, request: Request):
+    async def _async_send(self, request: Request) -> Response:
         if request.method.lower() != "get":
             return await self.sender.send(request)
 
@@ -318,7 +324,7 @@ class CachingSender(ExtendingSender):
 
         if cached is not None and etag is None:
             return cached
-        elif etag is not None:
+        if etag is not None:
             request.headers.update(ETag=etag)
 
         fresh = await self.sender.send(request)

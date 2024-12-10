@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from tekore._client.base import SpotifyBase
+from tekore._client.decor import maximise_limit, scopes, send_and_process
 from tekore.model import (
     FullArtistOffsetPaging,
     FullTrackPaging,
@@ -9,9 +11,6 @@ from tekore.model import (
     SimplePlaylistPaging,
     SimpleShowPaging,
 )
-
-from ..base import SpotifyBase
-from ..decor import maximise_limit, scopes, send_and_process
 
 paging_type = {
     "artists": FullArtistOffsetPaging,
@@ -26,7 +25,7 @@ paging_type = {
 
 def search_result(json: dict):
     """Unpack search result dicts into respective paging type constructors."""
-    return tuple(paging_type[key](**json[key]) for key in json.keys())
+    return tuple(paging_type[key](**json[key]) for key in json)
 
 
 class SpotifySearch(SpotifyBase):

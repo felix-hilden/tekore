@@ -3,8 +3,8 @@ from itertools import product
 from tekore.model import RecommendationAttribute
 
 prefixes = {"min", "max", "target"}
-attributes = set(str(a) for a in RecommendationAttribute)
-valid = set("_".join(i) for i in product(prefixes, attributes))
+attributes = {str(a) for a in RecommendationAttribute}
+valid = {"_".join(i) for i in product(prefixes, attributes)}
 
 
 def validate_attributes(candidates: dict) -> None:
@@ -23,4 +23,5 @@ def validate_attributes(candidates: dict) -> None:
     """
     for name in candidates:
         if name not in valid:
-            raise ValueError(f"Invalid attribute `{name}`!")
+            msg = f"Invalid attribute `{name}`!"
+            raise ValueError(msg)

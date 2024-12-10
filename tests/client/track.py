@@ -12,6 +12,7 @@ from ._resources import (
 )
 
 
+@pytest.mark.api
 class TestSpotifyTrack:
     def test_track_with_market(self, app_client):
         track = app_client.track(track_id, market="US")

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class scope(Enum):
+class scope(Enum):  # noqa: N801
     """
     User access token privileges.
 
@@ -54,7 +54,7 @@ class scope(Enum):
     app_remote_control = "app-remote-control"
     streaming = "streaming"
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Enum value."""
         return self.value
 
@@ -116,12 +116,12 @@ class Scope(frozenset):
         """
         return super().__new__(cls, [str(m) for m in members])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Readable representation."""
         members = "'" + "', '".join(sorted(self)) + "'"
         return f"Scope({members})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Join members with spaces."""
         return " ".join(sorted(self))
 
