@@ -27,10 +27,10 @@ class RecommendationAttribute(StrEnum):
 class RecommendationSeed(Identifiable):
     """Recommendation seeds."""
 
-    afterFilteringSize: int
-    afterRelinkingSize: int
+    afterFilteringSize: int  # noqa: N815
+    afterRelinkingSize: int  # noqa: N815
     href: str | None
-    initialPoolSize: int
+    initialPoolSize: int  # noqa: N815
     type: str
 
 

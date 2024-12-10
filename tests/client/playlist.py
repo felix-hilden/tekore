@@ -210,7 +210,7 @@ class TestSpotifyPlaylistModify:
             # For some reason the name not being reflected is a common
             # failure in CI although the call works. Disabling test
             # to not cause noise.
-            # assert playlist.name == new_name
+            # assert playlist.name == new_name  # noqa: ERA001
         finally:
             # Unfollow (delete) playlist to tear down
             user_client.playlist_unfollow(playlist.id)

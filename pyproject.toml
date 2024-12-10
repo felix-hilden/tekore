@@ -49,13 +49,14 @@ python_files = "*.py"
 testpaths = ["tests"]
 markers = ["api: tests that connect to the real Spotify Web API"]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     "error",
     "ignore::tekore.MissingConfigurationWarning",
 ]
 
 [tool.coverage.run]
-source = ["tekore"]
+source = ["src"]
 branch = true
 command_line = "-m pytest"
 
@@ -69,18 +70,41 @@ precision = 1
 show_missing = true
 skip_covered = true
 
-[tool.pydocstyle]
-ignore = "D100,D104,D105,D107,D203,D212,D213,D413,D415,D416,D419"
-
 [tool.pyright]
 # https://github.com/microsoft/pyright/issues/7561
 pythonVersion = "3.9"
 
-[tool.black]
-skip-magic-trailing-comma = true
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN", # annotations - too oppressive
+    "TC", # type checking - too much hassle
+]
+extend-ignore = [
+    "D203", # recommended by ruff format
+    "D212", # docstring format clash
+    "D413", # empty docstring ending line
+    "S105", # token/pw warnings noisy
+    "COM812", # recommended by ruff format
+    "FBT00", # bool positional/default arg
+    "ISC001", # recommended by ruff format
+    "PLR0913", # many arguments is fine
+    "SLF001", # private access needed
+]
+extend-unsafe-fixes = ["F401"]
+isort.split-on-trailing-comma = false
 
-[tool.isort]
-atomic = true
-profile = "black"
-line_length = 88
-skip_gitignore = true
+[tool.ruff.lint.extend-per-file-ignores]
+"src/*/__init__.py" = ["F401"]
+"src/tekore/_sender/error.py" = ["N818"]
+"docs/*" = ["ALL"]
+"tests/*" = [
+    "D", # docstring
+    "ANN", # annotations
+    "S101", # assertions - necessary in tests
+    "PLR2004", # magic values - ok in test assertions
+    "PLR09", # complexity - too oppressive in tests
+]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true

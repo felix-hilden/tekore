@@ -208,7 +208,7 @@ class Credentials(Client):
         tuple[str, str]
             authorisation URL and PKCE code verifier
         """
-        if not (32 <= verifier_bytes <= 96):
+        if not (32 <= verifier_bytes <= 96):  # noqa: PLR2004
             msg = "Invalid number of verifier bytes!"
             raise AssertionError(msg)
         verifier = token_urlsafe(verifier_bytes)

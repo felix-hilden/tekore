@@ -40,7 +40,7 @@ def _replace_arg(position, name, value, args, kwargs):
     return args, kwargs
 
 
-def chunked(
+def chunked(  # noqa: C901
     arg_name: str,
     arg_pos: int,
     chunk_size: int,
@@ -76,7 +76,7 @@ def chunked(
         position of the chain argument
     """
 
-    def decorator(function: Callable) -> Callable:
+    def decorator(function: Callable) -> Callable:  # noqa: C901
         nonlocal arg_pos, reverse_pos, chain_pos
         arg_pos -= 1
         if reverse_pos is not None:

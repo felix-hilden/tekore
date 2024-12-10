@@ -237,10 +237,10 @@ def prompt_for_user_token(
     auth = UserAuth(cred, scope=scope)
 
     if open_browser:
-        print("Opening browser for Spotify login...")
+        print("Opening browser for Spotify login...")  # noqa: T201
         webbrowser.open(auth.url)
     else:
-        print("Open this URL in your browser: " + auth.url)
+        print("Open this URL in your browser: " + auth.url)  # noqa: T201
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 
@@ -305,10 +305,10 @@ def prompt_for_pkce_token(
     auth = UserAuth(cred, scope=scope, pkce=True)
 
     if open_browser:
-        print("Opening browser for Spotify login...")
+        print("Opening browser for Spotify login...")  # noqa: T201
         webbrowser.open(auth.url)
     else:
-        print("Open this URL in your browser: " + auth.url)
+        print("Open this URL in your browser: " + auth.url)  # noqa: T201
     redirected = input("Please paste redirect URL: ").strip()
     return auth.request_token(url=redirected)
 
