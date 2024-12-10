@@ -11,7 +11,7 @@ class StrEnumMeta(EnumMeta):
     This does not change values.
     """
 
-    def __new__(mcs, cls, bases, classdict, **kwds):
+    def __new__(mcs, cls, bases, classdict, **kwds):  # noqa: N804
         """Override `__new__` to make all keys lowercase."""
         enum_class = super().__new__(mcs, cls, bases, classdict, **kwds)
         copied_member_map = dict(enum_class._member_map_)
@@ -44,7 +44,7 @@ class Model(BaseModel):
     """Response model base."""
 
     def __init__(self, **data) -> None:
-        """"""
+        """"""  # noqa: D419
         super().__init__(**data)
         unknowns = set(data.keys()) - set(self.__dict__.keys())
         cls_name = self.__class__.__name__

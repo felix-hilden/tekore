@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class scope(Enum):
+class scope(Enum):  # noqa: N801
     """
     User access token privileges.
 

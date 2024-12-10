@@ -97,7 +97,7 @@ class Token(AccessToken):
     @property
     def is_expiring(self) -> bool:
         """Determine whether token is about to expire."""
-        return self.expires_in < 60
+        return self.expires_in < 60  # noqa: PLR2004
 
     @property
     def uses_pkce(self) -> bool:
