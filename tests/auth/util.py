@@ -78,7 +78,8 @@ class TestUserAuth:
 
 
 class TestTokenUtilityFunctions:
-    def test_prompt_for_user_token(self):
+    @pytest.mark.parametrize("open_browser", [True, False])
+    def test_prompt_for_user_token(self, open_browser):
         cred = MagicMock()
         input_ = MagicMock(return_value="http://example.com?code=1&state=s")
         state = MagicMock(return_value="s")
@@ -90,7 +91,7 @@ class TestTokenUtilityFunctions:
             patch(util_mod + ".print", MagicMock()),
             patch(util_mod + ".gen_state", state),
         ):
-            prompt_for_user_token("", "", "")
+            prompt_for_user_token("", "", "", open_browser)
 
         input_.assert_called_once()
 
@@ -124,7 +125,8 @@ class TestTokenUtilityFunctions:
         assert old_token != str(token)
         token.credentials.close()
 
-    def test_prompt_for_pkce_token(self):
+    @pytest.mark.parametrize("open_browser", [True, False])
+    def test_prompt_for_pkce_token(self, open_browser):
         cred = MagicMock()
         cred.pkce_user_authorisation.return_value = ("https://a.com", "verifier")
         cred_factory = MagicMock(return_value=cred)
@@ -138,7 +140,7 @@ class TestTokenUtilityFunctions:
             patch(util_mod + ".print", MagicMock()),
             patch(util_mod + ".gen_state", state),
         ):
-            prompt_for_pkce_token("", "")
+            prompt_for_pkce_token("", "", open_browser=open_browser)
 
         input_.assert_called_once()
 

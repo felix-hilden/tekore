@@ -231,6 +231,12 @@ class TestCredentialsOffline:
         c.pkce_user_authorisation("scope", "state")
         c.close()
 
+    def test_pkce_user_authorisation_invalid_verify_bytes(self):
+        c = Credentials("id", redirect_uri="redirect")
+        with pytest.raises(AssertionError):
+            c.pkce_user_authorisation("scope", "state", verifier_bytes=1)
+        c.close()
+
     def test_request_pkce_token(self):
         c = Credentials("id")
         c.send = MagicMock(return_value=mock_response())
