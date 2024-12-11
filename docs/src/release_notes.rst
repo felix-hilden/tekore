@@ -21,6 +21,8 @@ Fixed
 - Avoid constructing query params manually (:issue:`332`)
 - Fix :class:`RetryingSender` to not return ``None``` in
   complex retry scenarios (:issue:`333`)
+- Convert :class:`Response` headers to dicts in :class:`SyncSender`
+  and :class:`AsyncSender` (:issue:`339`)
 
 5.5.1 (2024-09-09)
 ------------------

@@ -46,7 +46,7 @@ class SyncSender(Sender):
         )
         return Response(
             url=str(response.url),
-            headers=response.headers,
+            headers=dict(response.headers),
             status_code=response.status_code,
             content=try_parse_json(response),
         )
@@ -93,7 +93,7 @@ class AsyncSender(Sender):
         )
         return Response(
             url=str(response.url),
-            headers=response.headers,
+            headers=dict(response.headers),
             status_code=response.status_code,
             content=try_parse_json(response),
         )
