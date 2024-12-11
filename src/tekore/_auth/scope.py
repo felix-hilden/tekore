@@ -105,7 +105,7 @@ class Scope(frozenset):
        print(s)  # -> 'a b c'
     """
 
-    def __new__(cls, *members):
+    def __new__(cls, *members) -> "Scope":
         """
         Construct a new set of scopes.
 

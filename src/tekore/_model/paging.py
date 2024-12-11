@@ -9,7 +9,7 @@ class Paging(Model):
     """Paging base."""
 
     href: str
-    items: Sequence[Model]
+    items: Sequence[Model | None]
     limit: int
     next: str | None
 

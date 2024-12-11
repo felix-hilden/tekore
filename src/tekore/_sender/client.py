@@ -75,12 +75,12 @@ def send_and_process(post_func: Callable) -> Callable:
                 e.optional_scope = wrapper.optional_scope
                 raise
 
-        async def async_send(self, request: Request, params: tuple):
+        async def async_send(self: Sender, request: Request, params: tuple):
             response = await self.send(request)
             return try_post_func(request, response, *params)
 
         @wraps(function)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(self: Sender, *args, **kwargs):
             request, params = function(self, *args, **kwargs)
 
             if self.is_async:

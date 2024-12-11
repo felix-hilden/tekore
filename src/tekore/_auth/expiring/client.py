@@ -92,7 +92,7 @@ class Credentials(Client):
         payload = {"grant_type": "client_credentials"}
         return self._token_request(payload, auth=True), ()
 
-    def _user_auth_payload(self, scope, state):
+    def _user_auth_payload(self, scope, state: str | None):
         payload = {
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,

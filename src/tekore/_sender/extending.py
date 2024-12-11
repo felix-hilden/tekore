@@ -155,8 +155,8 @@ class CachingSender(ExtendingSender):
     ) -> None:
         super().__init__(sender)
         self._max_size = max_size
-        self._cache = {}
-        self._deque = deque(maxlen=self.max_size)
+        self._cache: dict[str, tuple] = {}
+        self._deque: deque = deque(maxlen=self.max_size)
         self._lock: asyncio.Lock | None = None
 
     def __repr__(self) -> str:
@@ -181,7 +181,7 @@ class CachingSender(ExtendingSender):
         self._deque.clear()
 
     @staticmethod
-    def _vary_key(request: Request, vary: list | None) -> str | None:
+    def _vary_key(request: Request, vary: list[str] | None) -> str | None:
         if vary is not None:
             return " ".join(request.headers[k] for k in vary)
         return None

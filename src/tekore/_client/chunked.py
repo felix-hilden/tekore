@@ -4,6 +4,8 @@ import operator
 from collections.abc import Callable, Generator
 from functools import reduce, wraps
 
+from .base import SpotifyBase
+
 
 def _chunks(lst: list, n: int, *, reverse: bool) -> Generator[list]:
     """
@@ -27,12 +29,12 @@ def _chunks(lst: list, n: int, *, reverse: bool) -> Generator[list]:
         yield lst[i : i + n]
 
 
-def _get_arg(position, name, args, kwargs):
+def _get_arg(position: int, name: str, args, kwargs):
     """Get argument from args or kwargs."""
     return kwargs.get(name, None) if len(args) <= position else args[position]
 
 
-def _replace_arg(position, name, value, args, kwargs):
+def _replace_arg(position: int, name: str, value, args, kwargs):
     if len(args) <= position:
         kwargs[name] = value
     else:
@@ -92,7 +94,7 @@ def chunked(  # noqa: C901
 
             return args, kwargs
 
-        async def async_wrapper(self, chunks, chain_val, args, kwargs):
+        async def async_wrapper(self: SpotifyBase, chunks, chain_val, args, kwargs):
             responses = []
             for chunk in chunks:
                 args, kwargs = replace(chunk, chain_val, args, kwargs)
@@ -102,7 +104,7 @@ def chunked(  # noqa: C901
             return process(responses)
 
         @wraps(function)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(self: SpotifyBase, *args, **kwargs):
             arg_val = _get_arg(arg_pos, arg_name, args, kwargs)
             if not self.chunked_on or arg_val is None:
                 return function(self, *args, **kwargs)
@@ -136,16 +138,16 @@ def chunked(  # noqa: C901
     return decorator
 
 
-def join_lists(responses):
+def join_lists(responses: list):
     """Join lists of models."""
     return reduce(operator.iadd, responses, [])
 
 
-def return_none(_) -> None:
+def return_none(_: list) -> None:
     """Return None always."""
     return
 
 
-def return_last(responses):
+def return_last(responses: list):
     """Return last item of a list."""
     return responses[-1] if responses else None

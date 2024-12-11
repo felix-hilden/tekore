@@ -24,12 +24,12 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
     """
 
     def decorator(function: Callable) -> Callable:
-        async def async_wrapper(self, *args, **kwargs):
+        async def async_wrapper(self: SpotifyBase, *args, **kwargs):
             json = await function(self, *args, **kwargs)
             return post_func(json)
 
         @wraps(function)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(self: SpotifyBase, *args, **kwargs):
             falsies = [
                 bool(_get_arg(arg_pos - 1, arg_name, args, kwargs))
                 for arg_name, arg_pos in arguments
@@ -48,7 +48,7 @@ def process_if_not_specified(post_func: Callable, *arguments) -> Callable:
     return decorator
 
 
-def parse_additional_types(as_tracks):
+def parse_additional_types(as_tracks: bool | Iterable[str]) -> str | None:
     """Determine `additional_types` argument content."""
     types = {"track", "episode"}
     if as_tracks is True:

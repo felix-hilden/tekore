@@ -8,7 +8,7 @@ from tekore._convert import to_uri
 from tekore.model import RepeatState
 
 
-def offset_to_dict(offset: int | str | None):
+def offset_to_dict(offset: int | str | None) -> dict | None:
     """
     Parse playback start offset to an appropriate payload member.
 

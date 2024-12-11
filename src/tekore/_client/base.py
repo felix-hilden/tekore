@@ -57,12 +57,12 @@ class SpotifyBase(Client):
             self._token_cv.set(value)
 
     @property
-    def max_limits_on(self):
+    def max_limits_on(self) -> bool:
         """Max limits getter."""
         return self._max_limits_on_cv.get(self._max_limits_on)
 
     @max_limits_on.setter
-    def max_limits_on(self, value) -> None:
+    def max_limits_on(self, value: bool) -> None:
         try:
             self._max_limits_on_cv.get()
         except LookupError:
@@ -71,12 +71,12 @@ class SpotifyBase(Client):
             self._max_limits_on_cv.set(value)
 
     @property
-    def chunked_on(self):
+    def chunked_on(self) -> bool:
         """Chunked getter."""
         return self._chunked_on_cv.get(self._chunked_on)
 
     @chunked_on.setter
-    def chunked_on(self, value) -> None:
+    def chunked_on(self, value: bool) -> None:
         try:
             self._chunked_on_cv.get()
         except LookupError:
@@ -115,7 +115,7 @@ class SpotifyBase(Client):
     @staticmethod
     def _request(
         method: str, url: str, payload: dict | None = None, params: dict | None = None
-    ):
+    ) -> tuple[Request, tuple]:
         return (
             Request(
                 method=method, url=url, params=parse_url_params(params), json=payload

@@ -18,7 +18,7 @@ def _process_short_link(request: Request, response: Response) -> str:
 
 
 @send_and_process(_process_short_link)
-def _send_short_link(_: Sender, request: Request):
+def _send_short_link(_: Sender, request: tuple[Request, tuple]) -> str:
     return request
 
 

@@ -9,7 +9,7 @@ from .base import SpotifyBase
 from .decor import send_and_process
 
 
-def parse_paging_result(result):
+def parse_paging_result(result: dict) -> dict:
     """Parse through the varying paging layouts."""
     # If only one top-level key, the paging object is one level deeper
     if len(result) == 1:

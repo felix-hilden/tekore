@@ -3,7 +3,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from functools import wraps
 
-from tekore._auth import Scope
+from tekore._auth import Scope, scope
+from tekore._client.base import SpotifyBase
+from tekore._sender import Request, Response
 from tekore._sender import send_and_process as _send_and_process
 
 from .handle import handle_errors
@@ -19,7 +21,7 @@ def send_and_process(post_func: Callable) -> Callable:
         function to call with response JSON content
     """
 
-    def parse_response(request, response):
+    def parse_response(request: Request, response: Response):
         handle_errors(request, response)
         return post_func(response.content)
 
@@ -41,7 +43,7 @@ def maximise_limit(max_limit: int) -> Callable:
         arg_pos = varnames.index("limit") - 1
 
         @wraps(function)
-        def wrapper(self, *args, **kwargs):
+        def wrapper(self: SpotifyBase, *args, **kwargs):
             if self.max_limits_on and len(args) <= arg_pos:
                 kwargs.setdefault("limit", max_limit)
             return function(self, *args, **kwargs)
@@ -68,7 +70,9 @@ def _add_doc_section(doc: str, section: str) -> str:
     return f"{empty}\n{head}\n\n{section}\n{body}"
 
 
-def scopes(required: list | None = None, optional: list | None = None) -> Callable:
+def scopes(
+    required: list[scope] | None = None, optional: list[scope] | None = None
+) -> Callable:
     """
     List the scopes that a call uses.
 
