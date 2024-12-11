@@ -241,7 +241,7 @@ def prompt_for_user_token(
         webbrowser.open(auth.url)
     else:
         print("Open this URL in your browser: " + auth.url)  # noqa: T201
-    redirected = input("Please paste redirect URL: ").strip()
+    redirected = input("Paste the final redirected URL from the browser: ").strip()
     return auth.request_token(url=redirected)
 
 
@@ -309,7 +309,7 @@ def prompt_for_pkce_token(
         webbrowser.open(auth.url)
     else:
         print("Open this URL in your browser: " + auth.url)  # noqa: T201
-    redirected = input("Please paste redirect URL: ").strip()
+    redirected = input("Paste the final redirected URL from the browser: ").strip()
     return auth.request_token(url=redirected)
 
 

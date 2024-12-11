@@ -23,6 +23,8 @@ Fixed
   complex retry scenarios (:issue:`333`)
 - Convert :class:`Response` headers to dicts in :class:`SyncSender`
   and :class:`AsyncSender` (:issue:`339`)
+- Improve messages in :func:`prompt_for_user_token` and
+  :func:`prompt_for_pkce_token` (:issue:`340`)
 
 5.5.1 (2024-09-09)
 ------------------
