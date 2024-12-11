@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+6.0.0 (2024-12-11)
+------------------
 Changed
 *******
 - Remove support for Python 3.8 (:issue:`329`)
