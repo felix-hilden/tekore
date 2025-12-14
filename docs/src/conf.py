@@ -10,7 +10,7 @@ from tekore import __version__
 
 project = "tekore"
 author = "Felix Hildén"
-copyright = "2019-2025, Felix Hildén"
+copyright = "2019-2026, Felix Hildén"
 version = __version__
 release = version
 
