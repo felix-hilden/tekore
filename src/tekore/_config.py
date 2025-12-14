@@ -37,7 +37,7 @@ def _read_configuration(conf: dict, *, return_refresh: bool = False) -> tuple:
 
     values = tuple(conf.get(var) for var in variables)
 
-    for var, val in zip(variables, values):
+    for var, val in zip(variables, values, strict=True):
         if val is None:
             warn(
                 f"`{var}` missing! None returned instead.",
@@ -203,7 +203,9 @@ def config_to_file(
             tk.user_refresh_var,
         )
         val_dict = {
-            name: value for name, value in zip(names, values) if value is not None
+            name: value
+            for name, value in zip(names, values, strict=False)
+            if value is not None
         }
 
     c = _read_configfile(file_path, force=False)

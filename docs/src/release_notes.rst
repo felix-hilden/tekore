@@ -5,6 +5,11 @@ Release notes
 =============
 Unreleased
 ----------
+Changed
+*******
+- Remove support for Python 3.9 (:issue:`343`)
+- Add support for Python 3.14 (:issue:`343`)
+
 Tooling
 *******
 - Address deprecations in build (:issue:`342`)

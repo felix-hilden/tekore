@@ -11,11 +11,10 @@ license-files = ["LICENSE"]
 dynamic = ["version"]
 
 # Bump Pyright below too when changing the minimum version
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "httpx>=0.15,<0.29",
     "pydantic>=1.8,!=2.4.0,!=2.5.0,!=2.5.1",
-    "eval_type_backport; python_version=='3.9'",
 ]
 
 keywords = ["spotify", "web", "api", "client"]
@@ -26,11 +25,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Multimedia :: Sound/Audio",
 ]
 
@@ -72,7 +71,7 @@ skip_covered = true
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/issues/7561
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 
 [tool.ruff]
 src = ["src", "tests"]

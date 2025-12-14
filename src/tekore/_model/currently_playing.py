@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Union
-
 from .context import Context
 from .device import Device
 from .episode import FullEpisode
@@ -48,7 +46,7 @@ class Actions(Model):
     disallows: Disallows
 
 
-PlaybackItem = Union[FullTrack, LocalTrack, FullEpisode, None]
+PlaybackItem = FullTrack | LocalTrack | FullEpisode | None
 
 
 class CurrentlyPlaying(Model):
