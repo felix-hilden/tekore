@@ -68,7 +68,7 @@ from ._sender import (
     Unauthorised,
 )
 
-__version__ = "6.0.0"
+__version__ = "6.1.0"
 
 # Change the module of classes to hide module structure
 # and fix Sphinx base class links
