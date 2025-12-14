@@ -3,6 +3,12 @@
 
 Release notes
 =============
+Unreleased
+----------
+Tooling
+*******
+- Address deprecations in build (:issue:`342`)
+
 6.0.0 (2024-12-11)
 ------------------
 Changed
