@@ -19,6 +19,7 @@ coverage.xml
 docs/build
 .tox/
 .pypirc
+*.conf
 
 # Environments
 .env
