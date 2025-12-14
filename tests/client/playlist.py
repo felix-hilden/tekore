@@ -177,7 +177,7 @@ class TestSpotifyPlaylistModify:
             assert_items_equal(
                 user_client,
                 playlist.id,
-                [track_uris[1], track_uris[0]] + track_uris[2:],
+                [track_uris[1], track_uris[0], *track_uris[2:]],
             )
 
             user_client.playlist_reorder(

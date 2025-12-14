@@ -8,11 +8,11 @@ from ._resources import artist_ids, category_id, genres, track_id
 @pytest.mark.api
 class TestSpotifyBrowse:
     def test_featured_playlists_with_country(self, app_client):
-        msg, playlists = app_client.featured_playlists(country="US")
+        _, playlists = app_client.featured_playlists(country="US")
         assert playlists.total > 0
 
     def test_featured_playlists_no_country(self, app_client):
-        msg, playlists = app_client.featured_playlists()
+        _, playlists = app_client.featured_playlists()
         assert playlists.total > 0
 
     def test_new_releases_with_country(self, app_client):

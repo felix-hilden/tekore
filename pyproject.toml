@@ -74,6 +74,9 @@ skip_covered = true
 # https://github.com/microsoft/pyright/issues/7561
 pythonVersion = "3.9"
 
+[tool.ruff]
+src = ["src", "tests"]
+
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [

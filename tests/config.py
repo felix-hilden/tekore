@@ -1,7 +1,9 @@
+import os
 from pathlib import Path
 
 import pytest
 
+import tekore as tk
 from tekore import (
     MissingConfigurationWarning,
     config_from_environment,
@@ -12,8 +14,6 @@ from tests._util import handle_warnings
 
 
 def config_names_set(id_, secret, uri, refresh):
-    import tekore as tk
-
     tk.client_id_var = id_
     tk.client_secret_var = secret
     tk.redirect_uri_var = uri
@@ -22,8 +22,6 @@ def config_names_set(id_, secret, uri, refresh):
 
 @pytest.fixture
 def conf_vars():
-    import tekore as tk
-
     client_id_var = tk.client_id_var
     client_secret_var = tk.client_secret_var
     redirect_uri_var = tk.redirect_uri_var
@@ -68,10 +66,6 @@ class TestReadConfig:
         _, _, _, _ = config_from_environment(return_refresh=True)
 
     def test_environment_read_modified_names(self):
-        import os
-
-        import tekore as tk
-
         tk.client_id_var = "client_id"
         tk.client_secret_var = "client_secret"
         tk.redirect_uri_var = "redirect_uri"
@@ -117,8 +111,6 @@ class TestReadConfig:
             config_from_file(conf_path, "NOTSECTION")
 
     def test_file_pathlib_path_accepted(self, conf_path):
-        from pathlib import Path
-
         path = Path(conf_path)
         conf = config_from_file(path)
         assert conf == ("df_id", "df_secret", "df_uri")
@@ -150,8 +142,6 @@ class TestConfigToFile:
         assert written == loaded
 
     def test_config_written_with_dict(self, conf_path):
-        import tekore as tk
-
         written = {tk.client_secret_var: "secret"}
 
         config_to_file(conf_path, written)

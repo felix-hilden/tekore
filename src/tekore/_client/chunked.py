@@ -38,7 +38,7 @@ def _replace_arg(position: int, name: str, value, args, kwargs):
     if len(args) <= position:
         kwargs[name] = value
     else:
-        args = args[:position] + (value,) + args[position + 1 :]
+        args = (*args[:position], value, *args[position + 1 :])
     return args, kwargs
 
 

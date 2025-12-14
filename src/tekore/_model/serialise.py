@@ -11,7 +11,7 @@ class StrEnumMeta(EnumMeta):
     This does not change values.
     """
 
-    def __new__(mcs, cls, bases, classdict, **kwds):  # noqa: N804
+    def __new__(mcs, cls, bases, classdict, **kwds):
         """Override `__new__` to make all keys lowercase."""
         enum_class = super().__new__(mcs, cls, bases, classdict, **kwds)
         copied_member_map = dict(enum_class._member_map_)

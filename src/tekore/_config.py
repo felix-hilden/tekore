@@ -6,6 +6,8 @@ from os import environ
 from pathlib import Path
 from warnings import warn
 
+import tekore as tk
+
 
 class MissingConfigurationWarning(RuntimeWarning):
     """Missing value read from configuration."""
@@ -28,17 +30,10 @@ def _read_configuration(conf: dict, *, return_refresh: bool = False) -> tuple:
         (client ID, client secret, redirect URI), None if not found.
         If return_refresh is True, also return user refresh token.
     """
-    from tekore import (
-        client_id_var,
-        client_secret_var,
-        redirect_uri_var,
-        user_refresh_var,
-    )
-
-    variables = [client_id_var, client_secret_var, redirect_uri_var]
+    variables = [tk.client_id_var, tk.client_secret_var, tk.redirect_uri_var]
 
     if return_refresh:
-        variables.append(user_refresh_var)
+        variables.append(tk.user_refresh_var)
 
     values = tuple(conf.get(var) for var in variables)
 
@@ -201,14 +196,12 @@ def config_to_file(
     if isinstance(values, dict):
         val_dict = values
     else:
-        from tekore import (
-            client_id_var,
-            client_secret_var,
-            redirect_uri_var,
-            user_refresh_var,
+        names = (
+            tk.client_id_var,
+            tk.client_secret_var,
+            tk.redirect_uri_var,
+            tk.user_refresh_var,
         )
-
-        names = (client_id_var, client_secret_var, redirect_uri_var, user_refresh_var)
         val_dict = {
             name: value for name, value in zip(names, values) if value is not None
         }
