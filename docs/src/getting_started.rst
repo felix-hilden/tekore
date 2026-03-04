@@ -6,7 +6,7 @@ To use the Web API, you'll need to register an `application`_.
 From its page retrieve the client ID and secret.
 They are your application's credentials to the API.
 A walkthrough of creating an application and setting it up can be found `here
-<https://developer.spotify.com/documentation/general/guides/app-settings/>`_.
+<https://developer.spotify.com/documentation/web-api/concepts/apps>`_.
 
 Retrieving a client token
 -------------------------

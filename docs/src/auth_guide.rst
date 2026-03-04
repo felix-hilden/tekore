@@ -30,7 +30,7 @@ in both server and scripting contexts, see the following:
 
 See :ref:`auth` for reference documentation and
 Spotify's `authorisation guide <https://developer.spotify.com/
-documentation/general/guides/authorization-guide/>`_
+documentation/web-api/concepts/authorization>`_
 for more information about the underlying authentication procedures.
 
 User authorisation
@@ -128,6 +128,20 @@ retrieving user tokens without a client secret,
 and provides an added layer of security with code challenges and verifiers.
 Challenges and verifiers are handled automatically when using
 :class:`UserAuth` with PKCE enabled.
+
+Redirect URI requirements
+*************************
+As of November 2025, Spotify enforces stricter requirements
+on redirect URIs and OAuth flows
+(see Spotify's `migration notice
+<https://developer.spotify.com/blog/2025-10-14-reminder-oauth-migration-27-nov-2025>`_):
+
+- **HTTPS is required** for all production redirect URIs.
+  Plain ``http://`` redirect URIs are no longer accepted.
+- **localhost is prohibited** as a redirect URI hostname.
+  For local development, use the loopback IP address
+  ``127.0.0.1`` instead (e.g. ``http://127.0.0.1:5000/callback``).
+
 Here's a summary of the configuration requirements
 for each authorisation method.
 

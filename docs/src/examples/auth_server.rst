@@ -5,18 +5,20 @@ Authenticating server
 The scripts below detail how to start up a simple authentication sever.
 
 In this example the configured redirect URI must match
-``http://localhost:5000/callback`` and be whitelisted in your
+``http://127.0.0.1:5000/callback`` and be whitelisted in your
 `application <https://developer.spotify.com/dashboard>`_ settings.
 Note that the server need not be accessible from the web.
 With a server that is hosted elsewhere
 or one that needs to be accessible from outside,
 whitelist another redirect URI that matches the server's address.
 
-Run the script and navigate to ``localhost:5000`` to see your user ID.
+Run the script and navigate to ``127.0.0.1:5000`` to see your user ID.
 It should be ``None`` before logging in.
 During login you will be redirected to authenticate at Spotify.
 If access is granted and the state security check passes,
 another redirection via ``/callback`` to an info page will be performed.
+Note: ensure your browser navigates to ``127.0.0.1:5000``,
+not ``localhost:5000``, so that the redirect URI matches.
 It should read "successful" and refer you back to the main page.
 You should now see a generated user ID and your currently playing track.
 The ID is saved to your session cookies and preserved during navigation.
@@ -206,6 +208,6 @@ Logging out deletes the cookie and server-stored access token.
               uvicorn.run(
                   "main:app",
                   port=5000,
-                  host="0.0.0.0",
+                  host="127.0.0.1",
                   reload=True,
               )

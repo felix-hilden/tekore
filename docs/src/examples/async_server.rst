@@ -4,7 +4,7 @@ Async server
 ============
 The following scripts starts up a simple AIOHTTP web server for song search.
 
-Run the script and navigate to ``localhost:5000`` to see the main page.
+Run the script and navigate to ``127.0.0.1:5000`` to see the main page.
 Enter search terms to the address bar to search for songs.
 
 Asynchronous programming is particularly handy in web server contexts.
