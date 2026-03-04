@@ -1,5 +1,7 @@
 from enum import Enum
 
+from typing_extensions import Self
+
 
 class scope(Enum):  # noqa: N801
     """
@@ -105,7 +107,7 @@ class Scope(frozenset):
        print(s)  # -> 'a b c'
     """
 
-    def __new__(cls, *members) -> "Scope":
+    def __new__(cls, *members) -> Self:
         """
         Construct a new set of scopes.
 
