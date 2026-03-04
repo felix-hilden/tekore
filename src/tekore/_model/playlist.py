@@ -53,12 +53,18 @@ class LocalPlaylistTrack(LocalTrack):
 
 
 class PlaylistTrack(Model):
-    """Track or episode on a playlist."""
+    """
+    Track or episode on a playlist.
+
+    `track` and `item` are the same, but `track` is deprecated
+    and may be removed in a future version.
+    """
 
     added_at: datetime
     added_by: PublicUser
     is_local: bool
-    track: FullPlaylistTrack | FullPlaylistEpisode | LocalPlaylistTrack | None
+    track: FullPlaylistTrack | FullPlaylistEpisode | LocalPlaylistTrack | None = None
+    item: FullPlaylistTrack | FullPlaylistEpisode | LocalPlaylistTrack | None = None
 
     primary_color: str | None
     video_thumbnail: dict | None
@@ -90,16 +96,28 @@ class Playlist(Item):
 
 
 class SimplePlaylist(Playlist):
-    """Simplified playlist object."""
+    """
+    Simplified playlist object.
+
+    `tracks` and `items` are the same, but `tracks` is deprecated
+    and may be removed in a future version.
+    """
 
     tracks: Tracks
+    items: Tracks
 
 
 class FullPlaylist(Playlist):
-    """Complete playlist object."""
+    """
+    Complete playlist object.
+
+    `tracks` and `items` are the same, but `tracks` is deprecated
+    and may be removed in a future version.
+    """
 
     followers: Followers
     tracks: PlaylistTrackPaging
+    items: PlaylistTrackPaging
 
 
 class SimplePlaylistPaging(OffsetPaging):

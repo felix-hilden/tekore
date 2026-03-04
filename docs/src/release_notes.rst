@@ -3,6 +3,21 @@
 
 Release notes
 =============
+Unreleased
+----------
+Deprecated
+**********
+- Deprecate ``track`` and ``tracks`` of :class:`PlaylistTrack
+  <model.PlaylistTrack>`, :class:`FullPlaylist <model.FullPlaylist>` and
+  :class:`SimplePlaylist <model.SimplePlaylist>`, as they are likely to be
+  removed from the API in the future (:issue:`346`)
+
+Added
+*****
+- Add ``item`` and ``items`` to :class:`PlaylistTrack <model.PlaylistTrack>`,
+  :class:`FullPlaylist <model.FullPlaylist>` and
+  :class:`SimplePlaylist <model.SimplePlaylist>` (:issue:`346`)
+
 6.1.0 (2025-12-14)
 ------------------
 Changed
