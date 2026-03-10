@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+6.1.1 (2026-03-10)
+------------------
 Deprecated
 **********
 - Deprecate ``track`` and ``tracks`` of :class:`PlaylistTrack
