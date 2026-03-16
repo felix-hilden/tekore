@@ -42,7 +42,7 @@ class SpotifySearch(SpotifyBase):
         include_external: str | None = None,
         limit: int = 20,
         offset: int = 0,
-    ) -> tuple:
+    ) -> tuple[FullArtistOffsetPaging | FullTrackPaging | SimpleAlbumPaging | SimpleAudiobookPaging | SimpleEpisodePaging | SimplePlaylistPaging | SimpleShowPaging, ...]:
         """
         Search for an item.
 
