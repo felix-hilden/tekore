@@ -37,6 +37,20 @@ class BadRequest(ClientError):
     """
 
 
+class RefreshTokenInvalid(BadRequest):
+    """
+    400 - Invalid grant when refreshing a token.
+
+    Raised when the authorisation server rejects a token request with an
+    ``invalid_grant`` OAuth error. For user tokens this most commonly means
+    that the refresh token has expired or been revoked, e.g. because of
+    Spotify's six-month refresh token expiration. When this is raised the
+    user should be prompted to authorise the application again.
+
+    This is a subclass of :class:`BadRequest`.
+    """
+
+
 class Unauthorised(ClientError):
     """
     401 - Unauthorised.

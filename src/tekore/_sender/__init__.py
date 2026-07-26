@@ -9,6 +9,7 @@ from .error import (
     HTTPError,
     InternalServerError,
     NotFound,
+    RefreshTokenInvalid,
     ServerError,
     ServiceUnavailable,
     TooManyRequests,

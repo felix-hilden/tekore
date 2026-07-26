@@ -3,6 +3,13 @@
 
 Release notes
 =============
+Unreleased
+----------
+Added
+*****
+- Introduce :class:`RefreshTokenInvalid` to signal failed attempts
+  at refreshing user tokens (:issue:`349`)
+
 6.1.1 (2026-03-10)
 ------------------
 Deprecated

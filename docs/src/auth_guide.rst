@@ -63,7 +63,7 @@ can be used to request new access tokens.
 
 A refresh token is enough to request new user access tokens,
 making them a perfect candidate to save to a file or a database.
-It is valid until the user manually revokes it from Spotify.
+It is valid for 6 months, or until the user manually revokes it from Spotify.
 A new refresh token may also be returned when requesting a new access token.
 
 In practice receiving new refresh tokens seems to be rare,

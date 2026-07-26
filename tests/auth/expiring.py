@@ -4,7 +4,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from tekore import AccessToken, Credentials, HTTPError, Response, Scope, Token
+from tekore import (
+    AccessToken,
+    BadRequest,
+    Credentials,
+    HTTPError,
+    RefreshTokenInvalid,
+    Response,
+    Scope,
+    Token,
+)
 
 
 class TestAccessToken:
@@ -180,6 +189,34 @@ class TestCredentialsOffline:
         c.send = MagicMock(return_value=response)
         with pytest.raises(HTTPError):
             c.request_client_token()
+        c.close()
+
+    def test_invalid_grant_raises_refresh_token_invalid(self):
+        c = Credentials("id", "secret")
+        error = {"error": "invalid_grant", "error_description": "Refresh token revoked"}
+        response = mock_response(400, error)
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(RefreshTokenInvalid):
+            c.refresh_user_token("refresh")
+        c.close()
+
+    def test_refresh_token_invalid_is_bad_request(self):
+        c = Credentials("id", "secret")
+        error = {"error": "invalid_grant"}
+        response = mock_response(400, error)
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(BadRequest):
+            c.refresh_user_token("refresh")
+        c.close()
+
+    def test_other_bad_request_not_refresh_token_invalid(self):
+        c = Credentials("id", "secret")
+        error = {"error": "invalid_client"}
+        response = mock_response(400, error)
+        c.send = MagicMock(return_value=response)
+        with pytest.raises(BadRequest) as excinfo:
+            c.refresh_user_token("refresh")
+        assert not isinstance(excinfo.value, RefreshTokenInvalid)
         c.close()
 
     def test_user_authorisation_url(self):

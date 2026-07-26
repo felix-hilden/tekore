@@ -12,6 +12,7 @@ Web errors for :ref:`auth` and :ref:`client`.
    ClientError
    ServerError
    BadRequest
+   RefreshTokenInvalid
    Unauthorised
    Forbidden
    NotFound
@@ -52,10 +53,17 @@ objects for closer inspection.
         print(ex.request)
         print(ex.response)
 
+When refreshing a user token fails because the refresh token has expired or
+been revoked, for example due to Spotify's six-month refresh token
+expiration, a :class:`RefreshTokenInvalid` error is raised. It is a subclass
+of :class:`BadRequest`, so it can be caught specifically to trigger a new
+authorisation, while existing ``except BadRequest`` handlers keep working.
+
 .. autoclass:: HTTPError
 .. autoclass:: ClientError
 .. autoclass:: ServerError
 .. autoclass:: BadRequest
+.. autoclass:: RefreshTokenInvalid
 .. autoclass:: Unauthorised
    :undoc-members:
 .. autoclass:: Forbidden
