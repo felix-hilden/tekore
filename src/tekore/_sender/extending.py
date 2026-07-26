@@ -30,7 +30,7 @@ class ExtendingSender(Sender):
         """Sender asynchronicity, delegated to the underlying sender."""
         return self.sender.is_async
 
-    def close(self) -> None | Coroutine[None, None, None]:
+    def close(self) -> Coroutine[None, None, None] | None:
         """
         Close the underlying sender.
 

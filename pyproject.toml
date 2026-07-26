@@ -83,6 +83,7 @@ ignore = [
     "TC", # type checking - too much hassle
 ]
 extend-ignore = [
+    "CPY001", # copyright notices not required
     "D203", # recommended by ruff format
     "D212", # docstring format clash
     "D413", # empty docstring ending line
@@ -91,6 +92,7 @@ extend-ignore = [
     "FBT00", # bool positional/default arg
     "ISC001", # recommended by ruff format
     "PLR0913", # many arguments is fine
+    "PLR0917", # many arguments is fine
     "SLF001", # private access needed
 ]
 extend-unsafe-fixes = ["F401"]
