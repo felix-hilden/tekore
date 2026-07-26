@@ -45,8 +45,8 @@ class TestSpotifyPlaylistView:
         nones = [i is None for i in (owner.followers, owner.images)]
         assert all(nones)
 
-    def test_playlist_cover_image(self, app_client):
-        app_client.playlist_cover_image(playlist_id)
+    def test_playlist_cover_image(self, user_client):
+        user_client.playlist_cover_image(playlist_id)
 
     def test_playlist_items(self, app_client):
         items = app_client.playlist_items(playlist_id)

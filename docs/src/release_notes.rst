@@ -7,6 +7,8 @@ Unreleased
 ----------
 Added
 *****
+- Add missing ``account_id`` to :class:`PrivateUser <model.PrivateUser>`
+  (:issue:`348`)
 - Introduce :class:`RefreshTokenInvalid` to signal failed attempts
   at refreshing user tokens (:issue:`349`)
 

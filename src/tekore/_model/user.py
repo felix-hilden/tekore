@@ -35,8 +35,14 @@ class PrivateUser(User):
     :attr:`email` requires the ``user-read-email`` scope.
     :attr:`birthday` is unavailable unless the now-invalid
     ``user-read-birthdate`` scope was granted to the token.
+
+    .. note::
+
+       Country, email, explicit content, followers and product
+       are marked as deprecated by Spotify.
     """
 
+    account_id: str
     country: str | None = None
     email: str | None = None
     explicit_content: ExplicitContent | None = None
