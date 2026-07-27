@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+6.2.0 (2026-07-27)
+------------------
 Added
 *****
 - Add missing ``account_id`` to :class:`PrivateUser <model.PrivateUser>`
