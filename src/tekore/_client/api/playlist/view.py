@@ -58,7 +58,7 @@ def parse_additional_types(as_tracks: bool | Iterable[str]) -> str | None:
     else:
         types = types.difference(as_tracks)
 
-    return ",".join(types) if types else None
+    return ",".join(sorted(types)) if types else None
 
 
 class SpotifyPlaylistView(SpotifyBase):

@@ -12,6 +12,11 @@ Added
 - Introduce :class:`RefreshTokenInvalid` to signal failed attempts
   at refreshing user tokens (:issue:`349`)
 
+Fixed
+*****
+- Sort ``additional_types`` query parameter values to produce deterministic
+  URLs for reliable caching (:issue:`350`)
+
 6.1.1 (2026-03-10)
 ------------------
 Deprecated

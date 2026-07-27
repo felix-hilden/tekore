@@ -1,6 +1,7 @@
 import pytest
 
 from tekore import to_uri
+from tekore._client.api.playlist.view import parse_additional_types
 
 from ._resources import (
     image,
@@ -10,6 +11,20 @@ from ._resources import (
     track_ids,
     user_id,
 )
+
+
+class TestParseAdditionalTypes:
+    def test_all_types_sorted_deterministically(self):
+        assert parse_additional_types(False) == "episode,track"
+
+    def test_as_tracks_returns_none(self):
+        assert parse_additional_types(True) is None
+
+    def test_iterable_excludes_given_types(self):
+        assert parse_additional_types(["track"]) == "episode"
+
+    def test_excluding_all_types_returns_none(self):
+        assert parse_additional_types(["track", "episode"]) is None
 
 
 @pytest.mark.api
