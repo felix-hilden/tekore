@@ -34,7 +34,9 @@ class StrEnum(str, Enum, metaclass=StrEnumMeta):
 
     @classmethod
     def _missing_(cls, value):
-        return cls[value.lower()]
+        if not isinstance(value, str):
+            return None
+        return cls._member_map_.get(value.lower())
 
     def __str__(self) -> str:
         return self.name

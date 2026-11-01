@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pydantic import ValidationError
 
 from tekore._model.serialise import Model, StrEnum, UnknownModelAttributeWarning
 
@@ -47,6 +48,36 @@ class TestEnumCaseInsensitive:
         # Should not change caps when iterating or accessing values in other means
         for e in ECaps:
             assert e.upper() == e
+
+    def test_value_in_caps(self):
+        assert E("A") is E.a
+
+
+class TestEnumUnknownValue:
+    @pytest.mark.parametrize("value", ["d", None, 1])
+    def test_unknown_value_raises_value_error(self, value):
+        with pytest.raises(ValueError, match="is not a valid E"):
+            E(value)
+
+    @pytest.mark.parametrize("value", ["d", None])
+    def test_unknown_value_in_model_raises_validation_error(self, value):
+        class C(Model):
+            v: E
+
+        with pytest.raises(ValidationError):
+            C(v=value)
+
+    def test_unknown_value_falls_back_to_next_union_member(self):
+        class WithEnum(Model):
+            v: E
+
+        class WithOptionalStr(Model):
+            v: str | None
+
+        class C(Model):
+            m: WithEnum | WithOptionalStr
+
+        assert isinstance(C(m={"v": None}).m, WithOptionalStr)
 
 
 class TestSerialisableEnum:
