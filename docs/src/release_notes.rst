@@ -3,6 +3,14 @@
 
 Release notes
 =============
+Unreleased
+----------
+Fixed
+*****
+- Raise ``ValueError`` for unknown values of :class:`StrEnum <model.StrEnum>`
+  to fix parsing local files in :class:`PlaylistTrack <model.PlaylistTrack>`
+  with Pydantic ``2.14`` (:issue:`PR`)
+
 6.2.0 (2026-07-27)
 ------------------
 Added
