@@ -1,6 +1,6 @@
 import pytest
 
-from tekore import NotFound, from_uri
+from tekore import from_uri
 
 from ._resources import audiobook_id, audiobook_ids
 
@@ -21,13 +21,13 @@ class TestSpotifyAudiobook:
     def test_audiobook_with_non_us_market(self, app_client):
         app_client.audiobook(audiobook_id, market="FI")
 
-    def test_audiobooks_no_market_not_found(self, app_client):
-        with pytest.raises(NotFound):
-            app_client.audiobooks(audiobook_ids)
+    def test_audiobooks_no_market_returns_results(self, app_client):
+        books = app_client.audiobooks(audiobook_ids)
+        assert audiobook_ids == [b.id for b in books]
 
     def test_audiobooks_with_us_market(self, app_client):
-        with pytest.raises(NotFound):
-            app_client.audiobooks(audiobook_ids, market="US")
+        books = app_client.audiobooks(audiobook_ids, market="US")
+        assert audiobook_ids == [b.id for b in books]
 
     @pytest.mark.xfail(reason="API inconsistencies.")
     def test_audiobook_chapters_no_market_not_found(self, app_client):

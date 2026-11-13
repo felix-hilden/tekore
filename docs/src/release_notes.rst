@@ -10,6 +10,8 @@ Fixed
 - Raise ``ValueError`` for unknown values of :class:`StrEnum <model.StrEnum>`
   to fix parsing local files in :class:`PlaylistTrack <model.PlaylistTrack>`
   with Pydantic ``2.14`` (:issue:`351`)
+- Fix the URL of :meth:`audiobooks <Spotify.audiobooks>`, which previously
+  resulted in a "not found" or "gone" error (:issue:`352`)
 
 6.2.0 (2026-07-27)
 ------------------
