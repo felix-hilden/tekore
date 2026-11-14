@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+7.0.0 (2026-11-14)
+------------------
 Changed
 *******
 - Remove support for Python 3.10 (:issue:`354`)
