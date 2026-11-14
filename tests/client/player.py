@@ -1,4 +1,4 @@
-from time import sleep
+from time import sleep, time
 
 import pytest
 
@@ -60,15 +60,26 @@ def setup(user_client):
 
 
 SLEEP_SECS = 5
+POLL_SECS = 1
+TIMEOUT_SECS = 15
 
 
-def currently_playing(client):
-    sleep(SLEEP_SECS)
-    return client.playback_currently_playing()
+def wait_for(client, predicate, timeout: float = TIMEOUT_SECS):
+    """
+    Poll current playback until predicate is true or timeout is reached.
+
+    Returns the last playback state regardless of whether predicate matched.
+    """
+    deadline = time() + timeout
+    while True:
+        sleep(POLL_SECS)
+        playing = client.playback()
+        if (playing is not None and predicate(playing)) or time() > deadline:
+            return playing
 
 
 def assert_playing(client, track_id: str):
-    playing = currently_playing(client)
+    playing = wait_for(client, lambda p: p.item is not None and p.item.id == track_id)
     assert playing.item.id == track_id
 
 
@@ -109,12 +120,21 @@ class TestSpotifyPlayerSequence:
         assert_playing(user_client, track_ids[1])
 
         # Playback start
+        # Spotify ignores a track list without an offset if a track list
+        # is already playing (the current track just restarts), so switch
+        # to a context and wait for it to be active before starting.
+        album_uri = to_uri("album", album_id)
+        user_client.playback_start_context(album_uri)
+        playing = wait_for(
+            user_client, lambda p: p.context is not None and p.context.uri == album_uri
+        )
+        assert playing.context.uri == album_uri
         user_client.playback_start_tracks(track_ids[:2])
         assert_playing(user_client, track_ids[0])
 
         # Playback pause
         user_client.playback_pause()
-        playing = currently_playing(user_client)
+        playing = wait_for(user_client, lambda p: not p.is_playing)
         assert playing.is_playing is False
 
         # Already paused
@@ -123,7 +143,7 @@ class TestSpotifyPlayerSequence:
 
         # Playback resume
         user_client.playback_resume()
-        playing = currently_playing(user_client)
+        playing = wait_for(user_client, lambda p: p.is_playing)
         assert playing.is_playing is True
 
         # Playback next
@@ -136,7 +156,7 @@ class TestSpotifyPlayerSequence:
 
         # Playback seek
         user_client.playback_seek(30 * 1000)
-        playing = currently_playing(user_client)
+        playing = wait_for(user_client, lambda p: p.progress_ms > 30 * 1000)
         assert playing.progress_ms > 30 * 1000
 
         # Playback repeat / shuffle
@@ -158,7 +178,9 @@ class TestSpotifyPlayerSequence:
 
         # Currently playing episode returned by default
         user_client.playback_next()
-        playing = currently_playing(user_client)
+        playing = wait_for(
+            user_client, lambda p: p.item is not None and p.item.id == episode_id
+        )
         assert playing.item.id == episode_id
         # Episode.show has total_episodes
         assert playing.item.show.total_episodes is not None
