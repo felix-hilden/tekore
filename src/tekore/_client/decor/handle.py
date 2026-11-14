@@ -1,4 +1,4 @@
-from httpx import codes
+from httpx2 import codes
 
 from tekore._sender import Request, Response
 from tekore._sender.error import get_error

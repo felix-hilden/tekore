@@ -13,7 +13,7 @@ dynamic = ["version"]
 # Bump Pyright below too when changing the minimum version
 requires-python = ">=3.11"
 dependencies = [
-    "httpx>=0.15,<0.29",
+    "httpx2",
     "pydantic>=1.8,!=2.4.0,!=2.5.0,!=2.5.1",
 ]
 

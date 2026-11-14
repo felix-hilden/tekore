@@ -1,7 +1,7 @@
 coverage
 pytest
 pytest-asyncio>=0.17
-pytest-httpx
+httpx2-pytest
 
 # tests use newer pydantic features
 pydantic>=2

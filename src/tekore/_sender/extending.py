@@ -6,7 +6,7 @@ from collections import deque
 from collections.abc import Coroutine
 from urllib.parse import urlencode
 
-from httpx import codes
+from httpx2 import codes
 
 from .base import Request, Response
 from .concrete import Sender, SyncSender

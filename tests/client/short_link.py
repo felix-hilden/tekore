@@ -38,8 +38,8 @@ class TestSpotifyShortLinkOnline:
         assert link == resolved
         from_url(resolved)
 
-    def test_follow_short_link_does_not_authorise(self, app_client, httpx_mock):
-        httpx_mock.add_response(200)
+    def test_follow_short_link_does_not_authorise(self, app_client, httpx2_mock):
+        httpx2_mock.add_response(200)
         app_client.follow_short_link(short_link)
-        (request,) = httpx_mock.get_requests()
+        (request,) = httpx2_mock.get_requests()
         assert "authorization" not in request.headers

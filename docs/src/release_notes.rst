@@ -8,6 +8,8 @@ Unreleased
 Changed
 *******
 - Remove support for Python 3.10 (:issue:`354`)
+- Use :mod:`httpx2` instead of the unmaintained :mod:`httpx` as
+  the default networking library (:issue:`347`)
 
 Added
 *****

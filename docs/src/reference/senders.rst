@@ -29,8 +29,8 @@ Sender instances are passed to a client at initialisation.
     tk.Credentials(*conf, sender=tk.SyncSender())
     tk.Spotify(sender=tk.RetryingSender())
 
-Senders wrap around the :mod:`httpx` library
-and accept additional keyword arguments to :meth:`httpx.Client`.
+Senders wrap around the :mod:`httpx2` library
+and accept additional keyword arguments to :meth:`httpx2.Client`.
 
 .. code:: python
 
@@ -40,12 +40,12 @@ and accept additional keyword arguments to :meth:`httpx.Client`.
     }
     tk.SyncSender(proxies=proxies)
 
-Instances of :class:`httpx.Client` or :class:`httpx.AsyncClient`
+Instances of :class:`httpx2.Client` or :class:`httpx2.AsyncClient`
 can also be passed in for a finer control over sender behaviour.
 
 .. code:: python
 
-    from httpx import Client
+    from httpx2 import Client
 
     client = Client(proxies=proxies)
     tk.SyncSender(client)

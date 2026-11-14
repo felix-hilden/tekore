@@ -114,20 +114,20 @@ busy applications that request the same static resources repeatedly.
     tk.Spotify(sender=sender)
 
 At the lowest level, :class:`SyncSender` and :class:`AsyncSender` accept
-:class:`httpx.Client` instances which can further customise behavior.
+:class:`httpx2.Client` instances which can further customise behavior.
 For example, setting longer request timeouts and retrying on connection errors
 is possible with the following setup.
 
 .. code:: python
 
-   import httpx
+   import httpx2
 
-   trans = httpx.HTTPTransport(retries=3)
-   client = httpx.Client(timeout=30, transport=trans)
+   trans = httpx2.HTTPTransport(retries=3)
+   client = httpx2.Client(timeout=30, transport=trans)
    sender = tk.SyncSender(client=client)
 
-With an async sender use :class:`httpx.AsyncClient` and
-:class:`httpx.AsyncHTTPTransport` instead.
+With an async sender use :class:`httpx2.AsyncClient` and
+:class:`httpx2.AsyncHTTPTransport` instead.
 
 Traversing paging objects
 -------------------------
@@ -260,7 +260,7 @@ This is helpful for example in viewing names with non-latin alphabet.
 
 .. code:: python
 
-    from httpx import Client
+    from httpx2 import Client
 
     client = Client(headers={'Accept-Language': 'ru'})
     spotify = tk.Spotify(token, sender=tk.SyncSender(client))

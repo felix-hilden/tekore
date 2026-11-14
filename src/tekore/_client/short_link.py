@@ -1,4 +1,4 @@
-from httpx import codes
+from httpx2 import codes
 
 from tekore._sender import Request, Response, send_and_process
 from tekore._sender.base import Sender

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from httpx import AsyncClient, Client
-from httpx import Response as HTTPXResponse
+from httpx2 import AsyncClient, Client
+from httpx2 import Response as HTTPXResponse
 
 from .base import Request, Response, Sender
 
@@ -27,14 +27,14 @@ class SyncSender(Sender):
     Parameters
     ----------
     client
-        :class:`httpx.Client` to use when sending requests
+        :class:`httpx2.Client` to use when sending requests
     """
 
     def __init__(self, client: Client | None = None) -> None:
         self.client = client or Client()
 
     def send(self, request: Request) -> Response:
-        """Send request with :class:`httpx.Client`."""
+        """Send request with :class:`httpx2.Client`."""
         response = self.client.request(
             method=request.method,
             url=request.url,
@@ -74,14 +74,14 @@ class AsyncSender(Sender):
     Parameters
     ----------
     client
-        :class:`httpx.AsyncClient` to use when sending requests
+        :class:`httpx2.AsyncClient` to use when sending requests
     """
 
     def __init__(self, client: AsyncClient | None = None) -> None:
         self.client = client or AsyncClient()
 
     async def send(self, request: Request) -> Response:
-        """Send request with :class:`httpx.AsyncClient`."""
+        """Send request with :class:`httpx2.AsyncClient`."""
         response = await self.client.request(
             method=request.method,
             url=request.url,

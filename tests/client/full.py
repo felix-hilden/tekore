@@ -189,8 +189,8 @@ class TestSpotifyUnits:
         with pytest.raises(RuntimeError):
             await client.track("id")
 
-    def test_unauthorised_contains_missing_scopes(self, httpx_mock):
-        httpx_mock.add_response(401)
+    def test_unauthorised_contains_missing_scopes(self, httpx2_mock):
+        httpx2_mock.add_response(401)
         client = Spotify("token")
         func = client.playback
         with pytest.raises(Unauthorised) as e:
@@ -200,8 +200,8 @@ class TestSpotifyUnits:
         assert e.value.scope == func.scope
 
     @pytest.mark.asyncio
-    async def test_async_unauthorised_contains_missing_scopes(self, httpx_mock):
-        httpx_mock.add_response(401)
+    async def test_async_unauthorised_contains_missing_scopes(self, httpx2_mock):
+        httpx2_mock.add_response(401)
         client = Spotify("token", asynchronous=True)
         func = client.playback
         with pytest.raises(Unauthorised) as e:

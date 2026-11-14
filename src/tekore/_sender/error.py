@@ -1,4 +1,4 @@
-from httpx import codes
+from httpx2 import codes
 
 from .base import Request, Response
 

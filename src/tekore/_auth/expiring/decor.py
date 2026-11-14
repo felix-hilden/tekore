@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from httpx import codes
+from httpx2 import codes
 
 from tekore._sender import Request, Response
 from tekore._sender.error import RefreshTokenInvalid, get_error
