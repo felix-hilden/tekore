@@ -3,8 +3,8 @@
 
 Release notes
 =============
-Unreleased
-----------
+6.2.1 (2026-11-14)
+------------------
 Fixed
 *****
 - Raise ``ValueError`` for unknown values of :class:`StrEnum <model.StrEnum>`
