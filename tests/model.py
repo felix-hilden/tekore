@@ -4,6 +4,7 @@ import pytest
 from pydantic import ValidationError
 
 from tekore._model.serialise import Model, StrEnum, UnknownModelAttributeWarning
+from tekore.model import SimplePlaylistPaging
 
 
 class E(StrEnum):
@@ -119,3 +120,47 @@ class TestModel:
         with pytest.raises(AttributeError):
             assert data.u
         assert "u" not in data.model_dump_json()
+
+
+class TestSimplePlaylistPaging:
+    def test_null_items_and_empty_playlists_are_none(self):
+        empty = {
+            "collaborative": False,
+            "description": None,
+            "external_urls": {"spotify": "https://open.spotify.com/playlist/null"},
+            "href": "https://api.spotify.com/v1/playlists/null",
+            "id": None,
+            "images": [{"height": None, "url": None, "width": None}],
+            "name": None,
+            "owner": {
+                "display_name": None,
+                "external_urls": {"spotify": "https://open.spotify.com/user/null"},
+                "href": "https://api.spotify.com/v1/users/null",
+                "id": None,
+                "type": "user",
+                "uri": None,
+            },
+            "primary_color": None,
+            "public": True,
+            "snapshot_id": None,
+            "tracks": {
+                "href": "https://api.spotify.com/v1/playlists/null/tracks",
+                "total": None,
+            },
+            "items": {
+                "href": "https://api.spotify.com/v1/playlists/null/items",
+                "total": None,
+            },
+            "type": "playlist",
+            "uri": None,
+        }
+        paging = SimplePlaylistPaging(
+            href="h",
+            items=[None, empty],
+            limit=2,
+            next=None,
+            total=2,
+            offset=0,
+            previous=None,
+        )
+        assert paging.items == [None, None]

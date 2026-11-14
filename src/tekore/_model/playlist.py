@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
+
+from pydantic import model_validator
 
 from .base import Item
 from .episode import FullEpisode
@@ -121,6 +123,24 @@ class FullPlaylist(Playlist):
 
 
 class SimplePlaylistPaging(OffsetPaging):
-    """Paging of simplified playlists."""
+    """
+    Paging of simplified playlists.
+
+    Items can be ``None``. The API also returns playlist objects
+    with all values set to ``None``, which are converted to ``None``.
+    """
 
     items: list[SimplePlaylist | None]
+
+    @model_validator(mode="before")
+    @classmethod
+    def _nullify_empty_items(cls, data: Any) -> Any:
+        # A null ID is a sufficient check: it is a required string,
+        # so such an item would fail validation regardless.
+        if isinstance(data, dict) and isinstance(data.get("items"), list):
+            items = [
+                None if isinstance(i, dict) and i.get("id") is None else i
+                for i in data["items"]
+            ]
+            return {**data, "items": items}
+        return data
