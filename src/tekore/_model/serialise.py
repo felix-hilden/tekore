@@ -1,4 +1,5 @@
-from enum import Enum, EnumMeta
+from enum import EnumMeta
+from enum import StrEnum as StrEnum_
 from warnings import warn
 
 from pydantic import BaseModel
@@ -25,7 +26,7 @@ class StrEnumMeta(EnumMeta):
         return super().__getitem__(name.lower())
 
 
-class StrEnum(str, Enum, metaclass=StrEnumMeta):
+class StrEnum(StrEnum_, metaclass=StrEnumMeta):
     """
     Convert enumeration members to strings using their name.
 

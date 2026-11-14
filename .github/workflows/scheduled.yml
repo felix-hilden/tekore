@@ -4,7 +4,7 @@
 name: scheduled
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
 
 jobs:
   auth-test:
@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.11
+      - name: Set up Python 3.15
         uses: actions/setup-python@v1
         with:
-          python-version: "3.11"
+          python-version: "3.15"
       - name: Install package
         run: |
           python -m pip install --upgrade pip

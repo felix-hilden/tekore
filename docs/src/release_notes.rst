@@ -3,6 +3,16 @@
 
 Release notes
 =============
+Unreleased
+----------
+Changed
+*******
+- Remove support for Python 3.10 (:issue:`354`)
+
+Added
+*****
+- Support Python 3.15 (:issue:`354`)
+
 6.2.1 (2026-11-14)
 ------------------
 Fixed

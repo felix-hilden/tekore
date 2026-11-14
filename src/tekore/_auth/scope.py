@@ -1,6 +1,5 @@
 from enum import Enum
-
-from typing_extensions import Self
+from typing import Self
 
 
 class scope(Enum):  # noqa: N801
